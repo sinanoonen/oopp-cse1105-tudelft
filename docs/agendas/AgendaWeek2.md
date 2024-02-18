@@ -1,13 +1,13 @@
-## Week 2 Agenda 
+# Week 2 Agenda 
 
 Date:           19.2. 2024\
-Time:           14:45
-Location:       DW PC1 Cubicle 13
+Time:           14:45\
+Location:       DW PC1 Cubicle 13\
 Main focus:     Code of Conduct\
 Chair:          Ivo Harsani\
 Note taker:     Stefan Stoian
 
-# Agenda Items
+## Agenda Items
 
 - Opening by Chair (1 min)
 - Check-in: How is everyone doing? (2-3 min)

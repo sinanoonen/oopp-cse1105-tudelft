@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 public abstract class Transaction {
@@ -8,7 +9,7 @@ public abstract class Transaction {
     public Transaction(String owner, String date, float amount) {
         this.owner = owner;
         this.date = date;
-        this.amount = amount;
+        this.amount = Float.parseFloat(new DecimalFormat("#.##").format(amount));
     }
 
     public String getOwner() {

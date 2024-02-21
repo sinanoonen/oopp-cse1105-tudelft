@@ -4,26 +4,63 @@ import java.util.Map;
 
 public class Expense extends Transaction{
     // Title of the expense
-    private String name;
+    private String description;
     // participants mapped to how much money they owe
     Map<String, Float> participants;
 
-    public Expense(String owner, String date, float amount, String name, List<String> participants) {
+    /**
+     * Constructor method
+     * @param owner who paid the expense
+     * @param date when was the expense paid
+     * @param amount how much was paid
+     * @param description short description of what the expense was
+     * @param participants list containing initial participants of expense
+     */
+    public Expense(String owner, String date, float amount, String description, List<String> participants) {
         super(owner, date, amount);
-        this.name = name;
+        this.description = description;
         if(participants == null)
             return;
         participants.forEach(participant -> {this.participants.put(participant, 0f);});
     }
 
-    public String getName() {
-        return name;
+    /**
+     * Getter for description
+     * @return description
+     */
+    public String getDescription() {
+        return description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * Setter for description
+     * @param description new description
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
+    /**
+     * Updates the debt of a participant for this expense
+     * @param participant participant whose debt should be changed
+     * @param change change in debt (+ => more debt)
+     * @return true if operation performed successfully, false otherwise
+     */
+    public boolean modifyParticipant(String participant, float change) {
+        if(!participants.containsKey(participant))
+            return false;
+        // This assumes that values > 0 represent debt
+        float newValue = participants.get(participant) + change;
+        participants.put(participant, newValue);
+        return true;
+    }
+
+    /**
+     * Removes participant from expense,
+     * and splits their debt evenly among others
+     * @param participant participant to be removed
+     * @return true if operation performed successfully, false otherwise
+     */
     public boolean removeParticipant(String participant) {
         if(!participants.containsKey(participant))
             return false;
@@ -33,12 +70,11 @@ public class Expense extends Transaction{
         splitAmount = Float.parseFloat(new DecimalFormat("#.##").format(splitAmount));
         float remainder = amountToSplit - (participants.size() * splitAmount);
         for(String p : participants.keySet()) {
-            float v = participants.get(p);
-            // This assumes that values > 0 represent debt
             // If there is a remainder of n cents, the first n people pay 1 cent extra
-            float newValue = v + splitAmount + remainder > 0 ? 0.01f : 0;
+            float change = splitAmount + remainder > 0 ? 0.01f : 0;
             remainder -= 0.01f;
-            participants.put(p, newValue);
+            if(!modifyParticipant(p, change)) // check successful modification
+                return false;
         }
         return true;
     }

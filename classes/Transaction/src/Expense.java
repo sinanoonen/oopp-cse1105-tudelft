@@ -1,4 +1,5 @@
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ public class Expense extends Transaction{
     public Expense(String owner, String date, float amount, String description, List<String> participants) {
         super(owner, date, amount);
         this.description = description;
+        this.participants = new HashMap<>();
         if(participants == null)
             return;
         participants.forEach(participant -> {this.participants.put(participant, 0f);});

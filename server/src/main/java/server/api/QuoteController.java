@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package server.api;
 
+import commons.Quote;
 import java.util.List;
 import java.util.Random;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,10 +26,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import commons.Quote;
 import server.database.QuoteRepository;
 
+/**
+ * A controller for quotes.
+ */
 @RestController
 @RequestMapping("/api/quotes")
 public class QuoteController {
@@ -41,11 +43,22 @@ public class QuoteController {
         this.repo = repo;
     }
 
+    /**
+     * Get all quotes.
+     *
+     * @return all quotes
+     */
     @GetMapping(path = { "", "/" })
     public List<Quote> getAll() {
         return repo.findAll();
     }
 
+    /**
+     * Get a quote by its id.
+     *
+     * @param id the id of the quote
+     * @return the quote
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Quote> getById(@PathVariable("id") long id) {
         if (id < 0 || !repo.existsById(id)) {
@@ -54,6 +67,12 @@ public class QuoteController {
         return ResponseEntity.ok(repo.findById(id).get());
     }
 
+    /**
+     * Add a quote.
+     *
+     * @param quote the quote to add
+     * @return the added quote
+     */
     @PostMapping(path = { "", "/" })
     public ResponseEntity<Quote> add(@RequestBody Quote quote) {
 
@@ -70,6 +89,11 @@ public class QuoteController {
         return s == null || s.isEmpty();
     }
 
+    /**
+     * Get a random quote.
+     *
+     * @return a random quote
+     */
     @GetMapping("rnd")
     public ResponseEntity<Quote> getRandom() {
         var quotes = repo.findAll();

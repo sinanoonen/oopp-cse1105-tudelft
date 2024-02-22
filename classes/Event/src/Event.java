@@ -4,10 +4,10 @@ import java.util.Objects;
 import org.apache.commons.lang3.RandomStringUtils;
 
 public class Event {
-    String inviteCode;
-    String title;
-    List<String> participants;
-    List<Transaction> transactions;
+    private String inviteCode;
+    private String title;
+    private List<String> participants;
+    private List<Transaction> transactions;
 
     public Event(String title, List<String> participants) {
         this.inviteCode = RandomStringUtils.randomAlphanumeric(10);

@@ -69,7 +69,8 @@ public class Participant {
      */
     public boolean equals(Object object) {
         if (this == object) return true;
-        if (!(object instanceof Participant)) return false;
+        if(object == null) return false;
+        if (object.getClass() != getClass()) return false;
         Participant that = (Participant) object;
         return java.lang.Float.compare(debt, that.debt) == 0 &&
             java.util.Objects.equals(name, that.name);
@@ -81,7 +82,7 @@ public class Participant {
      * @return the hashcode
      */
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, debt);
+        return Objects.hash(name, debt);
     }
 
     /**

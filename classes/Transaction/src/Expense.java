@@ -81,6 +81,10 @@ public class Expense extends Transaction{
         return true;
     }
 
+    /**
+     * toString of the expense method
+     * @return string representing the expense object
+     */
     @java.lang.Override
     public java.lang.String toString() {
         return "Expense{" + super.toString() +
@@ -89,6 +93,11 @@ public class Expense extends Transaction{
                 '}';
     }
 
+    /**
+     * Equals method of the expense
+     * @param object object to compare to
+     * @return true or false
+     */
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
@@ -103,6 +112,10 @@ public class Expense extends Transaction{
         return true;
     }
 
+    /**
+     * Hashcode for the expense
+     * @return integer hash of the expense object
+     */
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (description != null ? description.hashCode() : 0);

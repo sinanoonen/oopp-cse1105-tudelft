@@ -1,8 +1,13 @@
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import java.util.ArrayList;
 import java.util.List;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
+/**
+ * A test for the Event class.
+ */
 public class EventTest {
 
     @Test
@@ -61,11 +66,11 @@ public class EventTest {
         List<String> participants = new ArrayList<>();
         participants.add("Hanna");
         Event event = new Event("Vacation", participants);
-        List<String> particpants2 = new ArrayList<>();
+        List<String> participants2 = new ArrayList<>();
         participants2.add("Ivo");
         participants2.add("Jolyne");
-        event.setParticipants(particpants2);
-        assertEquals(particpants2, event.getParticipants());
+        event.setParticipants(participants2);
+        assertEquals(participants2, event.getParticipants());
     }
 
     @Test
@@ -82,6 +87,5 @@ public class EventTest {
         Event event3 = new Event("Football Game", participants);
         assertNotEquals(event, event2);
         assertNotEquals(event, event3);
-        assertEquals(event, event);
     }
 }

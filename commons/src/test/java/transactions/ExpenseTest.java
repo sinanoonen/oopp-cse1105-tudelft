@@ -1,17 +1,29 @@
+package transactions;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.*;
-
+/**
+ * A test for the Expense class.
+ */
 class ExpenseTest {
     Expense expense;
-    Date baseDate;
+    LocalDate baseDate;
 
     @BeforeEach
     void setupForTests() {
         List<String> participants = Arrays.asList("Ivo", "Philip", "Sinan");
-        baseDate = new Date(2024, Calendar.FEBRUARY, 22);
+        baseDate = LocalDate.of(2015, 3, 2);
         expense = new Expense("Yannick", baseDate, 40.60f,
                 "Meeting Lunch", participants);
     }
@@ -41,9 +53,9 @@ class ExpenseTest {
 
     @Test
     void testToString() {
-        String expected = "Expense{Transaction{owner = 'Yannick', " +
-                "date = '22-02-2024', amount = 40.60}" +
-                "description='Meeting Lunch, participants={Ivo, Philip, Sinan}}";
+        String expected = "Expense{Transaction{owner = 'Yannick', "
+                + "date = '22-02-2024', amount = 40.60}"
+                + "description='Meeting Lunch, participants={Ivo, Philip, Sinan}}";
         assertEquals(expected, expense.toString());
     }
 
@@ -57,10 +69,10 @@ class ExpenseTest {
                 "Meeting Lunch", participantsDifferent);
         Expense expenseOtherDifferent = new Expense("Ivo", baseDate, 40.60f, "Meeting Lunch",
                 participantsIdentical);
+        assertNotEquals(expense, expenseParticipantsDifferent);
+        assertNotEquals(expense, expenseOtherDifferent);
         assertEquals(expense, expenseIdentical);
         assertEquals(expense.hashCode(), expenseIdentical.hashCode());
-        assertNotEquals(expense, expenseOtherDifferent);
-        assertNotEquals(expense, expenseParticipantsDifferent);
         assertNotEquals(expense, expenseOtherDifferent);
         assertNotEquals(expense, expenseParticipantsDifferent);
     }

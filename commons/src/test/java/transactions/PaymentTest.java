@@ -2,16 +2,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class PaymentTest {
     Payment paymentSenderOwner;
     Payment paymentSenderNotOwner;
-    Date paymentDate;
+    LocalDate paymentDate;
 
     @BeforeEach
     void setUpforTests(){
-        paymentDate = new Date(2024,Calendar.FEBRUARY,23);
+        paymentDate = LocalDate.of(2024, 2, 23);
         paymentSenderNotOwner = new Payment("Emilio",paymentDate,20f,"Yannick","Filip");
         paymentSenderOwner = new Payment("Emilio",paymentDate,30f,"Yannick");
     }

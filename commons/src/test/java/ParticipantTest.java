@@ -1,6 +1,8 @@
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class ParticipantTest {
     private Participant participant1;
@@ -38,17 +40,17 @@ class ParticipantTest {
 
     @Test
     public void testEqualsWithSameObject() {
-        assertTrue(participant1.equals(participant1));
+        assertEquals(participant1, participant1);
     }
 
     @Test
     public void testEqualsWithDifferentObjectSameValues() {
-        assertTrue(participant1.equals(participant3));
+        assertEquals(participant1, participant3);
     }
 
     @Test
     public void testEqualsWithNull() {
-        assertFalse(participant1.equals(null));
+        assertNotEquals(null, participant1);
     }
 
     @Test

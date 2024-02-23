@@ -51,9 +51,9 @@ class ExpenseTest {
 
     @Test
     void testToString() {
-        String expected = "Expense{Transaction{owner = 'Yannick', "
-                + "date = '22-02-2024', amount = 40.60}"
-                + "description='Meeting Lunch, participants={Ivo, Philip, Sinan}}";
+        String expected = "Expense{Transaction{owner = 'Yannick', date = '2015-03-02',"
+                + " amount = 40.6}description='Meeting Lunch', "
+                + "participants={Ivo=0.0, Sinan=0.0, Philip=0.0}}";
         assertEquals(expected, expense.toString());
     }
 
@@ -61,9 +61,15 @@ class ExpenseTest {
     void testEqualsAndTestHashCode() {
         List<String> participantsIdentical = Arrays.asList("Ivo", "Philip", "Sinan");
         List<String> participantsDifferent = Arrays.asList("Yannick", "Philip", "Sinan");
-        Expense expenseIdentical = new Expense("Yannick", baseDate, 40.60f, "Meeting Lunch", participantsIdentical);
-        Expense expenseParticipantsDifferent = new Expense("Yannick", baseDate, 40.60f, "Meeting Lunch", participantsDifferent);
-        Expense expenseOtherDifferent = new Expense("Ivo", baseDate, 40.60f, "Meeting Lunch", participantsIdentical);
+        Expense expenseIdentical = new Expense("Yannick", baseDate,
+                40.60f, "Meeting Lunch",
+                participantsIdentical);
+        Expense expenseParticipantsDifferent = new Expense("Yannick", baseDate,
+                40.60f, "Meeting Lunch",
+                participantsDifferent);
+        Expense expenseOtherDifferent = new Expense("Ivo", baseDate, 40.60f,
+                "Meeting Lunch",
+                participantsIdentical);
         assertNotEquals(expense, expenseParticipantsDifferent);
         assertNotEquals(expense, expenseOtherDifferent);
         assertEquals(expense, expenseIdentical);

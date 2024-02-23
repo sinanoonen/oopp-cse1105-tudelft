@@ -1,10 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import transactions.Transaction;
 import org.apache.commons.lang3.RandomStringUtils;
+import transactions.Transaction;
 
+/**
+ * The Event class.
+ */
 public class Event {
     private String inviteCode;
     private String title;
@@ -12,7 +14,8 @@ public class Event {
     private List<Transaction> transactions;
 
     /**
-     * Constructor method
+     * Constructor method.
+     *
      * @param title of the event
      * @param participants of the event
      */
@@ -24,7 +27,8 @@ public class Event {
     }
 
     /**
-     * Getter for the invite code
+     * Getter for the invite code.
+     *
      * @return invite code
      */
     public String getInviteCode() {
@@ -32,7 +36,8 @@ public class Event {
     }
 
     /**
-     * Getter for the title
+     * Getter for the title.
+     *
      * @return title
      */
     public String getTitle() {
@@ -40,7 +45,8 @@ public class Event {
     }
 
     /**
-     * Getter for the participants
+     * Getter for the participants.
+     *
      * @return participants
      */
     public List<String> getParticipants() {
@@ -48,7 +54,8 @@ public class Event {
     }
 
     /**
-     * Getter for the transactions
+     * Getter for the transactions.
+     *
      * @return transactions
      */
     public List<Transaction> getTransactions() {
@@ -56,52 +63,65 @@ public class Event {
     }
 
     /**
-     * Setter for the invite code
-     * @param inviteCode
+     * Setter for the invite code.
+     *
+     * @param inviteCode invite code of the event
      */
     public void setInviteCode(String inviteCode) {
         this.inviteCode = inviteCode;
     }
 
     /**
-     * Setter for the title
-     * @param title
+     * Setter for the title.
+     *
+     * @param title title of the event
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     * Setter for the participants
-     * @param participants
+     * Setter for the participants.
+     *
+     * @param participants participants of the event
      */
     public void setParticipants(List<String> participants) {
         this.participants = participants;
     }
 
     /**
-     * Setter for the transactions
-     * @param transactions
+     * Setter for the transactions.
+     *
+     * @param transactions transactions of the event
      */
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
     }
 
     /**
-     * Equals method of the event
+     * Equals method of the event.
+     *
      * @param o object to compare to
      * @return true or false
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Event event = (Event) o;
-        return Objects.equals(inviteCode, event.inviteCode) && Objects.equals(title, event.title) && Objects.equals(participants, event.participants) && Objects.equals(transactions, event.transactions);
+        return Objects.equals(inviteCode, event.inviteCode)
+                && Objects.equals(title, event.title)
+                && Objects.equals(participants, event.participants)
+                && Objects.equals(transactions, event.transactions);
     }
 
     /**
-     * Hashcode for the event
+     * Hashcode for the event.
+     *
      * @return integer hash of the event object
      */
     @Override
@@ -110,16 +130,23 @@ public class Event {
     }
 
     /**
-     * toString of the event method
+     * toString of the event method.
+     *
      * @return string representing the event object
      */
     @Override
     public String toString() {
-        return "Event{" +
-                "inviteCode='" + inviteCode + '\'' +
-                ", title='" + title + '\'' +
-                ", participants=" + participants +
-                ", transactions=" + transactions +
-                '}';
+        return "Event{"
+                + "inviteCode='"
+                + inviteCode
+                + '\''
+                + ", title='"
+                + title
+                + '\''
+                + ", participants="
+                + participants
+                + ", transactions="
+                + transactions
+                + '}';
     }
 }

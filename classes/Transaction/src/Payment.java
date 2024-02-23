@@ -1,21 +1,21 @@
 import java.util.Objects;
 
 public class Payment extends Transaction {
-    private String sender;
     private String recipient;
+    private String sender;
 
     /**
      * Constructor for the payment class
      * @param owner the owner of the transaction
      * @param date the date of the transaction
      * @param amount the amount of the transaction
-     * @param sender the sender of the payment
      * @param recipient the recipient of the payment
+     * @param sender the sender of the payment
      */
-    public Payment(String owner, String date, float amount, String sender, String recipient) {
+    public Payment(String owner, String date, float amount, String recipient, String sender) {
         super(owner, date, amount);
-        this.sender = sender;
         this.recipient = recipient;
+        this.sender = sender;
     }
 
     /**
@@ -27,8 +27,8 @@ public class Payment extends Transaction {
      */
     public Payment(String owner, String date, float amount, String recipient) {
         super(owner, date, amount);
-        this.sender = owner;
         this.recipient = recipient;
+        this.sender = owner;
     }
 
     /**

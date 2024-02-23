@@ -33,6 +33,14 @@ public class Expense extends Transaction{
     }
 
     /**
+     * Getter for description
+     * @return description
+     */
+    public Map<String, Float> getParticipants() {
+        return participants;
+    }
+
+    /**
      * Setter for description
      * @param description new description
      */
@@ -83,7 +91,7 @@ public class Expense extends Transaction{
      * toString of the expense method
      * @return string representing the expense object
      */
-    @java.lang.Override
+    @Override
     public java.lang.String toString() {
         return "Expense{" + super.toString() +
                 "description='" + description + '\'' +

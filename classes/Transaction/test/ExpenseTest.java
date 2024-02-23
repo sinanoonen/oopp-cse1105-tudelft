@@ -2,15 +2,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 class ExpenseTest {
+    Expense expense;
+    Date baseDate;
 
     @BeforeEach
     void setupForTests() {
         List<String> participants = Arrays.asList("Ivo", "Philip", "Sinan");
-        Expense expense = new Expense("Yannick", "22-02-2024", 40.60f,
+        baseDate = new Date(2024, Calendar.FEBRUARY, 22);
+        expense = new Expense("Yannick", baseDate, 40.60f,
                 "Meeting Lunch", participants);
     }
 
@@ -18,21 +20,22 @@ class ExpenseTest {
     void testGetters() {
         assertEquals("Meeting Lunch", expense.getDescription());
         assertEquals("Yannick", expense.getOwner());
-        assertEquals("22-02-2024", expense.getDate());
+        assertEquals(baseDate, expense.getDate());
         assertEquals(40.60f, expense.getAmount());
         assertEquals(3, expense.getParticipants().size());
     }
 
     @Test
     void testSetters() {
+        Date otherDate = new Date(2020, Calendar.JUNE, 16);
         expense.setDescription("Snacks");
         expense.setOwner("Ivo");
-        expense.setDate("16-06-2020");
+        expense.setDate(otherDate);
         expense.setAmount(10.00f);
 
         assertEquals("Snacks", expense.getDescription());
         assertEquals("Ivo", expense.getOwner());
-        assertEquals("16-06-2020", expense.getDate());
+        assertEquals(otherDate, expense.getDate());
         assertEquals(10.00f, expense.getAmount());
     }
 
@@ -48,11 +51,11 @@ class ExpenseTest {
     void testEqualsAndTestHashCode() {
         List<String> participantsIdentical = Arrays.asList("Ivo", "Philip", "Sinan");
         List<String> participantsDifferent = Arrays.asList("Yannick", "Philip", "Sinan");
-        Expense expenseIdentical = new Expense("Yannick", "22-02-2024", 40.60f, "Meeting Lunch",
+        Expense expenseIdentical = new Expense("Yannick", baseDate, 40.60f, "Meeting Lunch",
                 participantsIdentical);
-        Expense expenseParticipantsDifferent = new Expense("Yannick", "22-02-2024", 40.60f,
+        Expense expenseParticipantsDifferent = new Expense("Yannick", baseDate, 40.60f,
                 "Meeting Lunch", participantsDifferent);
-        Expense expenseOtherDifferent = new Expense("Ivo", "22-02-2024", 40.60f, "Meeting Lunch",
+        Expense expenseOtherDifferent = new Expense("Ivo", baseDate, 40.60f, "Meeting Lunch",
                 participantsIdentical);
         assertEquals(expense, expenseIdentical);
         assertEquals(expense.hashCode(), expenseIdentical.hashCode());

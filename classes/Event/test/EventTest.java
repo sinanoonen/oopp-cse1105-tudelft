@@ -37,4 +37,51 @@ public class EventTest {
         Event event = new Event("Meeting", participants);
         assertEquals(new ArrayList<>(), event.getTransactions());
     }
+
+    @Test
+    public void testSetInviteCode() {
+        List<String> participants = new ArrayList<>();
+        participants.add("Filip");
+        Event event = new Event("Lunch", participants);
+        event.setInviteCode("1234567890");
+        assertEquals("1234567890", event.getInviteCode());
+    }
+
+    @Test
+    public void testSetTitle() {
+        List<String> participants = new ArrayList<>();
+        participants.add("George");
+        Event event = new Event("Drinks", participants);
+        event.setTitle("Bar");
+        assertEquals("Bar", event.getTitle());
+    }
+
+    @Test
+    public void testSetParticipants() {
+        List<String> participants = new ArrayList<>();
+        participants.add("Hanna");
+        Event event = new Event("Vacation", participants);
+        List<String> particpants2 = new ArrayList<>();
+        participants2.add("Ivo");
+        participants2.add("Jolyne");
+        event.setParticipants(particpants2);
+        assertEquals(particpants2, event.getParticipants());
+    }
+
+    @Test
+    public void testEquals() {
+        List<String> participants = new ArrayList<>();
+        participants.add("Kevin");
+        participants.add("Larry");
+        Event event = new Event("Football Game", participants);
+        List<String> participants2 = new ArrayList<>();
+        participants2.add("Mark");
+        participants2.add("Nina");
+        Event event2 = new Event("Picnic", participants2);
+        //event3 and event should not be equal, as the invite code should be different
+        Event event3 = new Event("Football Game", participants);
+        assertNotEquals(event, event2);
+        assertNotEquals(event, event3);
+        assertEquals(event, event);
+    }
 }

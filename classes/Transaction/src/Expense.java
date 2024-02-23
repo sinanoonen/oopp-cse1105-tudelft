@@ -1,7 +1,5 @@
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Expense extends Transaction{
     // Title of the expense
@@ -17,7 +15,7 @@ public class Expense extends Transaction{
      * @param description short description of what the expense was
      * @param participants list containing initial participants of expense
      */
-    public Expense(String owner, String date, float amount, String description, List<String> participants) {
+    public Expense(String owner, Date date, float amount, String description, List<String> participants) {
         super(owner, date, amount);
         this.description = description;
         this.participants = new HashMap<>();
@@ -105,11 +103,8 @@ public class Expense extends Transaction{
 
         Expense expense = (Expense) object;
 
-        if (description != null ? !description.equals(expense.description) : expense.description != null) return false;
-        if (participants != null ? !participants.equals(expense.participants) : expense.participants != null)
-            return false;
-
-        return true;
+        if (!Objects.equals(description, expense.description)) return false;
+        return Objects.equals(participants, expense.participants);
     }
 
     /**

@@ -70,7 +70,7 @@ public class Participant {
     public boolean equals(Object object) {
         if (this == object) return true;
         if(object == null) return false;
-        if (object.getClass() != getClass()) return false;
+        if (!object.getClass().equals(getClass())) return false;
         Participant that = (Participant) object;
         return java.lang.Float.compare(debt, that.debt) == 0 &&
             java.util.Objects.equals(name, that.name);

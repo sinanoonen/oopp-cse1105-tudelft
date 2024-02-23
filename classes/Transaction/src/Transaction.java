@@ -1,12 +1,13 @@
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.Objects;
 
 public abstract class Transaction {
     private String owner;
-    private String date;
+    private Date date;
     private float amount;
 
-    public Transaction(String owner, String date, float amount) {
+    public Transaction(String owner, Date date, float amount) {
         this.owner = owner;
         this.date = date;
         this.amount = Float.parseFloat(new DecimalFormat("#.##").format(amount));
@@ -16,7 +17,7 @@ public abstract class Transaction {
         return owner;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -28,7 +29,7 @@ public abstract class Transaction {
         this.owner = owner;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

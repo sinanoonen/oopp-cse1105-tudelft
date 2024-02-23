@@ -1,3 +1,5 @@
+package transactions;
+
 import java.util.Objects;
 
 public class Payment extends Transaction {

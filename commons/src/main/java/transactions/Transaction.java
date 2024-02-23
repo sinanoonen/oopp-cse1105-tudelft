@@ -32,7 +32,7 @@ public abstract class Transaction {
         this.owner = owner;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

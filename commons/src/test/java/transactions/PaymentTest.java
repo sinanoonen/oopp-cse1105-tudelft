@@ -1,8 +1,12 @@
+package transactions;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.time.LocalDate;
+import transactions.Payment;
 import java.util.*;
 
 public class PaymentTest {
@@ -20,20 +24,20 @@ public class PaymentTest {
     @Test
     void testGetters(){
         assertEquals("Filip",paymentSenderNotOwner.getSender());
-        assertEquals("Yannick",paymentSenderNotOwner.getReceiver());
+        assertEquals("Yannick",paymentSenderNotOwner.getRecipient());
         assertEquals(paymentDate, paymentSenderNotOwner.getDate());
         assertEquals("Emilio",paymentSenderNotOwner.getOwner());
-        asertEquals(20f,paymentSenderOwner.getAmount());
+        assertEquals(20f,paymentSenderOwner.getAmount());
         assertEquals("Emilio",paymentSenderOwner.getOwner());
         assertEquals("Emilio",paymentSenderOwner.getSender());
         assertEquals(paymentSenderOwner.getOwner(), paymentSenderOwner.getSender());
     }
 
     @Test
-    void testSetters(){
-        Date otherDate = new Date(2020, Calendar.JUNE, 16);
+    void testSetters() {
+        LocalDate otherDate = LocalDate.of(2020, Calendar.JUNE, 16);
         paymentSenderNotOwner.setSender("Ivo");
-        paymentSenderNotOwner.setReceiver("Sinan");
+        paymentSenderNotOwner.setRecipient("Sinan");
         paymentSenderNotOwner.setDate(otherDate);
         paymentSenderNotOwner.setOwner("Yannick");
         paymentSenderNotOwner.setAmount(15f);
@@ -42,12 +46,12 @@ public class PaymentTest {
         paymentSenderOwner.setOwner("Ivo");
 
         assertEquals("Ivo",paymentSenderNotOwner.getSender());
-        assertEquals("Sinan",paymentSenderNotOwner.getReceiver());
+        assertEquals("Sinan",paymentSenderNotOwner.getRecipient());
         assertEquals(otherDate,paymentSenderNotOwner.getDate());
         assertEquals("Yannick",paymentSenderNotOwner.getOwner());
         assertEquals(15f,paymentSenderNotOwner.getAmount());
-        assertEquals(paymentSenderOwner.getSender("Ivo"));
-        assertEquals(paymentSenderOwner.getOwner("Ivo"));
+        assertEquals(paymentSenderOwner.getSender(), "Ivo");
+        assertEquals(paymentSenderOwner.getOwner(), "Ivo");
     }
 
     @Test

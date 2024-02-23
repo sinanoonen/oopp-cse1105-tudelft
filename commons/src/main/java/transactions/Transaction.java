@@ -1,15 +1,16 @@
 package transactions;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
 public abstract class Transaction {
     private String owner;
-    private Date date;
+    private LocalDate date;
     private float amount;
 
-    public Transaction(String owner, Date date, float amount) {
+    public Transaction(String owner, LocalDate date, float amount) {
         this.owner = owner;
         this.date = date;
         this.amount = Float.parseFloat(new DecimalFormat("#.##").format(amount));
@@ -19,7 +20,7 @@ public abstract class Transaction {
         return owner;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 

@@ -1,40 +1,47 @@
 package transactions;
 
+import java.util.Date;
 import java.util.Objects;
 
+/**
+ * The payment class that extends from the transaction class.
+ */
 public class Payment extends Transaction {
     private String recipient;
     private String sender;
 
     /**
-     * Constructor for the payment class
+     * Constructor for the payment class.
+     *
      * @param owner the owner of the transaction
      * @param date the date of the transaction
      * @param amount the amount of the transaction
      * @param recipient the recipient of the payment
      * @param sender the sender of the payment
      */
-    public Payment(String owner, String date, float amount, String recipient, String sender) {
+    public Payment(String owner, Date date, float amount, String recipient, String sender) {
         super(owner, date, amount);
         this.recipient = recipient;
         this.sender = sender;
     }
 
     /**
-     * The owner of the transaction is also the sender of the payment
+     * The owner of the transaction is also the sender of the payment.
+     *
      * @param owner the owner of the transaction
      * @param date the date of the transaction
      * @param amount the amount of the transaction
      * @param recipient the recipient of the payment
      */
-    public Payment(String owner, String date, float amount, String recipient) {
+    public Payment(String owner, Date date, float amount, String recipient) {
         super(owner, date, amount);
         this.recipient = recipient;
         this.sender = owner;
     }
 
     /**
-     * Getter for the sender
+     * Getter for the sender.
+     *
      * @return the sender
      */
     public String getSender() {
@@ -42,7 +49,8 @@ public class Payment extends Transaction {
     }
 
     /**
-     * Setter for the sender
+     * Setter for the sender.
+     *
      * @param sender the new sender
      */
     public void setSender(String sender) {
@@ -50,7 +58,8 @@ public class Payment extends Transaction {
     }
 
     /**
-     * Getter for the recipient
+     * Getter for the recipient.
+     *
      * @return the recipient
      */
     public String getRecipient() {
@@ -58,7 +67,8 @@ public class Payment extends Transaction {
     }
 
     /**
-     * Setter for the recipient
+     * Setter for the recipient.
+     *
      * @param recipient the new recipient
      */
     public void setRecipient(String recipient) {
@@ -66,37 +76,48 @@ public class Payment extends Transaction {
     }
 
     /**
-     * Generates a string representation of the payment
+     * Generates a string representation of the payment.
+     *
      * @return the string
      */
     @Override
     public String toString() {
-        return "Payment{" + super.toString() +
-            "sender='" + sender + '\'' +
-            ", recipient='" + recipient + '\'' +
-            '}';
+        return "Payment{" + super.toString()
+            + "sender='" + sender + '\''
+            + ", recipient='" + recipient + '\''
+            + '}';
     }
 
     /**
-     * The equals method
+     * The equals method.
+     *
      * @param object the object to be compared to
      * @return true iff the two objects are equal
      */
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if(object == null) return false;
-        if (!object.getClass().equals(getClass())) return false;
-        if (!super.equals(object)) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null) {
+            return false;
+        }
+        if (!object.getClass().equals(getClass())) {
+            return false;
+        }
+        if (!super.equals(object)) {
+            return false;
+        }
 
         Payment that = (Payment) object;
 
-        return Objects.equals(sender, that.sender) &&
-            Objects.equals(recipient, that.recipient);
+        return Objects.equals(sender, that.sender)
+            && Objects.equals(recipient, that.recipient);
     }
 
     /**
-     * Generates a hashcode
+     * Generates a hashcode.
+     *
      * @return the hashcode
      */
     @Override

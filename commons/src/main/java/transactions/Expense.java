@@ -1,6 +1,7 @@
 package transactions;
 
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 public class Expense extends Transaction{
@@ -17,7 +18,7 @@ public class Expense extends Transaction{
      * @param description short description of what the expense was
      * @param participants list containing initial participants of expense
      */
-    public Expense(String owner, Date date, float amount, String description, List<String> participants) {
+    public Expense(String owner, LocalDate date, float amount, String description, List<String> participants) {
         super(owner, date, amount);
         this.description = description;
         this.participants = new HashMap<>();

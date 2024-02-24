@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.apache.commons.lang3.RandomStringUtils;
+import transactions.Expense;
 import transactions.Transaction;
 
 /**
@@ -96,6 +97,20 @@ public class Event {
      */
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    /**
+     * Gets a list of expenses by participant name using streams.
+     *
+     * @param participant the participant name linked to the expenses
+     * @return a list of expenses of the participant
+     */
+    public List<Expense> getExpensesByParticipant(String participant) {
+        return transactions.stream()
+                .filter(transaction -> transaction instanceof Expense)
+                .map(transaction -> (Expense) transaction)
+                .filter(expense -> expense.getParticipants().containsKey(participant))
+                .toList();
     }
 
     /**

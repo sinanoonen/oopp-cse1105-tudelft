@@ -20,7 +20,7 @@ class ExpenseTest {
 
     @BeforeEach
     void setupForTests() {
-        List<String> participants = Arrays.asList("Ivo", "Philip", "Sinan");
+        List<String> participants = Arrays.asList("Ivo", "Filip", "Sinan");
         baseDate = LocalDate.of(2015, 3, 2);
         expense = new Expense("Yannick", baseDate, 40.60f,
                 "Meeting Lunch", participants);
@@ -53,14 +53,14 @@ class ExpenseTest {
     void testToString() {
         String expected = "Expense{Transaction{owner = 'Yannick', date = '2015-03-02',"
                 + " amount = 40.6}description='Meeting Lunch', "
-                + "participants={Ivo=0.0, Sinan=0.0, Philip=0.0}}";
+                + "participants={Ivo=0.0, Sinan=0.0, Filip=0.0}}";
         assertEquals(expected, expense.toString());
     }
 
     @Test
     void testEqualsAndTestHashCode() {
-        List<String> participantsIdentical = Arrays.asList("Ivo", "Philip", "Sinan");
-        List<String> participantsDifferent = Arrays.asList("Yannick", "Philip", "Sinan");
+        List<String> participantsIdentical = Arrays.asList("Ivo", "Filip", "Sinan");
+        List<String> participantsDifferent = Arrays.asList("Yannick", "Filip", "Sinan");
         Expense expenseIdentical = new Expense("Yannick", baseDate,
                 40.60f, "Meeting Lunch",
                 participantsIdentical);

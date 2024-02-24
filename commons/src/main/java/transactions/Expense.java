@@ -65,6 +65,18 @@ public class Expense extends Transaction {
     }
 
     /**
+     * adds a participant to the expense
+     * @param participant participant to be added
+     * @return true if participant successfully added, false otherwise
+     */
+    public boolean addParticipant(String participant) {
+        if(participants.containsKey(participant))
+            return false;
+        participants.put(participant, 0f);
+        return true;
+    }
+
+    /**
      * Updates the debt of a participant for this expense.
      *
      * @param participant participant whose debt should be changed

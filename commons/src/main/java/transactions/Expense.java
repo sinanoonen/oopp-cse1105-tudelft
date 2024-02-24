@@ -107,6 +107,7 @@ public class Expense extends Transaction {
 
     /**
      * Splits the total value of the expense equally among all participants of the event.
+     * 
      * @return true if operation was successful, false otherwise
      */
     public boolean splitEqually(float amount) {
@@ -122,6 +123,7 @@ public class Expense extends Transaction {
      * Splits an amount among a subgroup of users,
      * where each user has a multiple expressing
      * what fraction of the expense they should pay.
+     *
      * @param amount amount that should be split among the subgroup.
      * @param userMultiplierMap a map containing all users that should pay, mapped to a multiplier
      * @return true if successful operation, false otherwise.

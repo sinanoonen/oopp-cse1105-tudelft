@@ -13,8 +13,8 @@ import java.util.Objects;
 public class Expense extends Transaction {
     // Title of the expense
     private String description;
-    // participants mapped to how much money they owe
-    Map<String, Float> participants;
+    // a map of each participant's debt within this expense
+    Map<String, Float> debts;
 
     /**
      * Constructor method.
@@ -28,11 +28,11 @@ public class Expense extends Transaction {
     public Expense(String owner, LocalDate date, float amount, String description, List<String> participants) {
         super(owner, date, amount);
         this.description = description;
-        this.participants = new HashMap<>();
+        this.debts = new HashMap<>();
         if (participants == null) {
             return;
         }
-        participants.forEach(participant -> this.participants.put(participant, 0f));
+        participants.forEach(participant -> this.debts.put(participant, 0f));
     }
 
     /**
@@ -45,12 +45,12 @@ public class Expense extends Transaction {
     }
 
     /**
-     * Getter for description.
+     * Getter for debts map.
      *
-     * @return description
+     * @return debts
      */
-    public Map<String, Float> getParticipants() {
-        return participants;
+    public Map<String, Float> getDebts() {
+        return debts;
     }
 
     /**
@@ -63,21 +63,6 @@ public class Expense extends Transaction {
     }
 
     /**
-     * adds a participant to the expense.
-     *
-     * @param participant participant to be added
-     *
-     * @return true if participant successfully added, false otherwise
-     */
-    public boolean addParticipant(String participant) {
-        if (participants.containsKey(participant)) {
-            return false;
-        }
-        participants.put(participant, 0f);
-        return true;
-    }
-
-    /**
      * Updates the debt of a participant for this expense.
      *
      * @param participant participant whose debt should be changed
@@ -85,28 +70,13 @@ public class Expense extends Transaction {
      * @return true if operation performed successfully, false otherwise
      */
     public boolean modifyParticipant(String participant, float change) {
-        if (!participants.containsKey(participant)) {
+        if (!debts.containsKey(participant)) {
             return false;
         }
         // This assumes that values > 0 represent debt
-        float newValue = participants.get(participant) + change;
-        participants.put(participant, newValue);
+        float newValue = debts.get(participant) + change;
+        debts.put(participant, newValue);
         return true;
-    }
-
-    /**
-     * Removes participant from expense
-     * and splits their debt evenly among others.
-     *
-     * @param participant participant to be removed
-     * @return true if operation performed successfully, false otherwise
-     */
-    public boolean removeParticipant(String participant) {
-        if (!participants.containsKey(participant)) {
-            return false;
-        }
-        float amountToSplit = participants.remove(participant);
-        return splitEqually(amountToSplit);
     }
 
     /**
@@ -115,7 +85,7 @@ public class Expense extends Transaction {
      * @return true if operation was successful, false otherwise
      */
     public boolean splitEqually(float amount) {
-        List<String> allParticipants = getParticipants().keySet().stream().toList();
+        List<String> allParticipants = debts.keySet().stream().toList();
         Map<String, Integer> usersMultiplierMap = new HashMap<>();
         allParticipants.forEach(p -> {
             usersMultiplierMap.put(p, 1);
@@ -160,8 +130,8 @@ public class Expense extends Transaction {
         return "Expense{" + super.toString()
                 + "description='"
                 + description + '\''
-                + ", participants="
-                + participants
+                + ", debts="
+                + debts
                 + '}';
     }
 
@@ -187,7 +157,7 @@ public class Expense extends Transaction {
         if (!Objects.equals(description, expense.description)) {
             return false;
         }
-        return Objects.equals(participants, expense.participants);
+        return Objects.equals(debts, expense.debts);
     }
 
     /**
@@ -198,7 +168,7 @@ public class Expense extends Transaction {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (participants != null ? participants.hashCode() : 0);
+        result = 31 * result + (debts != null ? debts.hashCode() : 0);
         return result;
     }
 }

@@ -32,7 +32,7 @@ class ExpenseTest {
         assertEquals("Yannick", expense.getOwner());
         assertEquals(baseDate, expense.getDate());
         assertEquals(40.60f, expense.getAmount());
-        assertEquals(3, expense.getParticipants().size());
+        assertEquals(3, expense.getDebts().size());
     }
 
     @Test
@@ -81,15 +81,7 @@ class ExpenseTest {
     @Test
     void testModifyParticipant() {
         assertTrue(expense.modifyParticipant("Ivo", 10.15f));
-        assertEquals(10.15f, expense.getParticipants().get("Ivo"));
+        assertEquals(10.15f, expense.getDebts().get("Ivo"));
         assertFalse(expense.modifyParticipant("Emilio", 5.50f));
-    }
-
-    @Test
-    void testRemoveParticipant() {
-        assertTrue(expense.removeParticipant("Ivo"));
-        assertFalse(expense.getParticipants().containsKey("Ivo"));
-        assertEquals(2, expense.getParticipants().size());
-        assertFalse(expense.removeParticipant("Emilio"));
     }
 }

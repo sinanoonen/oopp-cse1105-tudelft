@@ -2,7 +2,10 @@ package transactions;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Expense class that extends from the transaction class.
@@ -63,6 +66,7 @@ public class Expense extends Transaction {
      * adds a participant to the expense.
      *
      * @param participant participant to be added
+     *
      * @return true if participant successfully added, false otherwise
      */
     public boolean addParticipant(String participant) {
@@ -107,7 +111,7 @@ public class Expense extends Transaction {
 
     /**
      * Splits the total value of the expense equally among all participants of the event.
-     * 
+     *
      * @return true if operation was successful, false otherwise
      */
     public boolean splitEqually(float amount) {

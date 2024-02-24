@@ -32,9 +32,7 @@ public class Expense extends Transaction {
         if (participants == null) {
             return;
         }
-        participants.forEach(participant -> {
-            this.participants.put(participant, 0f);
-        });
+        participants.forEach(participant -> this.participants.put(participant, 0f));
     }
 
     /**
@@ -65,13 +63,15 @@ public class Expense extends Transaction {
     }
 
     /**
-     * adds a participant to the expense
+     * adds a participant to the expense.
+     *
      * @param participant participant to be added
      * @return true if participant successfully added, false otherwise
      */
     public boolean addParticipant(String participant) {
-        if(participants.containsKey(participant))
+        if (participants.containsKey(participant)) {
             return false;
+        }
         participants.put(participant, 0f);
         return true;
     }

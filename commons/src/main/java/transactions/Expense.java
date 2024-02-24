@@ -2,10 +2,7 @@ package transactions;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Expense class that extends from the transaction class.
@@ -105,15 +102,42 @@ public class Expense extends Transaction {
             return false;
         }
         float amountToSplit = participants.remove(participant);
-        float splitAmount = amountToSplit / participants.size();
+        return splitEqually(amountToSplit);
+    }
+
+    /**
+     * Splits the total value of the expense equally among all participants of the event.
+     * @return true if operation was successful, false otherwise
+     */
+    public boolean splitEqually(float amount) {
+        List<String> allParticipants = getParticipants().keySet().stream().toList();
+        Map<String, Integer> usersMultiplierMap = new HashMap<>();
+        allParticipants.forEach(p -> {
+            usersMultiplierMap.put(p, 1);
+        });
+        return splitAmong(amount, usersMultiplierMap);
+    }
+
+    /**
+     * Splits an amount among a subgroup of users,
+     * where each user has a multiple expressing
+     * what fraction of the expense they should pay.
+     * @param amount amount that should be split among the subgroup.
+     * @param userMultiplierMap a map containing all users that should pay, mapped to a multiplier
+     * @return true if successful operation, false otherwise.
+     */
+    public boolean splitAmong(float amount, Map<String, Integer> userMultiplierMap) {
+        int numSplits = userMultiplierMap.values().stream().mapToInt(Integer::intValue).sum();
+        float splitAmount = amount / numSplits;
         // round to 2 dp
         splitAmount = Float.parseFloat(new DecimalFormat("#.##").format(splitAmount));
-        float remainder = amountToSplit - (participants.size() * splitAmount);
-        for (String p : participants.keySet()) {
-            // If there is a remainder of n cents, the first n people pay 1 cent extra
-            float change = splitAmount + remainder > 0 ? 0.01f : 0;
+        float remainder = amount - (userMultiplierMap.size() * splitAmount);
+        for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
+            String user = entry.getKey();
+            int multiplier = entry.getValue();
+            float change = splitAmount * multiplier + remainder > 0 ? 0.01f : 0;
             remainder -= 0.01f;
-            if (!modifyParticipant(p, change)) { // check successful modification
+            if (!modifyParticipant(user, change)) {
                 return false;
             }
         }

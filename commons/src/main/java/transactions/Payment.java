@@ -1,6 +1,6 @@
 package transactions;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -19,7 +19,7 @@ public class Payment extends Transaction {
      * @param recipient the recipient of the payment
      * @param sender the sender of the payment
      */
-    public Payment(String owner, Date date, float amount, String recipient, String sender) {
+    public Payment(String owner, LocalDate date, float amount, String recipient, String sender) {
         super(owner, date, amount);
         this.recipient = recipient;
         this.sender = sender;
@@ -33,7 +33,7 @@ public class Payment extends Transaction {
      * @param amount the amount of the transaction
      * @param recipient the recipient of the payment
      */
-    public Payment(String owner, Date date, float amount, String recipient) {
+    public Payment(String owner, LocalDate date, float amount, String recipient) {
         super(owner, date, amount);
         this.recipient = recipient;
         this.sender = owner;

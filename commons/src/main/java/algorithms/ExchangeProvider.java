@@ -12,7 +12,7 @@ import java.util.Map;
  * The API is free to use and requires an API key to access the data.
  * The API returns the exchange rates in JSON format.
  * The base currency is EUR.
- * The API documentation can be found at https://openexchangerates.org/documentation
+ * The API documentation can be found at <a href="https://openexchangerates.org/documentation">...</a>
  */
 public class ExchangeProvider {
 

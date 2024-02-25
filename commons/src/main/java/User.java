@@ -1,24 +1,27 @@
 import java.util.Objects;
 
+/**
+ * User class.
+ */
 public class User {
     private String name;
     private String email;
-    private String IBAN;
-    private String BIC;
+    private String iban;
+    private String bic;
 
     /**
      * Constructor for the user class.
      *
      * @param name name of the user which will serve as the username
      * @param email email of the user
-     * @param IBAN IBAN of the user
-     * @param BIC BIC of the user
+     * @param iban IBAN of the user
+     * @param bic BIC of the user
      */
-    public User(String name, String email, String IBAN, String BIC) {
+    public User(String name, String email, String iban, String bic) {
         this.name = name;
         this.email = email;
-        this.IBAN = IBAN;
-        this.BIC = BIC;
+        this.iban = iban;
+        this.bic = bic;
     }
 
     /**
@@ -44,8 +47,8 @@ public class User {
      *
      * @return the iban of the user
      */
-    public String getIBAN() {
-        return IBAN;
+    public String getIban() {
+        return iban;
     }
 
     /**
@@ -53,8 +56,8 @@ public class User {
      *
      * @return the BIC of the user
      */
-    public String getBIC() {
-        return BIC;
+    public String getBic() {
+        return bic;
     }
 
     /**
@@ -78,18 +81,19 @@ public class User {
     /**
      * Setter for the IBAN.
      *
-     * @param IBAN new iban of the user.
+     * @param iban new iban of the user.
      */
-    public void setIBAN(String IBAN) {
-        this.IBAN = IBAN;
+    public void setIban(String iban) {
+        this.iban = iban;
     }
 
     /**
      * Setter for the BIC.
-     * @param BIC new BIC of the user.
+     *
+     * @param bic new BIC of the user.
      */
-    public void setBIC(String BIC) {
-        this.BIC = BIC;
+    public void setBic(String bic) {
+        this.bic = bic;
     }
 
     /**
@@ -106,25 +110,31 @@ public class User {
                 + email
                 + '\''
                 + ", IBAN='"
-                + IBAN
+                + iban
                 + '\''
                 + ", BIC='"
-                + BIC
+                + bic
                 + '\''
                 + '}';
     }
     /**
-     * Equals method for the user class
+     * Equals method for the user class.
      *
      * @param o object to be compared
      * @return true if the two objects are equal
      */
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         User user = (User) o;
-        return Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(IBAN, user.IBAN) && Objects.equals(BIC, user.BIC);
+        return Objects.equals(name, user.name) && Objects.equals(email, user.email)
+                && Objects.equals(iban, user.iban) && Objects.equals(bic, user.bic);
     }
 
     /**
@@ -134,6 +144,6 @@ public class User {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(name, email, IBAN, BIC);
+        return Objects.hash(name, email, iban, bic);
     }
 }

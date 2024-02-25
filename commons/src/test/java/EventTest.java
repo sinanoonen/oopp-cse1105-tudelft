@@ -2,7 +2,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -12,41 +13,47 @@ public class EventTest {
 
     @Test
     public void testGetInviteCode() {
-        List<String> participants = new ArrayList<>();
-        participants.add("Alice");
+        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
+        Map<User, Float> participants = new HashMap<>();
+        participants.put(user1, 0f);
         Event event = new Event("Birthday Party", participants);
         assertEquals(10, event.getInviteCode().length());
     }
 
     @Test
     public void testGetTitle() {
-        List<String> participants = new ArrayList<>();
-        participants.add("Bob");
+        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
+        Map<User, Float> participants = new HashMap<>();
+        participants.put(user1, 0f);
         Event event = new Event("Conference", participants);
         assertEquals("Conference", event.getTitle());
     }
 
     @Test
     public void testGetParticipants() {
-        List<String> participants = new ArrayList<>();
-        participants.add("Charlie");
-        participants.add("David");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
+        Map<User, Float> participants = new HashMap<>();
+        participants.put(user1, 0f);
+        participants.put(user2, 0f);
         Event event = new Event("Wedding", participants);
         assertEquals(participants, event.getParticipants());
     }
 
     @Test
     public void testGetTransactions() {
-        List<String> participants = new ArrayList<>();
-        participants.add("Emma");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        Map<User, Float> participants = new HashMap<>();
+        participants.put(user1, 0f);
         Event event = new Event("Meeting", participants);
         assertEquals(new ArrayList<>(), event.getTransactions());
     }
 
     @Test
     public void testSetInviteCode() {
-        List<String> participants = new ArrayList<>();
-        participants.add("Filip");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        Map<User, Float> participants = new HashMap<>();
+        participants.put(user1, 0f);
         Event event = new Event("Lunch", participants);
         event.setInviteCode("1234567890");
         assertEquals("1234567890", event.getInviteCode());
@@ -54,8 +61,9 @@ public class EventTest {
 
     @Test
     public void testSetTitle() {
-        List<String> participants = new ArrayList<>();
-        participants.add("George");
+        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
+        Map<User, Float> participants = new HashMap<>();
+        participants.put(user1, 0f);
         Event event = new Event("Drinks", participants);
         event.setTitle("Bar");
         assertEquals("Bar", event.getTitle());
@@ -63,26 +71,29 @@ public class EventTest {
 
     @Test
     public void testSetParticipants() {
-        List<String> participants = new ArrayList<>();
-        participants.add("Hanna");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        Map<User, Float> participants = new HashMap<>();
+        participants.put(user1, 0f);
         Event event = new Event("Vacation", participants);
-        List<String> participants2 = new ArrayList<>();
-        participants2.add("Ivo");
-        participants2.add("Jolyne");
+        Map<User, Float> participants2 = new HashMap<>();
+        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
+        participants2.put(user2, 0f);
         event.setParticipants(participants2);
         assertEquals(participants2, event.getParticipants());
     }
 
     @Test
     public void testEquals() {
-        List<String> participants = new ArrayList<>();
-        participants.add("Kevin");
-        participants.add("Larry");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        Map<User, Float> participants = new HashMap<>();
+        participants.put(user1, 0f);
         Event event = new Event("Football Game", participants);
-        List<String> participants2 = new ArrayList<>();
-        participants2.add("Mark");
-        participants2.add("Nina");
+
+        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
+        Map<User, Float> participants2 = new HashMap<>();
+        participants.put(user2, 0f);
         Event event2 = new Event("Picnic", participants2);
+
         //event3 and event should not be equal, as the invite code should be different
         Event event3 = new Event("Football Game", participants);
         assertNotEquals(event, event2);

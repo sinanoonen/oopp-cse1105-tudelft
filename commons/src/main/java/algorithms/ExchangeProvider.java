@@ -7,6 +7,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
 
+/**
+ * This class provides the exchange rates from the Open Exchange Rates API.
+ * The API is free to use and requires an API key to access the data.
+ * The API returns the exchange rates in JSON format.
+ * The base currency is EUR.
+ * The API documentation can be found at https://openexchangerates.org/documentation
+ */
 public class ExchangeProvider {
 
     private static final String API_URL = "https://openexchangerates.org/api/latest.json";

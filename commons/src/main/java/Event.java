@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.lang3.RandomStringUtils;
 import transactions.Transaction;
@@ -10,7 +11,7 @@ import transactions.Transaction;
 public class Event {
     private String inviteCode;
     private String title;
-    private List<String> participants;
+    private Map<User, Float> participants;
     private List<Transaction> transactions;
 
     /**
@@ -19,7 +20,7 @@ public class Event {
      * @param title of the event
      * @param participants of the event
      */
-    public Event(String title, List<String> participants) {
+    public Event(String title, Map<User, Float> participants) {
         this.inviteCode = RandomStringUtils.randomAlphanumeric(10);
         this.title = title;
         this.participants = participants;
@@ -49,7 +50,7 @@ public class Event {
      *
      * @return participants
      */
-    public List<String> getParticipants() {
+    public Map<User, Float> getParticipants() {
         return participants;
     }
 
@@ -85,7 +86,7 @@ public class Event {
      *
      * @param participants participants of the event
      */
-    public void setParticipants(List<String> participants) {
+    public void setParticipants(Map<User, Float> participants) {
         this.participants = participants;
     }
 

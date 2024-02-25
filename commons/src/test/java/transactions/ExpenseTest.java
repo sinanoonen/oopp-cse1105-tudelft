@@ -51,9 +51,9 @@ class ExpenseTest {
 
     @Test
     void testToString() {
-        String expected = "Expense{Transaction{owner = 'Yannick', date = '2015-03-02',"
-                + " amount = 40.6}description='Meeting Lunch', "
-                + "participants={Ivo=0.0, Sinan=0.0, Filip=0.0}}";
+        String expected = "Expense{Transaction{owner = 'Yannick', date = '2015-03-02', "
+                + "amount = 40.6}description='Meeting Lunch', "
+                + "debts={Ivo=0.0, Sinan=0.0, Filip=0.0}}";
         assertEquals(expected, expense.toString());
     }
 

@@ -1,7 +1,5 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import transactions.Transaction;
 
@@ -18,12 +16,14 @@ public class Event {
      * Constructor method.
      *
      * @param title of the event
-     * @param participants of the event
+     * @param creator of the event
      */
-    public Event(String title, Map<User, Float> participants) {
+    public Event(String title, User creator) {
         this.inviteCode = RandomStringUtils.randomAlphanumeric(10);
         this.title = title;
-        this.participants = participants;
+        this.participants = new HashMap<>();
+        // Creator of the event will automatically be a participant
+        participants.put(creator, 0f);
         this.transactions = new ArrayList<>();
     }
 
@@ -82,21 +82,55 @@ public class Event {
     }
 
     /**
-     * Setter for the participants.
+     * Adds a participant to the event.
      *
-     * @param participants participants of the event
+     * @param user user to be added to event
+     * @return true if operation successful, false otherwise
      */
-    public void setParticipants(Map<User, Float> participants) {
-        this.participants = participants;
+    public boolean addParticipant(User user) {
+        if (user == null) {
+            return false;
+        }
+        participants.put(user, 0f);
+        return true;
     }
 
     /**
-     * Setter for the transactions.
+     * Removes a participant from an event.
      *
-     * @param transactions transactions of the event
+     * @param user user to be removed from event
+     * @return true if operation successful, false otherwise
      */
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
+    public boolean removeParticipant(User user) {
+        if (!participants.containsKey(user)) {
+            return false;
+        }
+        participants.remove(user);
+        return true;
+    }
+
+    /**
+     * Adds a transaction to the event.
+     *
+     * @param transaction transaction to be added
+     * @return true if operation successful, false otherwise
+     */
+    public boolean addTransaction(Transaction transaction) {
+        if (transaction == null) {
+            return false;
+        }
+        transactions.add(transaction);
+        return true;
+    }
+
+    /**
+     * Removes a transaction from the event.
+     *
+     * @param transaction transaction to be removed
+     * @return true if operation successful, false otherwise
+     */
+    public boolean removeTransaction(Transaction transaction) {
+        return transactions.remove(transaction);
     }
 
     /**

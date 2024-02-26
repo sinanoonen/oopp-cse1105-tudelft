@@ -39,11 +39,16 @@ public class TagTest {
         Tag tag1 = new Tag("TestTag", Color.RED);
         Tag tag2 = new Tag("TestTag", Color.RED);
         Tag tag3 = new Tag("DifferentTag", Color.BLUE);
+        Tag tag4 = new Tag("TestTag", Color.YELLOW);
+        Tag tag5 = new Tag("DifferentTag", Color.RED);
         assertEquals(tag1, tag2);
-        assertEquals(tag2, tag1);
         assertNotEquals(tag1, tag3);
-        assertNotEquals(tag3, tag1);
+        assertNotEquals(tag1, tag4);
+        assertNotEquals(tag1, tag5);
         assertEquals(tag1.hashCode(), tag2.hashCode());
+        assertNotEquals(tag1.hashCode(), tag3.hashCode());
+        assertNotEquals(tag1.hashCode(), tag4.hashCode());
+        assertNotEquals(tag1.hashCode(), tag5.hashCode());
     }
 
     @Test
@@ -56,13 +61,17 @@ public class TagTest {
     public void testEqualsMethodWithNullColor() {
         Tag tag1 = new Tag("TestTag", null);
         Tag tag2 = new Tag("TestTag", null);
+        Tag tag3 = new Tag("TestTag", Color.RED);
         assertEquals(tag1, tag2);
+        assertNotEquals(tag1, tag3);
     }
 
     @Test
     public void testEqualsMethodWithNullName() {
         Tag tag1 = new Tag(null, Color.RED);
         Tag tag2 = new Tag(null, Color.RED);
+        Tag tag3 = new Tag("Ciao", Color.RED);
         assertEquals(tag1, tag2);
+        assertNotEquals(tag1, tag3);
     }
 }

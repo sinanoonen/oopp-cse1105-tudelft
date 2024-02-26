@@ -13,8 +13,8 @@ import transactions.Transaction;
 public class Event {
     private String inviteCode;
     private String title;
-    private Map<User, Float> participants;
-    private List<Transaction> transactions;
+    private final Map<User, Float> participants;
+    private final List<Transaction> transactions;
 
     /**
      * Constructor method.
@@ -147,7 +147,7 @@ public class Event {
         return transactions.stream()
                 .filter(transaction -> transaction instanceof Expense)
                 .map(transaction -> (Expense) transaction)
-                .filter(expense -> expense.getParticipants().containsKey(participant))
+                .filter(expense -> expense.getDebts().containsKey(participant))
                 .toList();
     }
 

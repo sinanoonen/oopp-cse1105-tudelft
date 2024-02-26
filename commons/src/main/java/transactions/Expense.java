@@ -32,8 +32,11 @@ public class Expense extends Transaction {
         if (participants == null) {
             return;
         }
+        //TODO SPLIT EQUALLY BY DEFAULT
         participants.forEach(participant -> this.debts.put(participant, 0f));
     }
+
+    //TODO ADD A CONSTRUCTOR THAT TAKES ALSO A MULTIPLIER MAP AND SPLITS AMONG
 
     /**
      * Getter for description.

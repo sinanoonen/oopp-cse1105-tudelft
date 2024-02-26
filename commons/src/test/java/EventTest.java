@@ -1,10 +1,11 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import transactions.Payment;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * A test for the Event class.
@@ -74,6 +75,60 @@ public class EventTest {
         event.removeParticipant(user1);
         participants.remove(user1);
         assertEquals(participants, event.getParticipants());
+    }
+
+    @Test
+    void testAddAndRemoveNull() {
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        Map<User, Float> participants = new HashMap<>();
+        participants.put(user1, 0f);
+        Event event = new Event("Vacation", user1);
+
+        int size = event.getParticipants().keySet().size();
+        assertFalse(event.addParticipant(null));
+        assertEquals(size, event.getParticipants().keySet().size());
+        assertFalse(event.removeParticipant(null));
+        assertEquals(size, event.getParticipants().keySet().size());
+    }
+
+    @Test
+    void testAddAndRemoveTransaction() {
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        Map<User, Float> participants = new HashMap<>();
+        participants.put(user1, 0f);
+        Event event = new Event("Vacation", user1);
+
+        assertFalse(event.addTransaction(null));
+
+        Payment payment = new Payment("David",
+                LocalDate.of(2021, 1, 1), 100,
+                "David");
+
+        assertEquals(0, event.getTransactions().size());
+        assertTrue(event.addTransaction(payment));
+        assertEquals(1, event.getTransactions().size());
+        assertEquals(payment, event.getTransactions().getFirst());
+
+        assertFalse(event.addTransaction(null));
+        assertEquals(1, event.getTransactions().size());
+        assertEquals(payment, event.getTransactions().getFirst());
+
+        assertFalse(event.removeTransaction(null));
+        assertEquals(1, event.getTransactions().size());
+        assertEquals(payment, event.getTransactions().getFirst());
+
+        Payment payment2 = new Payment("David",
+                LocalDate.of(2021, 1, 1), 500,
+                "David");
+        assertFalse(event.removeTransaction(payment2));
+        assertEquals(1, event.getTransactions().size());
+        assertEquals(payment, event.getTransactions().getFirst());
+
+        Payment paymentIdentical = new Payment("David",
+                LocalDate.of(2021, 1, 1), 100,
+                "David");
+        assertTrue(event.removeTransaction(paymentIdentical));
+        assertEquals(0, event.getTransactions().size());
     }
 
     @Test

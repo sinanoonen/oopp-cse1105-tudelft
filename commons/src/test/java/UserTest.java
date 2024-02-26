@@ -1,15 +1,14 @@
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import transactions.Expense;
 
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
     User testUser;
+
     @BeforeEach
     void setupForTests() {
         testUser = new User("testName", "testEmail", "testIban", "testBic");
@@ -78,7 +77,8 @@ class UserTest {
 
     @Test
     void testToString() {
-        assertEquals("User{name='testName', email='testEmail', IBAN='testIban', BIC='testBic'}", testUser.toString());
+        assertEquals("User{name='testName', email='testEmail', IBAN='testIban', BIC='testBic'}",
+                testUser.toString());
     }
 
     @Test

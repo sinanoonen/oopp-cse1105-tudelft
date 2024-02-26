@@ -1,13 +1,14 @@
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import transactions.Expense;
-import transactions.Payment;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import transactions.Expense;
+import transactions.Payment;
 
 class EventManagerTest {
 
@@ -28,9 +29,11 @@ class EventManagerTest {
 
         testEvent2 = new Event("title2", new User("name2", "email2", "iban2", "bic2"));
 
-        testExpense = new Expense("emilio", LocalDate.of(2024,1,1), 100, "description", List.of("emilio", "mario"));
+        testExpense = new Expense("emilio", LocalDate.of(2024, 1, 1),
+                100, "description", List.of("emilio", "mario"));
 
-        testPayment = new Payment("emilio", LocalDate.of(2024,1,1), 100,"emilio", "mario");
+        testPayment = new Payment("emilio", LocalDate.of(2024, 1, 1),
+                100, "emilio", "mario");
 
         eventManagerFull = new EventManager(events);
     }

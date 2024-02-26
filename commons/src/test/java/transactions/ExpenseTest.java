@@ -1,16 +1,13 @@
 package transactions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +33,8 @@ class ExpenseTest {
         assertEquals(baseDate, expense.getDate());
         assertEquals(90f, expense.getAmount());
 
-        // When creating a new expense using the default constructor default behaviour should split the debt equally
+        // When creating a new expense using the default
+        // constructor default behaviour should split the debt equally
         Map<String, Float> debts = new HashMap<>();
         debts.put("Ivo", 30f);
         debts.put("Filip", 30f);
@@ -80,6 +78,9 @@ class ExpenseTest {
         List<String> participantsIdentical = Arrays.asList("Ivo", "Filip", "Sinan");
         List<String> participantsDifferent = Arrays.asList("Yannick", "Filip", "Sinan");
 
+        assertEquals(expense, expense);
+        assertNotEquals(expense, null);
+
         Expense expenseIdentical = new Expense("Yannick", baseDate,
                 90f, "Meeting Lunch",
                 participantsIdentical);
@@ -99,10 +100,6 @@ class ExpenseTest {
         Expense expenseDescriptionDifferent = new Expense("Yannick", baseDate, 90f,
                 "Snacks",
                 participantsIdentical);
-
-
-        assertEquals(expense, expense);
-        assertNotEquals(expense, null);
 
         assertNotEquals(expense, expenseDescriptionDifferent);
         assertNotEquals(expense, expenseParticipantsDifferent);

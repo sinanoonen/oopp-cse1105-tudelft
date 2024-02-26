@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -68,19 +67,29 @@ public class PaymentTest {
 
     @Test
     void testEqualsAndHashCode() {
-        Payment paymentIdentical = new Payment("Emilio", paymentDate, 20f, "Yannick", "Filip");
-        Payment paymentDifferent = new Payment("Sinan", paymentDate, 30f, "Yannick", "Filip");
-        Payment paymentIdentical2 = new Payment("Emilio", paymentDate, 30f, "Yannick");
-        Payment paymentDifferent2 =  new Payment("Ivo", paymentDate, 40f, "Yannick");
-        Expense expense = new Expense("Emilio", paymentDate, 20f, "Yannick", List.of("Filip"));
-
         assertEquals(paymentSenderNotOwner, paymentSenderNotOwner);
-        assertEquals(paymentSenderNotOwner, paymentIdentical);
-        assertEquals(paymentSenderOwner, paymentIdentical2);
         assertNotEquals(paymentSenderNotOwner, null);
-        assertNotEquals(paymentSenderNotOwner, expense);
+
+        Payment paymentIdentical = new Payment("Emilio", paymentDate,
+                20f, "Yannick", "Filip");
+        assertEquals(paymentSenderNotOwner, paymentIdentical);
+
+        Payment paymentDifferent = new Payment("Sinan", paymentDate,
+                30f, "Yannick", "Filip");
         assertNotEquals(paymentSenderNotOwner, paymentDifferent);
+
+        Payment paymentIdentical2 = new Payment("Emilio", paymentDate,
+                30f, "Yannick");
+        assertEquals(paymentSenderOwner, paymentIdentical2);
+
+        Payment paymentDifferent2 =  new Payment("Ivo", paymentDate,
+                40f, "Yannick");
         assertNotEquals(paymentSenderOwner, paymentDifferent2);
+
+        Expense expense = new Expense("Emilio", paymentDate, 20f,
+                "Yannick", List.of("Filip"));
+        assertNotEquals(paymentSenderNotOwner, expense);
+
     }
 
 }

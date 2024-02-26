@@ -1,3 +1,8 @@
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -5,7 +10,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import transactions.Payment;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * A test for the Event class.
@@ -80,8 +84,6 @@ public class EventTest {
     @Test
     void testAddAndRemoveNull() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        Map<User, Float> participants = new HashMap<>();
-        participants.put(user1, 0f);
         Event event = new Event("Vacation", user1);
 
         int size = event.getParticipants().keySet().size();
@@ -94,8 +96,6 @@ public class EventTest {
     @Test
     void testAddAndRemoveTransaction() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        Map<User, Float> participants = new HashMap<>();
-        participants.put(user1, 0f);
         Event event = new Event("Vacation", user1);
 
         assertFalse(event.addTransaction(null));

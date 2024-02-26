@@ -30,6 +30,8 @@ public class Event {
         this.transactions = new ArrayList<>();
     }
 
+    //TODO ADD CONSTRUCTOR THAT TAKES A LIST OF USERS
+
     /**
      * Getter for the invite code.
      *

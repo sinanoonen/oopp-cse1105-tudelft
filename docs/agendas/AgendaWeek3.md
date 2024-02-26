@@ -44,10 +44,10 @@
    - Addressing questions or clarifications
 
 ## 10. Action Items and Next Steps
-    - Summarizing key decisions and action items
-    - Assigning tasks and setting deadlines
-    - Clarifying the next steps and follow-up actions
+   - Summarizing key decisions and action items
+   - Assigning tasks and setting deadlines
+   - Clarifying the next steps and follow-up actions
 
 ## 11. Closing
-    - Recap if needed
-    - Thanking the team for their participation
+   - Recap if needed
+   - Thanking the team for their participation

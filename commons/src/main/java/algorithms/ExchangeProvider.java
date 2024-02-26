@@ -35,11 +35,13 @@ public class ExchangeProvider {
     public static Map<String, Double> getExchangeRates() throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create(API_URL + "?app_id=" + API_KEY + "&base=EUR"))
+                .uri(URI.create(API_URL + "?app_id=" + API_KEY))
                 .build();
 
-        HttpResponse<String> response = HttpClient.newHttpClient()
-                .send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response;
+        try (HttpClient httpClient = HttpClient.newHttpClient()) {
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        }
 
         System.out.println(response.statusCode());
         System.out.println(response.body());

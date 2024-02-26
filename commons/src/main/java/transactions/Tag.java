@@ -1,3 +1,5 @@
+package transactions;
+
 import java.awt.Color;
 import java.util.Objects;
 
@@ -62,7 +64,7 @@ public class Tag {
      */
     @Override
     public String toString() {
-        return "Tag{"
+        return "transactions.Tag{"
             + "name='" + name + '\''
             + ", color=" + color
             + '}';

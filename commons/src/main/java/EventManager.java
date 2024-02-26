@@ -48,10 +48,10 @@ public class EventManager {
      * @param participant the participant to search for.
      * @return a list of events that the participant is part of.
      */
-    public List<Event> getEventsByParticipant(String participant) {
+    public List<Event> getEventsByParticipant(User participant) {
         List<Event> participantEvents = new ArrayList<>();
         for (Event event : this.events) {
-            if (event.getParticipants().contains(participant)) {
+            if (event.getParticipants().containsKey(participant)) {
                 participantEvents.add(event);
             }
         }

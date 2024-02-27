@@ -1,53 +1,56 @@
-# Agenda for Week 3
+# Week 3 Meeting Agenda
 
-## 1. Introduction and Welcome
-   - Brief overview of the Agenda
-   - How is everyone doing?
+Date:           February 27th, 2024\
+Time:           2:45 PM\
+Location:       Cubicle 13, DW PC1\
+Chair:          Emilio Gennaro\
+Note taker:
 
-## 2. Progress Review
-   - Review of work completed since the last meeting
-   - Assessing achievements and milestones reached
-   - Discussing any challenges or obstacles encountered
-   - Celebrating successes and addressing any setbacks
-   - Adjusting plans or strategies based on progress evaluation
+## Agenda Items
+- Opening by Chair (1 min)
+- Check-in: How is everyone doing? (1 min)
+- Announcements by the team (1 min)
+- Approval of the agenda - Does anyone have any additions? (1 min)
+- Announcements by the TA (2 min)
 
-## 3. Spring Boot Understanding
-   - Discussion on when to start working on Spring
-   - Discussion on how Spring Boot works within the context of our project (Backend Devs)
+## Talking Points:
 
-## 4. JavaFX Understanding
-   - Discussion on when to start working on JavaFX
-   - Discussion on how JavaFX works within the context of our project (Frontend Devs)
+## 1. Progress Assessment (5 min)
+- Reviewing Work Accomplished Since Last Meeting
+- Recognizing Achievements and Milestones
+- Addressing Challenges and Setbacks
+- Reflecting on Progress and Adjusting Plans
 
-## 5. Redrawing App Data Structures
-   - Assessment of current data structures
-   - Identifying areas for improvement or modification
-   - Collaborative redesign of app data structures as needed
+## 2. Spring Boot Discussion (5 min)
+- Timing for Spring Integration
+- Understanding Spring Boot's Role in Our Project (Backend Development)
 
-## 6. Drawing App Userflow
-   - Mapping out the user flow of the application
-   - Identifying key user interactions and pathways
-   - Creating or updating user flow diagrams
+## 3. JavaFX Discussion (5 min)
+- Timing for JavaFX Integration
+- Understanding JavaFX's Role in Our Project (Frontend Development)
 
-## 7. Adding New Issues
-   - Review of current issues and tasks
-   - Brainstorming and adding new issues as necessary
-   - Assigning tasks and responsibilities
+## 4. Review and Revise App Data Structures (5 min)
+- Evaluating Current Data Structures
+- Identifying Areas for Enhancement
+- Collaboratively Refining App Data Structures
 
-## 8. Adding New Milestone
-   - Evaluation of project progress against current milestones
-   - Discussion for the new milestone
-   - Setting up and defining the new milestone(s)
+## 6. Adding New Tasks (10 min)
+- Reviewing Existing Issues and Tasks
+- Brainstorming and Adding New Tasks as Needed
+- Assigning Responsibilities
 
-## 9. A.O.B.
-   - Any other topics or concerns from the team
-   - Addressing questions or clarifications
+## 7. Setting New Milestones (10 min)
+- Assessing Progress Toward Current Milestones
+- Planning for New Milestones
+- Defining Milestone Objectives
 
-## 10. Action Items and Next Steps
-   - Summarizing key decisions and action items
-   - Assigning tasks and setting deadlines
-   - Clarifying the next steps and follow-up actions
+## 8. Any Other Business (AOB) (4 min)
+- Open Floor for Additional Topics or Concerns
+- Addressing Questions or Seeking Clarifications
 
-## 11. Closing
-   - Recap if needed
-   - Thanking the team for their participation
+## 9. Conclusion(5 min)
+- Recap (if necessary)
+- Feedback round: What went well and what can be improved next time? (3-5 min)
+- Planned meeting duration != actual duration? Where/why did you mis -estimate? (2-3 min)
+- Question round: Does anyone have anything to add before the meeting closes? (2 min)
+- Closure (1 min)

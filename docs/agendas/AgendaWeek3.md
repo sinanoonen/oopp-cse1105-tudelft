@@ -4,7 +4,7 @@ Date:           February 27th, 2024\
 Time:           2:45 PM\
 Location:       Cubicle 13, DW PC1\
 Chair:          Emilio Gennaro\
-Note taker:
+Note taker:     Filip Keerberg\
 
 ## Agenda Items
 - Opening by Chair (1 min)

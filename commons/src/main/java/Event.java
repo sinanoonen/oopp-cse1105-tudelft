@@ -110,6 +110,16 @@ public class Event {
     }
 
     /**
+     * Deletes a tag from the event.
+     *
+     * @param tag tag to be deleted
+     * @return true if tag was successfully deleted, false otherwise
+     */
+    public boolean removeTag(Tag tag) {
+        return availableTags.remove(tag);
+    }
+
+    /**
      * Adds a participant to the event.
      *
      * @param user user to be added to event

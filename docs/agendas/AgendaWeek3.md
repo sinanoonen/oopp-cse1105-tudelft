@@ -48,6 +48,8 @@ Note taker:     Filip Keerberg\
 - Open Floor for Additional Topics or Concerns
 - Addressing Questions or Seeking Clarifications
 
+## 9. Code of Conduct
+
 ## 9. Conclusion(5 min)
 - Recap (if necessary)
 - Feedback round: What went well and what can be improved next time? (3-5 min)

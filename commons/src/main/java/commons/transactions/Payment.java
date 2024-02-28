@@ -1,4 +1,4 @@
-package transactions;
+package commons.transactions;
 
 import java.time.LocalDate;
 import java.util.Objects;

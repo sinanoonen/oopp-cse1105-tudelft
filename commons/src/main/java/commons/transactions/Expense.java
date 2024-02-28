@@ -1,4 +1,4 @@
-package transactions;
+package commons.transactions;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;

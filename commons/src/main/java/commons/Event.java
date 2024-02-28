@@ -1,10 +1,18 @@
+package commons;
+
+import commons.transactions.Expense;
+import commons.transactions.Tag;
+import commons.transactions.Transaction;
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
-import transactions.Transaction;
 
 /**
  * The Event class.
@@ -14,6 +22,7 @@ public class Event {
     private String title;
     private Map<User, Float> participants;
     private List<Transaction> transactions;
+    private Set<Tag> availableTags;
 
     /**
      * Constructor method.
@@ -28,6 +37,13 @@ public class Event {
         // Creator of the event will automatically be a participant
         participants.put(creator, 0f);
         this.transactions = new ArrayList<>();
+        this.availableTags = new HashSet<>(
+                Arrays.asList(
+                    new Tag("Food", new Color(147, 196, 125)),
+                    new Tag("Entrance Fees", new Color(74, 134, 232)),
+                    new Tag("Travel", new Color(224, 102, 102))
+                )
+        );
     }
 
     //TODO ADD CONSTRUCTOR THAT TAKES A LIST OF USERS
@@ -60,9 +76,9 @@ public class Event {
     }
 
     /**
-     * Getter for the transactions.
+     * Getter for the commons.transactions.
      *
-     * @return transactions
+     * @return commons.transactions
      */
     public List<Transaction> getTransactions() {
         return transactions;
@@ -84,6 +100,34 @@ public class Event {
      */
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    /**
+     * Adds a new tag that can be used for the commons.transactions of this event.
+     *
+     * @param tag tag to be added
+     */
+    public void addTag(Tag tag) {
+        availableTags.add(tag);
+    }
+
+    /**
+     * Getter for the tags of this event.
+     *
+     * @return availableTags
+     */
+    public Set<Tag> getTags() {
+        return availableTags;
+    }
+
+    /**
+     * Deletes a tag from the event.
+     *
+     * @param tag tag to be deleted
+     * @return true if tag was successfully deleted, false otherwise
+     */
+    public boolean removeTag(Tag tag) {
+        return availableTags.remove(tag);
     }
 
     /**
@@ -139,6 +183,44 @@ public class Event {
     }
 
     /**
+     * Gets a list of expenses by participant name.
+     *
+     * @param participant the participant name linked to the expenses
+     * @return a list of expenses of the participant
+     */
+    public List<Expense> getExpensesByParticipant(String participant) {
+        if (participants.keySet()
+                .stream()
+                .noneMatch(user -> user.getName().equals(participant))) {
+            throw new IllegalArgumentException("Tag not found in Event");
+        }
+
+        return transactions.stream()
+                .filter(transaction -> transaction instanceof Expense)
+                .map(transaction -> (Expense) transaction)
+                .filter(expense -> expense.getDebts().containsKey(participant))
+                .toList();
+    }
+
+    /**
+     * Gets a list of expenses by tag.
+     *
+     * @param tag the tag to filter by.
+     * @return filtered list of expenses.
+     */
+    public List<Expense> getExpensesByTag(Tag tag) {
+        if (!availableTags.contains(tag)) {
+            throw new IllegalArgumentException("Tag not found in Event");
+        }
+
+        return transactions.stream()
+                .filter(transaction -> transaction instanceof Expense)
+                .map(transaction -> (Expense) transaction)
+                .filter(expense -> expense.getTags().contains(tag))
+                .toList();
+    }
+
+    /**
      * Equals method of the event.
      *
      * @param o object to compare to
@@ -185,7 +267,7 @@ public class Event {
                 + '\''
                 + ", participants="
                 + participants
-                + ", transactions="
+                + ", commons.transactions="
                 + transactions
                 + '}';
     }

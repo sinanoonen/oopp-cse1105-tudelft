@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
+import transactions.Expense;
 import transactions.Tag;
 import transactions.Transaction;
 
@@ -175,6 +176,44 @@ public class Event {
      */
     public boolean removeTransaction(Transaction transaction) {
         return transactions.remove(transaction);
+    }
+
+    /**
+     * Gets a list of expenses by participant name.
+     *
+     * @param participant the participant name linked to the expenses
+     * @return a list of expenses of the participant
+     */
+    public List<Expense> getExpensesByParticipant(String participant) {
+        if (participants.keySet()
+                .stream()
+                .noneMatch(user -> user.getName().equals(participant))) {
+            throw new IllegalArgumentException("Tag not found in Event");
+        }
+
+        return transactions.stream()
+                .filter(transaction -> transaction instanceof Expense)
+                .map(transaction -> (Expense) transaction)
+                .filter(expense -> expense.getDebts().containsKey(participant))
+                .toList();
+    }
+
+    /**
+     * Gets a list of expenses by tag.
+     *
+     * @param tag the tag to filter by.
+     * @return filtered list of expenses.
+     */
+    public List<Expense> getExpensesByTag(Tag tag) {
+        if (!availableTags.contains(tag)) {
+            throw new IllegalArgumentException("Tag not found in Event");
+        }
+
+        return transactions.stream()
+                .filter(transaction -> transaction instanceof Expense)
+                .map(transaction -> (Expense) transaction)
+                .filter(expense -> expense.getTags().contains(tag))
+                .toList();
     }
 
     /**

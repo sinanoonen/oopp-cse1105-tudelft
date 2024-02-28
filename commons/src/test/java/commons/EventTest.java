@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -19,14 +17,14 @@ public class EventTest {
     public void testGetInviteCode() {
         User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Birthday Party", user1);
-        Assertions.assertEquals(10, event.getInviteCode().length());
+        assertEquals(10, event.getInviteCode().length());
     }
 
     @Test
     public void testGetTitle() {
         User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Conference", user1);
-        Assertions.assertEquals("Conference", event.getTitle());
+        assertEquals("Conference", event.getTitle());
     }
 
     @Test
@@ -38,14 +36,14 @@ public class EventTest {
         participants.put(user2, 0f);
         Event event = new Event("Wedding", user1);
         event.addParticipant(user2);
-        Assertions.assertEquals(participants, event.getParticipants());
+        assertEquals(participants, event.getParticipants());
     }
 
     @Test
     public void testGetTransactions() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Meeting", user1);
-        Assertions.assertEquals(new ArrayList<>(), event.getTransactions());
+        assertEquals(new ArrayList<>(), event.getTransactions());
     }
 
     @Test
@@ -53,7 +51,7 @@ public class EventTest {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Lunch", user1);
         event.setInviteCode("1234567890");
-        Assertions.assertEquals("1234567890", event.getInviteCode());
+        assertEquals("1234567890", event.getInviteCode());
     }
 
     @Test
@@ -61,7 +59,7 @@ public class EventTest {
         User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Drinks", user1);
         event.setTitle("Bar");
-        Assertions.assertEquals("Bar", event.getTitle());
+        assertEquals("Bar", event.getTitle());
     }
 
     @Test
@@ -71,13 +69,13 @@ public class EventTest {
         Map<User, Float> participants = new HashMap<>();
         participants.put(user1, 0f);
         Event event = new Event("Vacation", user1);
-        Assertions.assertEquals(participants, event.getParticipants());
+        assertEquals(participants, event.getParticipants());
         participants.put(user2, 0f);
         event.addParticipant(user2);
-        Assertions.assertEquals(participants, event.getParticipants());
+        assertEquals(participants, event.getParticipants());
         event.removeParticipant(user1);
         participants.remove(user1);
-        Assertions.assertEquals(participants, event.getParticipants());
+        assertEquals(participants, event.getParticipants());
     }
 
     @Test
@@ -90,7 +88,7 @@ public class EventTest {
 
         //event3 and event should not be equal, as the invite code should be different
         Event event3 = new Event("Football Game", user1);
-        Assertions.assertNotEquals(event, event2);
-        Assertions.assertNotEquals(event, event3);
+        assertNotEquals(event, event2);
+        assertNotEquals(event, event3);
     }
 }

@@ -1,6 +1,8 @@
+package commons;
+
+import commons.transactions.Transaction;
 import java.util.ArrayList;
 import java.util.List;
-import transactions.Transaction;
 
 /**
  * The EventManager class is responsible for managing events and

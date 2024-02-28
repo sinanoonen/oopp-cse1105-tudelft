@@ -1,5 +1,7 @@
 package commons.transactions;
 
+import jakarta.persistence.Entity;
+
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -10,11 +12,17 @@ import java.util.Objects;
 /**
  * Expense class that extends from the transaction class.
  */
+@Entity
 public class Expense extends Transaction {
     // Title of the expense
     private String description;
     // a map of each participant's debt within this expense
     Map<String, Float> debts;
+
+    /* unused */
+    protected Expense() {
+
+    }
 
     /**
      * Constructor method.

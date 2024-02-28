@@ -1,5 +1,7 @@
 package commons.transactions;
 
+import jakarta.persistence.*;
+
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,11 +11,20 @@ import java.util.Objects;
 /**
  * An abstract transaction class that represents any kind of transaction between the participants.
  */
+@Entity
 public abstract class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     private String owner;
     private LocalDate date;
     private float amount;
+    @ManyToMany
     private List<Tag> tags;
+
+    protected Transaction() {
+        this.tags = new ArrayList<>();
+    }
 
     /**
      * Constructor for the transaction class.

@@ -19,7 +19,7 @@ public class User {
 
     /* unused */
     protected User() {
-        
+
     }
 
     /**

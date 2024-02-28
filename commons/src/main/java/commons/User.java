@@ -1,15 +1,26 @@
 package commons;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.util.Objects;
 
 /**
  * User class.
  */
+@Entity
 public class User {
     private String name;
+    @Id
     private String email;
+    @Id
     private String iban;
     private String bic;
+
+    /* unused */
+    protected User() {
+        
+    }
 
     /**
      * Constructor for the user class.

@@ -2,13 +2,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import commons.Event;
+import commons.EventManager;
+import commons.User;
+import commons.transactions.Expense;
+import commons.transactions.Payment;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import transactions.Expense;
-import transactions.Payment;
+
 
 class EventManagerTest {
 

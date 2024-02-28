@@ -5,13 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import commons.transactions.Payment;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import transactions.Payment;
-
 
 /**
  * A test for the Event class.

@@ -1,9 +1,14 @@
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
+import transactions.Tag;
 import transactions.Transaction;
 
 /**
@@ -14,6 +19,7 @@ public class Event {
     private String title;
     private Map<User, Float> participants;
     private List<Transaction> transactions;
+    private Set<Tag> availableTags;
 
     /**
      * Constructor method.
@@ -28,6 +34,13 @@ public class Event {
         // Creator of the event will automatically be a participant
         participants.put(creator, 0f);
         this.transactions = new ArrayList<>();
+        this.availableTags = new HashSet<>(
+                Arrays.asList(
+                    new Tag("Food", new Color(147, 196, 125)),
+                    new Tag("Entrance Fees", new Color(74, 134, 232)),
+                    new Tag("Travel", new Color(224, 102, 102))
+                )
+        );
     }
 
     /**
@@ -82,6 +95,34 @@ public class Event {
      */
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    /**
+     * Adds a new tag that can be used for the transactions of this event.
+     *
+     * @param tag tag to be added
+     */
+    public void addTag(Tag tag) {
+        availableTags.add(tag);
+    }
+
+    /**
+     * Getter for the tags of this event.
+     *
+     * @return availableTags
+     */
+    public Set<Tag> getTags() {
+        return availableTags;
+    }
+
+    /**
+     * Deletes a tag from the event.
+     *
+     * @param tag tag to be deleted
+     * @return true if tag was successfully deleted, false otherwise
+     */
+    public boolean removeTag(Tag tag) {
+        return availableTags.remove(tag);
     }
 
     /**

@@ -86,6 +86,18 @@ public class Event {
     }
 
     /**
+     * Gets the total amount debt for a user in the event.
+     *
+     * @param user user whose debt to total.
+     * @return total debt
+     */
+    public float getTotalDebt(User user) {
+        return (float) getExpensesByParticipant(user.getName()).stream()
+                .mapToDouble(expense -> expense.getDebts().get(user.getName()))
+                .sum();
+    }
+
+    /**
      * Getter for the commons.transactions.
      *
      * @return commons.transactions

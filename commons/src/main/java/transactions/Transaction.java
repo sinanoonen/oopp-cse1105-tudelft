@@ -2,6 +2,8 @@ package transactions;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -11,6 +13,7 @@ public abstract class Transaction {
     private String owner;
     private LocalDate date;
     private float amount;
+    private List<Tag> tags;
 
     /**
      * Constructor for the transaction class.
@@ -23,6 +26,7 @@ public abstract class Transaction {
         this.owner = owner;
         this.date = date;
         this.amount = Float.parseFloat(new DecimalFormat("#.##").format(amount));
+        this.tags = new ArrayList<>();
     }
 
     public String getOwner() {
@@ -47,6 +51,18 @@ public abstract class Transaction {
 
     public void setAmount(float amount) {
         this.amount = amount;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
+    }
+
+    public boolean removeTag(Tag tag) {
+        return tags.remove(tag);
     }
 
     @Override

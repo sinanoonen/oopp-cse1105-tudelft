@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
-import transactions.Expense;
-import transactions.Tag;
-import transactions.Transaction;
+import commons.transactions.Expense;
+import commons.transactions.Tag;
+import commons.transactions.Transaction;
 
 /**
  * The Event class.
@@ -72,9 +72,9 @@ public class Event {
     }
 
     /**
-     * Getter for the transactions.
+     * Getter for the commons.transactions.
      *
-     * @return transactions
+     * @return commons.transactions
      */
     public List<Transaction> getTransactions() {
         return transactions;
@@ -99,7 +99,7 @@ public class Event {
     }
 
     /**
-     * Adds a new tag that can be used for the transactions of this event.
+     * Adds a new tag that can be used for the commons.transactions of this event.
      *
      * @param tag tag to be added
      */
@@ -263,7 +263,7 @@ public class Event {
                 + '\''
                 + ", participants="
                 + participants
-                + ", transactions="
+                + ", commons.transactions="
                 + transactions
                 + '}';
     }

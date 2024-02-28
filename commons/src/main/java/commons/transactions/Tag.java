@@ -1,4 +1,4 @@
-package transactions;
+package commons.transactions;
 
 import java.awt.Color;
 import java.util.Objects;
@@ -64,7 +64,7 @@ public class Tag {
      */
     @Override
     public String toString() {
-        return "transactions.Tag{"
+        return "commons.transactions.Tag{"
             + "name='" + name + '\''
             + ", color=" + color
             + '}';

@@ -1,14 +1,13 @@
-package transactions;
+package commons.transactions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.awt.Color;
 import org.junit.jupiter.api.Test;
-import transactions.Tag;
 
 /**
- * For testing the transactions.Tag class.
+ * For testing the commons.transactions.Tag class.
  */
 public class TagTest {
 
@@ -33,7 +32,7 @@ public class TagTest {
     @Test
     public void testToString() {
         Tag tag = new Tag("TestTag", Color.RED);
-        String expectedString = "transactions.Tag{name='TestTag', color=java.awt.Color[r=255,g=0,b=0]}";
+        String expectedString = "commons.transactions.Tag{name='TestTag', color=java.awt.Color[r=255,g=0,b=0]}";
         assertEquals(expectedString, tag.toString());
     }
 

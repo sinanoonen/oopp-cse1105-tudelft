@@ -3,26 +3,41 @@ package commons;
 import commons.transactions.Expense;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * The Event class.
  */
+@Entity
 public class Event {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String inviteCode;
     private String title;
-    private Map<User, Float> participants;
+    @ManyToMany
+    private List<User> participants;
+    @OneToMany
     private List<Transaction> transactions;
+    @OneToMany
     private Set<Tag> availableTags;
+
+    /* unused */
+    protected Event() {
+
+    }
 
     /**
      * Constructor method.
@@ -31,11 +46,8 @@ public class Event {
      * @param creator of the event
      */
     public Event(String title, User creator) {
-        this.inviteCode = RandomStringUtils.randomAlphanumeric(10);
         this.title = title;
-        this.participants = new HashMap<>();
-        // Creator of the event will automatically be a participant
-        participants.put(creator, 0f);
+        this.participants = Collections.singletonList(creator);
         this.transactions = new ArrayList<>();
         this.availableTags = new HashSet<>(
                 Arrays.asList(
@@ -69,7 +81,7 @@ public class Event {
      *
      * @return participants
      */
-    public Map<User, Float> getParticipants() {
+    public List<User> getParticipants() {
         return participants;
     }
 
@@ -135,11 +147,7 @@ public class Event {
      * @return true if operation successful, false otherwise
      */
     public boolean addParticipant(User user) {
-        if (user == null) {
-            return false;
-        }
-        participants.put(user, 0f);
-        return true;
+        return participants.add(user);
     }
 
     /**
@@ -149,11 +157,7 @@ public class Event {
      * @return true if operation successful, false otherwise
      */
     public boolean removeParticipant(User user) {
-        if (!participants.containsKey(user)) {
-            return false;
-        }
-        participants.remove(user);
-        return true;
+        return participants.remove(user);
     }
 
     /**
@@ -187,9 +191,10 @@ public class Event {
      * @return a list of expenses of the participant
      */
     public List<Expense> getExpensesByParticipant(String participant) {
-        if (participants.keySet()
-                .stream()
-                .noneMatch(user -> user.getName().equals(participant))) {
+        if (participants.stream()
+                .map(user -> user.getName())
+                .noneMatch(name -> name.equals(participant))
+        ) {
             throw new IllegalArgumentException("Tag not found in Event");
         }
 

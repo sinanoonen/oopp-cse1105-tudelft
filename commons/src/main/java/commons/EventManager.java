@@ -53,7 +53,7 @@ public class EventManager {
     public List<Event> getEventsByParticipant(User participant) {
         List<Event> participantEvents = new ArrayList<>();
         for (Event event : this.events) {
-            if (event.getParticipants().containsKey(participant)) {
+            if (event.getParticipants().contains(participant)) {
                 participantEvents.add(event);
             }
         }

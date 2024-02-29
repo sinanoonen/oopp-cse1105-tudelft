@@ -46,7 +46,29 @@ public class Event {
         );
     }
 
-    //TODO ADD CONSTRUCTOR THAT TAKES A LIST OF USERS
+    /**
+     * Constructor method.
+     *
+     *
+     * @param title of the event
+     * @param users that partake in the event
+     */
+    public Event(String title, List<User> users) {
+        this.inviteCode = RandomStringUtils.randomAlphanumeric(10);
+        this.title = title;
+        this.participants = new HashMap<>();
+        for (User user : users) {
+            participants.put(user, 0f);
+        }
+        this.transactions = new ArrayList<>();
+        this.availableTags = new HashSet<>(
+                Arrays.asList(
+                        new Tag("Food", new Color(147, 196, 125)),
+                        new Tag("Entrance Fees", new Color(74, 134, 232)),
+                        new Tag("Travel", new Color(224, 102, 102))
+                )
+        );
+    }
 
     /**
      * Getter for the invite code.
@@ -103,7 +125,7 @@ public class Event {
     }
 
     /**
-     * Adds a new tag that can be used for the commons.transactions of this event.
+     * Adds a new tag that can be used for the commons. transactions of this event.
      *
      * @param tag tag to be added
      */
@@ -125,8 +147,12 @@ public class Event {
      *
      * @param tag tag to be deleted
      * @return true if tag was successfully deleted, false otherwise
+     * @throws IllegalArgumentException if the tag is not found.
      */
     public boolean removeTag(Tag tag) {
+        if (!this.availableTags.contains(tag)) {
+            throw new IllegalArgumentException("Tag not found");
+        }
         return availableTags.remove(tag);
     }
 

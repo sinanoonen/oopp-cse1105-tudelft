@@ -35,7 +35,26 @@ public class Expense extends Transaction {
         participants.forEach(participant -> this.debts.put(participant, amount / participants.size()));
     }
 
-    //TODO ADD A CONSTRUCTOR THAT TAKES ALSO A MULTIPLIER MAP AND SPLITS AMONG
+    /**
+     * Constructor with custom multiplier map.
+     *
+     * @param owner who paid the expense
+     * @param date when was the expense paid
+     * @param amount how much was paid
+     * @param description short description of what the expense was
+     * @param participants list containing initial participants of expense
+     * @param multiplier map containing how should the amount be split
+     */
+    public Expense(String owner, LocalDate date, float amount, String description, List<String> participants,
+                   Map<String, Integer> multiplier) {
+        super(owner, date, amount);
+        this.description = description;
+        this.debts = new HashMap<>();
+        if (participants == null) {
+            return;
+        }
+        splitAmong(amount, multiplier);
+    }
 
     /**
      * Getter for description.

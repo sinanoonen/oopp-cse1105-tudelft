@@ -145,5 +145,5 @@ class ExpenseTest {
         assertEquals(90f, expense.getAmount());
     }
 
-    
+
 }

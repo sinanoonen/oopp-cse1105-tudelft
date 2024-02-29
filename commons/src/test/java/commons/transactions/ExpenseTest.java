@@ -145,5 +145,53 @@ class ExpenseTest {
         assertEquals(90f, expense.getAmount());
     }
 
+    @Test
+    void testSplitAmongWithNonIntegerRatio() {
+        Map<String, Integer> userMultiplierMap = new HashMap<>();
+        userMultiplierMap.put("Ivo", 2);
+        userMultiplierMap.put("Filip", 1);
+        userMultiplierMap.put("Sinan", 3);
 
+        expense.splitAmong(40f, userMultiplierMap);
+        Map<String, Float> debts = new HashMap<>();
+        debts.put("Ivo", 13.34f);
+        debts.put("Filip", 6.67f);
+        debts.put("Sinan", 20.01f);
+        assertEquals(debts, expense.getDebts());
+        assertEquals(90f, expense.getAmount());
+    }
+
+    @Test
+    void testCustomConstructor() {
+        List<String> participants = Arrays.asList("Ivo", "Filip", "Sinan");
+        baseDate = LocalDate.of(2015, 3, 2);
+        Map<String, Integer> userMultiplierMap = new HashMap<>();
+        userMultiplierMap.put("Ivo", 2);
+        userMultiplierMap.put("Filip", 1);
+        userMultiplierMap.put("Sinan", 1);
+        expense = new Expense("Yannick", baseDate, 40f,
+                "Meeting Lunch", participants, userMultiplierMap);
+        Map<String, Float> debts = new HashMap<>();
+        debts.put("Ivo", 20f);
+        debts.put("Filip", 10f);
+        debts.put("Sinan", 10f);
+        assertEquals(debts, expense.getDebts());
+    }
+
+    @Test
+    void testCustomConstructorWithNonIntegerRatio() {
+        List<String> participants = Arrays.asList("Ivo", "Filip", "Sinan");
+        baseDate = LocalDate.of(2015, 3, 2);
+        Map<String, Integer> userMultiplierMap = new HashMap<>();
+        userMultiplierMap.put("Ivo", 2);
+        userMultiplierMap.put("Filip", 1);
+        userMultiplierMap.put("Sinan", 3);
+        expense = new Expense("Yannick", baseDate, 40f,
+                "Meeting Lunch", participants, userMultiplierMap);
+        Map<String, Float> debts = new HashMap<>();
+        debts.put("Ivo", 13.34f);
+        debts.put("Filip", 6.67f);
+        debts.put("Sinan", 20.01f);
+        assertEquals(debts, expense.getDebts());
+    }
 }

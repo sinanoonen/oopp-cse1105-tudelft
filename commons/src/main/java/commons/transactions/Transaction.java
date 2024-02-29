@@ -10,10 +10,10 @@ import java.util.Objects;
  * An abstract transaction class that represents any kind of transaction between the participants.
  */
 public abstract class Transaction {
-    private String owner;
-    private LocalDate date;
-    private float amount;
-    private List<Tag> tags;
+    protected String owner;
+    protected LocalDate date;
+    protected float amount;
+    protected List<Tag> tags;
 
     /**
      * Constructor for the transaction class.

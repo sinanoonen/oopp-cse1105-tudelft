@@ -1,10 +1,7 @@
 package commons.transactions;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
+
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,6 +12,7 @@ import java.util.Objects;
  * An abstract transaction class that represents any kind of transaction between the participants.
  */
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

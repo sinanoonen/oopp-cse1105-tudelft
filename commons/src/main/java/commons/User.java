@@ -2,13 +2,20 @@ package commons;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
+
 import java.util.Objects;
 
 /**
  * User class.
  */
+
 @Entity
+@IdClass(UserKey.class)
+@Table(name = "users")
 public class User {
+
     private String name;
     @Id
     private String email;

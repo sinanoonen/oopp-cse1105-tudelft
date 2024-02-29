@@ -1,5 +1,6 @@
 package commons.transactions;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 
@@ -18,7 +19,7 @@ public class Expense extends Transaction {
     // Title of the expense
     private String description;
     // a map of each participant's debt within this expense
-    @OneToOne
+    @ElementCollection
     Map<String, Float> debts;
 
     /* unused */

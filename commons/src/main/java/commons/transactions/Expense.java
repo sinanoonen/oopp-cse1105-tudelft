@@ -32,7 +32,8 @@ public class Expense extends Transaction {
         if (participants == null) {
             return;
         }
-        participants.forEach(participant -> this.debts.put(participant, amount / participants.size()));
+        participants.forEach(participant -> this.debts.put(participant, 0f));
+        splitEqually(amount);
     }
 
     /**

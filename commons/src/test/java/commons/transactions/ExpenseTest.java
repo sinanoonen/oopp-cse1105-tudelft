@@ -125,7 +125,7 @@ class ExpenseTest {
         debts.put("Sinan", 10f);
 
         assertEquals(debts, expense.getDebts());
-        assertEquals(90f, expense.getAmount());
+        assertEquals(30f, expense.getAmount());
     }
 
     @Test

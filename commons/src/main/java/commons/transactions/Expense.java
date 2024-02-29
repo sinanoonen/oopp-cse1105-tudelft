@@ -91,7 +91,7 @@ public class Expense extends Transaction {
      */
     @Override
     public void setAmount(float amount) {
-        super.setAmount(amount);
+        this.amount = amount;
         splitEqually(amount);
     }
 
@@ -136,6 +136,7 @@ public class Expense extends Transaction {
      * @return true if successful operation, false otherwise.
      */
     public boolean splitAmong(float amount, Map<String, Integer> userMultiplierMap) {
+        this.amount = amount;
         int splits = 0;
         for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
             splits = splits + entry.getValue();

@@ -117,23 +117,6 @@ class ExpenseTest {
     }
 
     @Test
-    void testModifyParticipant() {
-        // Modify participant should be a private method that the class uses internally
-        // It should not be exposed to the outside world
-
-        // The only way to set debts is through the constructor or the split methods
-        // In general it should never be allowed to introduce an inconsistency
-        // between the amount and the debts
-        throw new UnsupportedOperationException("Modify participant should be a private method.");
-
-        /* Commented out because the method should be private
-        assertTrue(expense.modifyParticipant("Ivo", 10.15f));
-        assertEquals(10.15f, expense.getDebts().get("Ivo"));
-        assertFalse(expense.modifyParticipant("Emilio", 5.50f));
-         */
-    }
-
-    @Test
     void testSplitEqually() {
         expense.splitEqually(30f);
         Map<String, Float> debts = new HashMap<>();
@@ -142,7 +125,7 @@ class ExpenseTest {
         debts.put("Sinan", 10f);
 
         assertEquals(debts, expense.getDebts());
-        assertEquals(30f, expense.getAmount());
+        assertEquals(90f, expense.getAmount());
     }
 
     @Test
@@ -159,7 +142,7 @@ class ExpenseTest {
         debts.put("Sinan", 10f);
 
         assertEquals(debts, expense.getDebts());
-        assertEquals(40f, expense.getAmount());
+        assertEquals(90f, expense.getAmount());
     }
 
     

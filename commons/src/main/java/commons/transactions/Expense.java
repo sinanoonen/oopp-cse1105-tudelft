@@ -32,8 +32,7 @@ public class Expense extends Transaction {
         if (participants == null) {
             return;
         }
-        //TODO SPLIT EQUALLY BY DEFAULT
-        participants.forEach(participant -> this.debts.put(participant, 0f));
+        participants.forEach(participant -> this.debts.put(participant, amount / participants.size()));
     }
 
     //TODO ADD A CONSTRUCTOR THAT TAKES ALSO A MULTIPLIER MAP AND SPLITS AMONG
@@ -66,13 +65,24 @@ public class Expense extends Transaction {
     }
 
     /**
+     * Override transaction setter to update debts after changing expense amount.
+     *
+     * @param amount new amount.
+     */
+    @Override
+    public void setAmount(float amount) {
+        super.setAmount(amount);
+        splitEqually(amount);
+    }
+
+    /**
      * Updates the debt of a participant for this expense.
      *
      * @param participant participant whose debt should be changed
      * @param change change in debt (+ => more debt)
      * @return true if operation performed successfully, false otherwise
      */
-    public boolean modifyParticipant(String participant, float change) {
+    private boolean modifyParticipant(String participant, float change) {
         if (!debts.containsKey(participant)) {
             return false;
         }
@@ -106,19 +116,16 @@ public class Expense extends Transaction {
      * @return true if successful operation, false otherwise.
      */
     public boolean splitAmong(float amount, Map<String, Integer> userMultiplierMap) {
-        int numSplits = userMultiplierMap.values().stream().mapToInt(Integer::intValue).sum();
-        float splitAmount = amount / numSplits;
-        // round to 2 dp
-        splitAmount = Float.parseFloat(new DecimalFormat("#.##").format(splitAmount));
-        float remainder = amount - (userMultiplierMap.size() * splitAmount);
+        int splits = 0;
+        for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
+            splits = splits + entry.getValue();
+        }
+        float oneAmount = amount / splits;
+        oneAmount = Float.parseFloat(new DecimalFormat("#.##").format(oneAmount));
         for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
             String user = entry.getKey();
             int multiplier = entry.getValue();
-            float change = splitAmount * multiplier + remainder > 0 ? 0.01f : 0;
-            remainder -= 0.01f;
-            if (!modifyParticipant(user, change)) {
-                return false;
-            }
+            debts.put(user, multiplier * oneAmount);
         }
         return true;
     }

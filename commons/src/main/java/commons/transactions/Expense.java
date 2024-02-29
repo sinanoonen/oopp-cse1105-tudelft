@@ -96,23 +96,6 @@ public class Expense extends Transaction {
     }
 
     /**
-     * Updates the debt of a participant for this expense.
-     *
-     * @param participant participant whose debt should be changed
-     * @param change change in debt (+ => more debt)
-     * @return true if operation performed successfully, false otherwise
-     */
-    private boolean modifyParticipant(String participant, float change) {
-        if (!debts.containsKey(participant)) {
-            return false;
-        }
-        // This assumes that values > 0 represent debt
-        float newValue = debts.get(participant) + change;
-        debts.put(participant, newValue);
-        return true;
-    }
-
-    /**
      * Splits the total value of the expense equally among all participants of the event.
      *
      * @return true if operation was successful, false otherwise

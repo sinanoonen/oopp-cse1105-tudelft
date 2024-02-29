@@ -2,7 +2,6 @@ package commons.transactions;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-
 import java.awt.Color;
 import java.util.Objects;
 

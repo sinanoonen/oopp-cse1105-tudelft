@@ -1,7 +1,6 @@
 package commons.transactions;
 
 import jakarta.persistence.Entity;
-
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;

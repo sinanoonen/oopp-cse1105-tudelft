@@ -4,8 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+//import java.util.HashMap;
+import java.util.List;
+//import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -31,9 +32,9 @@ public class EventTest {
     public void testGetParticipants() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
-        Map<User, Float> participants = new HashMap<>();
-        participants.put(user1, 0f);
-        participants.put(user2, 0f);
+        List<User> participants = new ArrayList<>();
+        participants.add(user1);
+        participants.add(user2);
         Event event = new Event("Wedding", user1);
         event.addParticipant(user2);
         assertEquals(participants, event.getParticipants());
@@ -66,11 +67,11 @@ public class EventTest {
     public void testAddAndRemoveParticipants() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
-        Map<User, Float> participants = new HashMap<>();
-        participants.put(user1, 0f);
+        List<User> participants = new ArrayList<>();
+        participants.add(user1);
         Event event = new Event("Vacation", user1);
         assertEquals(participants, event.getParticipants());
-        participants.put(user2, 0f);
+        participants.add(user2);
         event.addParticipant(user2);
         assertEquals(participants, event.getParticipants());
         event.removeParticipant(user1);

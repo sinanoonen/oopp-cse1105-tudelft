@@ -4,19 +4,20 @@ import commons.transactions.Expense;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+//import jakarta.persistence.GeneratedValue;
+//import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+//import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * The Event class.
@@ -24,7 +25,7 @@ import java.util.Set;
 @Entity
 public class Event {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    //@GeneratedValue(strategy = GenerationType.UUID)
     private String inviteCode;
     private String title;
     @ManyToMany
@@ -46,8 +47,10 @@ public class Event {
      * @param creator of the event
      */
     public Event(String title, User creator) {
+        this.inviteCode = RandomStringUtils.randomAlphanumeric(10);
         this.title = title;
-        this.participants = Collections.singletonList(creator);
+        this.participants = new ArrayList<>();
+        participants.add(creator);
         this.transactions = new ArrayList<>();
         this.availableTags = new HashSet<>(
                 Arrays.asList(

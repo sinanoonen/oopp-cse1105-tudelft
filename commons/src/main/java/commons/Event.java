@@ -3,26 +3,42 @@ package commons;
 import commons.transactions.Expense;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import org.apache.commons.lang3.RandomStringUtils;
+import java.util.UUID;
 
 /**
  * The Event class.
  */
+@Entity
 public class Event {
-    private String inviteCode;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID inviteCode;
     private String title;
-    private Map<User, Float> participants;
+    @ManyToMany
+    private Set<User> participants;
+    @OneToMany
     private List<Transaction> transactions;
+    @OneToMany
     private Set<Tag> availableTags;
+
+    @SuppressWarnings("unused")
+    protected Event() {
+
+    }
 
     /**
      * Constructor method.
@@ -31,11 +47,9 @@ public class Event {
      * @param creator of the event
      */
     public Event(String title, User creator) {
-        this.inviteCode = RandomStringUtils.randomAlphanumeric(10);
+        this.inviteCode = UUID.randomUUID();
         this.title = title;
-        this.participants = new HashMap<>();
-        // Creator of the event will automatically be a participant
-        participants.put(creator, 0f);
+        this.participants = new HashSet<>(Collections.singletonList(creator));
         this.transactions = new ArrayList<>();
         this.availableTags = new HashSet<>(
                 Arrays.asList(
@@ -49,16 +63,12 @@ public class Event {
     /**
      * Constructor method.
      *
-     *
      * @param title of the event
      * @param users that partake in the event
      */
-    public Event(String title, List<User> users) {
-        this(title, users.getFirst());
-        users.removeFirst();
-        for (User user : users) {
-            participants.put(user, 0f);
-        }
+    public Event(String title, Set<User> users) {
+        this(title, users.iterator().next());
+        participants.addAll(users);
     }
 
     /**
@@ -66,7 +76,7 @@ public class Event {
      *
      * @return invite code
      */
-    public String getInviteCode() {
+    public UUID getInviteCode() {
         return inviteCode;
     }
 
@@ -84,26 +94,29 @@ public class Event {
      *
      * @return participants
      */
-    public Map<User, Float> getParticipants() {
+    public Set<User> getParticipants() {
         return participants;
     }
 
     /**
-     * Getter for the commons.transactions.
+     * Gets the total amount debt for a user in the event.
+     *
+     * @param user user whose debt to total.
+     * @return total debt
+     */
+    public float getTotalDebt(User user) {
+        return (float) getExpensesByParticipant(user.getName()).stream()
+                .mapToDouble(expense -> expense.getDebts().get(user.getName()))
+                .sum();
+    }
+
+    /**
+     * Getter for the transactions.
      *
      * @return commons.transactions
      */
     public List<Transaction> getTransactions() {
         return transactions;
-    }
-
-    /**
-     * Setter for the invite code.
-     *
-     * @param inviteCode invite code of the event
-     */
-    public void setInviteCode(String inviteCode) {
-        this.inviteCode = inviteCode;
     }
 
     /**
@@ -115,8 +128,17 @@ public class Event {
         this.title = title;
     }
 
+    //    /**
+    //     * Setter for invite code.
+    //     *
+    //     * @param code UUID to set inviteCode
+    //     */
+    //    public void setInviteCode(UUID code) {
+    //        this.inviteCode = code;
+    //    }
+
     /**
-     * Adds a new tag that can be used for the commons. transactions of this event.
+     * Adds a new tag that can be used for the transactions of this event.
      *
      * @param tag tag to be added
      */
@@ -157,8 +179,7 @@ public class Event {
         if (user == null) {
             return false;
         }
-        participants.put(user, 0f);
-        return true;
+        return participants.add(user);
     }
 
     /**
@@ -168,11 +189,7 @@ public class Event {
      * @return true if operation successful, false otherwise
      */
     public boolean removeParticipant(User user) {
-        if (!participants.containsKey(user)) {
-            return false;
-        }
-        participants.remove(user);
-        return true;
+        return participants.remove(user);
     }
 
     /**
@@ -206,9 +223,10 @@ public class Event {
      * @return a list of expenses of the participant
      */
     public List<Expense> getExpensesByParticipant(String participant) {
-        if (participants.keySet()
-                .stream()
-                .noneMatch(user -> user.getName().equals(participant))) {
+        if (participants.stream()
+                .map(User::getName)
+                .noneMatch(name -> name.equals(participant))
+        ) {
             throw new IllegalArgumentException("Tag not found in Event");
         }
 

@@ -1,5 +1,7 @@
 package commons.transactions;
 
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -10,11 +12,18 @@ import java.util.Objects;
 /**
  * Expense class that extends from the transaction class.
  */
+@Entity
 public class Expense extends Transaction {
     // Title of the expense
     private String description;
     // a map of each participant's debt within this expense
+    @ElementCollection
     Map<String, Float> debts;
+
+    @SuppressWarnings("unused")
+    protected Expense() {
+
+    }
 
     /**
      * Constructor method.
@@ -91,7 +100,7 @@ public class Expense extends Transaction {
      */
     @Override
     public void setAmount(float amount) {
-        this.amount = amount;
+        super.setAmount((amount));
         splitEqually(amount);
     }
 
@@ -119,7 +128,7 @@ public class Expense extends Transaction {
      * @return true if successful operation, false otherwise.
      */
     public boolean splitAmong(float amount, Map<String, Integer> userMultiplierMap) {
-        this.amount = amount;
+        super.setAmount(amount);
         int splits = 0;
         for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
             splits = splits + entry.getValue();

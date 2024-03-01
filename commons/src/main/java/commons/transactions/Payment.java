@@ -1,14 +1,21 @@
 package commons.transactions;
 
+import jakarta.persistence.Entity;
 import java.time.LocalDate;
 import java.util.Objects;
 
 /**
  * The payment class that extends from the transaction class.
  */
+@Entity
 public class Payment extends Transaction {
     private String recipient;
     private String sender;
+
+    @SuppressWarnings("unused")
+    protected Payment() {
+
+    }
 
     /**
      * Constructor for the payment class.

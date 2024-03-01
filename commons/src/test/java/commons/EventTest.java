@@ -3,6 +3,7 @@ package commons;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,11 +13,13 @@ import java.awt.Color;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
+//import java.util.HashMap;
+//import java.util.Map;
 import org.junit.jupiter.api.Test;
+
 
 
 /**
@@ -28,7 +31,7 @@ public class EventTest {
     public void testGetInviteCode() {
         User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Birthday Party", user1);
-        assertEquals(10, event.getInviteCode().length());
+        assertNotNull(event.getInviteCode());
     }
 
     @Test
@@ -42,26 +45,23 @@ public class EventTest {
     public void testGetParticipants() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
-        Map<User, Float> participants = new HashMap<>();
-        participants.put(user1, 0f);
-        participants.put(user2, 0f);
+        List<User> participants = new ArrayList<>();
+        participants.add(user1);
+        participants.add(user2);
         Event event = new Event("Wedding", user1);
         event.addParticipant(user2);
-        assertEquals(participants, event.getParticipants());
+        assertEquals(new HashSet<>(participants), event.getParticipants());
     }
 
     @Test
     public void testAlternativeConstructor() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
-        List<User> participants = new ArrayList<>();
+        Set<User> participants = new HashSet<>();
         participants.add(user1);
         participants.add(user2);
-        Map<User, Float> mappedParticipants = new HashMap<>();
-        mappedParticipants.put(user1, 0f);
-        mappedParticipants.put(user2, 0f);
         Event event = new Event("Honeymoon", participants);
-        assertEquals(mappedParticipants, event.getParticipants());
+        assertEquals(participants, event.getParticipants());
     }
 
     @Test
@@ -69,14 +69,6 @@ public class EventTest {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Meeting", user1);
         assertEquals(new ArrayList<>(), event.getTransactions());
-    }
-
-    @Test
-    public void testSetInviteCode() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Lunch", user1);
-        event.setInviteCode("1234567890");
-        assertEquals("1234567890", event.getInviteCode());
     }
 
     @Test
@@ -139,11 +131,11 @@ public class EventTest {
     public void testAddAndRemoveParticipants() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
-        Map<User, Float> participants = new HashMap<>();
-        participants.put(user1, 0f);
+        Set<User> participants = new HashSet<>();
+        participants.add(user1);
         Event event = new Event("Vacation", user1);
         assertEquals(participants, event.getParticipants());
-        participants.put(user2, 0f);
+        participants.add(user2);
         event.addParticipant(user2);
         assertEquals(participants, event.getParticipants());
         event.removeParticipant(user1);
@@ -156,11 +148,11 @@ public class EventTest {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Vacation", user1);
 
-        int size = event.getParticipants().keySet().size();
+        int size = event.getParticipants().size();
         assertFalse(event.addParticipant(null));
-        assertEquals(size, event.getParticipants().keySet().size());
+        assertEquals(size, event.getParticipants().size());
         assertFalse(event.removeParticipant(null));
-        assertEquals(size, event.getParticipants().keySet().size());
+        assertEquals(size, event.getParticipants().size());
     }
 
     @Test

@@ -1,14 +1,23 @@
 package commons.transactions;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import java.awt.Color;
 import java.util.Objects;
 
 /**
  * The tag class.
  */
+@Entity
 public class Tag {
+    @Id
     private String name;
     private Color color;
+
+    @SuppressWarnings("unused")
+    protected Tag() {
+
+    }
 
     /**
      * Constructor for the tag.

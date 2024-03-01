@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import java.util.ArrayList;
 //import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 //import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,9 @@ public class EventTest {
     public void testGetInviteCode() {
         User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Birthday Party", user1);
-        assertEquals(10, event.getInviteCode().toString().length());
+        UUID uuid = UUID.randomUUID();
+        event.setInviteCode(uuid);
+        assertEquals(uuid, event.getInviteCode());
     }
 
     @Test
@@ -75,9 +78,11 @@ public class EventTest {
     public void testEquals() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Football Game", user1);
+        event.setInviteCode(UUID.randomUUID());
 
         User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
         Event event2 = new Event("Picnic", user2);
+        event2.setInviteCode(UUID.randomUUID());
 
         //event3 and event should not be equal, as the invite code should be different
         Event event3 = new Event("Football Game", user1);

@@ -117,6 +117,15 @@ public class Event {
     }
 
     /**
+     * Setter for invite code
+     *
+     * @param code UUID to set inviteCode
+     */
+    public void setInviteCode(UUID code) {
+        this.inviteCode = code;
+    }
+
+    /**
      * Adds a new tag that can be used for the transactions of this event.
      *
      * @param tag tag to be added

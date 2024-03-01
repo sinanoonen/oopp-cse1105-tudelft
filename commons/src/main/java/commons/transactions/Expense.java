@@ -133,8 +133,7 @@ public class Expense extends Transaction {
         for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
             splits = splits + entry.getValue();
         }
-        float oneAmount = amount / splits;
-        oneAmount = Float.parseFloat(new DecimalFormat("#.##").format(oneAmount));
+        float oneAmount = (float) (Math.round(amount / splits * 100.0) / 100.0);
         for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
             String user = entry.getKey();
             int multiplier = entry.getValue();

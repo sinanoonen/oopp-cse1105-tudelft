@@ -10,6 +10,7 @@ import commons.transactions.Payment;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -128,14 +129,19 @@ class EventManagerTest {
 
     @Test
     void getEventByInviteCode() {
-        testEvent.setInviteCode("1234");
-        testEvent2.setInviteCode("5678");
+        UUID eventCode = testEvent.getInviteCode();
+        UUID eventCode2 = testEvent2.getInviteCode();
 
         eventManagerFull.addEvent(testEvent2);
-        assertEquals(testEvent, eventManagerFull.getEventByInviteCode("1234"));
-        assertEquals(testEvent2, eventManagerFull.getEventByInviteCode("5678"));
+        assertEquals(testEvent, eventManagerFull.getEventByInviteCode(eventCode));
+        assertEquals(testEvent2, eventManagerFull.getEventByInviteCode(eventCode2));
 
-        assertThrows(IllegalArgumentException.class, () -> eventManagerEmpty.getEventByInviteCode("1234"));
-        assertThrows(IllegalArgumentException.class, () -> eventManagerEmpty.getEventByInviteCode("5678"));
+        assertThrows(IllegalArgumentException.class,
+                () -> eventManagerFull.getEventByInviteCode(UUID.randomUUID()));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> eventManagerEmpty.getEventByInviteCode(eventCode));
+        assertThrows(IllegalArgumentException.class,
+                () -> eventManagerEmpty.getEventByInviteCode(eventCode2));
     }
 }

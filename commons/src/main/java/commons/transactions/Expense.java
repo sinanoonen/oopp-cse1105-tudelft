@@ -42,6 +42,28 @@ public class Expense extends Transaction {
             return;
         }
         participants.forEach(participant -> this.debts.put(participant, 0f));
+        splitEqually(amount);
+    }
+
+    /**
+     * Constructor with custom multiplier map.
+     *
+     * @param owner who paid the expense
+     * @param date when was the expense paid
+     * @param amount how much was paid
+     * @param description short description of what the expense was
+     * @param participants list containing initial participants of expense
+     * @param multiplier map containing how should the amount be split
+     */
+    public Expense(String owner, LocalDate date, float amount, String description, List<String> participants,
+                   Map<String, Integer> multiplier) {
+        super(owner, date, amount);
+        this.description = description;
+        this.debts = new HashMap<>();
+        if (participants == null) {
+            return;
+        }
+        splitAmong(amount, multiplier);
     }
 
     /**
@@ -72,20 +94,14 @@ public class Expense extends Transaction {
     }
 
     /**
-     * Updates the debt of a participant for this expense.
+     * Override transaction setter to update debts after changing expense amount.
      *
-     * @param participant participant whose debt should be changed
-     * @param change change in debt (+ => more debt)
-     * @return true if operation performed successfully, false otherwise
+     * @param amount new amount.
      */
-    public boolean modifyParticipant(String participant, float change) {
-        if (!debts.containsKey(participant)) {
-            return false;
-        }
-        // This assumes that values > 0 represent debt
-        float newValue = debts.get(participant) + change;
-        debts.put(participant, newValue);
-        return true;
+    @Override
+    public void setAmount(float amount) {
+        this.amount = amount;
+        splitEqually(amount);
     }
 
     /**
@@ -112,19 +128,17 @@ public class Expense extends Transaction {
      * @return true if successful operation, false otherwise.
      */
     public boolean splitAmong(float amount, Map<String, Integer> userMultiplierMap) {
-        int numSplits = userMultiplierMap.values().stream().mapToInt(Integer::intValue).sum();
-        float splitAmount = amount / numSplits;
-        // round to 2 dp
-        splitAmount = Float.parseFloat(new DecimalFormat("#.##").format(splitAmount));
-        float remainder = amount - (userMultiplierMap.size() * splitAmount);
+        this.amount = amount;
+        int splits = 0;
+        for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
+            splits = splits + entry.getValue();
+        }
+        float oneAmount = amount / splits;
+        oneAmount = Float.parseFloat(new DecimalFormat("#.##").format(oneAmount));
         for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
             String user = entry.getKey();
             int multiplier = entry.getValue();
-            float change = splitAmount * multiplier + remainder > 0 ? 0.01f : 0;
-            remainder -= 0.01f;
-            if (!modifyParticipant(user, change)) {
-                return false;
-            }
+            debts.put(user, multiplier * oneAmount);
         }
         return true;
     }

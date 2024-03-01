@@ -27,18 +27,42 @@ public class EventManager {
         this.events = events;
     }
 
+    /**
+     * Adds an event to the list of events.
+     *
+     * @param event the event to be added.
+     */
     public void addEvent(Event event) {
         this.events.add(event);
     }
 
+    /**
+     * Removes an event from the list of events.
+     *
+     * @param event the event to be removed.
+     * @throws IllegalArgumentException if the event is not found.
+     */
     public void removeEvent(Event event) {
+        if (!this.events.contains(event)) {
+            throw new IllegalArgumentException("Event not found");
+        }
         this.events.remove(event);
     }
 
+    /**
+     * Returns a list of events.
+     *
+     * @return a list of events.
+     */
     public List<Event> getEvents() {
         return this.events;
     }
 
+    /**
+     * Sets the list of events.
+     *
+     * @param events the list of events to be set.
+     */
     public void setEvents(List<Event> events) {
         this.events = events;
     }

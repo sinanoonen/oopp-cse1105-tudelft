@@ -54,20 +54,11 @@ public class Event {
      * @param users that partake in the event
      */
     public Event(String title, List<User> users) {
-        this.inviteCode = RandomStringUtils.randomAlphanumeric(10);
-        this.title = title;
-        this.participants = new HashMap<>();
+        this(title, users.getFirst());
+        users.removeFirst();
         for (User user : users) {
             participants.put(user, 0f);
         }
-        this.transactions = new ArrayList<>();
-        this.availableTags = new HashSet<>(
-                Arrays.asList(
-                        new Tag("Food", new Color(147, 196, 125)),
-                        new Tag("Entrance Fees", new Color(74, 134, 232)),
-                        new Tag("Travel", new Color(224, 102, 102))
-                )
-        );
     }
 
     /**

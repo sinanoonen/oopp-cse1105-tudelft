@@ -10,13 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The Event class.
@@ -28,7 +22,7 @@ public class Event {
     private UUID inviteCode;
     private String title;
     @ManyToMany
-    private List<User> participants;
+    private Set<User> participants;
     @OneToMany
     private List<Transaction> transactions;
     @OneToMany
@@ -48,8 +42,7 @@ public class Event {
     public Event(String title, User creator) {
         this.inviteCode = UUID.randomUUID();
         this.title = title;
-        this.participants = new ArrayList<>();
-        participants.add(creator);
+        this.participants = new HashSet<>(Collections.singletonList(creator));
         this.transactions = new ArrayList<>();
         this.availableTags = new HashSet<>(
                 Arrays.asList(
@@ -63,16 +56,12 @@ public class Event {
     /**
      * Constructor method.
      *
-     *
      * @param title of the event
      * @param users that partake in the event
      */
-    public Event(String title, List<User> users) {
-        this(title, users.getFirst());
-        users.removeFirst();
-        for (User user : users) {
-            participants.put(user, 0f);
-        }
+    public Event(String title, Set<User> users) {
+        this(title, users.iterator().next());
+        participants.addAll(users);
     }
 
     /**
@@ -98,7 +87,7 @@ public class Event {
      *
      * @return participants
      */
-    public List<User> getParticipants() {
+    public Set<User> getParticipants() {
         return participants;
     }
 

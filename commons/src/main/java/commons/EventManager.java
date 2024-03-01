@@ -3,6 +3,7 @@ package commons;
 import commons.transactions.Transaction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The EventManager class is responsible for managing events and
@@ -130,7 +131,7 @@ public class EventManager {
      * @return the event with the given invite code.
      * @throws IllegalArgumentException if the event is not found with the given invite code.
      */
-    public Event getEventByInviteCode(String inviteCode) throws IllegalArgumentException {
+    public Event getEventByInviteCode(UUID inviteCode) throws IllegalArgumentException {
         Event inviteEvent = null;
         for (Event event : this.events) {
             if (event.getInviteCode().equals(inviteCode)) {

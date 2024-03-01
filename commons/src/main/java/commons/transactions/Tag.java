@@ -14,7 +14,7 @@ public class Tag {
     private String name;
     private Color color;
 
-    /* unused */
+    @SuppressWarnings("unused")
     protected Tag() {
 
     }

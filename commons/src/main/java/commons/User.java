@@ -22,7 +22,7 @@ public class User {
     private String iban;
     private String bic;
 
-    /* unused */
+    @SuppressWarnings("unused")
     protected User() {
 
     }

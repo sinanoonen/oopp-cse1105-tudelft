@@ -20,7 +20,7 @@ public class Expense extends Transaction {
     @ElementCollection
     Map<String, Float> debts;
 
-    /* unused */
+    @SuppressWarnings("unused")
     protected Expense() {
 
     }

@@ -12,7 +12,7 @@ public class Payment extends Transaction {
     private String recipient;
     private String sender;
 
-    /* unused */
+    @SuppressWarnings("unused")
     protected Payment() {
 
     }

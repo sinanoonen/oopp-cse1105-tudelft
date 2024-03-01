@@ -34,7 +34,7 @@ public class Event {
     @OneToMany
     private Set<Tag> availableTags;
 
-    /* unused */
+    @SuppressWarnings("unused")
     protected Event() {
 
     }

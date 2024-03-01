@@ -46,6 +46,7 @@ public class Event {
      * @param creator of the event
      */
     public Event(String title, User creator) {
+        this.inviteCode = UUID.randomUUID();
         this.title = title;
         this.participants = new ArrayList<>();
         participants.add(creator);
@@ -99,7 +100,7 @@ public class Event {
     }
 
     /**
-     * Getter for the commons.transactions.
+     * Getter for the transactions.
      *
      * @return commons.transactions
      */
@@ -116,14 +117,14 @@ public class Event {
         this.title = title;
     }
 
-    /**
-     * Setter for invite code.
-     *
-     * @param code UUID to set inviteCode
-     */
-    public void setInviteCode(UUID code) {
-        this.inviteCode = code;
-    }
+    //    /**
+    //     * Setter for invite code.
+    //     *
+    //     * @param code UUID to set inviteCode
+    //     */
+    //    public void setInviteCode(UUID code) {
+    //        this.inviteCode = code;
+    //    }
 
     /**
      * Adds a new tag that can be used for the transactions of this event.

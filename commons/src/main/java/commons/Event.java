@@ -4,20 +4,19 @@ import commons.transactions.Expense;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import jakarta.persistence.Entity;
-//import jakarta.persistence.GeneratedValue;
-//import jakarta.persistence.GenerationType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
-//import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import org.apache.commons.lang3.RandomStringUtils;
+import java.util.UUID;
 
 /**
  * The Event class.
@@ -25,8 +24,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 @Entity
 public class Event {
     @Id
-    //@GeneratedValue(strategy = GenerationType.UUID)
-    private String inviteCode;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID inviteCode;
     private String title;
     @ManyToMany
     private List<User> participants;
@@ -47,7 +46,6 @@ public class Event {
      * @param creator of the event
      */
     public Event(String title, User creator) {
-        this.inviteCode = RandomStringUtils.randomAlphanumeric(10);
         this.title = title;
         this.participants = new ArrayList<>();
         participants.add(creator);
@@ -66,7 +64,7 @@ public class Event {
      *
      * @return invite code
      */
-    public String getInviteCode() {
+    public UUID getInviteCode() {
         return inviteCode;
     }
 
@@ -110,15 +108,6 @@ public class Event {
     }
 
     /**
-     * Setter for the invite code.
-     *
-     * @param inviteCode invite code of the event
-     */
-    public void setInviteCode(String inviteCode) {
-        this.inviteCode = inviteCode;
-    }
-
-    /**
      * Setter for the title.
      *
      * @param title title of the event
@@ -128,7 +117,7 @@ public class Event {
     }
 
     /**
-     * Adds a new tag that can be used for the commons.transactions of this event.
+     * Adds a new tag that can be used for the transactions of this event.
      *
      * @param tag tag to be added
      */

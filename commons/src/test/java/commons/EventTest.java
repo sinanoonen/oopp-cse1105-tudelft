@@ -18,7 +18,7 @@ public class EventTest {
     public void testGetInviteCode() {
         User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Birthday Party", user1);
-        assertEquals(10, event.getInviteCode().length());
+        assertEquals(10, event.getInviteCode().toString().length());
     }
 
     @Test
@@ -45,14 +45,6 @@ public class EventTest {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Meeting", user1);
         assertEquals(new ArrayList<>(), event.getTransactions());
-    }
-
-    @Test
-    public void testSetInviteCode() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Lunch", user1);
-        event.setInviteCode("1234567890");
-        assertEquals("1234567890", event.getInviteCode());
     }
 
     @Test

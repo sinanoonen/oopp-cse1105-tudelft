@@ -47,6 +47,21 @@ public class Event {
     }
 
     /**
+     * Constructor method.
+     *
+     *
+     * @param title of the event
+     * @param users that partake in the event
+     */
+    public Event(String title, List<User> users) {
+        this(title, users.getFirst());
+        users.removeFirst();
+        for (User user : users) {
+            participants.put(user, 0f);
+        }
+    }
+
+    /**
      * Getter for the invite code.
      *
      * @return invite code
@@ -101,7 +116,7 @@ public class Event {
     }
 
     /**
-     * Adds a new tag that can be used for the commons.transactions of this event.
+     * Adds a new tag that can be used for the commons. transactions of this event.
      *
      * @param tag tag to be added
      */
@@ -123,8 +138,12 @@ public class Event {
      *
      * @param tag tag to be deleted
      * @return true if tag was successfully deleted, false otherwise
+     * @throws IllegalArgumentException if the tag is not found.
      */
     public boolean removeTag(Tag tag) {
+        if (!this.availableTags.contains(tag)) {
+            throw new IllegalArgumentException("Tag not found");
+        }
         return availableTags.remove(tag);
     }
 

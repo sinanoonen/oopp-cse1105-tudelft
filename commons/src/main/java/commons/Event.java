@@ -224,7 +224,7 @@ public class Event {
      */
     public List<Expense> getExpensesByParticipant(String participant) {
         if (participants.stream()
-                .map(user -> user.getName())
+                .map(User::getName)
                 .noneMatch(name -> name.equals(participant))
         ) {
             throw new IllegalArgumentException("Tag not found in Event");

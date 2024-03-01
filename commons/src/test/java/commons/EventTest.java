@@ -1,17 +1,23 @@
 package commons;
 
-import commons.transactions.Expense;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import commons.transactions.Payment;
-
-import java.awt.*;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.List;
-
 import commons.transactions.Tag;
+import java.awt.Color;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * A test for the Event class.

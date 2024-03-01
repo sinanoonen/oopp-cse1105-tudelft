@@ -117,7 +117,7 @@ public class Event {
     }
 
     /**
-     * Setter for invite code
+     * Setter for invite code.
      *
      * @param code UUID to set inviteCode
      */

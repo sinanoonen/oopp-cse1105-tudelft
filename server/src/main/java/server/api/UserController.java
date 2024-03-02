@@ -3,12 +3,7 @@ package server.api;
 import commons.User;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import server.database.UserRepository;
 
 /**
@@ -36,6 +31,32 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(results.getFirst());
+    }
+
+    /**
+     * Updates a user.
+     *
+     * @param email email of user to modify
+     * @param update updated user information
+     * @return updated user
+     */
+    @PutMapping("/{email}")
+    public ResponseEntity<User> editUser(@PathVariable String email, @RequestBody User update) {
+        if (isNullOrEmpty(email)) {
+            return ResponseEntity.badRequest().build();
+        }
+        var response = getUserByEmail(email);
+        if (response.getStatusCode().isError() || update == null) {
+            return response;
+        }
+
+        User user = response.getBody();
+        String name = isNullOrEmpty(update.getName()) ? user.getName() : update.getName();
+        String iban = isNullOrEmpty(update.getIban()) ? user.getIban() : update.getIban();
+        String bic = isNullOrEmpty(update.getBic()) ? user.getBic() : update.getBic();
+        return repo.updateUser(name, iban, bic, email) == 1
+                ? getUserByEmail(email)
+                : ResponseEntity.badRequest().build();
     }
 
     /**

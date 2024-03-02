@@ -34,8 +34,10 @@ public class UserController {
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         List<User> results = repo.getUserByEmail(email);
         if (results == null || results.isEmpty()) {
+            System.out.println("/users: Received bad GET request");
             return ResponseEntity.badRequest().build();
         }
+        System.out.println("/users: Received valid GET request");
         return ResponseEntity.ok(results.getFirst());
     }
 
@@ -49,13 +51,15 @@ public class UserController {
     @PutMapping("/{email}")
     public ResponseEntity<User> editUser(@PathVariable String email, @RequestBody User update) {
         if (isNullOrEmpty(email)) {
+            System.out.println("/users: Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }
         var response = getUserByEmail(email);
         if (response.getStatusCode().isError() || update == null) {
+            System.out.println("/users: Received bad PUT request");
             return response;
         }
-
+        System.out.println("/users: Received valid PUT request");
         User user = response.getBody();
         assert user != null;
         String name = isNullOrEmpty(update.getName()) ? user.getName() : update.getName();
@@ -80,10 +84,10 @@ public class UserController {
             || isNullOrEmpty(user.getIban())
             || isNullOrEmpty(user.getBic())
         ) {
-            System.out.println("Received bad post request");
+            System.out.println("/users: Received bad POST request");
             return ResponseEntity.badRequest().build();
         }
-        System.out.println("Received valid post request:");
+        System.out.println("/users: Received valid POST request:");
         System.out.println(user);
         User saved = repo.save(user);
         return ResponseEntity.ok(saved);

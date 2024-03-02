@@ -227,7 +227,7 @@ public class Event {
                 .map(User::getName)
                 .noneMatch(name -> name.equals(participant))
         ) {
-            throw new IllegalArgumentException("User not found in Event");
+            throw new IllegalArgumentException("Tag not found in Event");
         }
 
         return transactions.stream()

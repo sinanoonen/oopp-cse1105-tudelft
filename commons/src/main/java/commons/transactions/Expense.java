@@ -2,6 +2,7 @@ package commons.transactions;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -132,7 +133,8 @@ public class Expense extends Transaction {
         for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
             splits = splits + entry.getValue();
         }
-        float oneAmount = (float) (Math.round(amount / splits * 100.0) / 100.0);
+        float oneAmount = amount / splits;
+        oneAmount = Float.parseFloat(new DecimalFormat("#.##").format(oneAmount));
         for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
             String user = entry.getKey();
             int multiplier = entry.getValue();

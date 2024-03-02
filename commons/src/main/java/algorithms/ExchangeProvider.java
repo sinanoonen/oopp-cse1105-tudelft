@@ -1,10 +1,12 @@
 package algorithms;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -32,23 +34,30 @@ public class ExchangeProvider {
      *
      * @return A map of currency codes and exchange rates
      */
-    public static Map<String, Double> getExchangeRates() throws IOException, InterruptedException {
+    public static Map<String, Double> getExchangeRates() {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create(API_URL + "?app_id=" + API_KEY))
+                .uri(URI.create(API_URL + "?base=USD&app_id=" + API_KEY))
                 .build();
 
         HttpResponse<String> response;
         try (HttpClient httpClient = HttpClient.newHttpClient()) {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            return Collections.emptyMap();
         }
 
         System.out.println(response.statusCode());
-        System.out.println(response.body());
+        //System.out.println(response.body());
 
-        //TODO PARSE THE JSON RESPONSE AND RETURN THE RATES
-
-        return null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            ExchangeRates exchangeRates = mapper.readValue(response.body(), ExchangeRates.class);
+            System.out.println(exchangeRates.getBase());
+            return exchangeRates.getRates();
+        } catch (IOException e) {
+            return Collections.emptyMap();
+        }
 
     }
 

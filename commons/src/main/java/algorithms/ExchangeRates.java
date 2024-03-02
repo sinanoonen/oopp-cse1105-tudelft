@@ -22,6 +22,15 @@ public class ExchangeRates {
     }
 
     /**
+     * Getter for the base.
+     *
+     * @return the base
+     */
+    public String getBase() {
+        return base;
+    }
+
+    /**
      * Getter for the timestamp.
      *
      * @return the timestamp
@@ -31,11 +40,21 @@ public class ExchangeRates {
     }
 
     /**
-     * Getter for the base.
+     * Getter for the disclaimer.
      *
-     * @return the base
+     * @return the disclaimer
      */
-    public String getBase() {
-        return base;
+    public String getDisclaimer() {
+        return disclaimer;
     }
+
+    /**
+     * Getter for the license.
+     *
+     * @return the license
+     */
+    public String getLicense() {
+        return license;
+    }
+
 }

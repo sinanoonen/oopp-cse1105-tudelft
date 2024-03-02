@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Tag;
 import java.awt.Color;
@@ -51,6 +52,31 @@ public class EventTest {
         Event event = new Event("Wedding", user1);
         event.addParticipant(user2);
         assertEquals(new HashSet<>(participants), event.getParticipants());
+    }
+
+    @Test
+    public void testGetTotalDebt() {
+        User user1 = new User("John", "john@gmail.com", "NL234567891", "biicode2");
+        User user2 = new User("Darwin", "darwin@gmail.com", "NL234567891", "biicode2");
+        Set<User> participants = new HashSet<>();
+        participants.add(user1);
+        participants.add(user2);
+        List<String> names = new ArrayList<>();
+        names.add("John");
+        names.add("Darwin");
+        List<String> onlyDarwin = new ArrayList<>();
+        onlyDarwin.add("Darwin");
+        Event event = new Event("City trip", participants);
+        Expense expense1 = new Expense("John", LocalDate.of(2024, 3, 3), 60.0f,
+                "Dinner", names);
+        Expense expense2 = new Expense("Darwin", LocalDate.of(2021, 3, 3), 8.0f,
+                "Ice cream", onlyDarwin);
+        event.addTransaction(expense1);
+        event.addTransaction(expense2);
+        float totalDebtJohn = event.getTotalDebt(user1);
+        float totalDebtDarwin = event.getTotalDebt(user2);
+        assertEquals(30.0f, totalDebtJohn);
+        assertEquals(38.0f, totalDebtDarwin);
     }
 
     @Test
@@ -191,6 +217,33 @@ public class EventTest {
                 "David");
         assertTrue(event.removeTransaction(paymentIdentical));
         assertEquals(0, event.getTransactions().size());
+    }
+
+    @Test
+    public void testGetExpensesByParticipant() {
+        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
+        User user2 = new User("Mark", "mark@gmail.com", "NL987654321", "biicode2");
+        List<String> participants = new ArrayList<>();
+        participants.add("Alice");
+        participants.add("Mark");
+        Event event = new Event("Birthday Party", user1);
+        Expense expense1 = new Expense("Alice", LocalDate.of(2021, 1, 1), 100.0f,
+                "Cake and supplies", participants);
+        Expense expense2 = new Expense("Alice", LocalDate.of(2021, 1, 1), 20.0f,
+                "Pizza", participants);
+        event.addTransaction(expense1);
+        event.addTransaction(expense2);
+        List<Expense> expenses = event.getExpensesByParticipant("Alice");
+        assertEquals(2, expenses.size());
+        assertTrue(expenses.contains(expense1));
+        assertTrue(expenses.contains(expense2));
+    }
+
+    @Test
+    public void testGetExpensesByParticipantThrowsException() {
+        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
+        Event event = new Event("Birthday Party", user1);
+        assertThrows(IllegalArgumentException.class, () -> event.getExpensesByParticipant("John"));
     }
 
     @Test

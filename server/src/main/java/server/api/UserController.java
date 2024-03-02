@@ -57,6 +57,7 @@ public class UserController {
         }
 
         User user = response.getBody();
+        assert user != null;
         String name = isNullOrEmpty(update.getName()) ? user.getName() : update.getName();
         String iban = isNullOrEmpty(update.getIban()) ? user.getIban() : update.getIban();
         String bic = isNullOrEmpty(update.getBic()) ? user.getBic() : update.getBic();

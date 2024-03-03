@@ -46,6 +46,10 @@ public abstract class Transaction {
         this.tags = new ArrayList<>();
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getOwner() {
         return owner;
     }

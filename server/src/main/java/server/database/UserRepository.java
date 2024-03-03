@@ -20,4 +20,9 @@ public interface UserRepository extends JpaRepository<User, UserKey> {
     @Transactional
     @Query(value = "UPDATE USERS SET NAME=?1, IBAN=?2, BIC=?3 WHERE EMAIL=?4", nativeQuery = true)
     Integer updateUser(String name, String iban, String bic, String email);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM USERS WHERE EMAIL=?1", nativeQuery = true)
+    Integer deleteUserByEmail(String email);
 }

@@ -3,13 +3,7 @@ package server.api;
 import commons.User;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import server.database.UserRepository;
 
 /**
@@ -66,7 +60,7 @@ public class UserController {
         String iban = isNullOrEmpty(update.getIban()) ? user.getIban() : update.getIban();
         String bic = isNullOrEmpty(update.getBic()) ? user.getBic() : update.getBic();
         return repo.updateUser(name, iban, bic, email) == 1
-                ? getUserByEmail(email)
+                ? ResponseEntity.ok(new User(name, email, iban, bic))
                 : ResponseEntity.badRequest().build();
     }
 
@@ -91,6 +85,20 @@ public class UserController {
         System.out.println(user);
         User saved = repo.save(user);
         return ResponseEntity.ok(saved);
+    }
+
+    /**
+     * Endpoint to remove a user from the database.
+     *
+     * @param email email of user to delete
+     */
+    @DeleteMapping("/{email}")
+    public void deleteUser(@PathVariable String email) {
+        int res = repo.deleteUserByEmail(email);
+        System.out.println("Received " + (res == 1 ? "valid" : "bad") + " DELETE request");
+        if (res == 1) {
+            System.out.println("Deleting user " + email);
+        }
     }
 
     private boolean isNullOrEmpty(String s) {

@@ -3,6 +3,7 @@ package server.database;
 import commons.transactions.Expense;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+
 /**
  * Repository for Expenses.
  */

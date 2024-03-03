@@ -6,8 +6,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * This class provides the exchange rates from the Open Exchange Rates API.
@@ -34,7 +32,7 @@ public class ExchangeProvider {
      *
      * @return A map of currency codes and exchange rates
      */
-    public static Map<String, Double> getExchangeRates() {
+    public static ExchangeRates getExchangeRates() {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(API_URL + "?base=USD&app_id=" + API_KEY))
@@ -44,7 +42,7 @@ public class ExchangeProvider {
         try (HttpClient httpClient = HttpClient.newHttpClient()) {
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            return Collections.emptyMap();
+            throw new RuntimeException("Error sending request", e);
         }
 
         System.out.println(response.statusCode());
@@ -54,9 +52,9 @@ public class ExchangeProvider {
         try {
             ExchangeRates exchangeRates = mapper.readValue(response.body(), ExchangeRates.class);
             System.out.println(exchangeRates.getBase());
-            return exchangeRates.getRates();
+            return exchangeRates;
         } catch (IOException e) {
-            return Collections.emptyMap();
+            throw new RuntimeException("Error parsing JSON", e);
         }
 
     }

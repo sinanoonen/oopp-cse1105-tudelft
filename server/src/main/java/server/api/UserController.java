@@ -26,6 +26,17 @@ public class UserController {
     }
 
     /**
+     * Endpoint to get a list of all users.
+     *
+     * @return found user
+     */
+    @GetMapping(path = {"", "/"})
+    public List<User> getAllUsers() {
+        System.out.println("/users: Received valid GET request");
+        return repo.findAll();
+    }
+
+    /**
      * Endpoint to get a user by their email.
      *
      * @param email email to query by

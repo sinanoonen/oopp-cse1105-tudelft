@@ -20,6 +20,8 @@ public class EventControllerTest {
 
     private TestEventRepository repo;
     private EventController sut;
+    private TestExpenseRepository exRepo;
+    private TestPaymentRepository payRepo;
 
     /**
      * A test event repository.
@@ -27,7 +29,7 @@ public class EventControllerTest {
     @BeforeEach
     public void setup() {
         repo = new TestEventRepository();
-        sut = new EventController(repo);
+        sut = new EventController(repo, exRepo, payRepo);
     }
 
     @Test

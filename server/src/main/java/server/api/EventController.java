@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -86,6 +87,27 @@ public class EventController {
 
         Event saved = repo.save(event);
         return ResponseEntity.ok(saved);
+    }
+
+
+    /**
+     * Adds a user to an event.
+     *
+     * @param uuid the UUID of the event
+     * @param user the user to add
+     * @return the updated event
+     */
+    @PutMapping("/{uuid}/users")
+    public ResponseEntity<Event> addUser(@PathVariable("uuid") UUID uuid, @RequestBody User user) {
+        // TODO should this be a put or a post?
+        if (!repo.existsById(uuid)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Event event = repo.findById(uuid).get();
+        event.addParticipant(user);
+        repo.save(event);
+        return ResponseEntity.ok(event);
     }
 
     /**

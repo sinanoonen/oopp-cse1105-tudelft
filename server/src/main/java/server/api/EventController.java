@@ -74,6 +74,7 @@ public class EventController {
      */
     @PutMapping("/{uuid}/users")
     public ResponseEntity<Event> addUser(@PathVariable("uuid") UUID uuid, @RequestBody User user) {
+        // TODO should this be a put or a post?
         if (!repo.existsById(uuid)) {
             return ResponseEntity.badRequest().build();
         }

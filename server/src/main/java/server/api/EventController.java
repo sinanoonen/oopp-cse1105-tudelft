@@ -1,6 +1,7 @@
 package server.api;
 
 import commons.Event;
+import commons.User;
 import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Transaction;

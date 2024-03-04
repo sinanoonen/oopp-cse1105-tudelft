@@ -1,10 +1,12 @@
 package server.api;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import commons.User;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +24,9 @@ public class UserControllerTest {
 
     private User[] users;
 
+    /**
+     * Setup for the tests.
+     */
     @BeforeEach
     public void setup() {
         this.repo = new TestUserRepository();

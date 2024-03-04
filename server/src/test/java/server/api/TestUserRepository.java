@@ -60,18 +60,6 @@ public class TestUserRepository implements UserRepository {
         return users.remove(user) ? 1 : 0;
     }
 
-    private static boolean isNullOrEmpty(String s) {
-        return s == null || s.isEmpty();
-    }
-
-    public void call(String name) {
-        calledMethods.add(name);
-    }
-
-    private Optional<User> find(String email) {
-        return null;
-    }
-
     @Override
     public <S extends User> S save(S entity) {
         users.add(entity);
@@ -133,7 +121,6 @@ public class TestUserRepository implements UserRepository {
     public void deleteAll() {
 
     }
-
 
     @Override
     public void flush() {
@@ -211,7 +198,9 @@ public class TestUserRepository implements UserRepository {
     }
 
     @Override
-    public <S extends User, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends User, R> R findBy(
+            Example<S> example,
+            Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
 
@@ -223,5 +212,13 @@ public class TestUserRepository implements UserRepository {
     @Override
     public Page<User> findAll(Pageable pageable) {
         return null;
+    }
+
+    private static boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
+    }
+
+    public void call(String name) {
+        calledMethods.add(name);
     }
 }

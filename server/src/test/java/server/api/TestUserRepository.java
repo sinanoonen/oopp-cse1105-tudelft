@@ -86,6 +86,7 @@ public class TestUserRepository implements UserRepository {
         calledMethods.add("findAll");
         return users;
     }
+
     @Override
     public <S extends User> List<S> findAll(Example<S> example) {
         return null;
@@ -98,6 +99,16 @@ public class TestUserRepository implements UserRepository {
 
     @Override
     public <S extends User> Page<S> findAll(Example<S> example, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public List<User> findAll(Sort sort) {
+        return null;
+    }
+
+    @Override
+    public Page<User> findAll(Pageable pageable) {
         return null;
     }
 
@@ -201,16 +212,6 @@ public class TestUserRepository implements UserRepository {
     public <S extends User, R> R findBy(
             Example<S> example,
             Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
-        return null;
-    }
-
-    @Override
-    public List<User> findAll(Sort sort) {
-        return null;
-    }
-
-    @Override
-    public Page<User> findAll(Pageable pageable) {
         return null;
     }
 

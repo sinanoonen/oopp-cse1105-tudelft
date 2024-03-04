@@ -86,6 +86,20 @@ public class TestUserRepository implements UserRepository {
         calledMethods.add("findAll");
         return users;
     }
+    @Override
+    public <S extends User> List<S> findAll(Example<S> example) {
+        return null;
+    }
+
+    @Override
+    public <S extends User> List<S> findAll(Example<S> example, Sort sort) {
+        return null;
+    }
+
+    @Override
+    public <S extends User> Page<S> findAll(Example<S> example, Pageable pageable) {
+        return null;
+    }
 
     @Override
     public List<User> findAllById(Iterable<UserKey> userKeys) {
@@ -94,6 +108,11 @@ public class TestUserRepository implements UserRepository {
 
     @Override
     public long count() {
+        return 0;
+    }
+
+    @Override
+    public <S extends User> long count(Example<S> example) {
         return 0;
     }
 
@@ -127,6 +146,7 @@ public class TestUserRepository implements UserRepository {
 
     }
 
+
     @Override
     public <S extends User> S saveAndFlush(S entity) {
         return null;
@@ -143,12 +163,12 @@ public class TestUserRepository implements UserRepository {
     }
 
     @Override
-    public void deleteAllByIdInBatch(Iterable<UserKey> userKeys) {
+    public void deleteAllInBatch() {
 
     }
 
     @Override
-    public void deleteAllInBatch() {
+    public void deleteAllByIdInBatch(Iterable<UserKey> userKeys) {
 
     }
 
@@ -170,26 +190,6 @@ public class TestUserRepository implements UserRepository {
     @Override
     public <S extends User> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
-    }
-
-    @Override
-    public <S extends User> List<S> findAll(Example<S> example) {
-        return null;
-    }
-
-    @Override
-    public <S extends User> List<S> findAll(Example<S> example, Sort sort) {
-        return null;
-    }
-
-    @Override
-    public <S extends User> Page<S> findAll(Example<S> example, Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public <S extends User> long count(Example<S> example) {
-        return 0;
     }
 
     @Override

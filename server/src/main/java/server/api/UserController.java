@@ -17,7 +17,7 @@ import server.database.UserRepository;
  * A controller to access the users of the database.
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserRepository repo;
 

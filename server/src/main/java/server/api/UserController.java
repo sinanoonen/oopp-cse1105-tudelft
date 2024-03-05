@@ -17,7 +17,7 @@ import server.database.UserRepository;
  * A controller to access the users of the database.
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserRepository repo;
 
@@ -62,12 +62,16 @@ public class UserController {
      */
     @PutMapping("/{email}")
     public ResponseEntity<User> editUser(@PathVariable String email, @RequestBody User update) {
-        if (isNullOrEmpty(email)) {
+        if (update == null) {
+            update = new User(null, null, null, null);
+        }
+
+        if (isNullOrEmpty(email) || !isNullOrEmpty(update.getEmail())) {
             System.out.println("/users: Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }
         var response = getUserByEmail(email);
-        if (response.getStatusCode().isError() || update == null) {
+        if (response.getStatusCode().isError()) {
             System.out.println("/users: Received bad PUT request");
             return response;
         }
@@ -111,12 +115,14 @@ public class UserController {
      * @param email email of user to delete
      */
     @DeleteMapping("/{email}")
-    public void deleteUser(@PathVariable String email) {
+    public ResponseEntity<User> deleteUser(@PathVariable String email) {
         int res = repo.deleteUserByEmail(email);
         System.out.println("Received " + (res == 1 ? "valid" : "bad") + " DELETE request");
         if (res == 1) {
             System.out.println("Deleting user " + email);
+            return ResponseEntity.ok().build();
         }
+        return ResponseEntity.badRequest().build();
     }
 
     private boolean isNullOrEmpty(String s) {

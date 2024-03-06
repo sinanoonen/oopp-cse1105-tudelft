@@ -28,39 +28,32 @@ public class MainCtrl {
 
     private Stage primaryStage;
 
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
-
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
+    private EventOverviewCtrl eventOverviewCtrl;
+    private Scene eventOverview;
 
     /**
      * Initialize the main controller.
      *
      * @param primaryStage Stage
-     * @param overview Pair
-     * @param add Pair
+     * @param eventOverview the eventOverview scene
      */
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add) {
+    public void initialize(Stage primaryStage, Pair<EventOverviewCtrl, Parent> eventOverview) {
         this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
 
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
+        this.eventOverviewCtrl = eventOverview.getKey();
+        this.eventOverview = new Scene(eventOverview.getValue());
 
-        showOverview();
+        showEventOverview();
         primaryStage.show();
     }
 
     /**
      * Show the overview.
      */
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
+    public void showEventOverview() {
+        primaryStage.setTitle("Events: Overview");
+        primaryStage.setScene(eventOverview);
+        eventOverviewCtrl.refresh();
     }
 
     /**
@@ -68,7 +61,7 @@ public class MainCtrl {
      */
     public void showAdd() {
         primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
+        // primaryStage.setScene(add);
+        // add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
     }
 }

@@ -61,7 +61,7 @@ public class AddQuoteCtrl {
      */
     public void cancel() {
         clearFields();
-        mainCtrl.showOverview();
+        mainCtrl.showEventOverview();
     }
 
     /**
@@ -80,7 +80,7 @@ public class AddQuoteCtrl {
         }
 
         clearFields();
-        mainCtrl.showOverview();
+        mainCtrl.showEventOverview();
     }
 
     /**

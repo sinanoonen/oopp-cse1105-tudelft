@@ -1,6 +1,7 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import commons.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -110,5 +111,32 @@ class UserTest {
         assertNotEquals(testUser.hashCode(), testUser4.hashCode());
         assertNotEquals(testUser.hashCode(), testUser5.hashCode());
         assertNotEquals(testUser.hashCode(), testUser6.hashCode());
+    }
+
+    @Test
+    void testConstructorWithNullParameters() {
+        User nullUser = new User(null, null, null, null);
+        assertNotNull(nullUser);
+        assertNull(nullUser.getName());
+        assertNull(nullUser.getEmail());
+        assertNull(nullUser.getIban());
+        assertNull(nullUser.getBic());
+    }
+
+    @Test
+    void testEqualsAndHashCodeWithDifferentType() {
+        assertNotEquals(testUser, "not a user object");
+    }
+
+    @Test
+    void testEqualsAndHashCodeWithNull() {
+        assertNotEquals(testUser, null);
+    }
+
+    @Test
+    void testUniqueConstraints() {
+        User duplicateUser = new User("duplicateName", "testEmail",
+                "testIban", "uniqueBic");
+        assertNotEquals(testUser, duplicateUser);
     }
 }

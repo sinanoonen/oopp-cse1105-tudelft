@@ -29,6 +29,17 @@ import org.junit.jupiter.api.Test;
 public class EventTest {
 
     @Test
+    public void testAlternativeConstructor() {
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
+        Set<User> participants = new HashSet<>();
+        participants.add(user1);
+        participants.add(user2);
+        Event event = new Event("Honeymoon", participants);
+        assertEquals(participants, event.getParticipants());
+    }
+
+    @Test
     public void testGetInviteCode() {
         User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Birthday Party", user1);
@@ -55,14 +66,52 @@ public class EventTest {
     }
 
     @Test
-    public void testAlternativeConstructor() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
-        Set<User> participants = new HashSet<>();
-        participants.add(user1);
-        participants.add(user2);
-        Event event = new Event("Honeymoon", participants);
-        assertEquals(participants, event.getParticipants());
+    public void testGetTotalDebt() {
+        List<String> allParticipants = new ArrayList<>();
+        allParticipants.add("Alice");
+        allParticipants.add("Gerard");
+        allParticipants.add("Barry");
+        allParticipants.add("Lisa");
+
+        List<String> n134Participants = new ArrayList<>();
+        n134Participants.add("Alice");
+        n134Participants.add("Barry");
+        n134Participants.add("Lisa");
+
+        Set<User> eventUsers = new HashSet<>();
+        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
+        User user2 = new User("Gerard", "gerard@gmail.com", "NL123487659", "biicode2");
+        User user3 = new User("Barry", "barry@gmail.com", "NL121212121", "biicode3");
+        User user4 = new User("Lisa", "lisa@gmail.com", "NL098764321", "biicode4");
+        eventUsers.add(user1);
+        eventUsers.add(user2);
+        eventUsers.add(user3);
+        eventUsers.add(user4);
+
+        Event event = new Event("Drinks", eventUsers);
+        event.addTransaction(new Expense("Alice", LocalDate.of(2024, 1, 2), 40.0f,
+                "Cocktails", allParticipants));
+        event.addTransaction(new Expense("Alice", LocalDate.of(2023, 12, 30), 30.0f,
+                        "Champagne", n134Participants));
+        event.addTransaction(new Payment("Barry", LocalDate.of(2024, 1, 1), 10.0f,
+                "Alice"));
+
+        // TODO Make it so a Payment actually updates the debts of the people involved.
+        // Right now this test does not pass because a payment does not update the debts of the people involved.
+        // It thinks that Alice and Barry are both at 20 while they should be at 30 and 10 respectively.
+        // When someone sends a payment it should remove debt from the owner/sender and add debt to the recipient.
+
+        assertEquals(30.0f, event.getTotalDebt(user1));
+        // Alice had cocktails and champagne and received 10 from Barry, so 40/4 + 30/3 + 10 = 30.0f of debt
+
+        assertEquals(10.0f, event.getTotalDebt(user2));
+        // Gerard only had cocktails, so 40/4 = 10.0f debt
+
+        assertEquals(10.0f, event.getTotalDebt(user3));
+        // Barry had cocktails and champagne but already paid 10 to Alice, so 40/4 + 30/3 - 10 = 10.0f of debt
+
+        assertEquals(20.0f, event.getTotalDebt(user4));
+        // Lisa had cocktails and champagne, so 40/4 + 30/3 = 20.0f of debt
     }
 
     @Test
@@ -78,53 +127,6 @@ public class EventTest {
         Event event = new Event("Drinks", user1);
         event.setTitle("Bar");
         assertEquals("Bar", event.getTitle());
-    }
-
-    @Test
-    public void testGetTotalDebt() {
-        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
-        User user2 = new User("Gerard", "gerard@gmail.com", "NL123487659", "biicode2");
-        List<String> participants = new ArrayList<>();
-        participants.add("Alice");
-        participants.add("Gerard");
-        Event event = new Event("Drinks", user1);
-        event.addParticipant(user2);
-        event.addTransaction(new Expense("Alice", LocalDate.of(2024, 1, 2), 40.0f,
-                "Cocktails", participants));
-        assertEquals(20.0f, event.getTotalDebt(user1));
-        assertEquals(20.0f, event.getTotalDebt(user2));
-    }
-
-    @Test
-    public void testGetExpensesByParticipant() {
-        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
-        User user2 = new User("Gerard", "gerard@gmail.com", "NL123487659", "biicode2");
-        List<String> participants = new ArrayList<>();
-        participants.add("Alice");
-        participants.add("Gerard");
-        Event event = new Event("Drinks", user1);
-        event.addTransaction(new Expense("Alice", LocalDate.of(2024, 1, 2), 40.0f,
-                "Cocktails", participants));
-        List<Expense> expenses = new ArrayList<>();
-        expenses.add(new Expense("Alice", LocalDate.of(2024, 1, 2), 40.0f,
-                "Cocktails", participants));
-        assertEquals(expenses, event.getExpensesByParticipant("Alice"));
-        assertThrows(IllegalArgumentException.class, () -> event.getExpensesByParticipant("Johnathan"));
-    }
-
-    @Test
-    public void testGetTags() {
-        User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Party", user1);
-
-        assertEquals(3, event.getTags().size());
-        assertEquals(new HashSet<>(
-                Arrays.asList(
-                        new Tag("Food", new Color(147, 196, 125)),
-                        new Tag("Entrance Fees", new Color(74, 134, 232)),
-                        new Tag("Travel", new Color(224, 102, 102))
-                )
-        ), event.getTags());
     }
 
     @Test
@@ -145,6 +147,21 @@ public class EventTest {
     }
 
     @Test
+    public void testGetTags() {
+        User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
+        Event event = new Event("Party", user1);
+
+        assertEquals(3, event.getTags().size());
+        assertEquals(new HashSet<>(
+                Arrays.asList(
+                        new Tag("Food", new Color(147, 196, 125)),
+                        new Tag("Entrance Fees", new Color(74, 134, 232)),
+                        new Tag("Travel", new Color(224, 102, 102))
+                )
+        ), event.getTags());
+    }
+
+    @Test
     public void testRemoveTag() {
         User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Party", user1);
@@ -158,29 +175,6 @@ public class EventTest {
 
         assertThrows(IllegalArgumentException.class, () -> event.removeTag(activities));
     }
-
-    @Test
-    public void testGetExpensesByTag() {
-        User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
-        List<String> participants = new ArrayList<>();
-        participants.add("John");
-        participants.add("Steven");
-        Event event = new Event("Drinks", user1);
-        Expense expense = new Expense("John", LocalDate.of(2024, 1, 2), 40.0f,
-                "Cocktails", participants);
-        event.addTransaction(expense);
-        Tag tag = new Tag("Activities", new Color(255, 255, 25));
-        assertThrows(IllegalArgumentException.class, () -> event.getExpensesByTag(tag));
-        event.addTag(tag);
-        expense.addTag(tag);
-        List<Expense> expenses = new ArrayList<>();
-        expenses.add(expense);
-        assertEquals(expenses, event.getExpensesByTag(tag));
-        expense.removeTag(tag);
-        assertEquals(new ArrayList<>(), event.getExpensesByTag(tag));
-    }
-
-
 
     @Test
     public void testAddAndRemoveParticipants() {
@@ -246,6 +240,44 @@ public class EventTest {
                 "David");
         assertTrue(event.removeTransaction(paymentIdentical));
         assertEquals(0, event.getTransactions().size());
+    }
+
+    @Test
+    public void testGetExpensesByParticipant() {
+        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
+        User user2 = new User("Gerard", "gerard@gmail.com", "NL123487659", "biicode2");
+        List<String> participants = new ArrayList<>();
+        participants.add("Alice");
+        participants.add("Gerard");
+        Event event = new Event("Drinks", user1);
+        event.addTransaction(new Expense("Alice", LocalDate.of(2024, 1, 2), 40.0f,
+                "Cocktails", participants));
+        List<Expense> expenses = new ArrayList<>();
+        expenses.add(new Expense("Alice", LocalDate.of(2024, 1, 2), 40.0f,
+                "Cocktails", participants));
+        assertEquals(expenses, event.getExpensesByParticipant("Alice"));
+        assertThrows(IllegalArgumentException.class, () -> event.getExpensesByParticipant("Johnathan"));
+    }
+
+    @Test
+    public void testGetExpensesByTag() {
+        User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
+        List<String> participants = new ArrayList<>();
+        participants.add("John");
+        participants.add("Steven");
+        Event event = new Event("Drinks", user1);
+        Expense expense = new Expense("John", LocalDate.of(2024, 1, 2), 40.0f,
+                "Cocktails", participants);
+        event.addTransaction(expense);
+        Tag tag = new Tag("Activities", new Color(255, 255, 25));
+        assertThrows(IllegalArgumentException.class, () -> event.getExpensesByTag(tag));
+        event.addTag(tag);
+        expense.addTag(tag);
+        List<Expense> expenses = new ArrayList<>();
+        expenses.add(expense);
+        assertEquals(expenses, event.getExpensesByTag(tag));
+        expense.removeTag(tag);
+        assertEquals(new ArrayList<>(), event.getExpensesByTag(tag));
     }
 
     @Test

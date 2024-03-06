@@ -21,7 +21,6 @@ import static com.google.inject.Guice.createInjector;
 import client.scenes.AddQuoteCtrl;
 import client.scenes.EventOverviewCtrl;
 import client.scenes.MainCtrl;
-import client.scenes.QuoteOverviewCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;

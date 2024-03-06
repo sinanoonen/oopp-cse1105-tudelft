@@ -30,6 +30,6 @@ MINUTES WEEK 4
 - Variable font size
 - San Francisco font
 - Make json file with font settings
-- Screen reader - text to speech api
+- Screen reader - text to speech api?
 
 

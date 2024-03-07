@@ -17,7 +17,6 @@
 package client.scenes;
 
 import commons.Event;
-import commons.User;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

@@ -54,6 +54,11 @@ public class ServerUtils {
         }
     }
 
+    /**
+     * Get all events.
+     *
+     * @return List of all events on DB
+     */
     public List<Event> getEvents() {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/events")

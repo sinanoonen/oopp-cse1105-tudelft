@@ -72,7 +72,6 @@ public class EventOverviewCtrl implements Initializable {
      */
     public void refresh() {
         //this.event = event;
-
         this.event = serverUtils.getEvents().getFirst();
 
         System.out.println("Refreshing event overview");

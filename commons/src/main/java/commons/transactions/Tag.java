@@ -54,8 +54,8 @@ public class Tag {
      *
      * @return the color
      */
-    public Color getColor() {
-        return new Color(color);
+    public int getColor() {
+        return color;
     }
 
     /**
@@ -63,8 +63,8 @@ public class Tag {
      *
      * @param color sets the color
      */
-    public void setColor(Color color) {
-        this.color = color.getRGB();
+    public void setColor(int color) {
+        this.color = color;
     }
 
     /**

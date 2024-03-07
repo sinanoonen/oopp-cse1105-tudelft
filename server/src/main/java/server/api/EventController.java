@@ -79,9 +79,7 @@ public class EventController {
     @PostMapping(path = { "", "/" })
     public ResponseEntity<Event> add(@RequestBody Event event) {
 
-        if (event.getInviteCode() == null || isNullOrEmpty(event.getTitle())
-            || event.getTags() == null || event.getParticipants() == null
-            || event.getTransactions() == null) {
+        if (event == null || isNullOrEmpty(event.getTitle())) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -126,7 +124,7 @@ public class EventController {
      * @return list of all expenses
      */
     @SuppressWarnings({"checkstyle:WhitespaceAfter", "checkstyle:NoWhitespaceBefore"})
-    @GetMapping(path = { "", "/{uuid}" ,"/transactions"})
+    @GetMapping("{uuid}/transactions")
     public ResponseEntity<List<Transaction>> getAllTransactionsForEvent(@PathVariable("uuid") UUID uuid) {
         if (!repo.existsById(uuid)) {
             return ResponseEntity.badRequest().build();

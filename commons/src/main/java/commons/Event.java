@@ -3,12 +3,8 @@ package commons;
 import commons.transactions.Expense;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,24 +28,31 @@ public class Event {
     private Set<User> participants;
     @OneToMany
     private List<Transaction> transactions;
-    @OneToMany
+    @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Tag> availableTags;
 
     @SuppressWarnings("unused")
     protected Event() {
-
+        this.participants = new HashSet<>();
+        this.transactions = new ArrayList<>();
+        this.availableTags = new HashSet<>(
+                Arrays.asList(
+                        new Tag("Food", new Color(147, 196, 125)),
+                        new Tag("Entrance Fees", new Color(74, 134, 232)),
+                        new Tag("Travel", new Color(224, 102, 102))
+                )
+        );
     }
 
     /**
      * Constructor method.
      *
      * @param title of the event
-     * @param creator of the event
      */
-    public Event(String title, User creator) {
+    public Event(String title) {
         this.inviteCode = UUID.randomUUID();
         this.title = title;
-        this.participants = new HashSet<>(Collections.singletonList(creator));
+        this.participants = new HashSet<>();
         this.transactions = new ArrayList<>();
         this.availableTags = new HashSet<>(
                 Arrays.asList(
@@ -67,7 +70,7 @@ public class Event {
      * @param users that partake in the event
      */
     public Event(String title, Set<User> users) {
-        this(title, users.iterator().next());
+        this(title);
         participants.addAll(users);
     }
 

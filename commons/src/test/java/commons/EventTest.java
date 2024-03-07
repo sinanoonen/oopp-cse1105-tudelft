@@ -30,14 +30,16 @@ public class EventTest {
     @Test
     public void testGetInviteCode() {
         User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Birthday Party", user1);
+        Event event = new Event("Birthday Party");
+        event.addParticipant(user1);
         assertNotNull(event.getInviteCode());
     }
 
     @Test
     public void testGetTitle() {
         User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Conference", user1);
+        Event event = new Event("Conference");
+        event.addParticipant(user1);
         assertEquals("Conference", event.getTitle());
     }
 
@@ -48,7 +50,8 @@ public class EventTest {
         List<User> participants = new ArrayList<>();
         participants.add(user1);
         participants.add(user2);
-        Event event = new Event("Wedding", user1);
+        Event event = new Event("Wedding");
+        event.addParticipant(user1);
         event.addParticipant(user2);
         assertEquals(new HashSet<>(participants), event.getParticipants());
     }
@@ -67,14 +70,16 @@ public class EventTest {
     @Test
     public void testGetTransactions() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Meeting", user1);
+        Event event = new Event("Meeting");
+        event.addParticipant(user1);
         assertEquals(new ArrayList<>(), event.getTransactions());
     }
 
     @Test
     public void testSetTitle() {
         User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Drinks", user1);
+        Event event = new Event("Drinks");
+        event.addParticipant(user1);
         event.setTitle("Bar");
         assertEquals("Bar", event.getTitle());
     }
@@ -82,7 +87,8 @@ public class EventTest {
     @Test
     public void testGetTags() {
         User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Party", user1);
+        Event event = new Event("Party");
+        event.addParticipant(user1);
 
         assertEquals(3, event.getTags().size());
         assertEquals(new HashSet<>(
@@ -97,7 +103,8 @@ public class EventTest {
     @Test
     public void testAddTag() {
         User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Party", user1);
+        Event event = new Event("Party");
+        event.addParticipant(user1);
 
         event.addTag(new Tag("Activities", new Color(255, 255, 25)));
         assertEquals(4, event.getTags().size());
@@ -114,7 +121,8 @@ public class EventTest {
     @Test
     public void testRemoveTag() {
         User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Party", user1);
+        Event event = new Event("Party");
+        event.addParticipant(user1);
 
         Tag activities = new Tag("Activities", new Color(255, 255, 25));
         event.addTag(activities);
@@ -133,7 +141,8 @@ public class EventTest {
         User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
         Set<User> participants = new HashSet<>();
         participants.add(user1);
-        Event event = new Event("Vacation", user1);
+        Event event = new Event("Vacation");
+        event.addParticipant(user1);
         assertEquals(participants, event.getParticipants());
         participants.add(user2);
         event.addParticipant(user2);
@@ -146,7 +155,8 @@ public class EventTest {
     @Test
     void testAddAndRemoveNull() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Vacation", user1);
+        Event event = new Event("Vacation");
+        event.addParticipant(user1);
 
         int size = event.getParticipants().size();
         assertFalse(event.addParticipant(null));
@@ -158,7 +168,8 @@ public class EventTest {
     @Test
     void testAddAndRemoveTransaction() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Vacation", user1);
+        Event event = new Event("Vacation");
+        event.addParticipant(user1);
 
         assertFalse(event.addTransaction(null));
 
@@ -196,13 +207,16 @@ public class EventTest {
     @Test
     public void testEquals() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Football Game", user1);
+        Event event = new Event("Football Game");
+        event.addParticipant(user1);
 
         User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
-        Event event2 = new Event("Picnic", user2);
+        Event event2 = new Event("Picnic");
+        event.addParticipant(user1);
 
         //event3 and event should not be equal, as the invite code should be different
-        Event event3 = new Event("Football Game", user1);
+        Event event3 = new Event("Football Game");
+        event.addParticipant(user1);
         assertNotEquals(event, event2);
         assertNotEquals(event, event3);
     }

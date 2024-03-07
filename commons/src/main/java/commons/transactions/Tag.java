@@ -27,7 +27,8 @@ public class Tag {
      */
     public Tag(String name, Color color) {
         this.name = name;
-        this.color = color.getRGB();
+        int nullMagenta = new Color(247, 0, 213).getRGB();
+        this.color = color == null ? nullMagenta : color.getRGB();
     }
 
     /**

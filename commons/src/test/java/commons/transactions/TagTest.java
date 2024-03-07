@@ -35,7 +35,7 @@ public class TagTest {
     @Test
     public void testToString() {
         Tag tag = new Tag("TestTag", Color.RED);
-        String expectedString = "commons.transactions.Tag{name='TestTag', color=java.awt.Color[r=255,g=0,b=0]}";
+        String expectedString = "commons.transactions.Tag{name='TestTag', color=" + Color.RED.getRGB() + "}";
         assertEquals(expectedString, tag.toString());
     }
 

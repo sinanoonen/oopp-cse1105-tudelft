@@ -19,6 +19,8 @@ import java.util.Objects;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Transaction {
+
+    //TODO Make it so the Id is not always 0
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

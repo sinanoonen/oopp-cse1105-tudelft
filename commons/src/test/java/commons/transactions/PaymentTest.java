@@ -34,6 +34,9 @@ public class PaymentTest {
         assertEquals("Emilio", paymentSenderOwner.getOwner());
         assertEquals("Emilio", paymentSenderOwner.getSender());
         assertEquals(paymentSenderOwner.getOwner(), paymentSenderOwner.getSender());
+
+        //TODO Make it so the Id is not always 0
+        //assertNotEquals(paymentSenderNotOwner.getId(), paymentSenderOwner.getId());
     }
 
     @Test

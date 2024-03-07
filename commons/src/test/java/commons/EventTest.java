@@ -343,8 +343,8 @@ public class EventTest {
         foodList.add(lunch);
         foodList.add(milkshakes);
         List<Expense> entranceFeesList = new ArrayList<>();
-        List<Expense> travelList = new ArrayList<>();
         entranceFeesList.add(rockClimbing);
+        List<Expense> travelList = new ArrayList<>();
         List<Expense> addedCostsList = new ArrayList<>();
         addedCostsList.add(hiringEquipment);
 
@@ -352,6 +352,9 @@ public class EventTest {
         assertEquals(entranceFeesList, event.getExpensesByTag(entranceFees));
         assertEquals(travelList, event.getExpensesByTag(travel));
         assertEquals(addedCostsList, event.getExpensesByTag(addedCosts));
+
+        rockClimbing.removeTag(entranceFees);
+        assertEquals(new ArrayList<>(), event.getExpensesByTag(entranceFees));
     }
 
     @Test

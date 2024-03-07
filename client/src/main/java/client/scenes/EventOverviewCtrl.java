@@ -63,11 +63,17 @@ public class EventOverviewCtrl implements Initializable {
 
     }
 
+    public void foo() {
+        refresh(event);
+    }
+
     /**
      * Method to refresh the scene. This is needed for some reason.
      */
     public void refresh(Event event) {
         this.event = event;
+
+        System.out.println("Refreshing event overview");
 
         title.setEditable(false);
         titleBox.setVisible(false);
@@ -82,6 +88,7 @@ public class EventOverviewCtrl implements Initializable {
                 .map(this::transactionCellFactory)
                 .toList();
         transactionContainer.getItems().addAll(items);
+
 
     }
 
@@ -123,7 +130,7 @@ public class EventOverviewCtrl implements Initializable {
      */
     @FXML
     public void copyInviteCode(MouseEvent event) {
-        String inviteCode = "i am an invite code";
+        String inviteCode = this.event.getInviteCode().toString();
         Clipboard clipboard = Clipboard.getSystemClipboard();
         ClipboardContent content = new ClipboardContent();
         content.putString(inviteCode);

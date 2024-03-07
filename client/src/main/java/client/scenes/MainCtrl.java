@@ -45,7 +45,7 @@ public class MainCtrl {
         this.eventOverviewCtrl = eventOverview.getKey();
         this.eventOverview = new Scene(eventOverview.getValue());
 
-        Event demoEvent = new Event("Demo", (User) null);
+        Event demoEvent = new Event("Demo");
         showEventOverview(demoEvent);
         primaryStage.show();
     }

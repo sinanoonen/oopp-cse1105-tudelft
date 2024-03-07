@@ -28,11 +28,14 @@ class EventManagerTest {
     void setUp() {
         eventManagerEmpty = new EventManager();
 
-        testEvent = new Event("title", new User("name", "email", "iban", "bic"));
+
+        testEvent = new Event("title");
+        testEvent.addParticipant(new User("name", "email", "iban", "bic"));
         List<Event> events = new ArrayList<>();
         events.add(testEvent);
 
-        testEvent2 = new Event("title2", new User("name2", "email2", "iban2", "bic2"));
+        testEvent2 = new Event("title2");
+        testEvent2.addParticipant(new User("name2", "email2", "iban2", "bic2"));
 
         testExpense = new Expense("emilio", LocalDate.of(2024, 1, 1),
                 100, "description", List.of("emilio", "mario"));

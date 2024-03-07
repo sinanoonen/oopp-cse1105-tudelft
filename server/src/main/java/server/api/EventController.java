@@ -161,17 +161,17 @@ public class EventController {
     /**
      * Adds a transaction to an event.
      *
-     * @param uuid the  of the event
+     * @param uuid the UUID of the event
      * @param expense expense to be added
      * @return the saved transaction
      */
     @PostMapping("/{uuid}/transactions/expenses")
-    public ResponseEntity<Transaction> addTransactionToEvent(
+    public ResponseEntity<Expense> addTransactionToEvent(
             @PathVariable("uuid") UUID uuid,
             @RequestBody Expense expense) {
         if (!repo.existsById(uuid)
                 || isNullOrEmpty(expense.getOwner())
-                || expense.getAmount() <= 0
+                || expense.getAmount() < 0
                 || isNullOrEmpty(expense.getDescription())
         ) {
             return ResponseEntity.badRequest().build();
@@ -188,12 +188,12 @@ public class EventController {
     /**
      * Adds a transaction to an event.
      *
-     * @param uuid the  of the event
+     * @param uuid the UUID of the event
      * @param payment payment to be added
      * @return the saved transaction
      */
-    @PostMapping("/{uuid}/transactions/payment")
-    public ResponseEntity<Transaction> addTransactionToEvent(
+    @PostMapping("/{uuid}/transactions/payments")
+    public ResponseEntity<Payment> addTransactionToEvent(
             @PathVariable("uuid") UUID uuid,
             @RequestBody Payment payment) {
         if (!repo.existsById(uuid)

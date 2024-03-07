@@ -63,10 +63,6 @@ public class EventOverviewCtrl implements Initializable {
 
     }
 
-    public void foo() {
-        refresh();
-    }
-
     /**
      * Method to refresh the scene. This is needed for some reason.
      */
@@ -74,8 +70,6 @@ public class EventOverviewCtrl implements Initializable {
         //this.event = event;
         this.event = serverUtils.getEvents().getFirst();
         inviteCodeButton.requestFocus();
-
-        System.out.println("Refreshing event overview");
 
         title.setText(event.getTitle());
         title.setEditable(false);
@@ -91,8 +85,6 @@ public class EventOverviewCtrl implements Initializable {
                 .map(this::transactionCellFactory)
                 .toList();
         transactionContainer.getItems().addAll(items);
-
-
     }
 
     /**

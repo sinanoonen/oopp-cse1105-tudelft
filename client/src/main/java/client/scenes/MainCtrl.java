@@ -16,6 +16,8 @@
 
 package client.scenes;
 
+import commons.Event;
+import commons.User;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -43,17 +45,18 @@ public class MainCtrl {
         this.eventOverviewCtrl = eventOverview.getKey();
         this.eventOverview = new Scene(eventOverview.getValue());
 
-        showEventOverview();
+        Event demoEvent = new Event("Demo", (User) null);
+        showEventOverview(demoEvent);
         primaryStage.show();
     }
 
     /**
      * Show the overview.
      */
-    public void showEventOverview() {
-        primaryStage.setTitle("Events: Overview");
+    public void showEventOverview(Event event) {
+        primaryStage.setTitle(event.getTitle());
         primaryStage.setScene(eventOverview);
-        eventOverviewCtrl.refresh();
+        eventOverviewCtrl.refresh(event);
     }
 
     /**

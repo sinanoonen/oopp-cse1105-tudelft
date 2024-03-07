@@ -2,10 +2,19 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Event;
+import commons.transactions.Expense;
+import commons.transactions.Payment;
+import commons.transactions.Transaction;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -15,15 +24,20 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
  * Controller for the EventOverview scene.
  */
-public class EventOverviewCtrl {
+public class EventOverviewCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+
+    private Event event;
 
     @FXML
     private TextField title;
@@ -35,6 +49,8 @@ public class EventOverviewCtrl {
     private Pane buttonDarkener;
     @FXML
     private StackPane clipboardPopup;
+    @FXML
+    private ListView<Node> transactionContainer;
 
     @Inject
     public EventOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
@@ -42,14 +58,31 @@ public class EventOverviewCtrl {
         this.mainCtrl = mainCtrl;
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
+
     /**
      * Method to refresh the scene. This is needed for some reason.
      */
-    public void refresh() {
+    public void refresh(Event event) {
+        this.event = event;
+
         title.setEditable(false);
         titleBox.setVisible(false);
+
         buttonDarkener.setVisible(false);
         clipboardPopup.setOpacity(0);
+
+        transactionContainer.getItems().removeAll(transactionContainer.getItems());
+        List<Node> items = event
+                .getTransactions()
+                .stream()
+                .map(this::transactionCellFactory)
+                .toList();
+        transactionContainer.getItems().addAll(items);
+
     }
 
     /**
@@ -63,7 +96,6 @@ public class EventOverviewCtrl {
             return;
         }
         title.setEditable(true);
-        changeBackgroundColor(title, "#2b2b2b");
         titleBox.setVisible(true);
     }
 
@@ -81,7 +113,6 @@ public class EventOverviewCtrl {
         }
 
         titleBox.setVisible(false);
-        changeBackgroundColor(title, "#333333");
         title.setEditable(false);
     }
 
@@ -111,12 +142,12 @@ public class EventOverviewCtrl {
         if (!buttonDarkener.isVisible()) {
             clipboardPopup.toFront();
             FadeTransition fadeInTransition = new FadeTransition(Duration.seconds(0.5), clipboardPopup);
-            fadeInTransition.setFromValue(0.0);
-            fadeInTransition.setToValue(1.0);
+            fadeInTransition.setFromValue(0);
+            fadeInTransition.setToValue(1);
 
             FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(0.5), clipboardPopup);
-            fadeOutTransition.setFromValue(1.0);
-            fadeOutTransition.setToValue(0.0);
+            fadeOutTransition.setFromValue(1);
+            fadeOutTransition.setToValue(0);
             fadeOutTransition.setDelay(Duration.seconds(1));
 
             fadeInTransition.setOnFinished(finished -> fadeOutTransition.play());
@@ -145,4 +176,46 @@ public class EventOverviewCtrl {
 
         node.setStyle(currentStyle + newColor);
     }
+
+    private Node transactionCellFactory(Transaction transaction) {
+        return transaction instanceof Expense
+                ? expenseCellFactory((Expense) transaction)
+                : paymentCellFactory((Payment) transaction);
+    }
+
+    private Node expenseCellFactory(Expense expense) {
+        Pane base = new Pane();
+        base.setPrefWidth(transactionContainer.getPrefWidth() - 10);
+        base.setPrefHeight(100);
+        base.setStyle("-fx-background-color: #444444; -fx-border-width: 3; -fx-border-color: black;");
+
+        Text expenseTitle = new Text(expense.getDescription());
+        final double titleTopPadding = base.getPrefHeight() / 2 + 5;
+        final double titleLeftPadding = base.getPrefWidth() / 16;
+        expenseTitle.setLayoutX(base.getLayoutX() + titleLeftPadding);
+        expenseTitle.setLayoutY(base.getLayoutY() + titleTopPadding);
+        expenseTitle.setFont(Font.font("SansSerif", 15));
+        expenseTitle.setFill(Paint.valueOf("#FFFFFF"));
+
+        Text amount = new Text(String.valueOf(expense.getAmount()));
+        final double amountTopPadding = titleTopPadding;
+        final double amountLeftPadding = 3f / 4f * base.getPrefWidth();
+        amount.setLayoutX(base.getLayoutX() + amountLeftPadding);
+        amount.setLayoutY(base.getLayoutY() + amountTopPadding);
+        amount.setFont(Font.font("SansSerif", 15));
+        amount.setFill(Paint.valueOf("#FFFFFF"));
+
+        base.getChildren().addAll(expenseTitle, amount);
+
+        return base;
+    }
+
+    private Node paymentCellFactory(Payment payment) {
+        Pane base = new Pane();
+        base.setPrefWidth(transactionContainer.getPrefWidth() - 20);
+        base.setPrefHeight(100);
+        base.setStyle("-fx-background-color: #444444; -fx-border-width: 3; -fx-border-color: black;");
+        return base;
+    }
+
 }

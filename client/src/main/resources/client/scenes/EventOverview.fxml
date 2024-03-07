@@ -2,7 +2,7 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
@@ -12,12 +12,12 @@
 
 <AnchorPane prefHeight="647.0" prefWidth="600.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.EventOverviewCtrl">
    <children>
-      <Pane id="title_box" fx:id="titleBox" layoutX="24.0" layoutY="50.0" prefHeight="62.0" prefWidth="316.0" style="-fx-background-radius: 10; -fx-background-color: #2b2b2b;">
+      <Pane id="title_box" fx:id="titleBox" layoutX="24.0" layoutY="50.0" prefHeight="62.0" prefWidth="316.0" style="-fx-background-radius: 10; -fx-background-color: #2b2b2b;" visible="false">
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor>
       </Pane>
-      <TextField id="title_text" fx:id="title" editable="false" layoutX="30.0" layoutY="54.0" onKeyPressed="#onTitleFieldDeselect" onMouseClicked="#onTitleFieldClicked" prefHeight="52.0" prefWidth="301.0" promptText="Title" style="-fx-text-fill: #FFFFFF; -fx-background-color: #333333;" text="Title">
+      <TextField id="title_text" fx:id="title" editable="false" layoutX="30.0" layoutY="54.0" onKeyPressed="#onTitleFieldDeselect" onMouseClicked="#onTitleFieldClicked" prefHeight="52.0" prefWidth="301.0" promptText="Title" style="-fx-text-fill: #FFFFFF; -fx-background-color: transparent;" text="Title">
          <font>
             <Font name="SansSerif Bold" size="29.0" />
          </font>
@@ -25,7 +25,7 @@
             <Cursor fx:constant="TEXT" />
          </cursor>
       </TextField>
-      <Button fx:id="inviteCodeButton" layoutX="423.0" layoutY="65.0" mnemonicParsing="false" onMouseClicked="#copyInviteCode" onMousePressed="#toggleDarkenedButton" onMouseReleased="#toggleDarkenedButton" prefHeight="40.0" prefWidth="136.0" style="-fx-background-color: #222222; -fx-border-color: #C30052; -fx-border-width: 2; -fx-border-radius: 5;" text="Invite Code" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="inviteCodeButton" layoutX="423.0" layoutY="65.0" mnemonicParsing="false" onMouseClicked="#copyInviteCode" onMousePressed="#toggleDarkenedButton" onMouseReleased="#toggleDarkenedButton" prefHeight="40.0" prefWidth="136.0" style="-fx-background-color: #222222; -fx-background-radius: 7; -fx-border-color: #C30052; -fx-border-width: 2; -fx-border-radius: 5;" text="Invite Code" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="SansSerif Bold" size="19.0" />
          </font>
@@ -40,10 +40,6 @@
             </Text>
          </children>
       </StackPane>
-      <ScrollPane layoutX="24.0" layoutY="213.0" prefHeight="405.0" prefWidth="550.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-        </content>
-      </ScrollPane>
+      <ListView id="transaction_container" fx:id="transactionContainer" layoutX="25.0" layoutY="221.0" prefHeight="400.0" prefWidth="550.0" style="-fx-background-color: #3c3c3c; -fx-background-radius: 10; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 0;" />
    </children>
 </AnchorPane>

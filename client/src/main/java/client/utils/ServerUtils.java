@@ -18,6 +18,7 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import commons.Event;
 import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -51,6 +52,14 @@ public class ServerUtils {
         while ((line = br.readLine()) != null) {
             System.out.println(line);
         }
+    }
+
+    public List<Event> getEvents() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {});
     }
 
     /**

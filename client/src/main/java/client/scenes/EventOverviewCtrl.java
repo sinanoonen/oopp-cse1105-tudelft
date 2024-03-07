@@ -64,14 +64,16 @@ public class EventOverviewCtrl implements Initializable {
     }
 
     public void foo() {
-        refresh(event);
+        refresh();
     }
 
     /**
      * Method to refresh the scene. This is needed for some reason.
      */
-    public void refresh(Event event) {
-        this.event = event;
+    public void refresh() {
+        //this.event = event;
+
+        this.event = serverUtils.getEvents().getFirst();
 
         System.out.println("Refreshing event overview");
 

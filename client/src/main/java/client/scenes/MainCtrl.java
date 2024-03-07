@@ -55,7 +55,7 @@ public class MainCtrl {
     public void showEventOverview(Event event) {
         primaryStage.setTitle(event.getTitle());
         primaryStage.setScene(eventOverview);
-        eventOverviewCtrl.refresh(event);
+        eventOverviewCtrl.refresh();
     }
 
     /**

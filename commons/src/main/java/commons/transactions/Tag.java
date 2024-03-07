@@ -12,7 +12,7 @@ import java.util.Objects;
 public class Tag {
     @Id
     private String name;
-    private Color color;
+    private int color;
 
     @SuppressWarnings("unused")
     protected Tag() {
@@ -27,7 +27,7 @@ public class Tag {
      */
     public Tag(String name, Color color) {
         this.name = name;
-        this.color = color;
+        this.color = color.getRGB();
     }
 
     /**
@@ -54,7 +54,7 @@ public class Tag {
      * @return the color
      */
     public Color getColor() {
-        return color;
+        return new Color(color);
     }
 
     /**
@@ -63,7 +63,7 @@ public class Tag {
      * @param color sets the color
      */
     public void setColor(Color color) {
-        this.color = color;
+        this.color = color.getRGB();
     }
 
     /**

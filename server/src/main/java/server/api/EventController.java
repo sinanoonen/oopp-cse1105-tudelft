@@ -162,30 +162,53 @@ public class EventController {
      * Adds a transaction to an event.
      *
      * @param uuid the  of the event
-     * @param transaction expense to be added
+     * @param expense expense to be added
      * @return the saved transaction
      */
-    @PostMapping("/{uuid}/transactions")
+    @PostMapping("/{uuid}/transactions/expenses")
     public ResponseEntity<Transaction> addTransactionToEvent(
             @PathVariable("uuid") UUID uuid,
-            @RequestBody Transaction transaction) {
-        if (!repo.existsById(uuid) || transaction.getAmount() <= 0) {
+            @RequestBody Expense expense) {
+        if (!repo.existsById(uuid)
+                || isNullOrEmpty(expense.getOwner())
+                || expense.getAmount() <= 0
+                || isNullOrEmpty(expense.getDescription())
+        ) {
             return ResponseEntity.badRequest().build();
         }
 
+        expense.setDate(java.time.LocalDate.now());
+
         Event event = repo.findById(uuid).get();
-        event.addTransaction(transaction);
-        if (transaction instanceof Expense) {
-            Expense expense = (Expense) transaction;
-            Transaction savedExpense = exRepo.save(expense);
-            return ResponseEntity.ok(savedExpense);
-        } else {
-            Payment payment = (Payment) transaction;
-            Transaction savedPayment = payRepo.save(payment);
-            return ResponseEntity.ok(savedPayment);
-        }
+        event.addTransaction(expense);
+        Expense saved = exRepo.save(expense);
+        return ResponseEntity.ok(saved);
     }
 
+    /**
+     * Adds a transaction to an event.
+     *
+     * @param uuid the  of the event
+     * @param payment payment to be added
+     * @return the saved transaction
+     */
+    @PostMapping("/{uuid}/transactions/payment")
+    public ResponseEntity<Transaction> addTransactionToEvent(
+            @PathVariable("uuid") UUID uuid,
+            @RequestBody Payment payment) {
+        if (!repo.existsById(uuid)
+                || isNullOrEmpty(payment.getSender())
+                || payment.getAmount() <= 0
+                || isNullOrEmpty(payment.getRecipient())
+        ) {
+            return ResponseEntity.badRequest().build();
+        }
 
+        payment.setDate(java.time.LocalDate.now());
 
+        Event event = repo.findById(uuid).get();
+        event.addTransaction(payment);
+        Payment saved = payRepo.save(payment);
+        return ResponseEntity.ok(saved);
+    }
 }

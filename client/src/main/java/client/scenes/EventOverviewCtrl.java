@@ -73,9 +73,11 @@ public class EventOverviewCtrl implements Initializable {
     public void refresh() {
         //this.event = event;
         this.event = serverUtils.getEvents().getFirst();
+        inviteCodeButton.requestFocus();
 
         System.out.println("Refreshing event overview");
 
+        title.setText(event.getTitle());
         title.setEditable(false);
         titleBox.setVisible(false);
 

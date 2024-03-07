@@ -173,9 +173,8 @@ public class EventTest {
 
         assertFalse(event.addTransaction(null));
 
-        Payment payment = new Payment("David",
-                LocalDate.of(2021, 1, 1), 100,
-                "David");
+        Payment payment = new Payment(LocalDate.of(2021, 1, 1), 100,
+                "David", "David");
 
         assertEquals(0, event.getTransactions().size());
         assertTrue(event.addTransaction(payment));
@@ -190,16 +189,14 @@ public class EventTest {
         assertEquals(1, event.getTransactions().size());
         assertEquals(payment, event.getTransactions().getFirst());
 
-        Payment payment2 = new Payment("David",
-                LocalDate.of(2021, 1, 1), 500,
-                "David");
+        Payment payment2 = new Payment(LocalDate.of(2021, 1, 1), 500,
+                "David", "David");
         assertFalse(event.removeTransaction(payment2));
         assertEquals(1, event.getTransactions().size());
         assertEquals(payment, event.getTransactions().getFirst());
 
-        Payment paymentIdentical = new Payment("David",
-                LocalDate.of(2021, 1, 1), 100,
-                "David");
+        Payment paymentIdentical = new Payment(LocalDate.of(2021, 1, 1), 100,
+                "David", "David");
         assertTrue(event.removeTransaction(paymentIdentical));
         assertEquals(0, event.getTransactions().size());
     }

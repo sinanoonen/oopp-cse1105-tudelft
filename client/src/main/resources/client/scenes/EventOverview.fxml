@@ -41,6 +41,6 @@
          </children>
       </StackPane>
       <ListView id="transaction_container" fx:id="transactionContainer" layoutX="25.0" layoutY="221.0" prefHeight="400.0" prefWidth="550.0" style="-fx-background-color: #3c3c3c; -fx-background-radius: 10; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 0;" />
-      <Button layoutX="238.0" layoutY="69.0" mnemonicParsing="false" onMouseClicked="#foo" text="Refresh" />
+      <Button layoutX="463.0" layoutY="132.0" mnemonicParsing="false" onMouseClicked="#foo" text="Refresh" />
    </children>
 </AnchorPane>

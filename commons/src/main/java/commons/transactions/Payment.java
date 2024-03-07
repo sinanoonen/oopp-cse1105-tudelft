@@ -20,30 +20,15 @@ public class Payment extends Transaction {
     /**
      * Constructor for the payment class.
      *
-     * @param owner the owner of the transaction
      * @param date the date of the transaction
      * @param amount the amount of the transaction
      * @param recipient the recipient of the payment
      * @param sender the sender of the payment
      */
-    public Payment(String owner, LocalDate date, float amount, String recipient, String sender) {
-        super(owner, date, amount);
+    public Payment(LocalDate date, float amount, String recipient, String sender) {
+        super(sender, date, amount);
         this.recipient = recipient;
         this.sender = sender;
-    }
-
-    /**
-     * The owner of the transaction is also the sender of the payment.
-     *
-     * @param owner the owner of the transaction
-     * @param date the date of the transaction
-     * @param amount the amount of the transaction
-     * @param recipient the recipient of the payment
-     */
-    public Payment(String owner, LocalDate date, float amount, String recipient) {
-        super(owner, date, amount);
-        this.recipient = recipient;
-        this.sender = owner;
     }
 
     /**

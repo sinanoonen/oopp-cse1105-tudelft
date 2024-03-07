@@ -40,7 +40,7 @@ class EventManagerTest {
         testExpense = new Expense("emilio", LocalDate.of(2024, 1, 1),
                 100, "description", List.of("emilio", "mario"));
 
-        testPayment = new Payment("emilio", LocalDate.of(2024, 1, 1),
+        testPayment = new Payment(LocalDate.of(2024, 1, 1),
                 100, "emilio", "mario");
 
         eventManagerFull = new EventManager(events);

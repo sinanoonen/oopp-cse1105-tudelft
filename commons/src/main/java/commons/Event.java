@@ -1,6 +1,7 @@
 package commons;
 
 import commons.transactions.Expense;
+import commons.transactions.Payment;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import jakarta.persistence.Entity;
@@ -10,14 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The Event class.
@@ -105,9 +99,13 @@ public class Event {
      * @return total debt
      */
     public float getTotalDebt(User user) {
-        return (float) getExpensesByParticipant(user.getName()).stream()
+        float expenseDebt = (float) getExpensesByParticipant(user.getName()).stream()
                 .mapToDouble(expense -> expense.getDebts().get(user.getName()))
                 .sum();
+        float paymentDebt = (float) getPaymentsByParticipant(user.getName()).stream()
+                .mapToDouble(payment -> payment.getDebt().get(user.getName()))
+                .sum();
+        return expenseDebt + paymentDebt;
     }
 
     /**
@@ -214,6 +212,27 @@ public class Event {
      */
     public boolean removeTransaction(Transaction transaction) {
         return transactions.remove(transaction);
+    }
+
+    /**
+     * Gets a list of payments by participant name.
+     *
+     * @param participant the participant name linked to the payments
+     * @return a list of payments of the participant
+     */
+    private List<Payment> getPaymentsByParticipant(String participant) {
+        if (participants.stream()
+                .map(User::getName)
+                .noneMatch(name -> name.equals(participant))
+        ) {
+            throw new IllegalArgumentException("Participant not found in Event");
+        }
+
+        return transactions.stream()
+                .filter(transaction -> transaction instanceof Payment)
+                .map(transaction -> (Payment) transaction)
+                .filter(payment -> payment.getDebt().containsKey(participant))
+                .toList();
     }
 
     /**

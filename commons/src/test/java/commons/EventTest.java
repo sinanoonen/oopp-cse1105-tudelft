@@ -92,11 +92,6 @@ public class EventTest {
         event.addTransaction(new Payment("Barry", LocalDate.of(2024, 1, 1), 10.0f,
                 "Alice"));
 
-        // TODO Make it so a Payment actually updates the debts of the people involved.
-        // Right now this test does not pass because a payment does not update the debts of the people involved.
-        // It thinks that Alice and Barry are both at 20 while they should be at 30 and 10 respectively.
-        // When someone sends a payment it should remove debt from the owner/sender and add debt to the recipient.
-
         assertEquals(30.0f, event.getTotalDebt(user1));
         // Alice had cocktails and champagne and received 10 from Barry, so 40/4 + 30/3 + 10 = 30.0f of debt
 

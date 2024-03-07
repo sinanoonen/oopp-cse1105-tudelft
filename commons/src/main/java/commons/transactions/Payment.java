@@ -2,6 +2,8 @@ package commons.transactions;
 
 import jakarta.persistence.Entity;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -11,6 +13,7 @@ import java.util.Objects;
 public class Payment extends Transaction {
     private String recipient;
     private String sender;
+    Map<String, Float> debt;
 
     @SuppressWarnings("unused")
     protected Payment() {
@@ -30,6 +33,7 @@ public class Payment extends Transaction {
         super(owner, date, amount);
         this.recipient = recipient;
         this.sender = sender;
+        debtPutter(sender, recipient, amount);
     }
 
     /**
@@ -44,6 +48,20 @@ public class Payment extends Transaction {
         super(owner, date, amount);
         this.recipient = recipient;
         this.sender = owner;
+        debtPutter(owner, recipient, amount);
+    }
+
+    /**
+     * Updates the debts of the people involved in the payment.
+     *
+     * @param sender the sender of the payment
+     * @param recipient the recipient of the payment
+     * @param amount the amount of money in the payment
+     */
+    private void debtPutter(String sender, String recipient, float amount) {
+        debt = new HashMap<>();
+        debt.put(sender, amount * -1);
+        debt.put(recipient, amount);
     }
 
     /**
@@ -80,6 +98,15 @@ public class Payment extends Transaction {
      */
     public void setRecipient(String recipient) {
         this.recipient = recipient;
+    }
+
+    /**
+     * Getter for debt map.
+     *
+     * @return debt
+     */
+    public Map<String, Float> getDebt() {
+        return debt;
     }
 
     /**

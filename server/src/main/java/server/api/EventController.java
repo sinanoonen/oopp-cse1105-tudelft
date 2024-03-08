@@ -170,7 +170,7 @@ public class EventController {
      * @return the saved transaction
      */
     @PostMapping("/{uuid}/transactions/expenses")
-    public ResponseEntity<Expense> addTransactionToEvent(
+    public ResponseEntity<Expense> addExpenseToEvent(
             @PathVariable("uuid") UUID uuid,
             @RequestBody Expense expense) {
         if (!repo.existsById(uuid)
@@ -197,7 +197,7 @@ public class EventController {
      * @return the saved transaction
      */
     @PostMapping("/{uuid}/transactions/payments")
-    public ResponseEntity<Payment> addTransactionToEvent(
+    public ResponseEntity<Payment> addPaymentToEvent(
             @PathVariable("uuid") UUID uuid,
             @RequestBody Payment payment) {
         if (!repo.existsById(uuid)

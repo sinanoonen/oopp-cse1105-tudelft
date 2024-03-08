@@ -14,7 +14,7 @@ public class Payment extends Transaction {
 
     @SuppressWarnings("unused")
     protected Payment() {
-
+        this.setOwner(this.sender);
     }
 
     /**

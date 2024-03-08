@@ -33,6 +33,12 @@ import javafx.util.Duration;
 
 /**
  * Controller for the EventOverview scene.
+ * OUTLINE:
+ * - BASE METHODS
+ * - VISUAL EFFECTS HANDLERS
+ * - CELL CLICK HANDLERS
+ * - CELL FACTORIES
+ * - GENERAL METHODS
  */
 public class EventOverviewCtrl implements Initializable {
 
@@ -98,24 +104,11 @@ public class EventOverviewCtrl implements Initializable {
 
         participantsMenu.setVisible(false);
 
-        // Add the correct transactions
-        transactionContainer.getItems().removeAll(transactionContainer.getItems());
-        List<Node> transactions = event
-                .transactions()
-                .stream()
-                .map(this::transactionCellFactory)
-                .toList();
-        transactionContainer.getItems().addAll(transactions);
-
-        // Add the correct participants
-        participantsList.getItems().removeAll(participantsList.getItems());
-        List<Node> users = event
-                .getParticipants()
-                .stream()
-                .map(this::userCellFactory)
-                .toList();
-        participantsList.getItems().addAll(users);
+        resetTransactionsContainer();
+        resetParticipantsContainer();
     }
+
+    // ---------------- VISUAL EFFECTS HANDLERS ---------------- //
 
     /**
      * Function for allowing user to edit the title on double-click.
@@ -143,7 +136,6 @@ public class EventOverviewCtrl implements Initializable {
                 || title.getText().isEmpty()) {
             return;
         }
-
         titleBox.setVisible(false);
         title.setEditable(false);
     }
@@ -205,31 +197,37 @@ public class EventOverviewCtrl implements Initializable {
         });
     }
 
-    /**
-     * Changes the background color of an FXML node.
-     * Will add color if not already present.
-     *
-     * @param node node whose color to change
-     * @param color color string
-     */
-    private void changeBackgroundColor(Node node, String color) {
-        String currentStyle = node.getStyle();
-        String newColor = "-fx-background-color: " + color + ";";
+    // ---------------- CELL CLICK HANDLERS ---------------- //
 
-        if (currentStyle.contains("-fx-background-color")) {
-            // remove existing background color
-            int startIndex = currentStyle.indexOf("-fx-background-color");
-            int endIndex = currentStyle.indexOf(";", startIndex);
-            currentStyle = currentStyle.substring(0, startIndex) + currentStyle.substring(endIndex + 1);
+    private void transactionClickHandler(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount() != 2) {
+            return;
         }
-
-        node.setStyle(currentStyle + newColor);
+        Node source = (Node) mouseEvent.getSource();
+        Transaction transaction = (Transaction) source.getUserData();
+        if (transaction instanceof Expense) {
+            // mainCtrl.showExpenseOverview((Expense) transaction);
+        } else {
+            // mainCtrl.showPaymentOverview((Payment) transaction);
+        }
     }
 
+    private void participantClickHandler(MouseEvent mouseEvent) {
+
+    }
+
+    // ---------------- CELL FACTORIES ---------------- //
+
     private Node transactionCellFactory(Transaction transaction) {
-        return transaction instanceof Expense
+        if (transaction == null) {
+            return null;
+        }
+        Node res = transaction instanceof Expense
                 ? expenseCellFactory((Expense) transaction)
                 : paymentCellFactory((Payment) transaction);
+        res.setOnMouseClicked(this::transactionClickHandler);
+        res.setUserData(transaction);
+        return res;
     }
 
     private Node expenseCellFactory(Expense expense) {
@@ -275,6 +273,32 @@ public class EventOverviewCtrl implements Initializable {
                 + " -fx-border-radius: 5;"
         );
 
+        Text sender = new Text(payment.getSender());
+        final double senderTopPadding = base.getPrefHeight() / 2 + 5;
+        final double senderLeftPadding = base.getPrefWidth() / 16;
+        sender.setLayoutX(base.getLayoutX() + senderLeftPadding);
+        sender.setLayoutY(base.getLayoutY() + senderTopPadding);
+        sender.setFont(Font.font("SansSerif", 15));
+        sender.setFill(Paint.valueOf("#FFFFFF"));
+
+        Text recipient = new Text(payment.getRecipient());
+        final double recipientTopPadding = senderTopPadding;
+        final double recipientLeftPadding = 3f / 4f * base.getPrefWidth();
+        recipient.setLayoutX(base.getLayoutX() + recipientLeftPadding);
+        recipient.setLayoutY(base.getLayoutY() + recipientTopPadding);
+        recipient.setFont(Font.font("SansSerif", 15));
+        recipient.setFill(Paint.valueOf("#FFFFFF"));
+
+        Text amount = new Text(String.valueOf(payment.getAmount()));
+        final double amountTopPadding = senderTopPadding;
+        final double amountLeftPadding = 0.4f * base.getPrefWidth();
+        amount.setLayoutX(base.getLayoutX() + amountLeftPadding);
+        amount.setLayoutY(base.getLayoutY() + amountTopPadding);
+        amount.setFont(Font.font("SansSerif", 15));
+        amount.setFill(Paint.valueOf("#FFFFFF"));
+
+        base.getChildren().addAll(sender, recipient, amount);
+
         return base;
     }
 
@@ -290,15 +314,59 @@ public class EventOverviewCtrl implements Initializable {
         );
 
         Text username = new Text(user.getName());
-        final double titleTopPadding = base.getPrefHeight() / 2 + 5;
-        final double titleLeftPadding = base.getPrefWidth() / 16;
-        username.setLayoutX(base.getLayoutX() + titleLeftPadding);
-        username.setLayoutY(base.getLayoutY() + titleTopPadding);
+        final double nameTopPadding = base.getPrefHeight() / 2 + 5;
+        final double nameLeftPadding = base.getPrefWidth() / 16;
+        username.setLayoutX(base.getLayoutX() + nameLeftPadding);
+        username.setLayoutY(base.getLayoutY() + nameTopPadding);
         username.setFont(Font.font("SansSerif", 15));
         username.setFill(Paint.valueOf("#FFFFFF"));
 
         base.getChildren().add(username);
+        base.setOnMouseClicked(this::participantClickHandler);
 
         return base;
+    }
+
+    // ---------------- GENERAL METHODS ---------------- //
+
+    private void resetTransactionsContainer() {
+        transactionContainer.getItems().removeAll(transactionContainer.getItems());
+        List<Node> transactions = event
+                .transactions()
+                .stream()
+                .map(this::transactionCellFactory)
+                .toList();
+        transactionContainer.getItems().addAll(transactions);
+    }
+
+    private void resetParticipantsContainer() {
+        participantsList.getItems().removeAll(participantsList.getItems());
+        List<Node> users = event
+                .getParticipants()
+                .stream()
+                .map(this::userCellFactory)
+                .toList();
+        participantsList.getItems().addAll(users);
+    }
+
+    /**
+     * Changes the background color of an FXML node.
+     * Will add color if not already present.
+     *
+     * @param node node whose color to change
+     * @param color color string
+     */
+    private void changeBackgroundColor(Node node, String color) {
+        String currentStyle = node.getStyle();
+        String newColor = "-fx-background-color: " + color + ";";
+
+        if (currentStyle.contains("-fx-background-color")) {
+            // remove existing background color
+            int startIndex = currentStyle.indexOf("-fx-background-color");
+            int endIndex = currentStyle.indexOf(";", startIndex);
+            currentStyle = currentStyle.substring(0, startIndex) + currentStyle.substring(endIndex + 1);
+        }
+
+        node.setStyle(currentStyle + newColor);
     }
 }

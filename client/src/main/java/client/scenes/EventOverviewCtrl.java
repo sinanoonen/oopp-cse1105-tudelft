@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -97,6 +98,7 @@ public class EventOverviewCtrl implements Initializable {
         clipboardPopup.setOpacity(0);
 
         participantsMenu.setVisible(false);
+        overviewDarkener.setVisible(false);
         overviewDarkener.setLayoutX(root.getLayoutX());
         overviewDarkener.setPrefWidth(root.getPrefWidth());
         overviewDarkener.setLayoutY(root.getLayoutY());
@@ -212,8 +214,13 @@ public class EventOverviewCtrl implements Initializable {
         }
     }
 
-    private void participantClickHandler(MouseEvent mouseEvent) {
-
+    private void participantClickHandler(ActionEvent actionEvent) {
+        Button button = (Button) actionEvent.getSource();
+        Pane userContainer = (Pane) button.getParent();
+        User user = (User) userContainer.getUserData();
+        serverUtils.removeUserFromEvent(event.getInviteCode(), user.getEmail());
+        refresh();
+        toggleParticipants();
     }
 
     // ---------------- CELL FACTORIES ---------------- //
@@ -321,8 +328,18 @@ public class EventOverviewCtrl implements Initializable {
         username.setFont(Font.font("SansSerif", 15));
         username.setFill(Paint.valueOf("#FFFFFF"));
 
-        base.getChildren().add(username);
-        base.setOnMouseClicked(this::participantClickHandler);
+        Button removeButton = new Button("X");
+        final double buttonTopPadding = 10;
+        final double buttonLeftPadding = 3 * base.getPrefWidth() / 4;
+        removeButton.setLayoutX(username.getLayoutX() + buttonLeftPadding);
+        removeButton.setLayoutY(base.getLayoutY() + buttonTopPadding);
+        removeButton.setFont(Font.font("SansSerif", 15));
+        removeButton.setTextFill(Paint.valueOf("#FFFFFF"));
+        removeButton.setStyle("-fx-background-color: transparent;");
+        removeButton.setOnAction(this::participantClickHandler);
+
+        base.getChildren().addAll(username, removeButton);
+        base.setUserData(user);
 
         return base;
     }

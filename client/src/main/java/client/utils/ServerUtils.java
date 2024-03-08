@@ -85,6 +85,20 @@ public class ServerUtils {
     }
 
     /**
+     * Removes a participant from an event.
+     *
+     * @param uuid uuid of event to remove from
+     * @param email email of user to remove
+     */
+    public void removeUserFromEvent(UUID uuid, String email) {
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events/" + uuid.toString() + "/users/" + email)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete();
+    }
+
+    /**
      * Get all quotes.
      *
      * @return all quotes

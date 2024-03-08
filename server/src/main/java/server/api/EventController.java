@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -110,6 +111,35 @@ public class EventController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(event);
+    }
+
+    /**
+     * Removes a user from an event.
+     *
+     * @param uuid uuid of event from which to remove user
+     * @param email email of user to remove
+     * @return successful operation indicator
+     */
+    @DeleteMapping("/{uuid}/users/{email}")
+    public ResponseEntity<Event> removeUserFromEvent(
+            @PathVariable("uuid") UUID uuid, @PathVariable("email") String email) {
+        if (uuid == null || isNullOrEmpty(uuid.toString()) || isNullOrEmpty(email)) {
+            return ResponseEntity.badRequest().build();
+        }
+        if (!repo.existsById(uuid)) {
+            return ResponseEntity.notFound().build();
+        }
+        Event event = repo.getReferenceById(uuid);
+        Optional<User> toRemove = event.getParticipants()
+                .stream()
+                .filter(u -> u.getEmail().equals(email))
+                .findFirst();
+        if (toRemove.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        event.removeParticipant(toRemove.get());
+        repo.save(event);
         return ResponseEntity.ok(event);
     }
 

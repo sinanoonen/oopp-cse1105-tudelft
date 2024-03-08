@@ -334,12 +334,12 @@ public class EventTest {
         Iterator<Tag> iterator = event.getTags().iterator();
         Tag food = iterator.next();
         Tag entranceFees = iterator.next();
+
         rockClimbing.addTag(entranceFees);
         lunch.addTag(food);
         milkshakes.addTag(food);
 
         assertThrows(IllegalArgumentException.class, () -> event.getExpensesByTag(addedCosts));
-        event.addTag(addedCosts);
 
         List<Expense> foodList = new ArrayList<>();
         foodList.add(lunch);
@@ -351,6 +351,7 @@ public class EventTest {
         addedCostsList.add(hiringEquipment);
 
         Tag travel = iterator.next();
+        event.addTag(addedCosts);
         assertEquals(foodList, event.getExpensesByTag(food));
         assertEquals(entranceFeesList, event.getExpensesByTag(entranceFees));
         assertEquals(travelList, event.getExpensesByTag(travel));

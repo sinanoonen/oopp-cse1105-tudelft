@@ -32,21 +32,35 @@ public class MainCtrl {
     private EventOverviewCtrl eventOverviewCtrl;
     private Scene eventOverview;
 
+    private AddEventCtrl addEventCtrl;
+    private Scene addEvent;
+
     /**
      * Initialize the main controller.
      *
      * @param primaryStage Stage
      * @param eventOverview the eventOverview scene
      */
-    public void initialize(Stage primaryStage, Pair<EventOverviewCtrl, Parent> eventOverview) {
+    public void initialize(Stage primaryStage,
+                           Pair<EventOverviewCtrl, Parent> eventOverview,
+                           Pair<AddEventCtrl, Parent> addEvent
+    ) {
         this.primaryStage = primaryStage;
 
         this.eventOverviewCtrl = eventOverview.getKey();
         this.eventOverview = new Scene(eventOverview.getValue());
 
-        Event demoEvent = new Event("Demo");
-        showEventOverview(demoEvent);
+        this.addEventCtrl = addEvent.getKey();
+        this.addEvent = new Scene(addEvent.getValue());
+
+        showAddEvent();
         primaryStage.show();
+    }
+
+    private void showAddEvent() {
+        primaryStage.setTitle("New Event");
+        primaryStage.setScene(addEvent);
+        addEventCtrl.refresh();
     }
 
     /**
@@ -55,15 +69,7 @@ public class MainCtrl {
     public void showEventOverview(Event event) {
         primaryStage.setTitle(event.getTitle());
         primaryStage.setScene(eventOverview);
-        eventOverviewCtrl.refresh();
+        eventOverviewCtrl.refresh(event);
     }
 
-    /**
-     * Show the add scene.
-     */
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        // primaryStage.setScene(add);
-        // add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
-    }
 }

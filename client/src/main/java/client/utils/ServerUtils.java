@@ -99,6 +99,20 @@ public class ServerUtils {
     }
 
     /**
+     * Adds a new event to the database.
+     *
+     * @param event event to be added
+     * @return added event
+     */
+    public Event addNewEvent(Event event) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/events")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(event, APPLICATION_JSON), Event.class);
+    }
+
+    /**
      * Get all quotes.
      *
      * @return all quotes

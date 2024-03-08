@@ -83,6 +83,26 @@ public class Event {
         participants.addAll(users);
     }
 
+    public void setInviteCode(UUID uuid) {
+        this.inviteCode = uuid;
+    }
+
+    public void setAvailableTags(Set<Tag> availableTags) {
+        this.availableTags = availableTags;
+    }
+
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
+    }
+
+    public void setParticipants(Set<User> participants) {
+        this.participants = participants;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
+    }
+
     /**
      * Getter for the invite code.
      *

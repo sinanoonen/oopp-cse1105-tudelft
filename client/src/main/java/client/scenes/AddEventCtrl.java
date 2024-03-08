@@ -33,6 +33,9 @@ public class AddEventCtrl {
         this.mainCtrl = mainCtrl;
     }
 
+    /**
+     * Refresh method for this scene.
+     */
     public void refresh() {
         inputField.setText("");
         inputField.setEditable(false);

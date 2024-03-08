@@ -8,6 +8,8 @@ import commons.transactions.Transaction;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -104,7 +106,11 @@ public class EventController {
 
         Event event = repo.findById(uuid).get();
         event.addParticipant(user);
-        repo.save(event);
+        try {
+            repo.save(event);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(event);
     }
 
@@ -123,14 +129,13 @@ public class EventController {
      *
      * @return list of all expenses
      */
-    @SuppressWarnings({"checkstyle:WhitespaceAfter", "checkstyle:NoWhitespaceBefore"})
     @GetMapping("{uuid}/transactions")
     public ResponseEntity<List<Transaction>> getAllTransactionsForEvent(@PathVariable("uuid") UUID uuid) {
         if (!repo.existsById(uuid)) {
             return ResponseEntity.badRequest().build();
         }
         Event event = repo.findById(uuid).get();
-        List<Transaction> transactions = event.getTransactions();
+        List<Transaction> transactions = event.transactions();
         return ResponseEntity.ok(transactions);
     }
 
@@ -148,7 +153,7 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
         Event event = repo.findById(uuid).get();
-        Optional<Transaction> transaction = event.getTransactions().stream()
+        Optional<Transaction> transaction = event.transactions().stream()
                 .filter(e -> e.getId() == trId)
                 .findFirst();
         if (!transaction.isEmpty()) {

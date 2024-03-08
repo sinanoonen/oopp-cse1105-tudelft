@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
+import commons.User;
 import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Transaction;
@@ -22,6 +23,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
@@ -40,6 +42,8 @@ public class EventOverviewCtrl implements Initializable {
     private Event event;
 
     @FXML
+    private AnchorPane root;
+    @FXML
     private TextField title;
     @FXML
     private Pane titleBox;
@@ -49,6 +53,12 @@ public class EventOverviewCtrl implements Initializable {
     private Pane buttonDarkener;
     @FXML
     private StackPane clipboardPopup;
+    @FXML
+    private Pane participantsMenu;
+    @FXML
+    private ListView<Node> participantsList;
+    @FXML
+    private Pane overviewDarkener;
     @FXML
     private ListView<Node> transactionContainer;
 
@@ -67,24 +77,44 @@ public class EventOverviewCtrl implements Initializable {
      * Method to refresh the scene. This is needed for some reason.
      */
     public void refresh() {
-        //this.event = event;
+
         this.event = serverUtils.getEvents().getFirst();
+
         inviteCodeButton.requestFocus();
 
         title.setText(event.getTitle());
         title.setEditable(false);
         titleBox.setVisible(false);
 
+        // Prepare invite button
         buttonDarkener.setVisible(false);
         clipboardPopup.setOpacity(0);
 
+        participantsMenu.setVisible(false);
+        overviewDarkener.setLayoutX(root.getLayoutX());
+        overviewDarkener.setPrefWidth(root.getPrefWidth());
+        overviewDarkener.setLayoutY(root.getLayoutY());
+        overviewDarkener.setPrefHeight(root.getPrefHeight());
+
+        participantsMenu.setVisible(false);
+
+        // Add the correct transactions
         transactionContainer.getItems().removeAll(transactionContainer.getItems());
-        List<Node> items = event
-                .getTransactions()
+        List<Node> transactions = event
+                .transactions()
                 .stream()
                 .map(this::transactionCellFactory)
                 .toList();
-        transactionContainer.getItems().addAll(items);
+        transactionContainer.getItems().addAll(transactions);
+
+        // Add the correct participants
+        participantsList.getItems().removeAll(participantsList.getItems());
+        List<Node> users = event
+                .getParticipants()
+                .stream()
+                .map(this::userCellFactory)
+                .toList();
+        participantsList.getItems().addAll(users);
     }
 
     /**
@@ -159,6 +189,23 @@ public class EventOverviewCtrl implements Initializable {
     }
 
     /**
+     * Toggles the participants display.
+     */
+    @FXML
+    public void toggleParticipants() {
+        overviewDarkener.toFront();
+        overviewDarkener.setVisible(!overviewDarkener.isVisible());
+        overviewDarkener.setMouseTransparent(!overviewDarkener.isVisible());
+        participantsMenu.toFront();
+        participantsMenu.setVisible(!participantsMenu.isVisible());
+        participantsMenu.setMouseTransparent(!participantsMenu.isVisible());
+        participantsMenu.getChildren().forEach(child -> {
+            child.setVisible(participantsMenu.isVisible());
+            child.setMouseTransparent(participantsMenu.isMouseTransparent());
+        });
+    }
+
+    /**
      * Changes the background color of an FXML node.
      * Will add color if not already present.
      *
@@ -187,9 +234,14 @@ public class EventOverviewCtrl implements Initializable {
 
     private Node expenseCellFactory(Expense expense) {
         Pane base = new Pane();
-        base.setPrefWidth(transactionContainer.getPrefWidth() - 10);
+        base.setPrefWidth(transactionContainer.getPrefWidth() - 20);
         base.setPrefHeight(100);
-        base.setStyle("-fx-background-color: #444444; -fx-border-width: 3; -fx-border-color: black;");
+        base.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: black;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
 
         Text expenseTitle = new Text(expense.getDescription());
         final double titleTopPadding = base.getPrefHeight() / 2 + 5;
@@ -216,8 +268,37 @@ public class EventOverviewCtrl implements Initializable {
         Pane base = new Pane();
         base.setPrefWidth(transactionContainer.getPrefWidth() - 20);
         base.setPrefHeight(100);
-        base.setStyle("-fx-background-color: #444444; -fx-border-width: 3; -fx-border-color: black;");
+        base.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: black;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
+
         return base;
     }
 
+    private Node userCellFactory(User user) {
+        Pane base = new Pane();
+        base.setPrefWidth(participantsList.getPrefWidth() - 20);
+        base.setPrefHeight(50);
+        base.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: black;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
+
+        Text username = new Text(user.getName());
+        final double titleTopPadding = base.getPrefHeight() / 2 + 5;
+        final double titleLeftPadding = base.getPrefWidth() / 16;
+        username.setLayoutX(base.getLayoutX() + titleLeftPadding);
+        username.setLayoutY(base.getLayoutY() + titleTopPadding);
+        username.setFont(Font.font("SansSerif", 15));
+        username.setFill(Paint.valueOf("#FFFFFF"));
+
+        base.getChildren().add(username);
+
+        return base;
+    }
 }

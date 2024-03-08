@@ -72,7 +72,7 @@ public class EventTest {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Meeting");
         event.addParticipant(user1);
-        assertEquals(new ArrayList<>(), event.getTransactions());
+        assertEquals(new ArrayList<>(), event.transactions());
     }
 
     @Test
@@ -176,29 +176,29 @@ public class EventTest {
         Payment payment = new Payment(LocalDate.of(2021, 1, 1), 100,
                 "David", "David");
 
-        assertEquals(0, event.getTransactions().size());
+        assertEquals(0, event.transactions().size());
         assertTrue(event.addTransaction(payment));
-        assertEquals(1, event.getTransactions().size());
-        assertEquals(payment, event.getTransactions().getFirst());
+        assertEquals(1, event.transactions().size());
+        assertEquals(payment, event.transactions().getFirst());
 
         assertFalse(event.addTransaction(null));
-        assertEquals(1, event.getTransactions().size());
-        assertEquals(payment, event.getTransactions().getFirst());
+        assertEquals(1, event.transactions().size());
+        assertEquals(payment, event.transactions().getFirst());
 
         assertFalse(event.removeTransaction(null));
-        assertEquals(1, event.getTransactions().size());
-        assertEquals(payment, event.getTransactions().getFirst());
+        assertEquals(1, event.transactions().size());
+        assertEquals(payment, event.transactions().getFirst());
 
         Payment payment2 = new Payment(LocalDate.of(2021, 1, 1), 500,
                 "David", "David");
         assertFalse(event.removeTransaction(payment2));
-        assertEquals(1, event.getTransactions().size());
-        assertEquals(payment, event.getTransactions().getFirst());
+        assertEquals(1, event.transactions().size());
+        assertEquals(payment, event.transactions().getFirst());
 
         Payment paymentIdentical = new Payment(LocalDate.of(2021, 1, 1), 100,
                 "David", "David");
         assertTrue(event.removeTransaction(paymentIdentical));
-        assertEquals(0, event.getTransactions().size());
+        assertEquals(0, event.transactions().size());
     }
 
     @Test

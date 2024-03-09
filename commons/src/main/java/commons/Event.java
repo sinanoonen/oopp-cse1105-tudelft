@@ -1,8 +1,10 @@
 package commons;
 
 import commons.transactions.Expense;
+import commons.transactions.Payment;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,7 +14,6 @@ import jakarta.persistence.OneToMany;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -31,26 +32,37 @@ public class Event {
     @ManyToMany
     private Set<User> participants;
     @OneToMany
-    private List<Transaction> transactions;
+    private List<Expense> expenses;
     @OneToMany
+    private List<Payment> payments;
+    @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Tag> availableTags;
 
     @SuppressWarnings("unused")
     protected Event() {
-
+        this.participants = new HashSet<>();
+        this.expenses = new ArrayList<>();
+        this.payments = new ArrayList<>();
+        this.availableTags = new HashSet<>(
+                Arrays.asList(
+                        new Tag("Food", new Color(147, 196, 125)),
+                        new Tag("Entrance Fees", new Color(74, 134, 232)),
+                        new Tag("Travel", new Color(224, 102, 102))
+                )
+        );
     }
 
     /**
      * Constructor method.
      *
      * @param title of the event
-     * @param creator of the event
      */
-    public Event(String title, User creator) {
+    public Event(String title) {
         this.inviteCode = UUID.randomUUID();
         this.title = title;
-        this.participants = new HashSet<>(Collections.singletonList(creator));
-        this.transactions = new ArrayList<>();
+        this.participants = new HashSet<>();
+        this.expenses = new ArrayList<>();
+        this.payments = new ArrayList<>();
         this.availableTags = new HashSet<>(
                 Arrays.asList(
                     new Tag("Food", new Color(147, 196, 125)),
@@ -67,7 +79,7 @@ public class Event {
      * @param users that partake in the event
      */
     public Event(String title, Set<User> users) {
-        this(title, users.iterator().next());
+        this(title);
         participants.addAll(users);
     }
 
@@ -78,6 +90,14 @@ public class Event {
      */
     public UUID getInviteCode() {
         return inviteCode;
+    }
+
+    public List<Expense> getExpenses() {
+        return expenses;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
     }
 
     /**
@@ -115,8 +135,10 @@ public class Event {
      *
      * @return commons.transactions
      */
-    public List<Transaction> getTransactions() {
-        return transactions;
+    public List<Transaction> transactions() {
+        List<Transaction> res = new ArrayList<>(expenses);
+        res.addAll(payments);
+        return res;
     }
 
     /**
@@ -127,15 +149,6 @@ public class Event {
     public void setTitle(String title) {
         this.title = title;
     }
-
-    //    /**
-    //     * Setter for invite code.
-    //     *
-    //     * @param code UUID to set inviteCode
-    //     */
-    //    public void setInviteCode(UUID code) {
-    //        this.inviteCode = code;
-    //    }
 
     /**
      * Adds a new tag that can be used for the transactions of this event.
@@ -202,7 +215,9 @@ public class Event {
         if (transaction == null) {
             return false;
         }
-        transactions.add(transaction);
+        boolean trash = transaction instanceof Expense
+                ? expenses.add((Expense) transaction)
+                : payments.add((Payment) transaction);
         return true;
     }
 
@@ -213,7 +228,9 @@ public class Event {
      * @return true if operation successful, false otherwise
      */
     public boolean removeTransaction(Transaction transaction) {
-        return transactions.remove(transaction);
+        return transaction instanceof Expense
+                ? expenses.remove(transaction)
+                : payments.remove(transaction);
     }
 
     /**
@@ -230,9 +247,7 @@ public class Event {
             throw new IllegalArgumentException("Tag not found in Event");
         }
 
-        return transactions.stream()
-                .filter(transaction -> transaction instanceof Expense)
-                .map(transaction -> (Expense) transaction)
+        return expenses.stream()
                 .filter(expense -> expense.getDebts().containsKey(participant))
                 .toList();
     }
@@ -248,9 +263,7 @@ public class Event {
             throw new IllegalArgumentException("Tag not found in Event");
         }
 
-        return transactions.stream()
-                .filter(transaction -> transaction instanceof Expense)
-                .map(transaction -> (Expense) transaction)
+        return expenses.stream()
                 .filter(expense -> expense.getTags().contains(tag))
                 .toList();
     }
@@ -273,7 +286,7 @@ public class Event {
         return Objects.equals(inviteCode, event.inviteCode)
                 && Objects.equals(title, event.title)
                 && Objects.equals(participants, event.participants)
-                && Objects.equals(transactions, event.transactions);
+                && Objects.equals(transactions(), event.transactions());
     }
 
     /**
@@ -283,7 +296,7 @@ public class Event {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(inviteCode, title, participants, transactions);
+        return Objects.hash(inviteCode, title, participants, transactions());
     }
 
     /**
@@ -303,7 +316,7 @@ public class Event {
                 + ", participants="
                 + participants
                 + ", commons.transactions="
-                + transactions
+                + transactions()
                 + '}';
     }
 }

@@ -20,8 +20,8 @@ public class PaymentTest {
     @BeforeEach
     void setUpForTests() {
         paymentDate = LocalDate.of(2024, 2, 23);
-        paymentSenderNotOwner = new Payment("Emilio", paymentDate, 20f, "Yannick", "Filip");
-        paymentSenderOwner = new Payment("Emilio", paymentDate, 30f, "Yannick");
+        paymentSenderNotOwner = new Payment(paymentDate, 20f, "Yannick", "Filip");
+        paymentSenderOwner = new Payment(paymentDate, 30f, "Yannick", "Emilio");
     }
 
     @Test
@@ -29,7 +29,7 @@ public class PaymentTest {
         assertEquals("Filip", paymentSenderNotOwner.getSender());
         assertEquals("Yannick", paymentSenderNotOwner.getRecipient());
         assertEquals(paymentDate, paymentSenderNotOwner.getDate());
-        assertEquals("Emilio", paymentSenderNotOwner.getOwner());
+        assertEquals("Filip", paymentSenderNotOwner.getOwner());
         assertEquals(30f, paymentSenderOwner.getAmount());
         assertEquals("Emilio", paymentSenderOwner.getOwner());
         assertEquals("Emilio", paymentSenderOwner.getSender());
@@ -59,7 +59,7 @@ public class PaymentTest {
 
     @Test
     void testToString() {
-        String expected = "Payment{Transaction{owner = 'Emilio', "
+        String expected = "Payment{Transaction{owner = 'Filip', "
                 + "date = '2024-02-23', amount = 20.0}sender='Filip',"
                 + " recipient='Yannick'}";
         assertEquals(expected, paymentSenderNotOwner.toString());
@@ -70,20 +70,20 @@ public class PaymentTest {
         assertEquals(paymentSenderNotOwner, paymentSenderNotOwner);
         assertNotEquals(paymentSenderNotOwner, null);
 
-        Payment paymentIdentical = new Payment("Emilio", paymentDate,
+        Payment paymentIdentical = new Payment(paymentDate,
                 20f, "Yannick", "Filip");
         assertEquals(paymentSenderNotOwner, paymentIdentical);
 
-        Payment paymentDifferent = new Payment("Sinan", paymentDate,
+        Payment paymentDifferent = new Payment(paymentDate,
                 30f, "Yannick", "Filip");
         assertNotEquals(paymentSenderNotOwner, paymentDifferent);
 
-        Payment paymentIdentical2 = new Payment("Emilio", paymentDate,
-                30f, "Yannick");
+        Payment paymentIdentical2 = new Payment(paymentDate,
+                30f, "Yannick", "Emilio");
         assertEquals(paymentSenderOwner, paymentIdentical2);
 
-        Payment paymentDifferent2 =  new Payment("Ivo", paymentDate,
-                40f, "Yannick");
+        Payment paymentDifferent2 =  new Payment(paymentDate,
+                40f, "Yannick", "Ivo");
         assertNotEquals(paymentSenderOwner, paymentDifferent2);
 
         Expense expense = new Expense("Emilio", paymentDate, 20f,

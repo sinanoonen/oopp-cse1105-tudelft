@@ -4,7 +4,6 @@ import commons.Event;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
 /**
  * Repository for events.
  */

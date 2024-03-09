@@ -45,7 +45,9 @@ public class EventControllerTest {
     }
 
     private static Event getEvent(String title) {
-        return new Event(title, new User("testName", "testMail", "testIBAN", "testBic"));
+        Event event = new Event(title);
+        event.addParticipant(new User("testName", "testMail", "testIBAN", "testBic"));
+        return event;
     }
 
     @Test

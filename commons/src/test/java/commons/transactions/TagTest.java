@@ -20,7 +20,7 @@ public class TagTest {
         Color color = Color.RED;
         Tag tag = new Tag(name, color);
         assertEquals(name, tag.getName());
-        assertEquals(color, tag.getColor());
+        assertEquals(color.getRGB(), tag.getColor());
     }
 
     @Test
@@ -28,14 +28,14 @@ public class TagTest {
         Tag tag = new Tag("InitialTag", Color.BLUE);
         tag.setName("UpdatedTag");
         assertEquals("UpdatedTag", tag.getName());
-        tag.setColor(Color.GREEN);
-        assertEquals(Color.GREEN, tag.getColor());
+        tag.setColor(Color.GREEN.getRGB());
+        assertEquals(Color.GREEN.getRGB(), tag.getColor());
     }
 
     @Test
     public void testToString() {
         Tag tag = new Tag("TestTag", Color.RED);
-        String expectedString = "commons.transactions.Tag{name='TestTag', color=java.awt.Color[r=255,g=0,b=0]}";
+        String expectedString = "commons.transactions.Tag{name='TestTag', color=" + Color.RED.getRGB() + "}";
         assertEquals(expectedString, tag.toString());
     }
 

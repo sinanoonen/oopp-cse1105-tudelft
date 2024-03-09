@@ -111,7 +111,7 @@ public class EventManager {
     public Event getEventByTransaction(Transaction transaction) throws IllegalArgumentException {
         Event transactionEvent = null;
         for (Event event : this.events) {
-            if (event.getTransactions().contains(transaction)) {
+            if (event.transactions().contains(transaction)) {
                 transactionEvent = event;
                 break;
             }

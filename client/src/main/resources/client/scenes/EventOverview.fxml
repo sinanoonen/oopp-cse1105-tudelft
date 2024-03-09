@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="participants_button" fx:id="root" prefHeight="647.0" prefWidth="600.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.EventOverviewCtrl">
+   <children>
+      <Pane id="title_box" fx:id="titleBox" layoutX="24.0" layoutY="50.0" prefHeight="62.0" prefWidth="316.0" style="-fx-background-radius: 10; -fx-background-color: #2b2b2b;" visible="false">
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </Pane>
+      <TextField id="title_text" fx:id="title" editable="false" layoutX="30.0" layoutY="54.0" onKeyPressed="#onTitleFieldDeselect" onMouseClicked="#onTitleFieldClicked" prefHeight="52.0" prefWidth="301.0" promptText="Title" style="-fx-text-fill: #FFFFFF; -fx-background-color: transparent;" text="Title">
+         <font>
+            <Font name="SansSerif Bold" size="29.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </TextField>
+      <Button fx:id="inviteCodeButton" layoutX="423.0" layoutY="65.0" mnemonicParsing="false" onMouseClicked="#copyInviteCode" onMousePressed="#toggleDarkenedButton" onMouseReleased="#toggleDarkenedButton" prefHeight="40.0" prefWidth="136.0" style="-fx-background-color: #3f3f3f; -fx-background-radius: 7; -fx-border-color: #C30052; -fx-border-width: 2; -fx-border-radius: 5;" text="Invite Code" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="SansSerif Bold" size="19.0" />
+         </font>
+      </Button>
+      <Pane id="button_darkener" fx:id="buttonDarkener" layoutX="423.0" layoutY="65.0" mouseTransparent="true" opacity="0.29" prefHeight="40.0" prefWidth="136.0" style="-fx-background-color: black; -fx-background-radius: 5;" visible="false" />
+      <StackPane id="clipboard_popup" fx:id="clipboardPopup" layoutX="52.0" layoutY="555.0" mouseTransparent="true" opacity="0.0" prefHeight="62.0" prefWidth="503.0" style="-fx-background-color: #222222; -fx-background-radius: 10;">
+         <children>
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Copied invite code to clipboard" textAlignment="CENTER" wrappingWidth="502.91796875">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Text>
+         </children>
+      </StackPane>
+      <ListView id="transaction_container" fx:id="transactionContainer" layoutX="25.0" layoutY="221.0" prefHeight="400.0" prefWidth="550.0" style="-fx-background-color: #3c3c3c; -fx-background-radius: 10; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 0;" />
+      <Button layoutX="52.0" layoutY="144.0" mnemonicParsing="false" onAction="#toggleParticipants" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="Participants" textFill="WHITE">
+         <font>
+            <Font name="SansSerif Bold" size="15.0" />
+         </font>
+      </Button>
+      <Pane id="overview_darkener" fx:id="overviewDarkener" mouseTransparent="true" onMouseClicked="#toggleParticipants" opacity="0.7" prefHeight="647.0" prefWidth="600.0" style="-fx-background-color: black;" visible="false" />
+      <Pane fx:id="participantsMenu" layoutX="124.0" layoutY="42.0" mouseTransparent="true" prefHeight="559.0" prefWidth="351.0" style="-fx-background-color: #333333; -fx-background-radius: 12; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10;" visible="false">
+         <children>
+            <ListView fx:id="participantsList" layoutX="10.0" layoutY="9.0" mouseTransparent="true" prefHeight="481.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-background: transparent;" visible="false" />
+            <Button layoutX="22.0" layoutY="505.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Add Participant" textFill="WHITE" visible="false" />
+            <Button layoutX="199.0" layoutY="505.0" mnemonicParsing="false" mouseTransparent="true" onAction="#toggleParticipants" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Close" textFill="WHITE" visible="false">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

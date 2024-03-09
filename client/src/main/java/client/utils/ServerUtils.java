@@ -18,7 +18,9 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import commons.Event;
 import commons.Quote;
+import commons.transactions.Expense;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -28,6 +30,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.UUID;
 import org.glassfish.jersey.client.ClientConfig;
 
 /**
@@ -51,6 +54,48 @@ public class ServerUtils {
         while ((line = br.readLine()) != null) {
             System.out.println(line);
         }
+    }
+
+    /**
+     * Get all events.
+     *
+     * @return List of all events on DB
+     */
+    public List<Event> getEvents() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {});
+    }
+
+    /**
+     * Sends HTTP request to add expense to db.
+     *
+     * @param uuid uuid of event to add expense to
+     * @param expense expense to be added
+     * @return added expense
+     */
+    public Expense addExpense(UUID uuid, Expense expense) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events/" + uuid.toString() + "/transactions/expenses")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(expense, APPLICATION_JSON), Expense.class);
+    }
+
+    /**
+     * Removes a participant from an event.
+     *
+     * @param uuid uuid of event to remove from
+     * @param email email of user to remove
+     */
+    public void removeUserFromEvent(UUID uuid, String email) {
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events/" + uuid.toString() + "/users/" + email)
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete();
     }
 
     /**

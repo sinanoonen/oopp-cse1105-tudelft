@@ -97,7 +97,7 @@ public class EventController {
      * @param user the user to add
      * @return the updated event
      */
-    @PutMapping("/{uuid}/users")
+    @PostMapping("/{uuid}/users")
     public ResponseEntity<Event> addUser(@PathVariable("uuid") UUID uuid, @RequestBody User user) {
         // TODO should this be a put or a post?
         if (!repo.existsById(uuid)) {

@@ -40,7 +40,7 @@
             </Text>
          </children>
       </StackPane>
-      <ListView id="transaction_container" fx:id="transactionContainer" layoutX="25.0" layoutY="221.0" prefHeight="400.0" prefWidth="550.0" style="-fx-background-color: #3c3c3c; -fx-background-radius: 10; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 0;" />
+      <ListView id="transaction_container" fx:id="transactionContainer" layoutX="25.0" layoutY="221.0" prefHeight="400.0" prefWidth="550.0" style="-fx-background-color: #3c3c3c; -fx-background-radius: 10; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 0; -fx-background: transparent;" />
       <Button layoutX="52.0" layoutY="144.0" mnemonicParsing="false" onAction="#toggleParticipants" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="Participants" textFill="WHITE">
          <font>
             <Font name="SansSerif Bold" size="15.0" />

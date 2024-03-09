@@ -14,6 +14,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.util.Optional;
+import java.util.UUID;
+
 /**
  * A controller for the AddEvent scene.
  */
@@ -78,6 +81,7 @@ public class AddEventCtrl {
         }
         if (inputField.getText().length() > 20) {
             displayInputError("Title exceeds max length (20)");
+            return;
         }
 
         Event newEvent = new Event(inputField.getText());

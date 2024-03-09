@@ -43,13 +43,7 @@ public class Event {
         this.participants = new HashSet<>();
         this.expenses = new ArrayList<>();
         this.payments = new ArrayList<>();
-        this.availableTags = new HashSet<>(
-                Arrays.asList(
-                        new Tag("Food", new Color(147, 196, 125)),
-                        new Tag("Entrance Fees", new Color(74, 134, 232)),
-                        new Tag("Travel", new Color(224, 102, 102))
-                )
-        );
+        this.availableTags = new HashSet<>();
     }
 
     /**

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import server.database.EventRepository;
 import server.database.ExpenseRepository;
 import server.database.PaymentRepository;
-import server.database.TagRepository;
 
 /**
  * A controller for events.

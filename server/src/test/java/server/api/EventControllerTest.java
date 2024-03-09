@@ -49,7 +49,7 @@ public class EventControllerTest {
     @Test
     public void databaseIsUsed() {
         sut.add(getEvent("test"));
-        repo.calledMethods.contains("save");
+        assertTrue(repo.calledMethods.contains("save"));
     }
 
     private static Event getEvent(String title) {
@@ -219,6 +219,17 @@ public class EventControllerTest {
         UUID testUuid = testEvent.getInviteCode();
         ResponseEntity<Transaction> response = sut.getTransactionByIdforEvent(testUuid, 0L);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void getTransactionByIdForEventWhenEventDoesNotExist() {
+        LocalDate baseDate = LocalDate.of(2024, 3, 1);
+        Transaction transaction = new Expense("TestExpense", baseDate, 90f,
+            "Just a test", new ArrayList<>());
+        UUID testUuid = UUID.randomUUID();
+
+        ResponseEntity<Transaction> response = sut.getTransactionByIdforEvent(testUuid, transaction.getId());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test

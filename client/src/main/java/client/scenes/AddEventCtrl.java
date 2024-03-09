@@ -14,9 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import java.util.Optional;
-import java.util.UUID;
-
 /**
  * A controller for the AddEvent scene.
  */

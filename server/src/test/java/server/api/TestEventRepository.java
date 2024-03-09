@@ -154,8 +154,10 @@ public class TestEventRepository implements EventRepository {
     @Override
     public Optional<Event> findById(UUID id) {
         call("findById");
-        for(Event event : events) {
-            if(event.getInviteCode().equals(id)) return Optional.of(event);
+        for (Event event : events) {
+            if (event.getInviteCode().equals(id)) {
+                return Optional.of(event);
+            }
         }
         return Optional.empty();
     }

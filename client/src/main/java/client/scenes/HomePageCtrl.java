@@ -4,7 +4,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 
 /**
- * A controller for the home page scene
+ * A controller for the home page scene.
  */
 public class HomePageCtrl {
 

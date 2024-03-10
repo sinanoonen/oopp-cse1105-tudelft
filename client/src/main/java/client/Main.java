@@ -48,6 +48,6 @@ public class Main extends Application {
         var addEvent = FXML.load(AddEventCtrl.class, "client", "scenes", "AddEvent.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, homepage, eventOverview, addEvent);
+        mainCtrl.initialize(primaryStage, homePage, eventOverview, addEvent);
     }
 }

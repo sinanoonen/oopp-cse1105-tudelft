@@ -20,6 +20,7 @@ import static com.google.inject.Guice.createInjector;
 
 import client.scenes.AddEventCtrl;
 import client.scenes.EventOverviewCtrl;
+import client.scenes.HomePageCtrl;
 import client.scenes.MainCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;
@@ -42,10 +43,11 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
+        var homePage = FXML.load(HomePageCtrl.class, "client", "scenes", "HomePage.fxml");
         var eventOverview = FXML.load(EventOverviewCtrl.class, "client", "scenes", "EventOverview.fxml");
         var addEvent = FXML.load(AddEventCtrl.class, "client", "scenes", "AddEvent.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, eventOverview, addEvent);
+        mainCtrl.initialize(primaryStage, homepage, eventOverview, addEvent);
     }
 }

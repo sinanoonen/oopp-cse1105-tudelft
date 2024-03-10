@@ -29,6 +29,9 @@ public class MainCtrl {
 
     private Stage primaryStage;
 
+    private HomePageCtrl homePageCtrl;
+    private Scene homePage;
+
     private EventOverviewCtrl eventOverviewCtrl;
     private Scene eventOverview;
 
@@ -39,13 +42,19 @@ public class MainCtrl {
      * Initialize the main controller.
      *
      * @param primaryStage Stage
+     * @param homePage home page on which the app opens
      * @param eventOverview the eventOverview scene
+     * @param addEvent the addEvent page
      */
     public void initialize(Stage primaryStage,
+                           Pair<HomePageCtrl, Parent> homePage,
                            Pair<EventOverviewCtrl, Parent> eventOverview,
                            Pair<AddEventCtrl, Parent> addEvent
     ) {
         this.primaryStage = primaryStage;
+
+        this.homePageCtrl = homePage.getKey();
+        this.homePage = new Scene(homePage.getValue());
 
         this.eventOverviewCtrl = eventOverview.getKey();
         this.eventOverview = new Scene(eventOverview.getValue());
@@ -55,6 +64,12 @@ public class MainCtrl {
 
         showAddEvent();
         primaryStage.show();
+    }
+
+    private void showHomePageEvent() {
+        primaryStage.setTitle("Home");
+        primaryStage.setScene(homePage);
+        homePageCtrl.refresh();
     }
 
     private void showAddEvent() {

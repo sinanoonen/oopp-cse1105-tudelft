@@ -83,9 +83,9 @@ public class EventOverviewCtrl implements Initializable {
     /**
      * Method to refresh the scene. This is needed for some reason.
      */
-    public void refresh() {
+    public void refresh(Event event) {
 
-        this.event = serverUtils.getEvents().getFirst();
+        this.event = event;
 
         inviteCodeButton.requestFocus();
 
@@ -219,7 +219,7 @@ public class EventOverviewCtrl implements Initializable {
         Pane userContainer = (Pane) button.getParent();
         User user = (User) userContainer.getUserData();
         serverUtils.removeUserFromEvent(event.getInviteCode(), user.getEmail());
-        refresh();
+        refresh(this.event);
         toggleParticipants();
     }
 

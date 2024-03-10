@@ -4,10 +4,12 @@ import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
 import commons.transactions.Payment;
+import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,9 +32,7 @@ import server.database.PaymentRepository;
 public class EventController {
 
     private final EventRepository repo;
-
     private final ExpenseRepository exRepo;
-
     private final PaymentRepository payRepo;
 
     /**
@@ -42,7 +42,9 @@ public class EventController {
      * @param exRepo expense repository
      * @param payRepo payment repository
      */
-    public EventController(EventRepository repo, ExpenseRepository exRepo, PaymentRepository payRepo) {
+    public EventController(EventRepository repo,
+                           ExpenseRepository exRepo,
+                           PaymentRepository payRepo) {
         this.repo = repo;
         this.exRepo = exRepo;
         this.payRepo = payRepo;
@@ -80,7 +82,6 @@ public class EventController {
      */
     @PostMapping(path = { "", "/" })
     public ResponseEntity<Event> add(@RequestBody Event event) {
-
         if (event == null || isNullOrEmpty(event.getTitle())) {
             return ResponseEntity.badRequest().build();
         }
@@ -89,6 +90,36 @@ public class EventController {
         return ResponseEntity.ok(saved);
     }
 
+    /**
+     * Returns the set of tags for an event.
+     *
+     * @param uuid uuid of event whose tags to fetch
+     * @return null if event does not exist; set of tags otherwise
+     */
+    @GetMapping("/{uuid}/tags")
+    public Set<Tag> getTags(@PathVariable("uuid") UUID uuid) {
+        Optional<Event> event = repo.findById(uuid);
+        return event.map(Event::getTags).orElse(null);
+    }
+
+    /**
+     * Adds a tag to the provided event.
+     *
+     * @param uuid uuid of event to which to add a tag
+     * @param tag tag to be added
+     * @return modified event
+     */
+    @PostMapping("/{uuid}/tags")
+    public ResponseEntity<Event> addTagToEvent(@PathVariable("uuid") UUID uuid, @RequestBody Tag tag) {
+        Optional<Event> event = repo.findById(uuid);
+        if (event.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        event.get().addTag(tag);
+        Event saved = repo.save(event.get());
+        return ResponseEntity.ok(saved);
+    }
 
     /**
      * Adds a user to an event.

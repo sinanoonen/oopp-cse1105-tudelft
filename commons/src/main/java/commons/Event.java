@@ -43,13 +43,7 @@ public class Event {
         this.participants = new HashSet<>();
         this.expenses = new ArrayList<>();
         this.payments = new ArrayList<>();
-        this.availableTags = new HashSet<>(
-                Arrays.asList(
-                        new Tag("Food", new Color(147, 196, 125)),
-                        new Tag("Entrance Fees", new Color(74, 134, 232)),
-                        new Tag("Travel", new Color(224, 102, 102))
-                )
-        );
+        this.availableTags = new HashSet<>();
     }
 
     /**
@@ -81,6 +75,26 @@ public class Event {
     public Event(String title, Set<User> users) {
         this(title);
         participants.addAll(users);
+    }
+
+    public void setInviteCode(UUID uuid) {
+        this.inviteCode = uuid;
+    }
+
+    public void setAvailableTags(Set<Tag> availableTags) {
+        this.availableTags = availableTags;
+    }
+
+    public void setExpenses(List<Expense> expenses) {
+        this.expenses = expenses;
+    }
+
+    public void setParticipants(Set<User> participants) {
+        this.participants = participants;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
     }
 
     /**

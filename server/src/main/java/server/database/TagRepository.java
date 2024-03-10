@@ -3,7 +3,6 @@ package server.database;
 import commons.transactions.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
 /**
  * A repository for tags.
  */

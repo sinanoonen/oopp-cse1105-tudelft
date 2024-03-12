@@ -208,6 +208,11 @@ public class EventOverviewCtrl implements Initializable {
         mainCtrl.showHomePage();
     }
 
+    /**
+     * Darkens the background of the hyperlink on hover.
+     *
+     * @param event MouseEvent
+     */
     public void toggleHyperlinkBackground(MouseEvent event) {
         changeBackgroundColor(backLink,
                 backLink.getStyle().contains("transparent")

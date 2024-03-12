@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
+import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
@@ -12,8 +13,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
-import java.util.List;
 
 /**
  * A controller for the home page scene.
@@ -36,6 +35,9 @@ public class HomePageCtrl {
         this.mainCtrl = mainCtrl;
     }
 
+    /**
+     * Refresh method for this scene.
+     */
     public void refresh() {
         events = serverUtils.getEvents();
 

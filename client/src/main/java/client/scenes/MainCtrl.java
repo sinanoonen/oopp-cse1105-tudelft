@@ -66,12 +66,18 @@ public class MainCtrl {
         primaryStage.show();
     }
 
+    /**
+     * Displays the home page.
+     */
     public void showHomePage() {
         primaryStage.setTitle("Home");
         primaryStage.setScene(homePage);
         homePageCtrl.refresh();
     }
 
+    /**
+     * Displays the page to add a new event.
+     */
     public void showAddEvent() {
         primaryStage.setTitle("New Event");
         primaryStage.setScene(addEvent);
@@ -79,7 +85,7 @@ public class MainCtrl {
     }
 
     /**
-     * Show the overview.
+     * Show the overview page for an event.
      */
     public void showEventOverview(Event event) {
         primaryStage.setTitle(event.getTitle());

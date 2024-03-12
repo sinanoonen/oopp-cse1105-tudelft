@@ -62,17 +62,17 @@ public class MainCtrl {
         this.addEventCtrl = addEvent.getKey();
         this.addEvent = new Scene(addEvent.getValue());
 
-        showAddEvent();
+        showHomePage();
         primaryStage.show();
     }
 
-    private void showHomePageEvent() {
+    public void showHomePage() {
         primaryStage.setTitle("Home");
         primaryStage.setScene(homePage);
         homePageCtrl.refresh();
     }
 
-    private void showAddEvent() {
+    public void showAddEvent() {
         primaryStage.setTitle("New Event");
         primaryStage.setScene(addEvent);
         addEventCtrl.refresh();

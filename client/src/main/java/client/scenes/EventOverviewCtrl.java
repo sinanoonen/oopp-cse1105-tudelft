@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
@@ -68,6 +69,8 @@ public class EventOverviewCtrl implements Initializable {
     private Pane overviewDarkener;
     @FXML
     private ListView<Node> transactionContainer;
+    @FXML
+    private Hyperlink backLink;
 
     @Inject
     public EventOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
@@ -105,6 +108,8 @@ public class EventOverviewCtrl implements Initializable {
         overviewDarkener.setPrefHeight(root.getPrefHeight());
 
         participantsMenu.setVisible(false);
+
+        changeBackgroundColor(backLink, "transparent");
 
         resetTransactionsContainer();
         resetParticipantsContainer();
@@ -199,6 +204,18 @@ public class EventOverviewCtrl implements Initializable {
         });
     }
 
+    public void onBackClicked(MouseEvent event) {
+        mainCtrl.showHomePage();
+    }
+
+    public void toggleHyperlinkBackground(MouseEvent event) {
+        changeBackgroundColor(backLink,
+                backLink.getStyle().contains("transparent")
+                ? "#2b2b2b"
+                : "transparent"
+        );
+    }
+
     // ---------------- CELL CLICK HANDLERS ---------------- //
 
     private void transactionClickHandler(MouseEvent mouseEvent) {
@@ -255,6 +272,7 @@ public class EventOverviewCtrl implements Initializable {
         expenseTitle.setLayoutY(base.getLayoutY() + titleTopPadding);
         expenseTitle.setFont(Font.font("SansSerif", 15));
         expenseTitle.setFill(Paint.valueOf("#FFFFFF"));
+        expenseTitle.setMouseTransparent(true);
 
         Text amount = new Text(String.valueOf(expense.getAmount()));
         final double amountTopPadding = titleTopPadding;
@@ -263,6 +281,7 @@ public class EventOverviewCtrl implements Initializable {
         amount.setLayoutY(base.getLayoutY() + amountTopPadding);
         amount.setFont(Font.font("SansSerif", 15));
         amount.setFill(Paint.valueOf("#FFFFFF"));
+        amount.setMouseTransparent(true);
 
         base.getChildren().addAll(expenseTitle, amount);
 
@@ -287,6 +306,7 @@ public class EventOverviewCtrl implements Initializable {
         sender.setLayoutY(base.getLayoutY() + senderTopPadding);
         sender.setFont(Font.font("SansSerif", 15));
         sender.setFill(Paint.valueOf("#FFFFFF"));
+        sender.setMouseTransparent(true);
 
         Text recipient = new Text(payment.getRecipient());
         final double recipientTopPadding = senderTopPadding;
@@ -295,6 +315,7 @@ public class EventOverviewCtrl implements Initializable {
         recipient.setLayoutY(base.getLayoutY() + recipientTopPadding);
         recipient.setFont(Font.font("SansSerif", 15));
         recipient.setFill(Paint.valueOf("#FFFFFF"));
+        recipient.setMouseTransparent(true);
 
         Text amount = new Text(String.valueOf(payment.getAmount()));
         final double amountTopPadding = senderTopPadding;
@@ -303,6 +324,7 @@ public class EventOverviewCtrl implements Initializable {
         amount.setLayoutY(base.getLayoutY() + amountTopPadding);
         amount.setFont(Font.font("SansSerif", 15));
         amount.setFill(Paint.valueOf("#FFFFFF"));
+        amount.setMouseTransparent(true);
 
         base.getChildren().addAll(sender, recipient, amount);
 
@@ -327,6 +349,7 @@ public class EventOverviewCtrl implements Initializable {
         username.setLayoutY(base.getLayoutY() + nameTopPadding);
         username.setFont(Font.font("SansSerif", 15));
         username.setFill(Paint.valueOf("#FFFFFF"));
+        username.setMouseTransparent(true);
 
         Button removeButton = new Button("X");
         final double buttonTopPadding = 10;

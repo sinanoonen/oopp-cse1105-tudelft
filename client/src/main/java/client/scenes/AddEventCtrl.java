@@ -66,6 +66,10 @@ public class AddEventCtrl {
         inputField.setEditable(false);
     }
 
+    public void cancel(ActionEvent actionEvent) {
+        mainCtrl.showHomePage();
+    }
+
     /**
      * Handles the create button logic.
      *

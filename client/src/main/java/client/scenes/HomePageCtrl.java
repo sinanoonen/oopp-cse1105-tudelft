@@ -164,7 +164,6 @@ public class HomePageCtrl {
         fadeOut.setDelay(Duration.seconds(1));
 
         fadeIn.setOnFinished(finished -> fadeOut.play());
-
         fadeIn.play();
     }
 }

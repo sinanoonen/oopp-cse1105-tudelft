@@ -4,15 +4,21 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import java.util.List;
+import java.util.UUID;
+
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 /**
  * A controller for the home page scene.
@@ -25,9 +31,19 @@ public class HomePageCtrl {
     private List<Event> events;
 
     @FXML
+    private AnchorPane root;
+    @FXML
     private ListView<Node> eventsList;
     @FXML
     private Circle addButton;
+    @FXML
+    private Pane addEventOverlay;
+    @FXML
+    private Pane screenDarkener;
+    @FXML
+    private TextField codeInput;
+    @FXML
+    private Pane errorPopup;
 
     @Inject
     public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
@@ -41,11 +57,47 @@ public class HomePageCtrl {
     public void refresh() {
         events = serverUtils.getEvents();
 
+        addEventOverlay.setVisible(false);
+        screenDarkener.setVisible(false);
+        addEventOverlay.setMouseTransparent(true);
+        screenDarkener.setMouseTransparent(true);
+        screenDarkener.setPrefWidth(root.getPrefWidth());
+        screenDarkener.setPrefHeight(root.getPrefHeight());
+        screenDarkener.setLayoutX(root.getLayoutX());
+        screenDarkener.setLayoutY(root.getLayoutY());
+
         reloadEventsList();
     }
 
-    public void addButtonController(MouseEvent mouseEvent) {
+    public void toggleEventOverlay() {
+        screenDarkener.toFront();
+        addEventOverlay.toFront();
+        addEventOverlay.setVisible(!addEventOverlay.isVisible());
+        screenDarkener.setVisible(!screenDarkener.isVisible());
+        addEventOverlay.setMouseTransparent(!addEventOverlay.isMouseTransparent());
+        screenDarkener.setMouseTransparent(!screenDarkener.isMouseTransparent());
+
+    }
+
+    public void createEvent() {
         mainCtrl.showAddEvent();
+    }
+
+    public void joinEvent() {
+        String input = codeInput.getText();
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(input);
+        } catch (Exception e) {
+            displayInputError("Invalid invite code");
+            return;
+        }
+        Event event = serverUtils.getEventByUUID(uuid);
+        if (event == null) {
+            displayInputError("Cannot find event");
+            return;
+        }
+        mainCtrl.showEventOverview(event);
     }
 
     private Node eventCellFactory(Event event) {
@@ -86,5 +138,27 @@ public class HomePageCtrl {
         eventsList.getItems().removeAll(eventsList.getItems());
         List<Node> items = events.stream().map(this::eventCellFactory).toList();
         eventsList.getItems().addAll(items);
+    }
+
+    private void displayInputError(String message) {
+        if (errorPopup.getOpacity() != 0) {
+            return; // avoids spamming the error popup
+        }
+        errorPopup.toFront();
+        Text error = (Text) errorPopup.getChildren().getFirst();
+        error.setText(message);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), errorPopup);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), errorPopup);
+        fadeOut.setFromValue(1);
+        fadeOut.setToValue(0);
+        fadeOut.setDelay(Duration.seconds(1));
+
+        fadeIn.setOnFinished(finished -> fadeOut.play());
+
+        fadeIn.play();
     }
 }

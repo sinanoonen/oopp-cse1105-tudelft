@@ -5,13 +5,11 @@ import com.google.inject.Inject;
 import commons.Event;
 import java.util.List;
 import java.util.UUID;
-
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
@@ -66,9 +64,14 @@ public class HomePageCtrl {
         screenDarkener.setLayoutX(root.getLayoutX());
         screenDarkener.setLayoutY(root.getLayoutY());
 
+        codeInput.setText("");
+
         reloadEventsList();
     }
 
+    /**
+     * Handler method to toggle the overlay for adding a new event (hitting the + button).
+     */
     public void toggleEventOverlay() {
         screenDarkener.toFront();
         addEventOverlay.toFront();
@@ -83,6 +86,9 @@ public class HomePageCtrl {
         mainCtrl.showAddEvent();
     }
 
+    /**
+     * Takes the text stored in the InputField, fetches the event, and displays said event.
+     */
     public void joinEvent() {
         String input = codeInput.getText();
         UUID uuid;

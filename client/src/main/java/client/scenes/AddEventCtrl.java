@@ -91,6 +91,9 @@ public class AddEventCtrl {
     }
 
     private void displayInputError(String message) {
+        if (errorPopup.getOpacity() != 0) {
+            return; // avoids spamming the error popup
+        }
         errorPopup.toFront();
         Text error = (Text) errorPopup.getChildren().getFirst();
         error.setText(message);

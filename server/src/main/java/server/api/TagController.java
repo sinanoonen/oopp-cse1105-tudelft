@@ -1,12 +1,13 @@
 package server.api;
 
-import commons.User;
+
 import commons.transactions.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,6 +57,36 @@ public class TagController {
     }
 
     /**
+     * Endpoint to update an existing tag.
+     *
+     * @param name name of the tag to update
+     * @param update updated tag information
+     * @return updated tag
+     */
+    @PutMapping("/{name}")
+    public ResponseEntity<Tag> updateTag(@PathVariable String name, @RequestBody Tag update) {
+        if (update == null) {
+            System.out.println("/users: Received bad PUT request");
+            return ResponseEntity.badRequest().build();
+        }
+        if (isNullOrEmpty(name) || !update.getName().equals(name)) {
+            System.out.println("/users: Received bad PUT request");
+            return ResponseEntity.badRequest().build();
+        }
+        var existingTags = repo.findByName(name);
+        System.out.println("/tags: Received valid PUT request");
+        for (Tag tag : existingTags) {
+            String tagName = update.getName();
+            int tagColor = update.getColor();
+            if (repo.updateTagColor(tagColor, tagName) != 1) {
+                return ResponseEntity.badRequest().build();
+            }
+            repo.save(tag);
+        }
+        return ResponseEntity.ok(update);
+    }
+
+    /**
      * Endpoint to add a new tag to the database.
      *
      * @param tag tag to be added
@@ -69,7 +100,11 @@ public class TagController {
         }
         System.out.println("/users: Received valid POST request:");
         System.out.println(tag);
-        Tag saved = repo.save(tag);
-        return ResponseEntity.ok(saved);
+        repo.save(tag);
+        return ResponseEntity.ok(tag);
+    }
+
+    private boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
     }
 }

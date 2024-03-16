@@ -35,6 +35,9 @@ public class MainCtrl {
     private AddEventCtrl addEventCtrl;
     private Scene addEvent;
 
+    private Scene adminOverview;
+    private AdminOverviewCtrl adminOverviewCtrl;
+
     /**
      * Initialize the main controller.
      *
@@ -43,7 +46,8 @@ public class MainCtrl {
      */
     public void initialize(Stage primaryStage,
                            Pair<EventOverviewCtrl, Parent> eventOverview,
-                           Pair<AddEventCtrl, Parent> addEvent
+                           Pair<AddEventCtrl, Parent> addEvent,
+                           Pair<AdminOverviewCtrl, Parent> adminOverview
     ) {
         this.primaryStage = primaryStage;
 
@@ -52,6 +56,9 @@ public class MainCtrl {
 
         this.addEventCtrl = addEvent.getKey();
         this.addEvent = new Scene(addEvent.getValue());
+
+        this.adminOverviewCtrl = adminOverview.getKey();
+        this.adminOverview = new Scene(adminOverview.getValue());
 
         showAddEvent();
         primaryStage.show();
@@ -70,6 +77,12 @@ public class MainCtrl {
         primaryStage.setTitle(event.getTitle());
         primaryStage.setScene(eventOverview);
         eventOverviewCtrl.refresh(event);
+    }
+
+    private void showAdminOverview() {
+        primaryStage.setTitle("Admin Overview");
+        primaryStage.setScene(adminOverview);
+        adminOverviewCtrl.initialize();
     }
 
 }

@@ -4,6 +4,7 @@ package server.api;
 import commons.transactions.Tag;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,11 +67,11 @@ public class TagController {
     @PutMapping("/{name}")
     public ResponseEntity<Tag> updateTag(@PathVariable String name, @RequestBody Tag update) {
         if (update == null) {
-            System.out.println("/users: Received bad PUT request");
+            System.out.println("/tags: Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }
         if (isNullOrEmpty(name) || !update.getName().equals(name)) {
-            System.out.println("/users: Received bad PUT request");
+            System.out.println("/tags: Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }
         var existingTags = repo.findByName(name);
@@ -98,10 +99,27 @@ public class TagController {
             System.out.println("/tags: Received bad POST request");
             return ResponseEntity.badRequest().build();
         }
-        System.out.println("/users: Received valid POST request:");
+        System.out.println("/tags: Received valid POST request");
         System.out.println(tag);
         repo.save(tag);
         return ResponseEntity.ok(tag);
+    }
+
+    /**
+     * Endpoint to delete a tag from the database.
+     *
+     * @param name name of the tag to delete
+     * @return ResponseEntity indicating success or failure of the deletion operation
+     */
+    @DeleteMapping("/{name}")
+    public ResponseEntity<Void> deleteTag(@PathVariable String name) {
+        int res = repo.deleteTagByName(name);
+        if (res != 1) {
+            System.out.println("/tags: Received a bad DELETE request");
+            return ResponseEntity.badRequest().build();
+        }
+        System.out.println("/tags: Received a valid DELETE request");
+        return ResponseEntity.ok().build();
     }
 
     private boolean isNullOrEmpty(String s) {

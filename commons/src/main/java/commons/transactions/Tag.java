@@ -1,7 +1,6 @@
 package commons.transactions;
 
 import jakarta.persistence.*;
-
 import java.awt.Color;
 import java.util.Objects;
 

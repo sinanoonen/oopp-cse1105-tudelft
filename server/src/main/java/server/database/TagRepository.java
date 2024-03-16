@@ -14,16 +14,16 @@ import org.springframework.data.jpa.repository.Query;
  * A repository for tags.
  */
 public interface TagRepository extends JpaRepository<Tag, String> {
-    @Query(value = "SELECT * FROM Tag t WHERE t.name = ?1", nativeQuery = true)
-    List<Tag> findByName(String name);
+    @Query(value = "SELECT * FROM Tag t WHERE t.id = ?1", nativeQuery = true)
+    List<Tag> findById(long id);
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE Tag SET COLOR=?1 WHERE NAME=?2", nativeQuery = true)
-    int updateTagColor(int color, String name);
+    @Query(value = "UPDATE Tag SET COLOR=?2, NAME=?3  WHERE ID=?1", nativeQuery = true)
+    int updateTag(long id, int color, String name);
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM Tag WHERE name=?1", nativeQuery = true)
-    Integer deleteTagByName(String name);
+    @Query(value = "DELETE FROM Tag WHERE id=?1", nativeQuery = true)
+    Integer deleteTagByName(long id);
 }

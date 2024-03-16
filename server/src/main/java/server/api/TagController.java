@@ -43,12 +43,12 @@ public class TagController {
     /**
      * Endpoint to get a tag by its name.
      *
-     * @param name name of the tag to query by
+     * @param id id of the tag to query by
      * @return found tag
      */
-    @GetMapping("/{name}")
-    public ResponseEntity<Tag> getTagByName(@PathVariable String name) {
-        List<Tag> tags = repo.findByName(name);
+    @GetMapping("/{id}")
+    public ResponseEntity<Tag> getTagByName(@PathVariable long id) {
+        List<Tag> tags = repo.findById(id);
         if (tags == null || tags.isEmpty()) {
             System.out.println("/tags: Received a bad GET request");
             return ResponseEntity.badRequest().build();
@@ -60,26 +60,26 @@ public class TagController {
     /**
      * Endpoint to update an existing tag.
      *
-     * @param name name of the tag to update
+     * @param id id of the tag to update
      * @param update updated tag information
      * @return updated tag
      */
-    @PutMapping("/{name}")
-    public ResponseEntity<Tag> updateTag(@PathVariable String name, @RequestBody Tag update) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Tag> updateTag(@PathVariable long id, @RequestBody Tag update) {
         if (update == null) {
             System.out.println("/tags: Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }
-        if (isNullOrEmpty(name) || !update.getName().equals(name)) {
+        if (repo.findById(id) == null || repo.findById(id).isEmpty()) {
             System.out.println("/tags: Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }
-        var existingTags = repo.findByName(name);
+        var existingTags = repo.findById(id);
         System.out.println("/tags: Received valid PUT request");
         for (Tag tag : existingTags) {
             String tagName = update.getName();
             int tagColor = update.getColor();
-            if (repo.updateTagColor(tagColor, tagName) != 1) {
+            if (repo.updateTag(id, tagColor, tagName) != 1) {
                 return ResponseEntity.badRequest().build();
             }
             repo.save(tag);
@@ -95,7 +95,7 @@ public class TagController {
      */
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Tag> addTag(@RequestBody Tag tag) {
-        if (tag == null || tag.getName() == null) {
+        if (tag == null) {
             System.out.println("/tags: Received bad POST request");
             return ResponseEntity.badRequest().build();
         }
@@ -108,12 +108,12 @@ public class TagController {
     /**
      * Endpoint to delete a tag from the database.
      *
-     * @param name name of the tag to delete
+     * @param id id of the tag to delete
      * @return ResponseEntity indicating success or failure of the deletion operation
      */
-    @DeleteMapping("/{name}")
-    public ResponseEntity<Void> deleteTag(@PathVariable String name) {
-        int res = repo.deleteTagByName(name);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTag(@PathVariable long id) {
+        int res = repo.deleteTagByName(id);
         if (res != 1) {
             System.out.println("/tags: Received a bad DELETE request");
             return ResponseEntity.badRequest().build();

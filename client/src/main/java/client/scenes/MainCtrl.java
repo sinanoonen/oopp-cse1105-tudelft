@@ -16,6 +16,9 @@
 
 package client.scenes;
 
+import client.utils.ClientUtils;
+import client.utils.Currency;
+import client.utils.Language;
 import commons.Event;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -29,27 +32,36 @@ public class MainCtrl {
 
     private Stage primaryStage;
 
+    private HomePageCtrl homePageCtrl;
+    private Scene homePage;
+
     private EventOverviewCtrl eventOverviewCtrl;
     private Scene eventOverview;
 
     private AddEventCtrl addEventCtrl;
     private Scene addEvent;
 
-    private Scene adminOverview;
-    private AdminOverviewCtrl adminOverviewCtrl;
+    private SettingsCtrl settingsCtrl;
+    private Scene settings;
 
     /**
      * Initialize the main controller.
      *
      * @param primaryStage Stage
+     * @param homePage home page on which the app opens
      * @param eventOverview the eventOverview scene
+     * @param addEvent the addEvent page
      */
     public void initialize(Stage primaryStage,
+                           Pair<HomePageCtrl, Parent> homePage,
                            Pair<EventOverviewCtrl, Parent> eventOverview,
                            Pair<AddEventCtrl, Parent> addEvent,
-                           Pair<AdminOverviewCtrl, Parent> adminOverview
+                            Pair<SettingsCtrl, Parent> settings
     ) {
         this.primaryStage = primaryStage;
+
+        this.homePageCtrl = homePage.getKey();
+        this.homePage = new Scene(homePage.getValue());
 
         this.eventOverviewCtrl = eventOverview.getKey();
         this.eventOverview = new Scene(eventOverview.getValue());
@@ -57,21 +69,37 @@ public class MainCtrl {
         this.addEventCtrl = addEvent.getKey();
         this.addEvent = new Scene(addEvent.getValue());
 
-        this.adminOverviewCtrl = adminOverview.getKey();
-        this.adminOverview = new Scene(adminOverview.getValue());
+        this.settingsCtrl = settings.getKey();
+        this.settings = new Scene(settings.getValue());
 
-        showAddEvent();
+        //Set default language and currency
+        ClientUtils.setCurrency(Currency.EUR);
+        ClientUtils.setLanguage(Language.ENGLISH);
+
+        showHomePage();
         primaryStage.show();
     }
 
-    private void showAddEvent() {
+    /**
+     * Displays the home page.
+     */
+    public void showHomePage() {
+        primaryStage.setTitle("Home");
+        primaryStage.setScene(homePage);
+        homePageCtrl.refresh();
+    }
+
+    /**
+     * Displays the page to add a new event.
+     */
+    public void showAddEvent() {
         primaryStage.setTitle("New Event");
         primaryStage.setScene(addEvent);
         addEventCtrl.refresh();
     }
 
     /**
-     * Show the overview.
+     * Show the overview page for an event.
      */
     public void showEventOverview(Event event) {
         primaryStage.setTitle(event.getTitle());
@@ -79,10 +107,14 @@ public class MainCtrl {
         eventOverviewCtrl.refresh(event);
     }
 
-    private void showAdminOverview() {
-        primaryStage.setTitle("Admin Overview");
-        primaryStage.setScene(adminOverview);
-        adminOverviewCtrl.initialize();
+
+    /**
+     * Show the settings page.
+     */
+    public void showSettings() {
+        primaryStage.setTitle("Settings");
+        primaryStage.setScene(settings);
+        settingsCtrl.refresh();
     }
 
 }

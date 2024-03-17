@@ -21,10 +21,11 @@ import static com.google.inject.Guice.createInjector;
 import client.scenes.AddEventCtrl;
 import client.scenes.AdminOverviewCtrl;
 import client.scenes.EventOverviewCtrl;
+import client.scenes.HomePageCtrl;
 import client.scenes.MainCtrl;
+import client.scenes.SettingsCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -36,18 +37,19 @@ public class Main extends Application {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
-    public static void main(String[] args) throws URISyntaxException, IOException {
+    public static void main(String[] args) {
         launch();
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
 
+        var homePage = FXML.load(HomePageCtrl.class, "client", "scenes", "HomePage.fxml");
         var eventOverview = FXML.load(EventOverviewCtrl.class, "client", "scenes", "EventOverview.fxml");
         var addEvent = FXML.load(AddEventCtrl.class, "client", "scenes", "AddEvent.fxml");
-        var adminOverview = FXML.load(AdminOverviewCtrl.class, "client", "scenes", "AdminOverview.fxml");
+        var settings = FXML.load(SettingsCtrl.class, "client", "scenes", "Settings.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, eventOverview, addEvent, adminOverview);
+        mainCtrl.initialize(primaryStage, homePage, eventOverview, addEvent, settings);
     }
 }

@@ -3,7 +3,6 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
-import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -11,8 +10,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 /**
  * A controller for the AddEvent scene.
@@ -66,12 +63,14 @@ public class AddEventCtrl {
         inputField.setEditable(false);
     }
 
+    public void cancel(ActionEvent actionEvent) {
+        mainCtrl.showHomePage();
+    }
+
     /**
      * Handles the create button logic.
-     *
-     * @param actionEvent actionEvent
      */
-    public void saveEvent(ActionEvent actionEvent) {
+    public void saveEvent() {
         if (inputField.getText().isEmpty()) {
             displayInputError("Title cannot be empty!");
             return;
@@ -87,21 +86,6 @@ public class AddEventCtrl {
     }
 
     private void displayInputError(String message) {
-        errorPopup.toFront();
-        Text error = (Text) errorPopup.getChildren().getFirst();
-        error.setText(message);
-
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), errorPopup);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), errorPopup);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-        fadeOut.setDelay(Duration.seconds(1));
-
-        fadeIn.setOnFinished(finished -> fadeOut.play());
-
-        fadeIn.play();
+        HomePageCtrl.displayErrorPopup(message, errorPopup);
     }
 }

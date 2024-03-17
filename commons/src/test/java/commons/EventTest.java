@@ -95,8 +95,9 @@ public class EventTest {
         event.addTransaction(new Payment("Barry", LocalDate.of(2024, 1, 1), 10.0f,
                 "Alice"));
 
-        assertEquals(30.0f, event.getTotalDebt(user1));
+        assertEquals(-40.0f, event.getTotalDebt(user1));
         // Alice had cocktails and champagne and received 10 from Barry, so 40/4 + 30/3 + 10 = 30.0f of debt
+        // She also paid for two expenses so her actual debt should be 30 - 40 - 30 = -40.0f
 
         assertEquals(10.0f, event.getTotalDebt(user2));
         // Gerard only had cocktails, so 40/4 = 10.0f debt
@@ -402,6 +403,6 @@ public class EventTest {
                 + "participants=[User{name='David', email='david@gmail.com', "
                 + "IBAN='NL123456789', BIC='biicode1'}], commons.transactions=[Expense{Transaction{owner = "
                 + "'David', date = '2020-02-02', amount = 10.0}description='Ice cream and coffee', "
-                + "debts={Mike=5.0, David=5.0}}]}", event.toString());
+                + "debts={Mike=5.0, David=-5.0}}]}", event.toString());
     }
 }

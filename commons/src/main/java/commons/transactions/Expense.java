@@ -43,6 +43,11 @@ public class Expense extends Transaction {
         }
         participants.forEach(participant -> this.debts.put(participant, 0f));
         splitEqually(amount);
+        if (debts.get(owner) != null) {
+            debts.put(owner, ((debts.get(owner)) - amount));
+        } else {
+            debts.put(owner, -1 * amount);
+        }
     }
 
     /**
@@ -64,6 +69,11 @@ public class Expense extends Transaction {
             return;
         }
         splitAmong(amount, multiplier);
+        if (debts.get(owner) != null) {
+            debts.put(owner, ((debts.get(owner)) - amount));
+        } else {
+            debts.put(owner, -1 * amount);
+        }
     }
 
     /**
@@ -101,7 +111,14 @@ public class Expense extends Transaction {
     @Override
     public void setAmount(float amount) {
         super.setAmount((amount));
+        debts.put(getOwner(), -1 * amount);
         splitEqually(amount);
+    }
+
+    @Override
+    public void setOwner(String owner) {
+        debts.remove(getOwner());
+        super.setOwner(owner);
     }
 
     /**
@@ -110,7 +127,8 @@ public class Expense extends Transaction {
      * @return true if operation was successful, false otherwise
      */
     public boolean splitEqually(float amount) {
-        List<String> allParticipants = debts.keySet().stream().toList();
+        List<String> allParticipants = new java.util.ArrayList<>(debts.keySet().stream().toList());
+        allParticipants.removeIf(participant -> debts.get(participant) < 0);
         Map<String, Integer> usersMultiplierMap = new HashMap<>();
         allParticipants.forEach(p -> {
             usersMultiplierMap.put(p, 1);

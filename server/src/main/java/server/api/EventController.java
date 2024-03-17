@@ -275,4 +275,33 @@ public class EventController {
         Payment saved = payRepo.save(payment);
         return ResponseEntity.ok(saved);
     }
+
+    /**
+     * Removes transaction from an event.
+     *
+     * @param uuid id of the event
+     * @param id id of the transaction
+     * @return the event
+     */
+    @DeleteMapping("/{uuid}/transactions/{id}")
+    public ResponseEntity<Event> removeTransactionFromEvent(
+            @PathVariable("uuid") UUID uuid, @PathVariable("id") Long id) {
+        if (uuid == null || isNullOrEmpty(uuid.toString()) || isNullOrEmpty(id.toString())) {
+            return ResponseEntity.badRequest().build();
+        }
+        if (!repo.existsById(uuid)) {
+            return ResponseEntity.notFound().build();
+        }
+        Event event = repo.getReferenceById(uuid);
+        Optional<Transaction> toRemove = event.transactions().stream()
+                .filter(e -> e.getId() == id)
+                .findFirst();
+        if (toRemove.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        event.removeTransaction(toRemove.get());
+        repo.save(event);
+        return ResponseEntity.ok(event);
+    }
+
 }

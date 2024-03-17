@@ -276,6 +276,13 @@ public class EventController {
         return ResponseEntity.ok(saved);
     }
 
+    /**
+     * Removes transaction from an event.
+     *
+     * @param uuid id of the event
+     * @param id id of the transaction
+     * @return the event
+     */
     @DeleteMapping("/{uuid}/transactions/{id}")
     public ResponseEntity<Event> removeTransactionFromEvent(
             @PathVariable("uuid") UUID uuid, @PathVariable("id") Long id) {

@@ -22,7 +22,7 @@ public class Expense extends Transaction {
 
     @SuppressWarnings("unused")
     protected Expense() {
-
+        this.debts = new HashMap<>();
     }
 
     /**
@@ -68,6 +68,7 @@ public class Expense extends Transaction {
         if (participants == null) {
             return;
         }
+        participants.forEach(participant -> this.debts.put(participant, 0f));
         splitAmong(amount, multiplier);
         if (debts.get(owner) != null) {
             debts.put(owner, ((debts.get(owner)) - amount));
@@ -92,6 +93,10 @@ public class Expense extends Transaction {
      */
     public Map<String, Float> getDebts() {
         return debts;
+    }
+
+    public void setDebts(Map<String, Float> debts) {
+        this.debts = debts == null ? new HashMap<>() : debts;
     }
 
     /**
@@ -151,7 +156,7 @@ public class Expense extends Transaction {
         for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
             splits = splits + entry.getValue();
         }
-        float oneAmount = amount / splits;
+        float oneAmount = splits == 0 ? amount : amount / splits;
         oneAmount = Float.parseFloat(new DecimalFormat("#.##").format(oneAmount));
         for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
             String user = entry.getKey();

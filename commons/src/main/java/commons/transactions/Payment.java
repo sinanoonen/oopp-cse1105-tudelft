@@ -17,20 +17,19 @@ public class Payment extends Transaction {
 
     @SuppressWarnings("unused")
     protected Payment() {
-
+        this.setOwner(this.sender);
     }
 
     /**
      * Constructor for the payment class.
      *
-     * @param owner the owner of the transaction
      * @param date the date of the transaction
      * @param amount the amount of the transaction
      * @param recipient the recipient of the payment
      * @param sender the sender of the payment
      */
-    public Payment(String owner, LocalDate date, float amount, String recipient, String sender) {
-        super(owner, date, amount);
+    public Payment(LocalDate date, float amount, String recipient, String sender) {
+        super(sender, date, amount);
         this.recipient = recipient;
         this.sender = sender;
         debtPutter(sender, recipient, amount);

@@ -16,6 +16,7 @@
 
 package client.scenes;
 
+import commons.Event;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -28,47 +29,47 @@ public class MainCtrl {
 
     private Stage primaryStage;
 
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
+    private EventOverviewCtrl eventOverviewCtrl;
+    private Scene eventOverview;
 
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
+    private AddEventCtrl addEventCtrl;
+    private Scene addEvent;
 
     /**
      * Initialize the main controller.
      *
      * @param primaryStage Stage
-     * @param overview Pair
-     * @param add Pair
+     * @param eventOverview the eventOverview scene
      */
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add) {
+    public void initialize(Stage primaryStage,
+                           Pair<EventOverviewCtrl, Parent> eventOverview,
+                           Pair<AddEventCtrl, Parent> addEvent
+    ) {
         this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
 
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
+        this.eventOverviewCtrl = eventOverview.getKey();
+        this.eventOverview = new Scene(eventOverview.getValue());
 
-        showOverview();
+        this.addEventCtrl = addEvent.getKey();
+        this.addEvent = new Scene(addEvent.getValue());
+
+        showAddEvent();
         primaryStage.show();
+    }
+
+    private void showAddEvent() {
+        primaryStage.setTitle("New Event");
+        primaryStage.setScene(addEvent);
+        addEventCtrl.refresh();
     }
 
     /**
      * Show the overview.
      */
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
+    public void showEventOverview(Event event) {
+        primaryStage.setTitle(event.getTitle());
+        primaryStage.setScene(eventOverview);
+        eventOverviewCtrl.refresh(event);
     }
 
-    /**
-     * Show the add scene.
-     */
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
-    }
 }

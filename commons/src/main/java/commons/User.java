@@ -18,7 +18,6 @@ public class User {
     private String name;
     @Id
     private String email;
-    @Id
     private String iban;
     private String bic;
 

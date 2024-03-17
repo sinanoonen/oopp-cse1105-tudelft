@@ -1,6 +1,8 @@
 package commons.transactions;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.awt.Color;
 import java.util.Objects;
@@ -11,8 +13,10 @@ import java.util.Objects;
 @Entity
 public class Tag {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
     private String name;
-    private Color color;
+    private int color;
 
     @SuppressWarnings("unused")
     protected Tag() {
@@ -27,7 +31,8 @@ public class Tag {
      */
     public Tag(String name, Color color) {
         this.name = name;
-        this.color = color;
+        int nullMagenta = new Color(247, 0, 213).getRGB();
+        this.color = color == null ? nullMagenta : color.getRGB();
     }
 
     /**
@@ -53,7 +58,7 @@ public class Tag {
      *
      * @return the color
      */
-    public Color getColor() {
+    public int getColor() {
         return color;
     }
 
@@ -62,8 +67,16 @@ public class Tag {
      *
      * @param color sets the color
      */
-    public void setColor(Color color) {
+    public void setColor(int color) {
         this.color = color;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     /**

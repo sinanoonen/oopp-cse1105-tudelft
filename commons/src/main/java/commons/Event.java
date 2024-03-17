@@ -264,6 +264,7 @@ public class Event {
         ) {
             throw new IllegalArgumentException("Participant not found in Event");
         }
+        List<Transaction> transactions = transactions();
 
         return transactions.stream()
                 .filter(transaction -> transaction instanceof Payment)

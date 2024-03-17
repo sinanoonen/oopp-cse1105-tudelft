@@ -130,22 +130,6 @@ public class EventTest {
     }
 
     @Test
-    public void testGetTags() {
-        User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Party");
-        event.addParticipant(user1);
-
-        assertEquals(3, event.getTags().size());
-        assertEquals(new HashSet<>(
-                Arrays.asList(
-                        new Tag("Food", new Color(147, 196, 125)),
-                        new Tag("Entrance Fees", new Color(74, 134, 232)),
-                        new Tag("Travel", new Color(224, 102, 102))
-                )
-        ), event.getTags());
-    }
-
-    @Test
     public void testAddTag() {
         User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
         Event event = new Event("Party");
@@ -166,7 +150,9 @@ public class EventTest {
     @Test
     public void testGetTags() {
         User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Party", user1);
+        Set<User> users = new HashSet<>();
+        users.add(user1);
+        Event event = new Event("Party", users);
 
         assertEquals(3, event.getTags().size());
         assertEquals(new HashSet<>(
@@ -393,7 +379,7 @@ public class EventTest {
 
         User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
         Event event2 = new Event("Picnic");
-        event.addParticipant(user1);
+        event2.addParticipant(user2);
 
         //event3 and event should not be equal, as the invite code should be different
         Event event3 = new Event("Football Game");
@@ -408,17 +394,23 @@ public class EventTest {
     @Test
     public void testHashCode() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Football Game", user1);
+        Set<User> users = new HashSet<>();
+        users.add(user1);
+        Event event = new Event("Football Game", users);
 
         User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
-        Event event2 = new Event("Picnic", user2);
+        Set<User> users2 = new HashSet<>();
+        users.add(user2);
+        Event event2 = new Event("Picnic", users2);
         assertNotEquals(event.hashCode(), event2.hashCode());
     }
 
     @Test
     public void testToString() {
         User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        Event event = new Event("Football Game", user1);
+        Set<User> users = new HashSet<>();
+        users.add(user1);
+        Event event = new Event("Football Game", users);
         List<String> participants = new ArrayList<>();
         participants.add("David");
         participants.add("Mike");

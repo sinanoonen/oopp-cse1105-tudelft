@@ -169,7 +169,7 @@ public class Expense extends Transaction {
     @Override
     public java.lang.String toString() {
         return "Expense{" + super.toString()
-                + "description='"
+                + ", description='"
                 + description + '\''
                 + ", debts="
                 + debts

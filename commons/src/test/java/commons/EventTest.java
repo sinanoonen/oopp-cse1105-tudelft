@@ -402,7 +402,7 @@ public class EventTest {
         assertEquals("Event{inviteCode='" + event.getInviteCode() + "', title='Football Game', "
                 + "participants=[User{name='David', email='david@gmail.com', "
                 + "IBAN='NL123456789', BIC='biicode1'}], commons.transactions=[Expense{Transaction{owner = "
-                + "'David', date = '2020-02-02', amount = 10.0}description='Ice cream and coffee', "
+                + "'David', date = '2020-02-02', amount = 10.0}, description='Ice cream and coffee', "
                 + "debts={Mike=5.0, David=-5.0}}]}", event.toString());
     }
 }

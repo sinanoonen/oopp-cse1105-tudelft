@@ -70,6 +70,20 @@ public class ServerUtils {
     }
 
     /**
+     * Gets an event from the database by its UUID.
+     *
+     * @param uuid uuid to search for
+     * @return the event
+     */
+    public Event getEventByUUID(UUID uuid) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events/" + uuid.toString())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {});
+    }
+
+    /**
      * Sends HTTP request to add expense to db.
      *
      * @param uuid uuid of event to add expense to

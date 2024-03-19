@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="668.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="668.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
    <children>
       <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="10.799999999999955" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.799999999999955" AnchorPane.topAnchor="10.0">
          <children>
@@ -120,7 +120,7 @@
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button cancelButton="true" contentDisplay="RIGHT" mnemonicParsing="false" text="Cancel">
+                  <Button cancelButton="true" contentDisplay="RIGHT" mnemonicParsing="false"  style="-fx-background-color: #3f3f3f" text="Cancel">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -128,7 +128,7 @@
                         <Insets left="150.0" />
                      </HBox.margin>
                   </Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" text="Add">
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" style="-fx-background-color: #3f3f3f" text="Add" >
                      <HBox.margin>
                         <Insets left="200.0" />
                      </HBox.margin>

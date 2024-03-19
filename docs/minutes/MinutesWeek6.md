@@ -27,8 +27,9 @@ Dedicate some time to fixing the code of conduct. (Should not be our biggest wor
   - Manage Participants
   - add participants to an event.
   - Link together all the pages.
-  - Bugfix, cannot start server.
   - Accessibility.
+
+- Bugfix, cannot start server.
   
 Stefan will continue work on the adminPage, Emilio will try to fix the server issues. Other tasks can be divided in the whatsapp group.
 

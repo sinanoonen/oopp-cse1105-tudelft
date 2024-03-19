@@ -98,8 +98,10 @@ public class HomePageCtrl {
             displayInputError("Invalid invite code");
             return;
         }
-        Event event = serverUtils.getEventByUUID(uuid);
-        if (event == null) {
+        Event event;
+        try {
+            event = serverUtils.getEventByUUID(uuid);
+        } catch (Exception e) {
             displayInputError("Cannot find event");
             return;
         }

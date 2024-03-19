@@ -4,7 +4,7 @@ Date:           March 19th, 2024\
 Time:           2:45 PM\
 Location:       Cubicle 13, DW PC1\
 Chair:          Filip Keerberg\
-Note taker:     Yannick Veerman\
+Note taker:     Yannick Veerman
 
 ## Agenda Items (6 min)
 - Opening by Chair (1 min)

@@ -47,6 +47,9 @@ public class MainCtrl {
     private Scene adminOverview;
     private AdminOverviewCtrl adminOverviewCtrl;
 
+    private Scene adminLogin;
+    private AdminLoginCtrl adminLoginCtrl;
+
     /**
      * Initialize the main controller.
      *
@@ -60,7 +63,8 @@ public class MainCtrl {
                            Pair<EventOverviewCtrl, Parent> eventOverview,
                            Pair<AddEventCtrl, Parent> addEvent,
                             Pair<SettingsCtrl, Parent> settings,
-                            Pair<AdminOverviewCtrl, Parent> adminOverview
+                            Pair<AdminOverviewCtrl, Parent> adminOverview,
+                           Pair<AdminLoginCtrl, Parent> adminLogin
     ) {
         this.primaryStage = primaryStage;
 
@@ -78,6 +82,9 @@ public class MainCtrl {
 
         this.adminOverviewCtrl = adminOverview.getKey();
         this.adminOverview = new Scene(adminOverview.getValue());
+
+        this.adminLoginCtrl = adminLogin.getKey();
+        this.adminLogin = new Scene(adminLogin.getValue());
 
         //Set default language and currency
         ClientUtils.setCurrency(Currency.EUR);
@@ -127,9 +134,17 @@ public class MainCtrl {
     /**
      * Shows the admin page.
      */
-    private void showAdminOverview() {
+    public void showAdminOverview() {
         primaryStage.setTitle("Admin Overview");
         primaryStage.setScene(adminOverview);
         adminOverviewCtrl.initialize();
+    }
+
+    /**
+     * Shows the admin login.
+     */
+    private void showAdminLogin() {
+        primaryStage.setTitle("Admin Login");
+        primaryStage.setScene(adminLogin);
     }
 }

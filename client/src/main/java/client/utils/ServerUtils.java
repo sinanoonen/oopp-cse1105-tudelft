@@ -155,6 +155,19 @@ public class ServerUtils {
                 .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
     }
 
+    /**
+     * Deletes an event.
+     *
+     * @param uuid the uuid of the event
+     */
+    public void deleteEvent(UUID uuid) {
+        ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/events/" + uuid)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .delete();
+    }
+
     public boolean authenticate(String password) {
         Response response = ClientBuilder.newClient(new ClientConfig())
             .target(SERVER).path("api/auth")
@@ -163,4 +176,5 @@ public class ServerUtils {
             .post(Entity.entity(password, APPLICATION_JSON));
         return response.getStatus() == 200;
     }
+
 }

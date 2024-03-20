@@ -5,6 +5,8 @@ import com.google.inject.Inject;
 import commons.Event;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -192,7 +194,10 @@ public class AdminOverviewCtrl {
     @FXML
     private void handleDeleteEvent() {
         if (selectedEvent != null) {
-            return;
+            UUID uuid = selectedEvent.getInviteCode();
+            server.deleteEvent(uuid);
+            selectedEvent = null;
+            initialize();
         }
     }
 }

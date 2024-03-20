@@ -69,6 +69,7 @@ public class Event {
                 )
         );
         this.creationDate = LocalDateTime.now();
+        this.lastActivity = LocalDateTime.now();
     }
 
     /**
@@ -84,22 +85,27 @@ public class Event {
 
     public void setInviteCode(UUID uuid) {
         this.inviteCode = uuid;
+        setLastActivity(LocalDateTime.now());
     }
 
     public void setAvailableTags(Set<Tag> availableTags) {
         this.availableTags = availableTags;
+        setLastActivity(LocalDateTime.now());
     }
 
     public void setExpenses(List<Expense> expenses) {
         this.expenses = expenses;
+        setLastActivity(LocalDateTime.now());
     }
 
     public void setParticipants(Set<User> participants) {
         this.participants = participants;
+        setLastActivity(LocalDateTime.now());
     }
 
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
+        setLastActivity(LocalDateTime.now());
     }
 
     /**
@@ -171,6 +177,7 @@ public class Event {
      */
     public void setTitle(String title) {
         this.title = title;
+        setLastActivity(LocalDateTime.now());
     }
 
     /**
@@ -180,6 +187,7 @@ public class Event {
      */
     public void addTag(Tag tag) {
         availableTags.add(tag);
+        setLastActivity(LocalDateTime.now());
     }
 
     /**
@@ -202,6 +210,7 @@ public class Event {
         if (!this.availableTags.contains(tag)) {
             throw new IllegalArgumentException("Tag not found");
         }
+        setLastActivity(LocalDateTime.now());
         return availableTags.remove(tag);
     }
 
@@ -215,6 +224,7 @@ public class Event {
         if (user == null) {
             return false;
         }
+        setLastActivity(LocalDateTime.now());
         return participants.add(user);
     }
 
@@ -225,6 +235,7 @@ public class Event {
      * @return true if operation successful, false otherwise
      */
     public boolean removeParticipant(User user) {
+        setLastActivity(LocalDateTime.now());
         return participants.remove(user);
     }
 
@@ -238,6 +249,7 @@ public class Event {
         if (transaction == null) {
             return false;
         }
+        setLastActivity(LocalDateTime.now());
         boolean trash = transaction instanceof Expense
                 ? expenses.add((Expense) transaction)
                 : payments.add((Payment) transaction);
@@ -251,6 +263,7 @@ public class Event {
      * @return true if operation successful, false otherwise
      */
     public boolean removeTransaction(Transaction transaction) {
+        setLastActivity(LocalDateTime.now());
         return transaction instanceof Expense
                 ? expenses.remove(transaction)
                 : payments.remove(transaction);

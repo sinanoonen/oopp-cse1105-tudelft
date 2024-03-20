@@ -24,6 +24,7 @@ import commons.transactions.Expense;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,8 +32,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
-
-import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
 /**
@@ -168,6 +167,12 @@ public class ServerUtils {
             .delete();
     }
 
+    /**
+     * This sends a post request to the admin controller.
+     *
+     * @param password the password (in string representation)
+     * @return true iff the entered password is the correct one
+     */
     public boolean authenticate(String password) {
         Response response = ClientBuilder.newClient(new ClientConfig())
             .target(SERVER).path("api/auth")

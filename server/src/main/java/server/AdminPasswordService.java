@@ -1,10 +1,12 @@
 package server;
 
-import org.springframework.stereotype.Service;
-
 import java.security.SecureRandom;
 import java.util.Base64;
+import org.springframework.stereotype.Service;
 
+/**
+ * This is a service to generate a random password when the server starts.
+ */
 @Service
 public class AdminPasswordService {
 

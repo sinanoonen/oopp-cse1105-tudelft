@@ -7,6 +7,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 
+/**
+ * This is a controller for the admin login page.
+ */
 public class AdminLoginCtrl {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -37,10 +40,9 @@ public class AdminLoginCtrl {
     private void loginButtonClicked() {
         String password = passwordField.getText();
         boolean result = server.authenticate(password);
-        if(result) {
+        if (result) {
             mainCtrl.showAdminOverview();
-        }
-        else {
+        } else {
             showError("Invalid password.");
         }
     }

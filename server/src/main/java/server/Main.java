@@ -24,11 +24,16 @@ import org.springframework.context.ConfigurableApplicationContext;
 /**
  * Main class for the server.
  */
-
 @SpringBootApplication
 @EntityScan(basePackages = { "commons", "server" })
 public class Main {
 
+    /**
+     * The main method that starts the server.
+     * It also loads the password service and prints the password.
+     *
+     * @param args any arguments passed at runtime
+     */
     public static void main(String[] args) {
         //SpringApplication.run(Main.class, args);
         ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);

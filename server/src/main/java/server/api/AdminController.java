@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.AdminPasswordService;
 
+/**
+ * This the admin controller used for authentification.
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AdminController {
@@ -17,6 +20,12 @@ public class AdminController {
         this.passwordService = passwordService;
     }
 
+    /**
+     * This verifies the password.
+     *
+     * @param request the password
+     * @return the response
+     */
     @PostMapping(path = { "", "/" })
     public ResponseEntity<?> verifyPassword(@RequestBody String request) {
         boolean isValid = passwordService.getAdminPassword().equals(request);

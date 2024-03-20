@@ -5,13 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
 import commons.Event;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -310,8 +308,7 @@ public class AdminOverviewCtrl {
             server.deleteEvent(uuid);
             selectedEvent = null;
             loadEvents();
-        }
-        else {
+        } else {
             showAlert("Error", "No event selected for delete.");
         }
     }

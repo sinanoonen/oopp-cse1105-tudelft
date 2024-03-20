@@ -1,8 +1,13 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
 import commons.Event;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +27,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-
+import javafx.stage.FileChooser;
 
 
 /**
@@ -210,13 +215,44 @@ public class AdminOverviewCtrl {
 
     @FXML
     private void handleExportEvent() {
+        if (selectedEvent == null) {
+            showAlert("Error", "No event selected for export.");
+            return;
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialFileName(selectedEvent.getTitle() + ".json");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        File file = fileChooser.showSaveDialog(eventContainer.getScene().getWindow());
 
+        if (file != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            try {
+                mapper.writeValue(file, selectedEvent);
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to export event: " + e.getMessage());
+            }
+        }
     }
 
     @FXML
     private void handleImportEvent() {
-        if (selectedEvent != null) {
-            return;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        File file = fileChooser.showOpenDialog(eventContainer.getScene().getWindow());
+
+        if (file != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            try {
+                Event event = mapper.readValue(file, Event.class);
+                server.addNewEvent(event);
+                loadEvents();
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to import event: " + e.getMessage());
+            }
         }
     }
 
@@ -227,6 +263,9 @@ public class AdminOverviewCtrl {
             server.deleteEvent(uuid);
             selectedEvent = null;
             loadEvents();
+        }
+        else {
+            showAlert("Error", "No event selected for delete.");
         }
     }
 }

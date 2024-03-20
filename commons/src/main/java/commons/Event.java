@@ -41,6 +41,7 @@ public class Event {
     private Set<Tag> availableTags;
 
     private LocalDateTime creationDate;
+    private LocalDateTime lastActivity;
 
     @SuppressWarnings("unused")
     protected Event() {
@@ -366,7 +367,8 @@ public class Event {
     }
 
     /**
-     * Getter for the creation date of the event
+     * Getter for the creation date of the event.
+     *
      * @return the creation date
      */
     public LocalDateTime getCreationDate() {
@@ -374,10 +376,29 @@ public class Event {
     }
 
     /**
-     * Setter for the creation date
+     * Setter for the creation date.
+     *
      * @param creationDate the new date
      */
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    /**
+     * Getter for the last activity of the event.
+     *
+     * @return the time of the last activity
+     */
+    public LocalDateTime getLastActivity() {
+        return lastActivity;
+    }
+
+    /**
+     * Setter for the last activity.
+     *
+     * @param lastActivity the time of the last activity
+     */
+    public void setLastActivity(LocalDateTime lastActivity) {
+        this.lastActivity = lastActivity;
     }
 }

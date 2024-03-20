@@ -59,6 +59,10 @@ public class AdminOverviewCtrl {
     private boolean ifSortByCreationDate;
     private boolean ifSortByLastActivity;
 
+    private boolean sortByTitleAscending;
+    private boolean sortByCreationDateAscending;
+    private boolean sortByLastActivityAscending;
+
     private Event selectedEvent;
 
     /**
@@ -81,6 +85,10 @@ public class AdminOverviewCtrl {
         ifSortByLastActivity = false;
         ifSortByTitle = false;
 
+        sortByTitleAscending = true;
+        sortByCreationDateAscending = true;
+        sortByLastActivityAscending = true;
+
         loadEvents();
         setupEventListView();
         setupEventSelection();
@@ -93,9 +101,26 @@ public class AdminOverviewCtrl {
                 List<Event> events = server.getEvents();
 
                 if (ifSortByTitle) {
-                    events.sort(Comparator.comparing(Event::getTitle));
+                    Comparator<Event> comparator = Comparator.comparing(Event::getTitle);
+                    if (!sortByTitleAscending) {
+                        events.sort(comparator);
+                    } else {
+                        events.sort(comparator.reversed());
+                    }
                 } else if (ifSortByCreationDate) {
-                    events.sort(Comparator.comparing(Event::getCreationDate));
+                    Comparator<Event> comparator = Comparator.comparing(Event::getCreationDate);
+                    if (!sortByCreationDateAscending) {
+                        events.sort(comparator);
+                    } else {
+                        events.sort(comparator.reversed());
+                    }
+                } else if (ifSortByLastActivity) {
+                    Comparator<Event> comparator = Comparator.comparing(Event::getLastActivity);
+                    if (!sortByLastActivityAscending) {
+                        events.sort(comparator);
+                    } else {
+                        events.sort(comparator.reversed());
+                    }
                 }
 
                 return events;
@@ -181,36 +206,58 @@ public class AdminOverviewCtrl {
             + "Tags: " + event.getTags() + "\n"
             + "Expenses: " + event.getExpenses() + "\n"
             + "Payments: " + event.getPayments() + "\n"
-            + "Creation Date:" + event.getCreationDate() + "\n";
+            + "Creation Date:" + event.getCreationDate() + "\n"
+            + "Last Activity:" + event.getLastActivity() + "\n";
     }
 
     @FXML
     private void handleSortByTitle() {
-        ObservableList<Event> events = eventContainer.getItems();
-        events.sort(Comparator.comparing(Event::getTitle));
-        eventContainer.setItems(events);
+        sort(Comparator.comparing(Event::getTitle), sortByTitleAscending);
 
         ifSortByTitle = true;
         ifSortByCreationDate = false;
         ifSortByLastActivity = false;
+
+        sortByTitleAscending = !sortByTitleAscending;
+        sortByCreationDateAscending = true;
+        sortByLastActivityAscending = true;
     }
 
     @FXML
     private void handleSortByCreationDate() {
-        ObservableList<Event> events = eventContainer.getItems();
-        events.sort(Comparator.comparing(Event::getCreationDate));
-        eventContainer.setItems(events);
+        sort(Comparator.comparing(Event::getCreationDate), sortByCreationDateAscending);
 
         ifSortByTitle = false;
         ifSortByCreationDate = true;
         ifSortByLastActivity = false;
+
+        sortByCreationDateAscending = !sortByCreationDateAscending;
+        sortByTitleAscending = true;
+        sortByLastActivityAscending = true;
     }
 
     @FXML
     private void handleSortByLastActivity() {
+        sort(Comparator.comparing(Event::getLastActivity), sortByLastActivityAscending);
+
         ifSortByTitle = false;
         ifSortByCreationDate = false;
         ifSortByLastActivity = true;
+
+        sortByLastActivityAscending = !sortByLastActivityAscending;
+        sortByTitleAscending = true;
+        sortByCreationDateAscending = true;
+    }
+
+    private void sort(Comparator<Event> comparing,  boolean sortAscending) {
+        ObservableList<Event> events = eventContainer.getItems();
+
+        if (!sortAscending) {
+            events.sort(comparing.reversed());
+        } else {
+            events.sort(comparing);
+        }
+        eventContainer.setItems(events);
     }
 
     @FXML

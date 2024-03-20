@@ -12,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import java.awt.Color;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -37,6 +39,8 @@ public class Event {
     private List<Payment> payments;
     @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Tag> availableTags;
+
+    private LocalDateTime creationDate;
 
     @SuppressWarnings("unused")
     protected Event() {
@@ -64,6 +68,7 @@ public class Event {
                     new Tag("Travel", new Color(224, 102, 102))
                 )
         );
+        this.creationDate = LocalDateTime.now();
     }
 
     /**
@@ -358,5 +363,21 @@ public class Event {
                 + ", commons.transactions="
                 + transactions()
                 + '}';
+    }
+
+    /**
+     * Getter for the creation date of the event
+     * @return the creation date
+     */
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    /**
+     * Setter for the creation date
+     * @param creationDate the new date
+     */
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 }

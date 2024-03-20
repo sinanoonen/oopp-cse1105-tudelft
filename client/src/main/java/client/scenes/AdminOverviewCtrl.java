@@ -50,6 +50,10 @@ public class AdminOverviewCtrl {
     @FXML
     private Button deleteEventButton;
 
+    private boolean ifSortByTitle;
+    private boolean ifSortByCreationDate;
+    private boolean ifSortByLastActivity;
+
     private Event selectedEvent;
 
     /**
@@ -68,6 +72,10 @@ public class AdminOverviewCtrl {
      * Initializes the scene.
      */
     public void initialize() {
+        ifSortByCreationDate = false;
+        ifSortByLastActivity = false;
+        ifSortByTitle = false;
+
         loadEvents();
         setupEventListView();
         setupEventSelection();
@@ -77,7 +85,15 @@ public class AdminOverviewCtrl {
         Task<List<Event>> task = new Task<>() {
             @Override
             protected List<Event> call() throws Exception {
-                return server.getEvents();
+                List<Event> events = server.getEvents();
+
+                if (ifSortByTitle) {
+                    events.sort(Comparator.comparing(Event::getTitle));
+                } else if (ifSortByCreationDate) {
+                    events.sort(Comparator.comparing(Event::getCreationDate));
+                }
+
+                return events;
             }
         };
 
@@ -159,7 +175,8 @@ public class AdminOverviewCtrl {
             + "Participants: " + event.getParticipants() + "\n"
             + "Tags: " + event.getTags() + "\n"
             + "Expenses: " + event.getExpenses() + "\n"
-            + "Payments: " + event.getPayments() + "\n";
+            + "Payments: " + event.getPayments() + "\n"
+            + "Creation Date:" + event.getCreationDate() + "\n";
     }
 
     @FXML
@@ -167,16 +184,28 @@ public class AdminOverviewCtrl {
         ObservableList<Event> events = eventContainer.getItems();
         events.sort(Comparator.comparing(Event::getTitle));
         eventContainer.setItems(events);
+
+        ifSortByTitle = true;
+        ifSortByCreationDate = false;
+        ifSortByLastActivity = false;
     }
 
     @FXML
     private void handleSortByCreationDate() {
+        ObservableList<Event> events = eventContainer.getItems();
+        events.sort(Comparator.comparing(Event::getCreationDate));
+        eventContainer.setItems(events);
 
+        ifSortByTitle = false;
+        ifSortByCreationDate = true;
+        ifSortByLastActivity = false;
     }
 
     @FXML
     private void handleSortByLastActivity() {
-
+        ifSortByTitle = false;
+        ifSortByCreationDate = false;
+        ifSortByLastActivity = true;
     }
 
     @FXML
@@ -197,7 +226,7 @@ public class AdminOverviewCtrl {
             UUID uuid = selectedEvent.getInviteCode();
             server.deleteEvent(uuid);
             selectedEvent = null;
-            initialize();
+            loadEvents();
         }
     }
 }

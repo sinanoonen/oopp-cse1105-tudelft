@@ -1,5 +1,6 @@
 package commons.transactions;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Objects;
 public class Payment extends Transaction {
     private String recipient;
     private String sender;
+    @ElementCollection
     Map<String, Float> debt;
 
     @SuppressWarnings("unused")

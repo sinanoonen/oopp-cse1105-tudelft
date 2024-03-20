@@ -152,4 +152,18 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
     }
+
+    /**
+     * Method to update an event.
+     *
+     * @param event updated event
+     * @return the updated event
+     */
+    public Event updateEvent(Event event) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events/" + event.getInviteCode())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(event, APPLICATION_JSON), Event.class);
+    }
 }

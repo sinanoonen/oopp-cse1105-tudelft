@@ -132,17 +132,20 @@ public class EventOverviewCtrl implements Initializable {
     /**
      * Handles deselecting the title text box.
      *
-     * @param event the key that was just pressed
+     * @param keyEvent the key that was just pressed
      */
     @FXML
-    public void onTitleFieldDeselect(KeyEvent event) {
-        if (!event.getCode().equals(KeyCode.ENTER)
-                && !event.getCode().equals(KeyCode.ESCAPE)
+    public void onTitleFieldDeselect(KeyEvent keyEvent) {
+        if (!keyEvent.getCode().equals(KeyCode.ENTER)
+                && !keyEvent.getCode().equals(KeyCode.ESCAPE)
                 || title.getText().isEmpty()) {
             return;
         }
         titleBox.setVisible(false);
         title.setEditable(false);
+        event.setTitle(title.getText());
+        Event updated = serverUtils.updateEvent(event);
+        refresh(updated);
     }
 
     /**

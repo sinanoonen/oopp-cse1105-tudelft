@@ -110,6 +110,7 @@ public class ServerUtils {
                 .get(new GenericType<>() {});
     }
 
+
     /**
      * Removes a participant from an event.
      *

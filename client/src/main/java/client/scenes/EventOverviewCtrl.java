@@ -273,7 +273,8 @@ public class EventOverviewCtrl implements Initializable {
         Pane userContainer = (Pane) button.getParent();
         User user = (User) userContainer.getUserData();
         serverUtils.removeUserFromEvent(event.getInviteCode(), user.getEmail());
-        refresh(this.event);
+        Event updated = serverUtils.getEventByUUID(event.getInviteCode());
+        refresh(updated);
         toggleParticipants();
     }
 
@@ -494,7 +495,24 @@ public class EventOverviewCtrl implements Initializable {
     }
 
     public void onAddParticipantsConfirm() {
+        List<Pane> selectedPanes = newParticipantsList
+                .getItems()
+                .stream()
+                .map(node -> (Pane) node)
+                .filter(pane -> pane.getChildren()
+                        .stream()
+                        .filter(child -> child instanceof CheckBox)
+                        .map(child -> (CheckBox) child)
+                        .findFirst()
+                        .get()
+                        .isSelected())
+                .toList();
+        List<User> selectedUsers = selectedPanes
+                .stream()
+                .map(pane -> (User) pane.getUserData())
+                .toList();
+        event.getParticipants().addAll(selectedUsers);
+        resetParticipantsContainer();
         swapParticipantsAddParticipants();
-
     }
 }

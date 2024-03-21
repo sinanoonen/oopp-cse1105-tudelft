@@ -20,6 +20,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import commons.Event;
 import commons.Quote;
+import commons.User;
 import commons.transactions.Expense;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -96,6 +97,17 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(expense, APPLICATION_JSON), Expense.class);
+    }
+
+    /**
+     * Returns all users stored in the database.
+     */
+    public List<User> getUsers() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/users")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {});
     }
 
     /**

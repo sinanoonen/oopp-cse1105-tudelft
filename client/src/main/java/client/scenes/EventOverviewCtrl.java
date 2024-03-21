@@ -15,10 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -66,7 +63,13 @@ public class EventOverviewCtrl implements Initializable {
     @FXML
     private ListView<Node> participantsList;
     @FXML
-    private Pane overviewDarkener;
+    private Pane participantsDarkener;
+    @FXML
+    private Pane addParticipantsMenu;
+    @FXML
+    private ListView<Node> newParticipantsList;
+    @FXML
+    private Pane addParticipantsDarkener;
     @FXML
     private ListView<Node> transactionContainer;
     @FXML
@@ -100,14 +103,20 @@ public class EventOverviewCtrl implements Initializable {
         buttonDarkener.setVisible(false);
         clipboardPopup.setOpacity(0);
 
+        // Ensure darkeners cover entire app
         participantsMenu.setVisible(false);
-        overviewDarkener.setVisible(false);
-        overviewDarkener.setLayoutX(root.getLayoutX());
-        overviewDarkener.setPrefWidth(root.getPrefWidth());
-        overviewDarkener.setLayoutY(root.getLayoutY());
-        overviewDarkener.setPrefHeight(root.getPrefHeight());
+        participantsDarkener.setVisible(false);
+        participantsDarkener.setLayoutX(root.getLayoutX());
+        participantsDarkener.setPrefWidth(root.getWidth());
+        participantsDarkener.setLayoutY(root.getLayoutY());
+        participantsDarkener.setPrefHeight(root.getHeight());
+        addParticipantsDarkener.setLayoutX(root.getLayoutX());
+        addParticipantsDarkener.setPrefWidth(root.getWidth());
+        addParticipantsDarkener.setLayoutY(root.getLayoutY());
+        addParticipantsDarkener.setPrefHeight(root.getHeight());
 
         participantsMenu.setVisible(false);
+        addParticipantsMenu.setVisible(false);
 
         changeBackgroundColor(backLink, "transparent");
 
@@ -192,9 +201,9 @@ public class EventOverviewCtrl implements Initializable {
      */
     @FXML
     public void toggleParticipants() {
-        overviewDarkener.toFront();
-        overviewDarkener.setVisible(!overviewDarkener.isVisible());
-        overviewDarkener.setMouseTransparent(!overviewDarkener.isVisible());
+        participantsDarkener.toFront();
+        participantsDarkener.setVisible(!participantsDarkener.isVisible());
+        participantsDarkener.setMouseTransparent(!participantsDarkener.isVisible());
         participantsMenu.toFront();
         participantsMenu.setVisible(!participantsMenu.isVisible());
         participantsMenu.setMouseTransparent(!participantsMenu.isVisible());
@@ -204,8 +213,31 @@ public class EventOverviewCtrl implements Initializable {
         });
     }
 
-    public void onBackClicked(MouseEvent event) {
-        mainCtrl.showHomePage();
+    /**
+     * Swaps between the participants menu and the add participants menu.
+     */
+    public void swapParticipantsAddParticipants() {
+        toggleParticipants();
+        toggleAddParticipants();
+    }
+
+    /**
+     * Toggles the add participants menu.
+     */
+    public void toggleAddParticipants() {
+        addParticipantsDarkener.toFront();
+        addParticipantsDarkener.setVisible(!addParticipantsDarkener.isVisible());
+        addParticipantsDarkener.setMouseTransparent(!addParticipantsDarkener.isVisible());
+        addParticipantsMenu.toFront();
+        addParticipantsMenu.setVisible(!addParticipantsMenu.isVisible());
+        addParticipantsMenu.setMouseTransparent(!addParticipantsMenu.isMouseTransparent());
+        addParticipantsMenu.getChildren().forEach(child -> {
+            child.setVisible(addParticipantsMenu.isVisible());
+            child.setMouseTransparent(addParticipantsMenu.isMouseTransparent());
+        });
+        if (addParticipantsMenu.isVisible()) {
+            resetNewParticipantsContainer();
+        }
     }
 
     /**
@@ -372,6 +404,38 @@ public class EventOverviewCtrl implements Initializable {
         return base;
     }
 
+    private Node newParticipantCellFactory(User user) {
+        Pane base = new Pane();
+        base.setPrefWidth(newParticipantsList.getPrefWidth() - 20);
+        base.setPrefHeight(50);
+        base.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: black;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
+
+        Text username = new Text(user.getName());
+        final double nameTopPadding = base.getPrefHeight() / 2 + 5;
+        final double nameLeftPadding = base.getPrefWidth() / 16;
+        username.setLayoutX(base.getLayoutX() + nameLeftPadding);
+        username.setLayoutY(base.getLayoutY() + nameTopPadding);
+        username.setFont(Font.font("SansSerif", 15));
+        username.setFill(Paint.valueOf("#FFFFFF"));
+        username.setMouseTransparent(true);
+
+        CheckBox addCheckBox = new CheckBox();
+        final double checkboxTopPadding = 15;
+        final double checkboxLeftPadding = 3 * base.getPrefWidth() / 4;
+        addCheckBox.setLayoutX(username.getLayoutX() + checkboxLeftPadding);
+        addCheckBox.setLayoutY(base.getLayoutY() + checkboxTopPadding);
+
+        base.getChildren().addAll(username, addCheckBox);
+        base.setUserData(user);
+
+        return base;
+    }
+
     // ---------------- GENERAL METHODS ---------------- //
 
     private void resetTransactionsContainer() {
@@ -394,6 +458,16 @@ public class EventOverviewCtrl implements Initializable {
         participantsList.getItems().addAll(users);
     }
 
+    private void resetNewParticipantsContainer() {
+        newParticipantsList.getItems().removeAll(newParticipantsList.getItems());
+        List<Node> users = serverUtils.getUsers()
+                .stream()
+                .filter(user -> !event.getParticipants().contains(user))
+                .map(this::newParticipantCellFactory)
+                .toList();
+        newParticipantsList.getItems().addAll(users);
+    }
+
     /**
      * Changes the background color of an FXML node.
      * Will add color if not already present.
@@ -413,5 +487,14 @@ public class EventOverviewCtrl implements Initializable {
         }
 
         node.setStyle(currentStyle + newColor);
+    }
+
+    public void onBackClicked(MouseEvent event) {
+        mainCtrl.showHomePage();
+    }
+
+    public void onAddParticipantsConfirm() {
+        swapParticipantsAddParticipants();
+
     }
 }

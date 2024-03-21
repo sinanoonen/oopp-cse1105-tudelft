@@ -10,6 +10,7 @@ import commons.transactions.Transaction;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -30,6 +31,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 /**
  * Controller for the EventOverview scene.
@@ -147,9 +149,11 @@ public class EventOverviewCtrl implements Initializable {
 
     /**
      * Onclick event to copy the event's invite code to the user's clipboard.
+     *
+     * @param event MouseEvent
      */
     @FXML
-    public void copyInviteCode() {
+    public void copyInviteCode(MouseEvent event) {
         String inviteCode = this.event.getInviteCode().toString();
         Clipboard clipboard = Clipboard.getSystemClipboard();
         ClipboardContent content = new ClipboardContent();
@@ -168,7 +172,18 @@ public class EventOverviewCtrl implements Initializable {
         buttonDarkener.setVisible(!buttonDarkener.isVisible());
         if (!buttonDarkener.isVisible()) {
             clipboardPopup.toFront();
-            HomePageCtrl.fadeInOutPopup(clipboardPopup);
+            FadeTransition fadeInTransition = new FadeTransition(Duration.seconds(0.5), clipboardPopup);
+            fadeInTransition.setFromValue(0);
+            fadeInTransition.setToValue(1);
+
+            FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(0.5), clipboardPopup);
+            fadeOutTransition.setFromValue(1);
+            fadeOutTransition.setToValue(0);
+            fadeOutTransition.setDelay(Duration.seconds(1));
+
+            fadeInTransition.setOnFinished(finished -> fadeOutTransition.play());
+
+            fadeInTransition.play();
         }
     }
 

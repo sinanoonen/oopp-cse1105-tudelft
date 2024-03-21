@@ -92,6 +92,7 @@ class UserTest {
         User testUser6 = new User("testName", "testEmail", "testIban", "testBic2");
 
         assertEquals(testUser, testUser2);
+        assertEquals(testUser, testUser);
         assertNotEquals(testUser, testUser3);
         assertNotEquals(testUser, testUser4);
         assertNotEquals(testUser, testUser5);

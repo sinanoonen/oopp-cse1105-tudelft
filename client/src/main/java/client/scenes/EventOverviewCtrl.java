@@ -15,7 +15,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -104,8 +108,6 @@ public class EventOverviewCtrl implements Initializable {
         clipboardPopup.setOpacity(0);
 
         // Ensure darkeners cover entire app
-        participantsMenu.setVisible(false);
-        participantsDarkener.setVisible(false);
         participantsDarkener.setLayoutX(root.getLayoutX());
         participantsDarkener.setPrefWidth(root.getWidth());
         participantsDarkener.setLayoutY(root.getLayoutY());
@@ -115,8 +117,12 @@ public class EventOverviewCtrl implements Initializable {
         addParticipantsDarkener.setLayoutY(root.getLayoutY());
         addParticipantsDarkener.setPrefHeight(root.getHeight());
 
-        participantsMenu.setVisible(false);
-        addParticipantsMenu.setVisible(false);
+        if (participantsMenu.isVisible()) {
+            toggleParticipants();
+        }
+        if (addParticipantsMenu.isVisible()) {
+            toggleAddParticipants();
+        }
 
         changeBackgroundColor(backLink, "transparent");
 
@@ -494,6 +500,9 @@ public class EventOverviewCtrl implements Initializable {
         mainCtrl.showHomePage();
     }
 
+    /**
+     * Adds the selected participants to the event.
+     */
     public void onAddParticipantsConfirm() {
         List<Pane> selectedPanes = newParticipantsList
                 .getItems()
@@ -511,8 +520,12 @@ public class EventOverviewCtrl implements Initializable {
                 .stream()
                 .map(pane -> (User) pane.getUserData())
                 .toList();
-        event.getParticipants().addAll(selectedUsers);
-        resetParticipantsContainer();
-        swapParticipantsAddParticipants();
+
+        Event updated = event;
+        for (User u : selectedUsers) {
+            updated = serverUtils.addUserToEvent(updated, u);
+        }
+        refresh(updated);
+        toggleParticipants();
     }
 }

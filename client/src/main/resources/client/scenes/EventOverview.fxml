@@ -74,6 +74,6 @@
             </Button>
          </children>
       </Pane>
-      <Pane id="overview_darkener" fx:id="addParticipantsDarkener" layoutY="-1.0" mouseTransparent="true" onMouseClicked="#toggleParticipants" opacity="0.7" prefHeight="658.0" prefWidth="610.0" style="-fx-background-color: black;" visible="false" />
+      <Pane id="overview_darkener" fx:id="addParticipantsDarkener" layoutY="-1.0" mouseTransparent="true" onMouseClicked="#swapParticipantsAddParticipants" opacity="0.7" prefHeight="658.0" prefWidth="610.0" style="-fx-background-color: black;" visible="false" />
    </children>
 </AnchorPane>

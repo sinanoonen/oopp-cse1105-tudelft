@@ -110,6 +110,20 @@ public class ServerUtils {
                 .get(new GenericType<>() {});
     }
 
+    /**
+     * Adds a user to the provided event.
+     *
+     * @param event event to which the user should be added
+     * @param user user to be added to event
+     * @return updated event
+     */
+    public Event addUserToEvent(Event event, User user) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/events/" + event.getInviteCode() + "/users")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(user, APPLICATION_JSON), Event.class);
+    }
 
     /**
      * Removes a participant from an event.

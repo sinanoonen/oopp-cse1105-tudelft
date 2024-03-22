@@ -42,15 +42,6 @@ public class HomePageCtrl {
     private TextField codeInput;
     @FXML
     private Pane errorPopup;
-    @FXML
-    private Circle optionsButton;
-    @FXML
-    Pane settingsOverlay;
-    @FXML
-    Pane settingClickArea;
-    @FXML
-    Pane quitClickArea;
-
 
     @Inject
     public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
@@ -72,52 +63,23 @@ public class HomePageCtrl {
         screenDarkener.setPrefHeight(root.getPrefHeight());
         screenDarkener.setLayoutX(root.getLayoutX());
         screenDarkener.setLayoutY(root.getLayoutY());
-        settingsOverlay.setVisible(false);
 
         codeInput.setText("");
 
         reloadEventsList();
     }
 
-
-
-    public void showSettings() {
-        mainCtrl.showSettings();
-    }
-
-
     /**
-     * Shows the add event overlay.
+     * Handler method to toggle the overlay for adding a new event (hitting the + button).
      */
-    public void showEventOverlay() {
+    public void toggleEventOverlay() {
+        screenDarkener.toFront();
         addEventOverlay.toFront();
-        addEventOverlay.setVisible(true);
-        screenDarkener.setVisible(true);
-        addEventOverlay.setMouseTransparent(false);
-        screenDarkener.setMouseTransparent(false);
-    }
+        addEventOverlay.setVisible(!addEventOverlay.isVisible());
+        screenDarkener.setVisible(!screenDarkener.isVisible());
+        addEventOverlay.setMouseTransparent(!addEventOverlay.isMouseTransparent());
+        screenDarkener.setMouseTransparent(!screenDarkener.isMouseTransparent());
 
-    /**
-     * Shows the settings overlay.
-     */
-    public void showSettingsOverlay() {
-        settingsOverlay.toFront();
-        settingsOverlay.setVisible(true);
-        screenDarkener.setVisible(true);
-        settingsOverlay.setMouseTransparent(false);
-        screenDarkener.setMouseTransparent(false);
-    }
-
-    /**
-     * Hides all popups.
-     */
-    public void hidePopUps() {
-        addEventOverlay.setVisible(false);
-        settingsOverlay.setVisible(false);
-        screenDarkener.setVisible(false);
-        addEventOverlay.setMouseTransparent(true);
-        settingsOverlay.setMouseTransparent(true);
-        screenDarkener.setMouseTransparent(true);
     }
 
     public void createEvent() {
@@ -136,8 +98,10 @@ public class HomePageCtrl {
             displayInputError("Invalid invite code");
             return;
         }
-        Event event = serverUtils.getEventByUUID(uuid);
-        if (event == null) {
+        Event event;
+        try {
+            event = serverUtils.getEventByUUID(uuid);
+        } catch (Exception e) {
             displayInputError("Cannot find event");
             return;
         }
@@ -185,10 +149,6 @@ public class HomePageCtrl {
     }
 
     private void displayInputError(String message) {
-        displayErrorPopup(message, errorPopup);
-    }
-
-    static void displayErrorPopup(String message, Pane errorPopup) {
         if (errorPopup.getOpacity() != 0) {
             return; // avoids spamming the error popup
         }
@@ -196,10 +156,6 @@ public class HomePageCtrl {
         Text error = (Text) errorPopup.getChildren().getFirst();
         error.setText(message);
 
-        fadeInOutPopup(errorPopup);
-    }
-
-    static void fadeInOutPopup(Pane errorPopup) {
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), errorPopup);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);

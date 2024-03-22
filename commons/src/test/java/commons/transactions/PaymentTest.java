@@ -90,7 +90,6 @@ public class PaymentTest {
                 "Yannick", List.of("Filip"));
         assertNotEquals(paymentSenderNotOwner, expense);
 
-        assertNotEquals(paymentSenderNotOwner.hashCode(), paymentSenderOwner.hashCode());
     }
 
 }

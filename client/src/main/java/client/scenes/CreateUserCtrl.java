@@ -3,11 +3,10 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.User;
+import java.util.regex.Pattern;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-
-import java.util.regex.Pattern;
 
 /**
  * A controller for the create-user page.
@@ -66,11 +65,12 @@ public class CreateUserCtrl {
     }
 
     private boolean validateInputs() {
-
+        // NAME CHECKING
         if (isNullOrEmpty(nameField.getText())) {
             HomePageCtrl.displayErrorPopup("Name cannot be empty", errorPopup);
             return false;
         }
+        // EMAIL CHECKING
         if (isNullOrEmpty(emailField.getText())) {
             HomePageCtrl.displayErrorPopup("Email cannot be empty", errorPopup);
             return false;
@@ -79,14 +79,24 @@ public class CreateUserCtrl {
             HomePageCtrl.displayErrorPopup("Invalid email", errorPopup);
             return false;
         }
+        if (serverUtils.getUsers()
+                .stream()
+                .anyMatch(user -> user.getEmail().equals(emailField.getText()))
+        ) {
+            HomePageCtrl.displayErrorPopup("Email already registered", errorPopup);
+            return false;
+        }
+        // IBAN CHECKING
         if (isNullOrEmpty(ibanField.getText())) {
             HomePageCtrl.displayErrorPopup("Iban cannot be empty", errorPopup);
             return false;
         }
+        // BIC CHECKING
         if (isNullOrEmpty(bicField.getText())) {
             HomePageCtrl.displayErrorPopup("Bic cannot be empty", errorPopup);
             return false;
         }
+
         return true;
     }
 

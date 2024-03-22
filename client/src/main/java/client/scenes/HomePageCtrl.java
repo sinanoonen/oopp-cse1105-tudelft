@@ -158,6 +158,10 @@ public class HomePageCtrl {
         });
     }
 
+    public void createUser() {
+        mainCtrl.showCreateUser();
+    }
+
     public void createEvent() {
         mainCtrl.showAddEvent();
     }

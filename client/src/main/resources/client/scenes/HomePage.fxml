@@ -92,7 +92,7 @@
                   <Font size="28.0" />
                </font>
             </Hyperlink>
-            <Button layoutX="217.0" layoutY="460.0" mnemonicParsing="false" mouseTransparent="true" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 5;" text="NEW" textFill="WHITE" visible="false">
+            <Button layoutX="217.0" layoutY="460.0" mnemonicParsing="false" mouseTransparent="true" onAction="#createUser" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 5;" text="NEW" textFill="WHITE" visible="false">
                <font>
                   <Font name="SansSerif Bold" size="24.0" />
                </font>

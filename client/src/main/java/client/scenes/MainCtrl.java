@@ -47,6 +47,9 @@ public class MainCtrl {
     private Scene adminOverview;
     private AdminOverviewCtrl adminOverviewCtrl;
 
+    private Scene createUser;
+    private CreateUserCtrl createUserCtrl;
+
     /**
      * Initialize the main controller.
      *
@@ -59,8 +62,9 @@ public class MainCtrl {
                            Pair<HomePageCtrl, Parent> homePage,
                            Pair<EventOverviewCtrl, Parent> eventOverview,
                            Pair<AddEventCtrl, Parent> addEvent,
-                            Pair<SettingsCtrl, Parent> settings,
-                            Pair<AdminOverviewCtrl, Parent> adminOverview
+                           Pair<SettingsCtrl, Parent> settings,
+                           Pair<AdminOverviewCtrl, Parent> adminOverview,
+                           Pair<CreateUserCtrl, Parent> createUser
     ) {
         this.primaryStage = primaryStage;
 
@@ -78,6 +82,9 @@ public class MainCtrl {
 
         this.adminOverviewCtrl = adminOverview.getKey();
         this.adminOverview = new Scene(adminOverview.getValue());
+
+        this.createUserCtrl = createUser.getKey();
+        this.createUser = new Scene(createUser.getValue());
 
         //Set default language and currency
         ClientUtils.setCurrency(Currency.EUR);
@@ -127,9 +134,18 @@ public class MainCtrl {
     /**
      * Shows the admin page.
      */
-    private void showAdminOverview() {
+    public void showAdminOverview() {
         primaryStage.setTitle("Admin Overview");
         primaryStage.setScene(adminOverview);
         adminOverviewCtrl.initialize();
+    }
+
+    /**
+     * Shows the page to create a new user.
+     */
+    public void showCreateUser() {
+        primaryStage.setTitle("New User");
+        primaryStage.setScene(createUser);
+        createUserCtrl.refresh();
     }
 }

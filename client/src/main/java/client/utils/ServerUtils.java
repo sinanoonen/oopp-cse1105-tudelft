@@ -112,6 +112,20 @@ public class ServerUtils {
     }
 
     /**
+     * Persists a new user on the database.
+     *
+     * @param user user to be persisted
+     * @return saved user
+     */
+    public User createUser(User user) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/users")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+    /**
      * Removes a participant from an event.
      *
      * @param uuid uuid of event to remove from

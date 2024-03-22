@@ -20,10 +20,10 @@ import static com.google.inject.Guice.createInjector;
 
 import client.scenes.AddEventCtrl;
 import client.scenes.AdminOverviewCtrl;
-import client.scenes.ManageUserCtrl;
 import client.scenes.EventOverviewCtrl;
 import client.scenes.HomePageCtrl;
 import client.scenes.MainCtrl;
+import client.scenes.ManageUserCtrl;
 import client.scenes.SettingsCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;

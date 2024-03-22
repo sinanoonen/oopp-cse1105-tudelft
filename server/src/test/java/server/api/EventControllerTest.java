@@ -54,7 +54,7 @@ public class EventControllerTest {
 
     private static Event getEvent(String title) {
         Event event = new Event(title);
-        event.addParticipant(new User("testName", "testMail", "testIBAN", "testBic"));
+        event.addParticipant(new User("testName", "testMail", "testIBAN", "testBic", UUID.randomUUID()));
         return event;
     }
 
@@ -109,7 +109,7 @@ public class EventControllerTest {
     @Test
     public void addUserToExistingEvent() {
         Event testEvent = getEvent("Existing Event");
-        User newUser = new User("newName", "newMail", "newIBAN", "newBic");
+        User newUser = new User("newName", "newMail", "newIBAN", "newBic", UUID.randomUUID());
 
         sut.add(testEvent);
         UUID testUuid = testEvent.getInviteCode();
@@ -122,7 +122,7 @@ public class EventControllerTest {
     @Test
     public void addUserToNonExistingEvent() {
         UUID testUuid = UUID.randomUUID();
-        User newUser = new User("newName", "newMail", "newIBAN", "newBic");
+        User newUser = new User("newName", "newMail", "newIBAN", "newBic", UUID.randomUUID());
 
         ResponseEntity<Event> response = sut.addUser(testUuid, newUser);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -130,7 +130,7 @@ public class EventControllerTest {
 
     @Test
     public void removeUserFromEvent() {
-        User existingUser = new User("existingName", "existingMail", "existingIBAN", "existingBic");
+        User existingUser = new User("existingName", "existingMail", "existingIBAN", "existingBic", UUID.randomUUID());
         Event testEvent = getEvent("Event");
         UUID testUuid = testEvent.getInviteCode();
         testEvent.addParticipant(existingUser);

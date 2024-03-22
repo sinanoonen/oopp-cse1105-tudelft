@@ -10,6 +10,8 @@ import commons.User;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.database.UserRepository;
@@ -32,9 +34,9 @@ public class UserControllerTest {
         this.repo = new TestUserRepository();
         this.controller = new UserController(repo);
         users = new User[3];
-        users[0] = new User("Filip", "fkeerberg@tudelft.nl", "iban_filip", "bic_filip");
-        users[1] = new User("Emilio", "ecostanza@tudelft.nl", "iban_emilio", "bic_emilio");
-        users[2] = new User("Sinan", "sönen@tudelft.nl", null, "bic_sinan");
+        users[0] = new User("Filip", "fkeerberg@tudelft.nl", "iban_filip", "bic_filip", UUID.randomUUID());
+        users[1] = new User("Emilio", "ecostanza@tudelft.nl", "iban_emilio", "bic_emilio", UUID.randomUUID());
+        users[2] = new User("Sinan", "sönen@tudelft.nl", null, "bic_sinan", UUID.randomUUID());
     }
 
     @Test
@@ -103,17 +105,17 @@ public class UserControllerTest {
     public void validEditUser() {
         controller.addUser(users[0]);
         controller.addUser(users[1]);
-        User edits = new User("Nico", null, null, null);
+        User edits = new User("Nico", null, null, null, null);
         var res = controller.editUser(users[1].getEmail(), edits);
         assertNotEquals(BAD_REQUEST, res.getStatusCode());
-        User expected = new User("Nico", users[1].getEmail(), users[1].getIban(), users[1].getBic());
+        User expected = new User("Nico", users[1].getEmail(), users[1].getIban(), users[1].getBic(), users[1].getEventID());
         assertEquals(expected, res.getBody());
     }
 
     @Test
     public void editUserEmail() {
         controller.addUser(users[0]);
-        User edits = new User(null, "newemail@tudelft.nl", null, "new_bic");
+        User edits = new User(null, "newemail@tudelft.nl", null, "new_bic", UUID.randomUUID());
         var res = controller.editUser(users[0].getEmail(), edits);
         assertEquals(BAD_REQUEST, res.getStatusCode());
         // Check unchanged
@@ -125,7 +127,7 @@ public class UserControllerTest {
     @Test
     public void editWithoutEdits() {
         controller.addUser(users[0]);
-        User edits = new User(null, null, null, null);
+        User edits = new User(null, null, null, null, null);
         var res = controller.editUser(users[0].getEmail(), edits);
         assertNotEquals(BAD_REQUEST, res.getStatusCode());
         assertEquals(users[0], res.getBody());

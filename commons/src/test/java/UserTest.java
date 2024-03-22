@@ -4,10 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import commons.User;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.UUID;
 
 
 class UserTest {
@@ -81,8 +80,9 @@ class UserTest {
 
     @Test
     void testToString() {
-        assertEquals("User{name='testName', email='testEmail', IBAN='testIban', BIC='testBic', eventID=" + testUser.getEventID() + "}",
-                testUser.toString());
+        assertEquals("User{name='testName', email='testEmail', IBAN='testIban', BIC='testBic', eventID="
+                        + testUser.getEventID() + "}",
+                        testUser.toString());
     }
 
     @Test

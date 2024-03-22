@@ -130,7 +130,11 @@ public class EventControllerTest {
 
     @Test
     public void removeUserFromEvent() {
-        User existingUser = new User("existingName", "existingMail", "existingIBAN", "existingBic", UUID.randomUUID());
+        User existingUser = new User("existingName",
+                "existingMail",
+                "existingIBAN",
+                "existingBic",
+                UUID.randomUUID());
         Event testEvent = getEvent("Event");
         UUID testUuid = testEvent.getInviteCode();
         testEvent.addParticipant(existingUser);

@@ -12,11 +12,14 @@ import commons.transactions.Payment;
 import commons.transactions.Tag;
 import java.awt.Color;
 import java.time.LocalDate;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
-
-
 
 /**
  * A test for the Event class.
@@ -415,7 +418,8 @@ public class EventTest {
 
         assertEquals("Event{inviteCode='" + event.getInviteCode() + "', title='Football Game', "
                 + "participants=[User{name='David', email='david@gmail.com', "
-                + "IBAN='NL123456789', BIC='biicode1', eventID=" + user1.getEventID() + "}], commons.transactions=[Expense{Transaction{owner = "
+                + "IBAN='NL123456789', BIC='biicode1', eventID=" + user1.getEventID()
+                + "}], commons.transactions=[Expense{Transaction{owner = "
                 + "'David', date = '2020-02-02', amount = 10.0}, description='Ice cream and coffee', "
                 + "debts={Mike=5.0, David=-5.0}}]}", event.toString());
     }

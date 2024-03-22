@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.database.UserRepository;
@@ -108,7 +107,11 @@ public class UserControllerTest {
         User edits = new User("Nico", null, null, null, null);
         var res = controller.editUser(users[1].getEmail(), edits);
         assertNotEquals(BAD_REQUEST, res.getStatusCode());
-        User expected = new User("Nico", users[1].getEmail(), users[1].getIban(), users[1].getBic(), users[1].getEventID());
+        User expected = new User("Nico",
+                users[1].getEmail(),
+                users[1].getIban(),
+                users[1].getBic(),
+                users[1].getEventID());
         assertEquals(expected, res.getBody());
     }
 

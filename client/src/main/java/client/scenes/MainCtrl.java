@@ -19,7 +19,9 @@ package client.scenes;
 import client.utils.ClientUtils;
 import client.utils.Currency;
 import client.utils.Language;
+import client.utils.ManageUserMode;
 import commons.Event;
+import commons.User;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -47,8 +49,8 @@ public class MainCtrl {
     private Scene adminOverview;
     private AdminOverviewCtrl adminOverviewCtrl;
 
-    private Scene createUser;
-    private CreateUserCtrl createUserCtrl;
+    private Scene manageUser;
+    private ManageUserCtrl manageUserCtrl;
 
     /**
      * Initialize the main controller.
@@ -64,7 +66,7 @@ public class MainCtrl {
                            Pair<AddEventCtrl, Parent> addEvent,
                            Pair<SettingsCtrl, Parent> settings,
                            Pair<AdminOverviewCtrl, Parent> adminOverview,
-                           Pair<CreateUserCtrl, Parent> createUser
+                           Pair<ManageUserCtrl, Parent> manageUser
     ) {
         this.primaryStage = primaryStage;
 
@@ -83,8 +85,8 @@ public class MainCtrl {
         this.adminOverviewCtrl = adminOverview.getKey();
         this.adminOverview = new Scene(adminOverview.getValue());
 
-        this.createUserCtrl = createUser.getKey();
-        this.createUser = new Scene(createUser.getValue());
+        this.manageUserCtrl = manageUser.getKey();
+        this.manageUser = new Scene(manageUser.getValue());
 
         //Set default language and currency
         ClientUtils.setCurrency(Currency.EUR);
@@ -145,7 +147,18 @@ public class MainCtrl {
      */
     public void showCreateUser() {
         primaryStage.setTitle("New User");
-        primaryStage.setScene(createUser);
-        createUserCtrl.refresh();
+        primaryStage.setScene(manageUser);
+        manageUserCtrl.refresh(ManageUserMode.CREATE, null);
+    }
+
+    /**
+     * Shows the page to edit a user.
+     *
+     * @param user user to be edited
+     */
+    public void showEditUser(User user) {
+        primaryStage.setTitle("Edit " + user.getEmail());
+        primaryStage.setScene(manageUser);
+        manageUserCtrl.refresh(ManageUserMode.EDIT, user);
     }
 }

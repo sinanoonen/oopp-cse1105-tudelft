@@ -20,7 +20,7 @@ import static com.google.inject.Guice.createInjector;
 
 import client.scenes.AddEventCtrl;
 import client.scenes.AdminOverviewCtrl;
-import client.scenes.CreateUserCtrl;
+import client.scenes.ManageUserCtrl;
 import client.scenes.EventOverviewCtrl;
 import client.scenes.HomePageCtrl;
 import client.scenes.MainCtrl;
@@ -50,9 +50,15 @@ public class Main extends Application {
         var addEvent = FXML.load(AddEventCtrl.class, "client", "scenes", "AddEvent.fxml");
         var settings = FXML.load(SettingsCtrl.class, "client", "scenes", "Settings.fxml");
         var adminOverview = FXML.load(AdminOverviewCtrl.class, "client", "scenes", "AdminOverview.fxml");
-        var createUser = FXML.load(CreateUserCtrl.class, "client", "scenes", "CreateUser.fxml");
+        var manageUser = FXML.load(ManageUserCtrl.class, "client", "scenes", "ManageUser.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, homePage, eventOverview, addEvent, settings, adminOverview, createUser);
+        mainCtrl.initialize(primaryStage,
+                homePage,
+                eventOverview,
+                addEvent,
+                settings,
+                adminOverview,
+                manageUser);
     }
 }

@@ -246,7 +246,7 @@ public class HomePageCtrl {
 
         base.getChildren().addAll(username);
         base.setOnMouseClicked(mouseEvent -> {
-            // TODO mainCtrl.showEditUser
+            mainCtrl.showEditUser(user);
         });
 
         return base;

@@ -126,6 +126,20 @@ public class ServerUtils {
     }
 
     /**
+     * Updates a given user.
+     *
+     * @param user updated user
+     * @return persisted user
+     */
+    public User updateUser(User user) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/users/" + user.getEmail())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+    /**
      * Removes a participant from an event.
      *
      * @param uuid uuid of event to remove from
@@ -193,4 +207,5 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(event, APPLICATION_JSON), Event.class);
     }
+
 }

@@ -36,16 +36,6 @@ public class HomePageCtrl {
     @FXML
     private Circle addButton;
     @FXML
-    private Circle usersButton;
-    @FXML
-    private Circle usersButtonDarkener;
-    @FXML
-    private Pane usersMenu;
-    @FXML
-    private Pane userMenuDarkener;
-    @FXML
-    private ListView<Node> usersList;
-    @FXML
     private Pane addEventOverlay;
     @FXML
     private Pane screenDarkener;
@@ -80,16 +70,11 @@ public class HomePageCtrl {
         addEventOverlay.setMouseTransparent(true);
         screenDarkener.setMouseTransparent(true);
         settingsOverlay.setVisible(false);
-        usersButtonDarkener.setVisible(false);
 
         screenDarkener.setPrefWidth(root.getWidth());
         screenDarkener.setPrefHeight(root.getHeight());
         screenDarkener.setLayoutX(root.getLayoutX());
         screenDarkener.setLayoutY(root.getLayoutY());
-
-        if (usersMenu.isVisible()) {
-            toggleUsersMenu();
-        }
 
         codeInput.setText("");
 
@@ -135,31 +120,6 @@ public class HomePageCtrl {
         addEventOverlay.setMouseTransparent(true);
         settingsOverlay.setMouseTransparent(true);
         screenDarkener.setMouseTransparent(true);
-    }
-
-    public void toggleUserButtonDarkener() {
-        usersButtonDarkener.setVisible(!usersButtonDarkener.isVisible());
-    }
-
-    /**
-     * Toggles the users menu as well as the background darkener.
-     */
-    public void toggleUsersMenu() {
-        reloadUsersList();
-        userMenuDarkener.toFront();
-        userMenuDarkener.setVisible(!userMenuDarkener.isVisible());
-        userMenuDarkener.setMouseTransparent(!userMenuDarkener.isMouseTransparent());
-        usersMenu.toFront();
-        usersMenu.setVisible(!usersMenu.isVisible());
-        usersMenu.setMouseTransparent(!usersMenu.isMouseTransparent());
-        usersMenu.getChildren().forEach(child -> {
-            child.setMouseTransparent(usersMenu.isMouseTransparent());
-            child.setVisible(usersMenu.isVisible());
-        });
-    }
-
-    public void createUser() {
-        mainCtrl.showCreateUser();
     }
 
     public void createEvent() {
@@ -220,50 +180,11 @@ public class HomePageCtrl {
         return base;
     }
 
-    private Node userCellFactory(User user) {
-        Pane base = new Pane();
-
-        final double width = usersList.getPrefWidth() - 20;
-        final double height = usersList.getPrefHeight() / 4;
-
-        base.setPrefWidth(width);
-        base.setPrefHeight(height);
-        base.setStyle("-fx-background-color: #444444;"
-                + " -fx-border-color: black;"
-                + " -fx-border-width: 3;"
-                + " -fx-background-radius: 5;"
-                + " -fx-border-radius: 5;"
-        );
-
-        Text username = new Text(user.getName());
-        final double nameTopPadding = base.getPrefHeight() / 2 + 5;
-        final double nameLeftPadding = base.getPrefWidth() / 8;
-        username.setLayoutX(base.getLayoutX() + nameLeftPadding);
-        username.setLayoutY(base.getLayoutY() + nameTopPadding);
-        username.setFill(Paint.valueOf("white"));
-        username.setFont(Font.font("SansSerif"));
-        username.setMouseTransparent(true);
-
-        base.getChildren().addAll(username);
-        base.setOnMouseClicked(mouseEvent -> {
-            mainCtrl.showEditUser(user);
-        });
-
-        return base;
-    }
-
     private void reloadEventsList() {
         eventsList.getItems().removeAll(eventsList.getItems());
         List<Node> items = events.stream().map(this::eventCellFactory).toList();
         eventsList.getItems().addAll(items);
     }
-
-    private void reloadUsersList() {
-        usersList.getItems().removeAll(usersList.getItems());
-        List<Node> items = serverUtils.getUsers().stream().map(this::userCellFactory).toList();
-        usersList.getItems().addAll(items);
-    }
-
 
     private void displayInputError(String message) {
         displayErrorPopup(message, errorPopup);

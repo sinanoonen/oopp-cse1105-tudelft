@@ -20,13 +20,10 @@ import client.utils.ClientUtils;
 import client.utils.Currency;
 import client.utils.Language;
 import commons.Event;
-import commons.User;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
-import java.util.Set;
 
 /**
  * Controller for the main scene.

@@ -5,15 +5,21 @@ import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
 import commons.transactions.Tag;
+import jakarta.ws.rs.WebApplicationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import jakarta.ws.rs.WebApplicationException;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import java.awt.Button;
@@ -79,6 +85,11 @@ public class AddExpenseCtrl {
     }
 
 
+    /**
+     * Refreshes the scene.
+     *
+     * @param event event the expense belongs to
+     */
     public void refresh(Event event) {
         this.event = event;
         this.tags = event.getTags();
@@ -116,6 +127,9 @@ public class AddExpenseCtrl {
     }
 
 
+    /**
+     * Shows the participants when clicked only some people button.
+     */
     public void handleOnlySomePeople() {
         if (onlySomePeople.isSelected()) {
             additionalCheckboxesContainer.getChildren().clear();
@@ -131,6 +145,9 @@ public class AddExpenseCtrl {
         }
     }
 
+    /**
+     * Controls the add new tag button.
+     */
     @FXML
     private void handleAddTagButtonClick() {
         // Retrieve the selected item from the ChoiceBox
@@ -144,6 +161,9 @@ public class AddExpenseCtrl {
 
     }
 
+    /**
+     *  Sets up the list view that shows the selected tags.
+     */
     public void setupListViewCellFactory() {
         selectedTags.setCellFactory(new Callback<ListView<Tag>, ListCell<Tag>>() {
             @Override
@@ -166,6 +186,12 @@ public class AddExpenseCtrl {
         });
     }
 
+    /**
+     * Converts rgb color int to css parsable string.
+     *
+     * @param rgb color
+     * @return colors string representation
+     */
     public String intToString(int rgb) {
         int red = (rgb >> 16) & 0xFF;
         int green = (rgb >> 8) & 0xFF;
@@ -199,7 +225,7 @@ public class AddExpenseCtrl {
             ObservableList<Tag> selectedTagsList = selectedTags.getItems();
             Set<Tag> selectedTagsSet = Set.copyOf(selectedTagsList);
 
-            Expense expense = new Expense(owner, expenseDate, expenseAmount, expenseDescription,debtors);
+            Expense expense = new Expense(owner, expenseDate, expenseAmount, expenseDescription, debtors);
             for (Tag tag : selectedTagsSet) {
                 expense.addTag(tag);
             }

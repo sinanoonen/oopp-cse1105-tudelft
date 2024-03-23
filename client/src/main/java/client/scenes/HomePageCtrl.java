@@ -1,12 +1,17 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import com.google.inject.Inject;
 import commons.Event;
+
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -21,7 +26,7 @@ import javafx.util.Duration;
 /**
  * A controller for the home page scene.
  */
-public class HomePageCtrl {
+public class HomePageCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
@@ -167,5 +172,10 @@ public class HomePageCtrl {
 
         fadeIn.setOnFinished(finished -> fadeOut.play());
         fadeIn.play();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        UIUtils.activateHighContrastMode(root);
     }
 }

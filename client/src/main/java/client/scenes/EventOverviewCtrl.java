@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
@@ -87,7 +88,7 @@ public class EventOverviewCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        UIUtils.activateHighContrastMode(root);
     }
 
     /**

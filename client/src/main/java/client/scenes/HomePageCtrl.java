@@ -3,7 +3,6 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
-import commons.User;
 import java.util.List;
 import java.util.UUID;
 import javafx.animation.FadeTransition;
@@ -46,11 +45,11 @@ public class HomePageCtrl {
     @FXML
     private Circle optionsButton;
     @FXML
-    Pane settingsOverlay;
+    private Pane settingsOverlay;
     @FXML
-    Pane settingClickArea;
+    private Pane settingClickArea;
     @FXML
-    Pane quitClickArea;
+    private Pane quitClickArea;
 
 
     @Inject
@@ -71,10 +70,8 @@ public class HomePageCtrl {
         screenDarkener.setMouseTransparent(true);
         settingsOverlay.setVisible(false);
 
-        screenDarkener.setPrefWidth(root.getWidth());
-        screenDarkener.setPrefHeight(root.getHeight());
-        screenDarkener.setLayoutX(root.getLayoutX());
-        screenDarkener.setLayoutY(root.getLayoutY());
+        screenDarkener.setPrefWidth(root.getPrefWidth());
+        screenDarkener.setPrefHeight(root.getPrefHeight());
 
         codeInput.setText("");
 
@@ -92,20 +89,22 @@ public class HomePageCtrl {
      * Shows the add event overlay.
      */
     public void showEventOverlay() {
+        screenDarkener.toFront();
+        screenDarkener.setVisible(true);
+        screenDarkener.setMouseTransparent(false);
         addEventOverlay.toFront();
         addEventOverlay.setVisible(true);
-        screenDarkener.setVisible(true);
         addEventOverlay.setMouseTransparent(false);
-        screenDarkener.setMouseTransparent(false);
     }
 
     /**
      * Shows the settings overlay.
      */
     public void showSettingsOverlay() {
+        screenDarkener.toFront();
+        screenDarkener.setVisible(true);
         settingsOverlay.toFront();
         settingsOverlay.setVisible(true);
-        screenDarkener.setVisible(true);
         settingsOverlay.setMouseTransparent(false);
         screenDarkener.setMouseTransparent(false);
     }

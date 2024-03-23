@@ -11,9 +11,9 @@
 
 <AnchorPane fx:id="root" prefHeight="623.0" prefWidth="600.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HomePageCtrl">
    <children>
-      <Text fill="#8e8e8e" layoutX="52.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="RECENTLY VIEWED">
+      <Text fill="WHITE" layoutX="52.0" layoutY="255.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Recently Viewed">
          <font>
-            <Font name="SansSerif Bold" size="27.0" />
+            <Font name="SansSerif Bold" size="22.0" />
          </font>
       </Text>
       <ListView fx:id="eventsList" layoutX="38.0" layoutY="263.0" prefHeight="330.0" prefWidth="382.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 3;" />
@@ -57,5 +57,10 @@
          </children>
       </Pane>
       <Pane id="join_darkkener" fx:id="screenDarkener" mouseTransparent="true" onMouseClicked="#toggleEventOverlay" opacity="0.3" prefHeight="623.0" prefWidth="607.0" style="-fx-background-color: black;" visible="false" />
+      <Text fill="WHITE" layoutX="158.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Definitively Not Splitser">
+         <font>
+            <Font name="System Bold" size="30.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

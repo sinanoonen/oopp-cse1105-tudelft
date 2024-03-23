@@ -7,8 +7,8 @@ import javafx.scene.Parent;
 
 public class UIUtils {
 
-    private static int contrastThreshold = 70;
-    private static double contrastModifier = 0.6;
+    private static int contrastThreshold = 75;
+    private static double contrastModifier = 0.86;
     private static double brightnessModifier = 20;
 
     /**
@@ -106,12 +106,17 @@ public class UIUtils {
         // if average is above threshold, add contrastModifier to all rgb values
         if(average > contrastThreshold) {
             for(int i = 0; i < 3; i++) {
-                rgb[i] = Math.min(255, (int) (rgb[i] * (1 + contrastModifier) + brightnessModifier));
+                rgb[i] = Math.min(255, (int) ((rgb[i] * (1 + contrastModifier)) + brightnessModifier));
             }
         } else {
             for(int i = 0; i < 3; i++) {
-                rgb[i] = Math.max(0, (int) (rgb[i] * (1 - contrastModifier) + brightnessModifier));
+                rgb[i] = Math.max(0, (int) ((rgb[i] * (1 - contrastModifier)) + brightnessModifier));
             }
+        }
+
+        for(int i = 0; i < 3; i++) {
+            rgb[i] = Math.min(255, rgb[i]);
+            rgb[i] = Math.max(0, rgb[i]);
         }
     }
 

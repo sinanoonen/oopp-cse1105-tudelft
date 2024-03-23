@@ -62,8 +62,8 @@ public class ManageUserCtrl {
             bicField.setText("");
 
             emailField.setEditable(true);
-            changeBackgroundColor(emailField, "white");
-            changeTextFill(emailField, "black");
+            changeStyleAttribute(emailField, "-fx-background-color", "white");
+            changeStyleAttribute(emailField, "-fx-text-fill", "black");
 
             confirmButton.setText("CREATE");
         } else {
@@ -74,8 +74,8 @@ public class ManageUserCtrl {
             bicField.setText(user.getBic());
 
             emailField.setEditable(false);
-            changeBackgroundColor(emailField, "#2b2b2b");
-            changeTextFill(emailField, "#8e8e8e");
+            changeStyleAttribute(emailField, "-fx-background-color", "#2b2b2b");
+            changeStyleAttribute(emailField, "-fx-text-fill", "#8e8e8e");
 
             confirmButton.setText("SAVE");
         }
@@ -170,44 +170,24 @@ public class ManageUserCtrl {
     }
 
     /**
-     * Changes the background color of an FXML node.
-     * Will add color if not already present.
+     * Changes the style attribute of an FXML node.
+     * Will add attribute if not already present.
      *
-     * @param node node whose color to change
-     * @param color color string
+     * @param node node whose style attribute to change
+     * @param attribute style attribute to change
+     * @param value value of the style attribute
      */
-    private void changeBackgroundColor(Node node, String color) {
+    private void changeStyleAttribute(Node node, String attribute, String value) {
         String currentStyle = node.getStyle();
-        String newColor = "-fx-background-color: " + color + ";";
+        String newAttribute = attribute + ": " + value + ";";
 
-        if (currentStyle.contains("-fx-background-color")) {
-            // remove existing background color
-            int startIndex = currentStyle.indexOf("-fx-background-color");
+        if (currentStyle.contains(attribute)) {
+            // remove existing attribute
+            int startIndex = currentStyle.indexOf(attribute);
             int endIndex = currentStyle.indexOf(";", startIndex);
             currentStyle = currentStyle.substring(0, startIndex) + currentStyle.substring(endIndex + 1);
         }
 
-        node.setStyle(currentStyle + newColor);
-    }
-
-    /**
-     * Changes the text fill color of an FXML node.
-     * Will add color if not already present.
-     *
-     * @param node node whose text fill to change
-     * @param color color string
-     */
-    private void changeTextFill(Node node, String color) {
-        String currentStyle = node.getStyle();
-        String newColor = "-fx-text-fill: " + color + ";";
-
-        if (currentStyle.contains("-fx-text-fill")) {
-            // remove existing background color
-            int startIndex = currentStyle.indexOf("-fx-text-fill");
-            int endIndex = currentStyle.indexOf(";", startIndex);
-            currentStyle = currentStyle.substring(0, startIndex) + currentStyle.substring(endIndex + 1);
-        }
-
-        node.setStyle(currentStyle + newColor);
+        node.setStyle(currentStyle + newAttribute);
     }
 }

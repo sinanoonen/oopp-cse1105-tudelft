@@ -144,21 +144,24 @@ public class MainCtrl {
 
     /**
      * Shows the page to create a new user.
+     *
+     * @param event event for which the user is to be created
      */
-    public void showCreateUser() {
+    public void showCreateUser(Event event) {
         primaryStage.setTitle("New User");
         primaryStage.setScene(manageUser);
-        manageUserCtrl.refresh(ManageUserMode.CREATE, null);
+        manageUserCtrl.refresh(ManageUserMode.CREATE, null, event);
     }
 
     /**
      * Shows the page to edit a user.
      *
      * @param user user to be edited
+     * @param event event for which the user is to be edited
      */
-    public void showEditUser(User user) {
+    public void showEditUser(User user, Event event) {
         primaryStage.setTitle("Edit " + user.getEmail());
         primaryStage.setScene(manageUser);
-        manageUserCtrl.refresh(ManageUserMode.EDIT, user);
+        manageUserCtrl.refresh(ManageUserMode.EDIT, user, event);
     }
 }

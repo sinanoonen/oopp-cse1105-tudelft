@@ -47,11 +47,11 @@
             <Font name="SansSerif Bold" size="15.0" />
          </font>
       </Button>
-      <Pane id="overview_darkener" fx:id="overviewDarkener" mouseTransparent="true" onMouseClicked="#toggleParticipants" opacity="0.7" prefHeight="647.0" prefWidth="628.0" style="-fx-background-color: black;" visible="false" />
+      <Pane id="overview_darkener" fx:id="participantsDarkener" mouseTransparent="true" onMouseClicked="#toggleParticipants" opacity="0.7" prefHeight="657.0" prefWidth="610.0" style="-fx-background-color: black;" visible="false" />
       <Pane fx:id="participantsMenu" layoutX="124.0" layoutY="42.0" mouseTransparent="true" prefHeight="559.0" prefWidth="351.0" style="-fx-background-color: #333333; -fx-background-radius: 12; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10;" visible="false">
          <children>
             <ListView fx:id="participantsList" layoutX="10.0" layoutY="9.0" mouseTransparent="true" prefHeight="481.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-background: transparent;" visible="false" />
-            <Button layoutX="22.0" layoutY="505.0" mnemonicParsing="false" mouseTransparent="true" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Add Participant" textFill="WHITE" visible="false" />
+            <Button layoutX="22.0" layoutY="505.0" mnemonicParsing="false" mouseTransparent="true" onAction="#swapParticipantsAddParticipants" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Add Participant" textFill="WHITE" visible="false" />
             <Button layoutX="199.0" layoutY="505.0" mnemonicParsing="false" mouseTransparent="true" onAction="#toggleParticipants" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Close" textFill="WHITE" visible="false">
                <font>
                   <Font size="15.0" />
@@ -64,5 +64,16 @@
             <Font size="14.0" />
          </font>
       </Hyperlink>
+      <Pane fx:id="addParticipantsMenu" layoutX="124.0" layoutY="42.0" mouseTransparent="true" prefHeight="559.0" prefWidth="351.0" style="-fx-background-color: #333333; -fx-background-radius: 12; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10;" visible="false">
+         <children>
+            <ListView fx:id="newParticipantsList" layoutX="10.0" layoutY="9.0" mouseTransparent="true" prefHeight="481.0" prefWidth="331.0" style="-fx-background-color: transparent; -fx-background: transparent;" />
+            <Button layoutX="100.0" layoutY="505.0" mnemonicParsing="false" mouseTransparent="true" onAction="#onAddParticipantsConfirm" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="CONFIRM" textFill="WHITE">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Pane id="overview_darkener" fx:id="addParticipantsDarkener" layoutY="-1.0" mouseTransparent="true" onMouseClicked="#swapParticipantsAddParticipants" opacity="0.7" prefHeight="658.0" prefWidth="610.0" style="-fx-background-color: black;" visible="false" />
    </children>
 </AnchorPane>

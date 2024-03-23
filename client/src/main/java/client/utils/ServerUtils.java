@@ -99,7 +99,6 @@ public class ServerUtils {
                 .post(Entity.entity(expense, APPLICATION_JSON), Expense.class);
     }
 
-
     /**
      * Returns all users stored in the database.
      */
@@ -112,10 +111,10 @@ public class ServerUtils {
     }
 
     /**
-     * Persists a new user on the database.
+     * Creates a new user by sending a POST request to the server's API endpoint for users.
      *
-     * @param user user to be persisted
-     * @return saved user
+     * @param user the User object containing the user details to be created
+     * @return the created User object returned by the server
      */
     public User createUser(User user) {
         return ClientBuilder.newClient(new ClientConfig())
@@ -126,17 +125,32 @@ public class ServerUtils {
     }
 
     /**
-     * Updates a given user.
+     * Updates an existing user by sending a PUT request to the server's API endpoint for users.
      *
-     * @param user updated user
-     * @return persisted user
+     * @param updated the User object containing the user details to be updated
+     * @return the updated User object returned by the server
      */
-    public User updateUser(User user) {
+    public User updateUser(User updated) {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/users/" + user.getEmail())
+                .target(SERVER).path("api/users/" + updated.getEmail())
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .put(Entity.entity(user, APPLICATION_JSON), User.class);
+                .put(Entity.entity(updated, APPLICATION_JSON), User.class);
+    }
+
+    /**
+     * Adds a user to the provided event.
+     *
+     * @param event event to which the user should be added
+     * @param user user to be added to event
+     * @return updated event
+     */
+    public Event addUserToEvent(Event event, User user) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/events/" + event.getInviteCode() + "/users")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(user, APPLICATION_JSON), Event.class);
     }
 
     /**

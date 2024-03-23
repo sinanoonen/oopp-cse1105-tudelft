@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ManageUserMode;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Event;
 import commons.User;
 import java.util.regex.Pattern;
 import javafx.fxml.FXML;
@@ -20,6 +21,7 @@ public class ManageUserCtrl {
     private MainCtrl mainCtrl;
 
     ManageUserMode mode;
+    Event event;
 
     @FXML
     private Text title;
@@ -52,8 +54,9 @@ public class ManageUserCtrl {
     /**
      * A refresh method for this scene, sets scene back to initial setting.
      */
-    public void refresh(ManageUserMode mode, User user) {
+    public void refresh(ManageUserMode mode, User user, Event event) {
         this.mode = mode;
+        this.event = event;
         if (mode == ManageUserMode.CREATE) {
             title.setText("CREATE NEW USER");
             nameField.setText("");
@@ -97,7 +100,7 @@ public class ManageUserCtrl {
         String email = emailField.getText();
         String iban = ibanField.getText();
         String bic = bicField.getText();
-        User user = new User(name, email, iban, bic);
+        User user = new User(name, email, iban, bic, event.getInviteCode());
 
         User saved = serverUtils.createUser(user);
         mainCtrl.showHomePage();
@@ -115,7 +118,7 @@ public class ManageUserCtrl {
         String email = emailField.getText();
         String iban = ibanField.getText();
         String bic = bicField.getText();
-        User updated = new User(name, email, iban, bic);
+        User updated = new User(name, email, iban, bic, event.getInviteCode());
 
         User saved = serverUtils.updateUser(updated);
         mainCtrl.showHomePage();

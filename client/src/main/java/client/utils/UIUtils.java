@@ -1,15 +1,13 @@
 package client.utils;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.collections.ObservableMap;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 
 public class UIUtils {
 
-    private static int contrastThreshold = 75;
-    private static double contrastModifier = 0.86;
-    private static double brightnessModifier = 20;
+    private static int CONTRAST_THRESHOLD = 75;
+    private static double CONTRAST_MODIFIER = 0.86;
+    private static double BRIGHTNESS_MODIFIER = 23;
 
     /**
      * Changes the color of a node.
@@ -60,15 +58,6 @@ public class UIUtils {
             borderColor = borderColor.replace("-fx-border-color: ", "");
         }
 
-
-        String textColor = "";
-        if(currentStyle.contains("-fx-text-fill")) {
-            int startIndex = currentStyle.indexOf("-fx-text-fill");
-            int endIndex = currentStyle.indexOf(";", startIndex);
-            textColor = currentStyle.substring(startIndex, endIndex);
-            textColor = textColor.replace("-fx-text-fill: ", "");
-        }
-
         if(!backgroundColor.isEmpty() && !backgroundColor.equals("transparent")) {
             int[] rgb = hexToRGB(backgroundColor);
             increaseColorContrast(rgb);
@@ -89,28 +78,18 @@ public class UIUtils {
             String newColor = String.format("#%02x%02x%02x", rgb[0], rgb[1], rgb[2]);
             changeColor(node, newColor, "-fx-border-color");
         }
-
-        if(!textColor.isEmpty() && !textColor.equals("transparent")) {
-            int[] rgb = hexToRGB(textColor);
-            increaseColorContrast(rgb);
-            String newColor = String.format("#%02x%02x%02x", rgb[0], rgb[1], rgb[2]);
-            changeColor(node, newColor, "-fx-text-fill");
-        }
-
-
-
     }
 
     private static void increaseColorContrast(int[] rgb) {
         int average = (rgb[0] + rgb[1] + rgb[2]) / 3;
         // if average is above threshold, add contrastModifier to all rgb values
-        if(average > contrastThreshold) {
+        if(average > CONTRAST_THRESHOLD) {
             for(int i = 0; i < 3; i++) {
-                rgb[i] = Math.min(255, (int) ((rgb[i] * (1 + contrastModifier)) + brightnessModifier));
+                rgb[i] = Math.min(255, (int) ((rgb[i] * (1.0 + CONTRAST_MODIFIER)) + BRIGHTNESS_MODIFIER));
             }
         } else {
             for(int i = 0; i < 3; i++) {
-                rgb[i] = Math.max(0, (int) ((rgb[i] * (1 - contrastModifier)) + brightnessModifier));
+                rgb[i] = Math.max(0, (int) ((rgb[i] * (1.0 - CONTRAST_MODIFIER)) + BRIGHTNESS_MODIFIER));
             }
         }
 

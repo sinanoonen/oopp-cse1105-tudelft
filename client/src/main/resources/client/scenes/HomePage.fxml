@@ -17,8 +17,8 @@
          </font>
       </Text>
       <ListView fx:id="eventsList" layoutX="38.0" layoutY="263.0" prefHeight="330.0" prefWidth="382.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 3;" />
-      <Circle fx:id="addButton" fill="#3f3f3f" layoutX="525.0" layoutY="560.0" onMouseReleased="#toggleEventOverlay" radius="33.0" stroke="#c30052" strokeType="INSIDE" strokeWidth="2.0" />
-      <Text fill="#999999" layoutX="504.0" layoutY="578.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="+" textAlignment="CENTER">
+      <Circle fx:id="addButton" fill="#3f3f3f" layoutX="525.0" layoutY="560.0" onMouseReleased="#toggleEventOverlay" radius="33.0" stroke="#c30052" strokeType="INSIDE" strokeWidth="2.0" style="-fx-fill: #3f3f3f;" />
+      <Text fill="#999999" layoutX="499.0" layoutY="581.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="+" textAlignment="CENTER" wrappingWidth="52.0048828125">
          <font>
             <Font name="System Bold" size="58.0" />
          </font>

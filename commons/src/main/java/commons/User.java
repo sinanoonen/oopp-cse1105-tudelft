@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * User class.
@@ -20,6 +21,8 @@ public class User {
     private String email;
     private String iban;
     private String bic;
+    @Id
+    private UUID eventID;
 
     @SuppressWarnings("unused")
     protected User() {
@@ -33,12 +36,14 @@ public class User {
      * @param email email of the user
      * @param iban IBAN of the user
      * @param bic BIC of the user
+     * @param eventID UUID of the event user is a part of
      */
-    public User(String name, String email, String iban, String bic) {
+    public User(String name, String email, String iban, String bic, UUID eventID) {
         this.name = name;
         this.email = email;
         this.iban = iban;
         this.bic = bic;
+        this.eventID = eventID;
     }
 
     /**
@@ -113,6 +118,14 @@ public class User {
         this.bic = bic;
     }
 
+    public UUID getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(UUID eventID) {
+        this.eventID = eventID;
+    }
+
     /**
      * Generates string representation of the user.
      *
@@ -131,7 +144,8 @@ public class User {
                 + '\''
                 + ", BIC='"
                 + bic
-                + '\''
+                + "', eventID="
+                + eventID
                 + '}';
     }
     /**
@@ -151,7 +165,8 @@ public class User {
         }
         User user = (User) o;
         return Objects.equals(name, user.name) && Objects.equals(email, user.email)
-                && Objects.equals(iban, user.iban) && Objects.equals(bic, user.bic);
+                && Objects.equals(iban, user.iban) && Objects.equals(bic, user.bic)
+                && Objects.equals(eventID, user.getEventID());
     }
 
     /**
@@ -161,6 +176,6 @@ public class User {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(name, email, iban, bic);
+        return Objects.hash(name, email, iban, bic, eventID);
     }
 }

@@ -16,6 +16,9 @@
 
 package client.scenes;
 
+import client.utils.ClientUtils;
+import client.utils.Currency;
+import client.utils.Language;
 import commons.Event;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -38,6 +41,12 @@ public class MainCtrl {
     private AddEventCtrl addEventCtrl;
     private Scene addEvent;
 
+    private SettingsCtrl settingsCtrl;
+    private Scene settings;
+
+    private Scene adminOverview;
+    private AdminOverviewCtrl adminOverviewCtrl;
+
     /**
      * Initialize the main controller.
      *
@@ -49,7 +58,9 @@ public class MainCtrl {
     public void initialize(Stage primaryStage,
                            Pair<HomePageCtrl, Parent> homePage,
                            Pair<EventOverviewCtrl, Parent> eventOverview,
-                           Pair<AddEventCtrl, Parent> addEvent
+                           Pair<AddEventCtrl, Parent> addEvent,
+                            Pair<SettingsCtrl, Parent> settings,
+                            Pair<AdminOverviewCtrl, Parent> adminOverview
     ) {
         this.primaryStage = primaryStage;
 
@@ -61,6 +72,16 @@ public class MainCtrl {
 
         this.addEventCtrl = addEvent.getKey();
         this.addEvent = new Scene(addEvent.getValue());
+
+        this.settingsCtrl = settings.getKey();
+        this.settings = new Scene(settings.getValue());
+
+        this.adminOverviewCtrl = adminOverview.getKey();
+        this.adminOverview = new Scene(adminOverview.getValue());
+
+        //Set default language and currency
+        ClientUtils.setCurrency(Currency.EUR);
+        ClientUtils.setLanguage(Language.ENGLISH);
 
         showHomePage();
         primaryStage.show();
@@ -93,4 +114,22 @@ public class MainCtrl {
         eventOverviewCtrl.refresh(event);
     }
 
+
+    /**
+     * Show the settings page.
+     */
+    public void showSettings() {
+        primaryStage.setTitle("Settings");
+        primaryStage.setScene(settings);
+        settingsCtrl.refresh();
+    }
+
+    /**
+     * Shows the admin page.
+     */
+    private void showAdminOverview() {
+        primaryStage.setTitle("Admin Overview");
+        primaryStage.setScene(adminOverview);
+        adminOverviewCtrl.initialize();
+    }
 }

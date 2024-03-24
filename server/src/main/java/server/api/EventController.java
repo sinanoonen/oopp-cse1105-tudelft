@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,6 +72,22 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(repo.findById(uuid).get());
+    }
+
+    /**
+     * Edit an event by its UUID.
+     *
+     * @param uuid the UUID of the event
+     * @return the event
+     */
+    @PutMapping("/{uuid}")
+    public ResponseEntity<Event> updateById(@PathVariable("uuid") UUID uuid,
+                                            @RequestBody Event updatedEvent) {
+        if (!repo.existsById(uuid) || updatedEvent == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        Event saved = repo.save(updatedEvent);
+        return ResponseEntity.ok(saved);
     }
 
     /**

@@ -30,12 +30,12 @@ class EventManagerTest {
 
 
         testEvent = new Event("title");
-        testEvent.addParticipant(new User("name", "email", "iban", "bic"));
+        testEvent.addParticipant(new User("name", "email", "iban", "bic", UUID.randomUUID()));
         List<Event> events = new ArrayList<>();
         events.add(testEvent);
 
         testEvent2 = new Event("title2");
-        testEvent2.addParticipant(new User("name2", "email2", "iban2", "bic2"));
+        testEvent2.addParticipant(new User("name2", "email2", "iban2", "bic2", UUID.randomUUID()));
 
         testExpense = new Expense("emilio", LocalDate.of(2024, 1, 1),
                 100, "description", List.of("emilio", "mario"));
@@ -93,8 +93,8 @@ class EventManagerTest {
 
     @Test
     void getEventsByParticipant() {
-        User user = new User("name", "email", "iban", "bic");
-        User user2 = new User("name2", "email2", "iban2", "bic2");
+        User user = new User("name", "email", "iban", "bic", UUID.randomUUID());
+        User user2 = new User("name2", "email2", "iban2", "bic2", UUID.randomUUID());
 
         testEvent.addParticipant(user);
         testEvent2.addParticipant(user2);

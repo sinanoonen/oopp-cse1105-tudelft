@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import commons.User;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ class UserTest {
 
     @BeforeEach
     void setupForTests() {
-        testUser = new User("testName", "testEmail", "testIban", "testBic");
+        testUser = new User("testName", "testEmail", "testIban", "testBic", UUID.randomUUID());
     }
 
     @Test
@@ -79,17 +80,18 @@ class UserTest {
 
     @Test
     void testToString() {
-        assertEquals("User{name='testName', email='testEmail', IBAN='testIban', BIC='testBic'}",
-                testUser.toString());
+        assertEquals("User{name='testName', email='testEmail', IBAN='testIban', BIC='testBic', eventID="
+                        + testUser.getEventID() + "}",
+                        testUser.toString());
     }
 
     @Test
     void testEquals() {
-        User testUser2 = new User("testName", "testEmail", "testIban", "testBic");
-        User testUser3 = new User("testName2", "testEmail2", "testIban2", "testBic2");
-        User testUser4 = new User("testName", "testEmail2", "testIban2", "testBic2");
-        User testUser5 = new User("testName", "testEmail", "testIban2", "testBic2");
-        User testUser6 = new User("testName", "testEmail", "testIban", "testBic2");
+        User testUser2 = new User("testName", "testEmail", "testIban", "testBic", testUser.getEventID());
+        User testUser3 = new User("testName2", "testEmail2", "testIban2", "testBic2", UUID.randomUUID());
+        User testUser4 = new User("testName", "testEmail2", "testIban2", "testBic2", UUID.randomUUID());
+        User testUser5 = new User("testName", "testEmail", "testIban2", "testBic2", UUID.randomUUID());
+        User testUser6 = new User("testName", "testEmail", "testIban", "testBic2", UUID.randomUUID());
 
         assertEquals(testUser, testUser2);
         assertEquals(testUser, testUser);
@@ -101,11 +103,11 @@ class UserTest {
 
     @Test
     void testHashCode() {
-        User testUser2 = new User("testName", "testEmail", "testIban", "testBic");
-        User testUser3 = new User("testName2", "testEmail2", "testIban2", "testBic2");
-        User testUser4 = new User("testName", "testEmail2", "testIban2", "testBic2");
-        User testUser5 = new User("testName", "testEmail", "testIban2", "testBic2");
-        User testUser6 = new User("testName", "testEmail", "testIban", "testBic2");
+        User testUser2 = new User("testName", "testEmail", "testIban", "testBic", testUser.getEventID());
+        User testUser3 = new User("testName2", "testEmail2", "testIban2", "testBic2", UUID.randomUUID());
+        User testUser4 = new User("testName", "testEmail2", "testIban2", "testBic2", UUID.randomUUID());
+        User testUser5 = new User("testName", "testEmail", "testIban2", "testBic2", UUID.randomUUID());
+        User testUser6 = new User("testName", "testEmail", "testIban", "testBic2", UUID.randomUUID());
 
         assertEquals(testUser.hashCode(), testUser2.hashCode());
         assertNotEquals(testUser.hashCode(), testUser3.hashCode());
@@ -116,7 +118,7 @@ class UserTest {
 
     @Test
     void testConstructorWithNullParameters() {
-        User nullUser = new User(null, null, null, null);
+        User nullUser = new User(null, null, null, null, null);
         assertNotNull(nullUser);
         assertNull(nullUser.getName());
         assertNull(nullUser.getEmail());
@@ -137,7 +139,7 @@ class UserTest {
     @Test
     void testUniqueConstraints() {
         User duplicateUser = new User("duplicateName", "testEmail",
-                "testIban", "uniqueBic");
+                "testIban", "uniqueBic", UUID.randomUUID());
         assertNotEquals(testUser, duplicateUser);
     }
 }

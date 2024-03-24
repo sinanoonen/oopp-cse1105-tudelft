@@ -18,9 +18,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
-
-
 
 /**
  * A test for the Event class.
@@ -29,8 +28,8 @@ public class EventTest {
 
     @Test
     public void testAlternativeConstructor() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
+        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2", UUID.randomUUID());
         Set<User> participants = new HashSet<>();
         participants.add(user1);
         participants.add(user2);
@@ -40,7 +39,7 @@ public class EventTest {
 
     @Test
     public void testGetInviteCode() {
-        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Event event = new Event("Birthday Party");
         event.addParticipant(user1);
         assertNotNull(event.getInviteCode());
@@ -48,7 +47,7 @@ public class EventTest {
 
     @Test
     public void testGetTitle() {
-        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Event event = new Event("Conference");
         event.addParticipant(user1);
         assertEquals("Conference", event.getTitle());
@@ -56,8 +55,8 @@ public class EventTest {
 
     @Test
     public void testGetParticipants() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
+        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2", UUID.randomUUID());
         List<User> participants = new ArrayList<>();
         participants.add(user1);
         participants.add(user2);
@@ -81,10 +80,10 @@ public class EventTest {
         n134Participants.add("Lisa");
 
         Set<User> eventUsers = new HashSet<>();
-        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
-        User user2 = new User("Gerard", "gerard@gmail.com", "NL123487659", "biicode2");
-        User user3 = new User("Barry", "barry@gmail.com", "NL121212121", "biicode3");
-        User user4 = new User("Lisa", "lisa@gmail.com", "NL098764321", "biicode4");
+        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
+        User user2 = new User("Gerard", "gerard@gmail.com", "NL123487659", "biicode2", UUID.randomUUID());
+        User user3 = new User("Barry", "barry@gmail.com", "NL121212121", "biicode3", UUID.randomUUID());
+        User user4 = new User("Lisa", "lisa@gmail.com", "NL098764321", "biicode4", UUID.randomUUID());
         eventUsers.add(user1);
         eventUsers.add(user2);
         eventUsers.add(user3);
@@ -114,7 +113,7 @@ public class EventTest {
 
     @Test
     public void testGetTransactions() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Event event = new Event("Meeting");
         event.addParticipant(user1);
         assertEquals(new ArrayList<>(), event.transactions());
@@ -122,7 +121,7 @@ public class EventTest {
 
     @Test
     public void testSetTitle() {
-        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("Alice", "alice@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Event event = new Event("Drinks");
         event.addParticipant(user1);
         event.setTitle("Bar");
@@ -131,7 +130,7 @@ public class EventTest {
 
     @Test
     public void testAddTag() {
-        User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Event event = new Event("Party");
         event.addParticipant(user1);
 
@@ -149,7 +148,7 @@ public class EventTest {
 
     @Test
     public void testGetTags() {
-        User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Set<User> users = new HashSet<>();
         users.add(user1);
         Event event = new Event("Party", users);
@@ -166,7 +165,7 @@ public class EventTest {
 
     @Test
     public void testRemoveTag() {
-        User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("John", "john@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Event event = new Event("Party");
         event.addParticipant(user1);
 
@@ -182,8 +181,8 @@ public class EventTest {
 
     @Test
     public void testAddAndRemoveParticipants() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
-        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
+        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2", UUID.randomUUID());
         Set<User> participants = new HashSet<>();
         participants.add(user1);
         Event event = new Event("Vacation");
@@ -199,7 +198,7 @@ public class EventTest {
 
     @Test
     void testAddAndRemoveNull() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Event event = new Event("Vacation");
         event.addParticipant(user1);
 
@@ -212,7 +211,7 @@ public class EventTest {
 
     @Test
     void testAddAndRemoveTransaction() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Event event = new Event("Vacation");
         event.addParticipant(user1);
 
@@ -260,10 +259,10 @@ public class EventTest {
         n234Participants.add("Amanda");
 
         Set<User> eventUsers = new HashSet<>();
-        User user1 = new User("John", "john@gmail.com", "NL567856789", "biicode1");
-        User user2 = new User("Mike", "mike@gmail.com", "NL123412349", "biicode2");
-        User user3 = new User("Pam", "pam@gmail.com", "NL121882188", "biicode3");
-        User user4 = new User("Amanda", "amanda@gmail.com", "NL098711321", "biicode4");
+        User user1 = new User("John", "john@gmail.com", "NL567856789", "biicode1", UUID.randomUUID());
+        User user2 = new User("Mike", "mike@gmail.com", "NL123412349", "biicode2", UUID.randomUUID());
+        User user3 = new User("Pam", "pam@gmail.com", "NL121882188", "biicode3", UUID.randomUUID());
+        User user4 = new User("Amanda", "amanda@gmail.com", "NL098711321", "biicode4", UUID.randomUUID());
         eventUsers.add(user1);
         eventUsers.add(user2);
         eventUsers.add(user3);
@@ -313,10 +312,10 @@ public class EventTest {
         n234Participants.add("Amanda");
 
         Set<User> eventUsers = new HashSet<>();
-        User user1 = new User("John", "john@gmail.com", "NL567856789", "biicode1");
-        User user2 = new User("Mike", "mike@gmail.com", "NL123412349", "biicode2");
-        User user3 = new User("Pam", "pam@gmail.com", "NL121882188", "biicode3");
-        User user4 = new User("Amanda", "amanda@gmail.com", "NL098711321", "biicode4");
+        User user1 = new User("John", "john@gmail.com", "NL567856789", "biicode1", UUID.randomUUID());
+        User user2 = new User("Mike", "mike@gmail.com", "NL123412349", "biicode2", UUID.randomUUID());
+        User user3 = new User("Pam", "pam@gmail.com", "NL121882188", "biicode3", UUID.randomUUID());
+        User user4 = new User("Amanda", "amanda@gmail.com", "NL098711321", "biicode4", UUID.randomUUID());
         eventUsers.add(user1);
         eventUsers.add(user2);
         eventUsers.add(user3);
@@ -373,11 +372,11 @@ public class EventTest {
 
     @Test
     public void testEquals() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Event event = new Event("Football Game");
         event.addParticipant(user1);
 
-        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
+        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2", UUID.randomUUID());
         Event event2 = new Event("Picnic");
         event2.addParticipant(user2);
 
@@ -393,12 +392,12 @@ public class EventTest {
 
     @Test
     public void testHashCode() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Set<User> users = new HashSet<>();
         users.add(user1);
         Event event = new Event("Football Game", users);
 
-        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2");
+        User user2 = new User("Charlie", "charlie@gmail.com", "NL234567891", "biicode2", UUID.randomUUID());
         Set<User> users2 = new HashSet<>();
         users.add(user2);
         Event event2 = new Event("Picnic", users2);
@@ -407,7 +406,7 @@ public class EventTest {
 
     @Test
     public void testToString() {
-        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1");
+        User user1 = new User("David", "david@gmail.com", "NL123456789", "biicode1", UUID.randomUUID());
         Set<User> users = new HashSet<>();
         users.add(user1);
         Event event = new Event("Football Game", users);
@@ -419,7 +418,8 @@ public class EventTest {
 
         assertEquals("Event{inviteCode='" + event.getInviteCode() + "', title='Football Game', "
                 + "participants=[User{name='David', email='david@gmail.com', "
-                + "IBAN='NL123456789', BIC='biicode1'}], commons.transactions=[Expense{Transaction{owner = "
+                + "IBAN='NL123456789', BIC='biicode1', eventID=" + user1.getEventID()
+                + "}], commons.transactions=[Expense{Transaction{owner = "
                 + "'David', date = '2020-02-02', amount = 10.0}, description='Ice cream and coffee', "
                 + "debts={Mike=5.0, David=-5.0}}]}", event.toString());
     }

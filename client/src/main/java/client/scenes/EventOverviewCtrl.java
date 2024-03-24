@@ -410,6 +410,11 @@ public class EventOverviewCtrl implements Initializable {
 
         base.getChildren().addAll(username, removeButton);
         base.setUserData(user);
+        base.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() > 1) {
+                mainCtrl.showEditUser(user, event);
+            }
+        });
 
         return base;
     }
@@ -442,6 +447,7 @@ public class EventOverviewCtrl implements Initializable {
 
         base.getChildren().addAll(username, addCheckBox);
         base.setUserData(user);
+        base.setOnMouseClicked(mouseEvent -> addCheckBox.setSelected(!addCheckBox.isSelected()));
 
         return base;
     }

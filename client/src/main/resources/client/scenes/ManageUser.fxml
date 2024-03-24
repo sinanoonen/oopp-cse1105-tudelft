@@ -54,7 +54,7 @@
             <Font name="SansSerif Regular" size="15.0" />
          </font>
       </TextField>
-      <Button fx:id="confirmButton" layoutX="437.0" layoutY="422.0" mnemonicParsing="false" onAction="#create" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 3;" text="CREATE" textFill="#bbbbbb">
+      <Button fx:id="confirmButton" layoutX="437.0" layoutY="422.0" mnemonicParsing="false" onAction="#confirm" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 3;" text="CONFIRM" textFill="#bbbbbb">
          <font>
             <Font name="SansSerif Bold" size="21.0" />
          </font>

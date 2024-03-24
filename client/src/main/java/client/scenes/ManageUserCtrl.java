@@ -89,6 +89,17 @@ public class ManageUserCtrl {
     }
 
     /**
+     * Method to decide what happens when clicking the confirm button.
+     */
+    public void confirm() {
+        if (mode == ManageUserMode.CREATE) {
+            create();
+        } else {
+            save();
+        }
+    }
+
+    /**
      * Validates the inputs and if all are valid creates a new user.
      */
     public void create() {
@@ -109,7 +120,7 @@ public class ManageUserCtrl {
     /**
      * Checks inputs and saves changes to a user.
      */
-    public void confirm() {
+    public void save() {
         if (!validateInputs()) {
             return;
         }
@@ -121,7 +132,7 @@ public class ManageUserCtrl {
         User updated = new User(name, email, iban, bic, event.getInviteCode());
 
         User saved = serverUtils.updateUser(updated);
-        mainCtrl.showEventOverview(event);
+        mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
     private boolean validateInputs() {

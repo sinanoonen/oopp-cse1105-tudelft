@@ -67,7 +67,7 @@ public class UserController {
             update = new User(null, null, null, null, null);
         }
 
-        if (isNullOrEmpty(email) || !isNullOrEmpty(update.getEmail())) {
+        if (isNullOrEmpty(email)) {
             System.out.println("/users: Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }

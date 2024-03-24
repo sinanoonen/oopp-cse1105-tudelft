@@ -89,10 +89,9 @@ public class MainCtrl {
         ClientUtils.setCurrency(Currency.EUR);
         ClientUtils.setLanguage(Language.ENGLISH);
 
-        showHomePage();
         this.addExpenseCtrl = addExpense.getKey();
         this.addExpense = new Scene(addExpense.getValue());
-
+        showHomePage();
         primaryStage.show();
     }
 

@@ -25,6 +25,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.stage.Modality;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 import javax.inject.Inject;
 
 /**
@@ -99,8 +103,19 @@ public class AddExpenseCtrl {
         whoPaid.getItems().addAll(participants);
         currencyChoiceBox.getItems().addAll(currencies);
         expenseTags.getItems().addAll(tags);
+        expenseTags.setConverter(new StringConverter<Tag>() {
+            @Override
+            public String toString(Tag tag) {
+                return tag != null ? tag.getName() : "";
+            }
 
+            @Override
+            public Tag fromString(String string) {
+                return null;
+            }
+        });
     }
+
 
     public void handleOnlySomePeople() {
         if (onlySomePeople.isSelected()) {
@@ -126,6 +141,37 @@ public class AddExpenseCtrl {
             // Add the selected tag to the ListView
             selectedTags.getItems().add(selectedTag);
         }
+        setupListViewCellFactory();
+
+    }
+
+    public void setupListViewCellFactory() {
+        selectedTags.setCellFactory(new Callback<ListView<Tag>, ListCell<Tag>>() {
+            @Override
+            public ListCell<Tag> call(ListView<Tag> listView) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(Tag tag, boolean empty) {
+                        super.updateItem(tag, empty);
+                        if (tag == null || empty) {
+                            setText(null);
+                        } else {
+                            setText(tag.getName()); // Display only the name of the tag
+                            int color = tag.getColor();
+                            String newColor = intToString(color);
+                            setStyle("-fx-background-color: " + newColor);
+                        }
+                    }
+                };
+            }
+        });
+    }
+
+    public String intToString(int rgb) {
+        int red = (rgb >> 16) & 0xFF;
+        int green = (rgb >> 8) & 0xFF;
+        int blue = rgb & 0xFF;
+        return String.format("#%02X%02X%02X", red, green, blue);
     }
 
     @FXML

@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import java.awt.Color;
 import java.util.Objects;
 
+
 /**
  * The tag class.
  */

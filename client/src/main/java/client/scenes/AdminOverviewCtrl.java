@@ -30,8 +30,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;import javafx.stage.FileChooser;
-
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 
 /**
  * The controller for the admin overview.

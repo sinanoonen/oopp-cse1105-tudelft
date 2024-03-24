@@ -3,6 +3,8 @@ package server.api;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import server.database.TagRepository;
 
@@ -72,6 +75,127 @@ public class TagControllerTest {
         ResponseEntity<Tag> res = tagController.updateTag(1L, update);
         assertEquals(BAD_REQUEST, res.getStatusCode());
         assertNotEquals(update, res.getBody());
+    }
+
+    @Test
+    public void getTagByNameValid() {
+        Tag tag = tags[0];
+        List<Tag> existingTags = Collections.singletonList(tag);
+        when(tagRepository.findById(1L)).thenReturn(existingTags);
+        ResponseEntity<Tag> response = tagController.getTagByName(1L);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(tag, response.getBody());
+    }
+
+    @Test
+    public void getTagByNameNotFound() {
+        List<Tag> emptyList = Collections.emptyList();
+        when(tagRepository.findById(1L)).thenReturn(emptyList);
+        ResponseEntity<Tag> response = tagController.getTagByName(1L);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    @Test
+    public void deleteTagValid() {
+        when(tagRepository.deleteTagByName(1L)).thenReturn(1);
+        ResponseEntity<Void> response = tagController.deleteTag(1L);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void deleteTagNotFound() {
+        when(tagRepository.deleteTagByName(1L)).thenReturn(0);
+        ResponseEntity<Void> response = tagController.deleteTag(1L);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void deleteTagInvalidId() {
+        ResponseEntity<Void> response = tagController.deleteTag(-1L);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void addValidTag() {
+        Tag tag = tags[0];
+        ResponseEntity<Tag> response = tagController.addTag(tag);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(tag, response.getBody());
+    }
+
+    @Test
+    public void addDuplicateTag() {
+        Tag tag = tags[0];
+        List<Tag> existingTags = Collections.singletonList(tag);
+        when(tagRepository.findById(1L)).thenReturn(existingTags);
+        ResponseEntity<Tag> response = tagController.addTag(tag);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    public void updateNonExistentTag() {
+        Tag update = new Tag("UpdatedTag1", new Color(-16776961));
+        when(tagRepository.findById(1L)).thenReturn(Collections.emptyList());
+        ResponseEntity<Tag> response = tagController.updateTag(1L, update);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void updateTagWithNullRequest() {
+        ResponseEntity<Tag> response = tagController.updateTag(1L, null);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void deleteTagWithInvalidId() {
+        ResponseEntity<Void> response = tagController.deleteTag(0L);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void deleteTagWithNegativeId() {
+        ResponseEntity<Void> response = tagController.deleteTag(-1L);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void deleteTagThrowsException() {
+        when(tagRepository.deleteTagByName(1L)).thenThrow(RuntimeException.class);
+        assertThrows(RuntimeException.class, () -> tagController.deleteTag(1L));
+    }
+
+    @Test
+    public void getTagByNameThrowsException() {
+        when(tagRepository.findById(1L)).thenThrow(RuntimeException.class);
+        assertThrows(RuntimeException.class, () -> tagController.getTagByName(1L));
+    }
+
+    @Test
+    public void updateTagWithEmptyRepository() {
+        Tag update = new Tag("UpdatedTag1", new Color(-16776961));
+        when(tagRepository.findById(1L)).thenReturn(Arrays.asList(tags));
+        ResponseEntity<Tag> response = tagController.updateTag(4L, update);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void addTagThrowsException() {
+        when(tagRepository.save(tags[0])).thenThrow(RuntimeException.class);
+        assertThrows(RuntimeException.class, () -> tagController.addTag(tags[0]));
+    }
+
+    @Test
+    public void getAllTagsThrowsException() {
+        when(tagRepository.findAll()).thenThrow(RuntimeException.class);
+        assertThrows(RuntimeException.class, () -> tagController.getAllTags());
+    }
+
+    @Test
+    public void deleteNonexistentTag() {
+        when(tagRepository.deleteTagByName(4L)).thenReturn(0);
+        ResponseEntity<Void> response = tagController.deleteTag(4L);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
 

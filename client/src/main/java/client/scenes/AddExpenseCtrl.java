@@ -4,14 +4,17 @@ import client.utils.ServerUtils;
 import commons.Event;
 import commons.User;
 import commons.transactions.Tag;
+import java.awt.Button;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-
 import java.awt.Button;
 import java.awt.event.ActionEvent;
 import java.net.URL;
@@ -20,7 +23,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class AddExpenseCtrl implements Initializable{
+/**
+ * Controller for adding an expense to an event.
+ */
+public class AddExpenseCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -49,7 +55,7 @@ public class AddExpenseCtrl implements Initializable{
 
     private Event event;
     private List<String> participants = new ArrayList<>();
-    private List<String> currencies = List.of("EUR","USD");
+    private final List<String> currencies = List.of("EUR", "USD");
     private Set<Tag> tags;
 
     public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -62,8 +68,12 @@ public class AddExpenseCtrl implements Initializable{
         this.tags = event.getTags();
     }
 
+
+    /**
+     * Initializes fxml elements.
+     */
     @FXML
-    public void initialize(URL location, ResourceBundle resources){
+    public void initialize() {
         refresh(event);
         participants = event.getParticipants().stream()
                         .map(User::getName)

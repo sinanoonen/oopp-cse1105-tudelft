@@ -9,133 +9,65 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="668.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="668.0" style="-fx-background-color: #333333; -fx-border-color: red;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
    <children>
-      <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="10.799999999999955" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.799999999999955" AnchorPane.topAnchor="10.0">
-         <children>
-            <Label text="Add/Edit Expense" VBox.vgrow="ALWAYS">
-               <font>
-                  <Font name="System Bold" size="27.0" />
-               </font>
-            </Label>
-            <HBox prefHeight="46.0" prefWidth="429.0">
-               <children>
-                  <Label prefHeight="26.0" prefWidth="76.0" text="Who paid?">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <ChoiceBox fx:id="whoPaid" prefWidth="150.0" />
-               </children>
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="46.0" prefWidth="429.0">
-               <children>
-                  <Label prefHeight="26.0" prefWidth="80.0" text="Description">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <TextField prefHeight="26.0" prefWidth="138.0" />
-               </children>
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="46.0" prefWidth="429.0">
-               <children>
-                  <Label prefHeight="26.0" prefWidth="78.0" text="How much?">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <TextField prefHeight="26.0" prefWidth="169.0" />
-                  <ChoiceBox fx:id="currencyChoiceBox" prefWidth="150.0" />
-               </children>
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="46.0" prefWidth="429.0">
-               <children>
-                  <Label prefHeight="26.0" prefWidth="60.0" text="Date:">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <DatePicker />
-               </children>
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="46.0" prefWidth="429.0">
-               <children>
-                  <Label prefHeight="26.0" prefWidth="74.0" text="Who Paid?">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <ChoiceBox prefWidth="150.0" />
-               </children>
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="82.0" prefWidth="506.0">
-               <children>
-                  <Label prefHeight="31.0" prefWidth="91.0" text="How to split?">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
-                  </Label>
-                  <CheckBox mnemonicParsing="false" prefHeight="26.0" prefWidth="182.0" text="Equally Between Everybody">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                  </CheckBox>
-                  <CheckBox fx:id="onlySomePeople" mnemonicParsing="false"  text="Only Some People" />
-                  <VBox fx:id="additionalCheckboxesContainer" prefHeight="117.0" prefWidth="96.0" />
-               </children>
-            </HBox>
-            <HBox prefHeight="75.0" prefWidth="647.0">
-               <children>
-                  <Label prefHeight="18.0" prefWidth="103.0" text="Expense Type">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <ChoiceBox prefWidth="150.0" />
-                  <ListView editable="true" prefHeight="200.0" prefWidth="200.0" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Button cancelButton="true" contentDisplay="RIGHT" mnemonicParsing="false"  style="-fx-background-color: #3f3f3f" text="Cancel">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets left="150.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button contentDisplay="RIGHT" mnemonicParsing="false" style="-fx-background-color: #3f3f3f" text="Add" >
-                     <HBox.margin>
-                        <Insets left="200.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
+      <Label layoutX="10.399999618530273" layoutY="10.399999618530273" style="-fx-text-fill: white;" text="Add/Edit Expense" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="27.0" />
+         </font>
+      </Label>
+      <Label layoutX="10.399999618530273" layoutY="60.0" prefHeight="26.0" prefWidth="76.0" style="-fx-text-fill: white;" text="Who paid?" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="whoPaid" layoutX="86.4000015258789" layoutY="60.0" prefWidth="150.0" />
+      <Label layoutX="10.399999618530273" layoutY="98.4000015258789" prefHeight="26.0" prefWidth="80.0" style="-fx-text-fill: white;" text="Description">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <TextField layoutX="90.4000015258789" layoutY="98.4000015258789" prefHeight="26.0" prefWidth="138.0" />
+      <Label layoutX="10.399999618530273" layoutY="134.39999389648438" prefHeight="26.0" prefWidth="78.0" style="-fx-text-fill: white;" text="How much?">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <TextField layoutX="88.80000305175781" layoutY="134.39999389648438" prefHeight="26.0" prefWidth="169.0" />
+      <ChoiceBox fx:id="currencyChoiceBox" layoutX="258.3999938964844" layoutY="134.39999389648438" prefWidth="150.0" />
+      <Label layoutX="10.399999618530273" layoutY="172.79998779296875" prefHeight="26.0" prefWidth="60.0" style="-fx-text-fill: white;" text="Date:">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <DatePicker layoutX="70.4000015258789" layoutY="172.79998779296875" />
+      <Label layoutX="4.0" layoutY="210.0" prefHeight="31.0" prefWidth="91.0" style="-fx-text-fill: white;" text="How to split?" textFill="#fffafa">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+         <padding>
+            <Insets right="10.0" top="10.0" />
+         </padding>
+      </Label>
+      <CheckBox fx:id="onlySomePeople" layoutX="314.0" layoutY="217.0" mnemonicParsing="false" onAction="#handleOnlySomePeople" style="-fx-background: #FFFFFF; -fx-text-fill: white;" text="Only Some People" textFill="WHITE" />
+      <VBox fx:id="additionalCheckboxesContainer" layoutX="480.0" layoutY="217.0" prefHeight="117.0" prefWidth="96.0" style="-fx-background-color: white;" />
+      <Label layoutX="4.0" layoutY="266.0" prefHeight="18.0" prefWidth="103.0" style="-fx-text-fill: white;" text="Expense Type">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="expenseTags" layoutX="113.0" layoutY="261.0" prefWidth="150.0" />
+      <Button cancelButton="true" contentDisplay="RIGHT" layoutX="160.79998779296875" layoutY="410.3999938964844" mnemonicParsing="false" style="-fx-background-color: #3f3f3f" text="Cancel">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button contentDisplay="RIGHT" layoutX="414.3999938964844" layoutY="410.3999938964844" mnemonicParsing="false" onAction="#handleAddButtonClick" style="-fx-background-color: #3f3f3f" text="Add" />
+      <CheckBox fx:id="equallyEverybody" layoutX="109.0" layoutY="217.0" mnemonicParsing="false" style="-fx-background: #FFFFFF; -fx-text-fill: white;" text="Equally Between Everybody" textFill="WHITE" />
+      <ListView fx:id="selectedTags" layoutX="21.0" layoutY="304.0" prefHeight="74.0" prefWidth="346.0" />
+      <Button fx:id="addTag" layoutX="288.0" layoutY="263.0" mnemonicParsing="false" onAction="#handleAddTagButtonClick" style="-fx-background-color: #3f3f3f;" text="Add Tag" />
    </children>
 </AnchorPane>

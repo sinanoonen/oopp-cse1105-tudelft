@@ -107,6 +107,22 @@ public class EventController {
     }
 
     /**
+     * Deletes an event by its uuid.
+     *
+     * @param uuid the uuid of the event to delete
+     * @return ResponseEntity indicating the outcome of the operation
+     */
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<?> deleteEvent(@PathVariable UUID uuid) {
+        if (repo.existsById(uuid)) {
+            repo.deleteById(uuid);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
      * Returns the set of tags for an event.
      *
      * @param uuid uuid of event whose tags to fetch

@@ -2,6 +2,7 @@ package server.api;
 
 import commons.User;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,10 +64,10 @@ public class UserController {
     @PutMapping("/{email}")
     public ResponseEntity<User> editUser(@PathVariable String email, @RequestBody User update) {
         if (update == null) {
-            update = new User(null, null, null, null);
+            update = new User(null, null, null, null, null);
         }
 
-        if (isNullOrEmpty(email) || !isNullOrEmpty(update.getEmail())) {
+        if (isNullOrEmpty(email) || (update.getEmail() != null && !update.getEmail().equals(email))) {
             System.out.println("/users: Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }
@@ -81,8 +82,9 @@ public class UserController {
         String name = isNullOrEmpty(update.getName()) ? user.getName() : update.getName();
         String iban = isNullOrEmpty(update.getIban()) ? user.getIban() : update.getIban();
         String bic = isNullOrEmpty(update.getBic()) ? user.getBic() : update.getBic();
+        UUID eventID = update.getEventID() == null ? user.getEventID() : update.getEventID();
         return repo.updateUser(name, iban, bic, email) == 1
-                ? ResponseEntity.ok(new User(name, email, iban, bic))
+                ? ResponseEntity.ok(new User(name, email, iban, bic, eventID))
                 : ResponseEntity.badRequest().build();
     }
 

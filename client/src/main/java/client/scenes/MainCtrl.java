@@ -19,7 +19,9 @@ package client.scenes;
 import client.utils.ClientUtils;
 import client.utils.Currency;
 import client.utils.Language;
+import client.utils.ManageUserMode;
 import commons.Event;
+import commons.User;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -47,6 +49,12 @@ public class MainCtrl {
     private Scene adminOverview;
     private AdminOverviewCtrl adminOverviewCtrl;
 
+    private Scene manageUser;
+    private ManageUserCtrl manageUserCtrl;
+
+    private Scene adminLogin;
+    private AdminLoginCtrl adminLoginCtrl;
+
     /**
      * Initialize the main controller.
      *
@@ -59,8 +67,10 @@ public class MainCtrl {
                            Pair<HomePageCtrl, Parent> homePage,
                            Pair<EventOverviewCtrl, Parent> eventOverview,
                            Pair<AddEventCtrl, Parent> addEvent,
-                            Pair<SettingsCtrl, Parent> settings,
-                            Pair<AdminOverviewCtrl, Parent> adminOverview
+                           Pair<SettingsCtrl, Parent> settings,
+                           Pair<AdminOverviewCtrl, Parent> adminOverview,
+                           Pair<ManageUserCtrl, Parent> manageUser,
+                           Pair<AdminLoginCtrl, Parent> adminLogin
     ) {
         this.primaryStage = primaryStage;
 
@@ -78,6 +88,12 @@ public class MainCtrl {
 
         this.adminOverviewCtrl = adminOverview.getKey();
         this.adminOverview = new Scene(adminOverview.getValue());
+
+        this.manageUserCtrl = manageUser.getKey();
+        this.manageUser = new Scene(manageUser.getValue());
+
+        this.adminLoginCtrl = adminLogin.getKey();
+        this.adminLogin = new Scene(adminLogin.getValue());
 
         //Set default language and currency
         ClientUtils.setCurrency(Currency.EUR);
@@ -127,8 +143,39 @@ public class MainCtrl {
     /**
      * Shows the admin page.
      */
-    private void showAdminOverview() {
+    public void showAdminOverview() {
         primaryStage.setTitle("Admin Overview");
         primaryStage.setScene(adminOverview);
+    }
+
+    /**
+     * Shows the page to create a new user.
+     *
+     * @param event event for which the user is to be created
+     */
+    public void showCreateUser(Event event) {
+        primaryStage.setTitle("New User");
+        primaryStage.setScene(manageUser);
+        manageUserCtrl.refresh(ManageUserMode.CREATE, null, event);
+    }
+
+    /**
+     * Shows the page to edit a user.
+     *
+     * @param user user to be edited
+     * @param event event for which the user is to be edited
+     */
+    public void showEditUser(User user, Event event) {
+        primaryStage.setTitle("Edit " + user.getEmail());
+        primaryStage.setScene(manageUser);
+        manageUserCtrl.refresh(ManageUserMode.EDIT, user, event);
+    }
+
+    /**
+     * Shows the admin login.
+     */
+    private void showAdminLogin() {
+        primaryStage.setTitle("Admin Login");
+        primaryStage.setScene(adminLogin);
     }
 }

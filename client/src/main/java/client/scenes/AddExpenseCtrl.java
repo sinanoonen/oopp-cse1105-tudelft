@@ -5,16 +5,17 @@ import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
 import commons.transactions.Tag;
-import java.awt.Button;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.ws.rs.WebApplicationException;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import java.awt.Button;
 import java.awt.event.ActionEvent;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
+import javafx.stage.Modality;
 import javax.inject.Inject;
 
 /**
@@ -60,6 +62,7 @@ public class AddExpenseCtrl {
     private Button cancelButton;
     @FXML
     private Button addButton;
+    private boolean initialized = false;
 
     private Event event;
     private List<String> participants = new ArrayList<>();
@@ -76,6 +79,8 @@ public class AddExpenseCtrl {
     public void refresh(Event event) {
         this.event = event;
         this.tags = event.getTags();
+        initialized = true;
+        initialize();
     }
 
 
@@ -84,7 +89,10 @@ public class AddExpenseCtrl {
      */
     @FXML
     public void initialize() {
-        refresh(event);
+        if (!initialized) {
+            // Delay initialization until after refresh() is called
+            return;
+        }
         participants = event.getParticipants().stream()
                         .map(User::getName)
                                 .toList();
@@ -121,37 +129,80 @@ public class AddExpenseCtrl {
     }
 
     @FXML
-    private void handleCancelButtonClick(ActionEvent event) {
+    private void handleCancelButtonClick() {
         // Handle cancel button click
+        mainCtrl.showEventOverview(event);
     }
 
     @FXML
     private void handleAddButtonClick() {
-        String owner = whoPaid.getValue();
-        String expenseDescription = description.getText();
-        float expenseAmount = Float.parseFloat(amount.getText());
-        LocalDate expenseDate = datePicker.getValue();
-        List<String> debtors = new ArrayList<>();
-        if (equallyEverybody.isSelected()) {
-            debtors = this.participants;
-        } else {
-            for (CheckBox checkBox : additionalCheckboxes) {
-                if (checkBox.isSelected()) {
-                    debtors.add(checkBox.getText());
+        try {
+            String owner = whoPaid.getValue();
+            String expenseDescription = description.getText();
+            float expenseAmount = Float.parseFloat(amount.getText());
+            LocalDate expenseDate = datePicker.getValue();
+            List<String> debtors = new ArrayList<>();
+            if (equallyEverybody.isSelected()) {
+                debtors = this.participants;
+            } else {
+                for (CheckBox checkBox : additionalCheckboxes) {
+                    if (checkBox.isSelected()) {
+                        debtors.add(checkBox.getText());
+                    }
                 }
             }
+            ObservableList<Tag> selectedTagsList = selectedTags.getItems();
+            Set<Tag> selectedTagsSet = Set.copyOf(selectedTagsList);
+
+            Expense expense = new Expense(owner, expenseDate, expenseAmount, expenseDescription,debtors);
+            for (Tag tag : selectedTagsSet) {
+                expense.addTag(tag);
+            }
+
+            event.addTransaction(expense);
+            server.addExpense(event.getInviteCode(), expense);
+
+        } catch (WebApplicationException e) {
+
+            var alert = new Alert(Alert.AlertType.ERROR);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+
         }
-        ObservableList<Tag> selectedTagsList = selectedTags.getItems();
-        Set<Tag> selectedTagsSet = Set.copyOf(selectedTagsList);
+        clearFields();
+    }
 
-        Expense expense = new Expense(owner, expenseDate, expenseAmount, expenseDescription,debtors);
-        for (Tag tag : selectedTagsSet) {
-            expense.addTag(tag);
+    private void clearFields() {
+        whoPaid.setValue(null);
+        description.clear();
+        amount.clear();
+        datePicker.setValue(null);
+        equallyEverybody.setSelected(false);
+        onlySomePeople.setSelected(false);
+
+        for (CheckBox cb : additionalCheckboxes) {
+            cb.setSelected(false);
         }
+        selectedTags.getItems().clear();
+    }
 
-        event.addTransaction(expense);
-        Expense saved = server.addExpense(event.getInviteCode(), expense);
-
+    /**
+     * Handle key events.
+     *
+     * @param e KeyEvent
+     */
+    public void keyPressed(KeyEvent e) {
+        switch (e.getCode()) {
+            case ENTER:
+                handleAddButtonClick();
+                break;
+            case ESCAPE:
+                handleCancelButtonClick();
+                break;
+            default:
+                break;
+        }
     }
 
 }

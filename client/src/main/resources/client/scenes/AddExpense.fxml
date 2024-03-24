@@ -60,14 +60,14 @@
          </font>
       </Label>
       <ChoiceBox fx:id="expenseTags" layoutX="113.0" layoutY="261.0" prefWidth="150.0" />
-      <Button cancelButton="true" contentDisplay="RIGHT" layoutX="160.79998779296875" layoutY="410.3999938964844" mnemonicParsing="false" style="-fx-background-color: #3f3f3f" text="Cancel">
+      <Button fx:id="cancelButton" cancelButton="true" contentDisplay="RIGHT" layoutX="160.79998779296875" layoutY="410.3999938964844" mnemonicParsing="false" onAction="#handleCancelButtonClick" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052;" text="Cancel" textFill="WHITE">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Button>
-      <Button contentDisplay="RIGHT" layoutX="414.3999938964844" layoutY="410.3999938964844" mnemonicParsing="false" onAction="#handleAddButtonClick" style="-fx-background-color: #3f3f3f" text="Add" />
+      <Button fx:id="addButton" contentDisplay="RIGHT" layoutX="414.3999938964844" layoutY="410.3999938964844" mnemonicParsing="false" onAction="#handleAddButtonClick" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052;" text="Add" textFill="WHITE" />
       <CheckBox fx:id="equallyEverybody" layoutX="109.0" layoutY="217.0" mnemonicParsing="false" style="-fx-background: #FFFFFF; -fx-text-fill: white;" text="Equally Between Everybody" textFill="WHITE" />
       <ListView fx:id="selectedTags" layoutX="21.0" layoutY="304.0" prefHeight="74.0" prefWidth="346.0" />
-      <Button fx:id="addTag" layoutX="288.0" layoutY="263.0" mnemonicParsing="false" onAction="#handleAddTagButtonClick" style="-fx-background-color: #3f3f3f;" text="Add Tag" />
+      <Button fx:id="addTag" layoutX="288.0" layoutY="263.0" mnemonicParsing="false" onAction="#handleAddTagButtonClick" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052;" text="Add Tag" textFill="WHITE" />
    </children>
 </AnchorPane>

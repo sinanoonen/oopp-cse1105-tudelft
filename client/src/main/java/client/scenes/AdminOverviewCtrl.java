@@ -5,12 +5,10 @@ import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import com.google.inject.Inject;
 import commons.Event;
-
 import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;

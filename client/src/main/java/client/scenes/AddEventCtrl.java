@@ -5,6 +5,8 @@ import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import com.google.inject.Inject;
 import commons.Event;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,9 +16,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * A controller for the AddEvent scene.

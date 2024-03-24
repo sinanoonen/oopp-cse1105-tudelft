@@ -1,7 +1,10 @@
 package client.scenes;
 
-import client.utils.*;
-
+import client.utils.ClientUtils;
+import client.utils.Currency;
+import client.utils.Language;
+import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;

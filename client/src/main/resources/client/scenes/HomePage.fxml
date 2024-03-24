@@ -18,6 +18,11 @@
             <Font name="SansSerif Bold" size="27.0" />
          </font>
       </Text>
+      <Text fill="WHITE" layoutX="177.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Definitively Not Splitser">
+         <font>
+            <Font name="System Bold" size="26.0" />
+         </font>
+      </Text>
       <ListView fx:id="eventsList" layoutX="38.0" layoutY="263.0" prefHeight="330.0" prefWidth="319.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 3;" />
       <Circle fx:id="addButton" fill="#3f3f3f" layoutX="525.0" layoutY="560.0" onMouseClicked="#showEventOverlay" radius="33.0" stroke="#c30052" strokeType="INSIDE" strokeWidth="2.0" />
       <Text fill="#999999" layoutX="504.0" layoutY="578.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="+" textAlignment="CENTER">

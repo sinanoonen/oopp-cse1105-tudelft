@@ -1,17 +1,19 @@
 package client.utils;
 
+import java.util.HashMap;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 
-import java.util.HashMap;
-
+/**
+ * A utility class for UI operations.
+ */
 public class UIUtils {
 
-    private static int CONTRAST_THRESHOLD = 75;
-    private static double CONTRAST_MODIFIER = 0.86;
-    private static double BRIGHTNESS_MODIFIER = 23;
+    private static final int CONTRAST_THRESHOLD = 75;
+    private static final double CONTRAST_MODIFIER = 0.86;
+    private static final double BRIGHTNESS_MODIFIER = 23;
 
-    private static HashMap<Node, String> colorMap = new HashMap<>();
+    private static final HashMap<Node, String> colorMap = new HashMap<>();
 
     /**
      * Changes the color of a node.
@@ -40,7 +42,7 @@ public class UIUtils {
 
 
         String backgroundColor = "";
-        if(currentStyle.contains("-fx-background-color")) {
+        if (currentStyle.contains("-fx-background-color")) {
             int startIndex = currentStyle.indexOf("-fx-background-color");
             int endIndex = currentStyle.indexOf(";", startIndex);
             backgroundColor = currentStyle.substring(startIndex, endIndex);
@@ -48,7 +50,7 @@ public class UIUtils {
         }
 
         String fillColor = "";
-        if(currentStyle.contains("-fx-fill")) {
+        if (currentStyle.contains("-fx-fill")) {
             int startIndex = currentStyle.indexOf("-fx-fill");
             int endIndex = currentStyle.indexOf(";", startIndex);
             fillColor = currentStyle.substring(startIndex, endIndex);
@@ -58,28 +60,28 @@ public class UIUtils {
 
 
         String borderColor = "";
-        if(currentStyle.contains("-fx-border-color")) {
+        if (currentStyle.contains("-fx-border-color")) {
             int startIndex = currentStyle.indexOf("-fx-border-color");
             int endIndex = currentStyle.indexOf(";", startIndex);
             borderColor = currentStyle.substring(startIndex, endIndex);
             borderColor = borderColor.replace("-fx-border-color: ", "");
         }
 
-        if(!backgroundColor.isEmpty() && !backgroundColor.equals("transparent")) {
+        if (!backgroundColor.isEmpty() && !backgroundColor.equals("transparent")) {
             int[] rgb = hexToRGB(backgroundColor);
             increaseColorContrast(rgb);
             String newColor = String.format("#%02x%02x%02x", rgb[0], rgb[1], rgb[2]);
             changeColor(node, newColor, "-fx-background-color");
         }
 
-        if(!fillColor.isEmpty() && !fillColor.equals("transparent")) {
+        if (!fillColor.isEmpty() && !fillColor.equals("transparent")) {
             int[] rgb = hexToRGB(fillColor);
             increaseColorContrast(rgb);
             String newColor = String.format("#%02x%02x%02x", rgb[0], rgb[1], rgb[2]);
             changeColor(node, newColor, "-fx-fill");
         }
 
-        if(!borderColor.isEmpty() && !borderColor.equals("transparent")) {
+        if (!borderColor.isEmpty() && !borderColor.equals("transparent")) {
             int[] rgb = hexToRGB(borderColor);
             increaseColorContrast(rgb);
             String newColor = String.format("#%02x%02x%02x", rgb[0], rgb[1], rgb[2]);
@@ -90,22 +92,27 @@ public class UIUtils {
     private static void increaseColorContrast(int[] rgb) {
         int average = (rgb[0] + rgb[1] + rgb[2]) / 3;
         // if average is above threshold, add contrastModifier to all rgb values
-        if(average > CONTRAST_THRESHOLD) {
-            for(int i = 0; i < 3; i++) {
+        if (average > CONTRAST_THRESHOLD) {
+            for (int i = 0; i < 3; i++) {
                 rgb[i] = Math.min(255, (int) ((rgb[i] * (1.0 + CONTRAST_MODIFIER)) + BRIGHTNESS_MODIFIER));
             }
         } else {
-            for(int i = 0; i < 3; i++) {
+            for (int i = 0; i < 3; i++) {
                 rgb[i] = Math.max(0, (int) ((rgb[i] * (1.0 - CONTRAST_MODIFIER)) + BRIGHTNESS_MODIFIER));
             }
         }
 
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             rgb[i] = Math.min(255, rgb[i]);
             rgb[i] = Math.max(0, rgb[i]);
         }
     }
 
+    /**
+     * Activates high contrast mode for a given root node and recursively for all its children.
+     *
+     * @param root the root node
+     */
     public static void activateHighContrastMode(Parent root) {
 
 
@@ -113,7 +120,7 @@ public class UIUtils {
 
         //get root children
         root.getChildrenUnmodifiable().forEach(node -> {
-            if(node instanceof Parent) {
+            if (node instanceof Parent) {
                 activateHighContrastMode((Parent) node);
             } else {
                 increaseNodeContrast(node);
@@ -121,6 +128,11 @@ public class UIUtils {
         });
     }
 
+    /**
+     * Deactivates high contrast mode for a given root node and recursively for all its children.
+     *
+     * @param root the root node
+     */
     public static void deactivateHighContrastMode(Parent root) {
         if (colorMap.containsKey(root)) {
             root.setStyle(colorMap.get(root));
@@ -152,27 +164,17 @@ public class UIUtils {
     }
 
     private static String stringToHex(String color) {
-        switch (color) {
-            case "black":
-                return "#000000";
-            case "white":
-                return "#FFFFFF";
-            case "red":
-                return "#FF0000";
-            case "green":
-                return "#00FF00";
-            case "blue":
-                return "#0000FF";
-            case "yellow":
-                return "#FFFF00";
-            case "cyan":
-                return "#00FFFF";
-            case "magenta":
-                return "#FF00FF";
-            case "gray":
-                return "#808080";
-            default:
-                return color;
-        }
+        return switch (color) {
+            case "black" -> "#000000";
+            case "white" -> "#FFFFFF";
+            case "red" -> "#FF0000";
+            case "green" -> "#00FF00";
+            case "blue" -> "#0000FF";
+            case "yellow" -> "#FFFF00";
+            case "cyan" -> "#00FFFF";
+            case "magenta" -> "#FF00FF";
+            case "gray" -> "#808080";
+            default -> color;
+        };
     }
 }

@@ -167,4 +167,33 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(event, APPLICATION_JSON), Event.class);
     }
+
+    /**
+     * Deletes an event.
+     *
+     * @param uuid the uuid of the event
+     */
+    public void deleteEvent(UUID uuid) {
+        ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/events/" + uuid)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .delete();
+    }
+
+    /**
+     * This sends a post request to the admin controller.
+     *
+     * @param password the password (in string representation)
+     * @return true iff the entered password is the correct one
+     */
+    public boolean authenticate(String password) {
+        Response response = ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/auth")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(password, APPLICATION_JSON));
+        return response.getStatus() == 200;
+    }
+
 }

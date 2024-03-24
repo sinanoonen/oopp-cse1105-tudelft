@@ -28,7 +28,6 @@ import client.scenes.SettingsCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 

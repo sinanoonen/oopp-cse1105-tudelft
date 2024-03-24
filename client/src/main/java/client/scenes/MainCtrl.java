@@ -89,7 +89,6 @@ public class MainCtrl {
         this.addExpenseCtrl = addExpense.getKey();
         this.addExpense = new Scene(addExpense.getValue());
         showHomePage();
-
         primaryStage.show();
     }
 

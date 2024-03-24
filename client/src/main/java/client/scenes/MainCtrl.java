@@ -60,18 +60,19 @@ public class MainCtrl {
     /**
      * Initialize the main controller.
      *
-     * @param primaryStage Stage
-     * @param homePage home page on which the app opens
+     * @param primaryStage  Stage
+     * @param homePage      home page on which the app opens
      * @param eventOverview the eventOverview scene
-     * @param addEvent the addEvent page
+     * @param addEvent      the addEvent page
+     * @param manageUser    the manageUser scene
      */
     public void initialize(Stage primaryStage,
                            Pair<HomePageCtrl, Parent> homePage,
                            Pair<EventOverviewCtrl, Parent> eventOverview,
                            Pair<AddEventCtrl, Parent> addEvent,
-                            Pair<SettingsCtrl, Parent> settings,
-                            Pair<AdminOverviewCtrl, Parent> adminOverview,
-                           Pair<AddExpenseCtrl, Parent> addExpense
+                           Pair<SettingsCtrl, Parent> settings,
+                           Pair<AdminOverviewCtrl, Parent> adminOverview,
+                           Pair<AddExpenseCtrl, Parent> addExpense,
                            Pair<ManageUserCtrl, Parent> manageUser,
                            Pair<AdminLoginCtrl, Parent> adminLogin
     ) {
@@ -159,6 +160,7 @@ public class MainCtrl {
         primaryStage.setScene(addExpense);
         addExpenseCtrl.refresh(event);
     }
+
     /**
      * Shows the page to create a new user.
      *

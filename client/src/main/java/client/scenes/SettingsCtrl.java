@@ -61,7 +61,6 @@ public class SettingsCtrl implements Initializable {
         //add listener to the currency choice box
         currencyChoiceBox.getSelectionModel().selectedItemProperty()
                 .addListener((observableValue, oldCurrency, newCurrency) -> {
-                    System.out.println("Currency changed from " + oldCurrency + " to " + newCurrency);
                     ClientUtils.setCurrency(newCurrency);
                     refresh();
                 });
@@ -69,7 +68,6 @@ public class SettingsCtrl implements Initializable {
         //add listener to the language choice box
         languageChoiceBox.getSelectionModel().selectedItemProperty()
                 .addListener((observableValue, oldLanguage, newLanguage) -> {
-                    System.out.println("Language changed from " + oldLanguage + " to " + newLanguage);
                     ClientUtils.setLanguage(newLanguage);
                     refresh();
                 });
@@ -77,7 +75,6 @@ public class SettingsCtrl implements Initializable {
         //add listener to the high contrast checkbox
         highContrastCheckBox.selectedProperty()
                 .addListener((observableValue, oldValue, newValue) -> {
-                    System.out.println("High contrast changed from " + oldValue + " to " + newValue);
                     ClientUtils.setHighContrast(newValue);
                     refresh();
                 });
@@ -85,7 +82,6 @@ public class SettingsCtrl implements Initializable {
         if (ClientUtils.isHighContrast()) {
             UIUtils.activateHighContrastMode(root);
         } else {
-            System.out.println("Deactivating high contrast mode");
             UIUtils.deactivateHighContrastMode(root);
         }
     }
@@ -114,7 +110,6 @@ public class SettingsCtrl implements Initializable {
         if (ClientUtils.isHighContrast()) {
             UIUtils.activateHighContrastMode(root);
         } else {
-            System.out.println("Deactivating high contrast mode");
             UIUtils.deactivateHighContrastMode(root);
         }
     }

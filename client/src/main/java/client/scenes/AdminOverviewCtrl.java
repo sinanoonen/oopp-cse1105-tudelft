@@ -78,7 +78,6 @@ public class AdminOverviewCtrl implements Initializable {
         if (ClientUtils.isHighContrast()) {
             UIUtils.activateHighContrastMode(root);
         } else {
-            System.out.println("Deactivating high contrast mode");
             UIUtils.deactivateHighContrastMode(root);
         }
     }

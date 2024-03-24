@@ -51,7 +51,6 @@ public class ExchangeProvider {
         ObjectMapper mapper = new ObjectMapper();
         try {
             ExchangeRates exchangeRates = mapper.readValue(response.body(), ExchangeRates.class);
-            System.out.println(exchangeRates.getBase());
             return exchangeRates;
         } catch (IOException e) {
             throw new RuntimeException("Error parsing JSON", e);

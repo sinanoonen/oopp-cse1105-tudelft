@@ -1,10 +1,15 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
 import commons.Event;
+import java.io.File;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -20,7 +25,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-
+import javafx.stage.FileChooser;
 
 
 /**
@@ -48,6 +53,14 @@ public class AdminOverviewCtrl {
     @FXML
     private Button deleteEventButton;
 
+    private boolean ifSortByTitle;
+    private boolean ifSortByCreationDate;
+    private boolean ifSortByLastActivity;
+
+    private boolean sortByTitleAscending;
+    private boolean sortByCreationDateAscending;
+    private boolean sortByLastActivityAscending;
+
     private Event selectedEvent;
 
     /**
@@ -66,6 +79,14 @@ public class AdminOverviewCtrl {
      * Initializes the scene.
      */
     public void initialize() {
+        ifSortByCreationDate = false;
+        ifSortByLastActivity = false;
+        ifSortByTitle = false;
+
+        sortByTitleAscending = true;
+        sortByCreationDateAscending = true;
+        sortByLastActivityAscending = true;
+
         loadEvents();
         setupEventListView();
         setupEventSelection();
@@ -75,7 +96,32 @@ public class AdminOverviewCtrl {
         Task<List<Event>> task = new Task<>() {
             @Override
             protected List<Event> call() throws Exception {
-                return server.getEvents();
+                List<Event> events = server.getEvents();
+
+                if (ifSortByTitle) {
+                    Comparator<Event> comparator = Comparator.comparing(Event::getTitle);
+                    if (!sortByTitleAscending) {
+                        events.sort(comparator);
+                    } else {
+                        events.sort(comparator.reversed());
+                    }
+                } else if (ifSortByCreationDate) {
+                    Comparator<Event> comparator = Comparator.comparing(Event::getCreationDate);
+                    if (!sortByCreationDateAscending) {
+                        events.sort(comparator);
+                    } else {
+                        events.sort(comparator.reversed());
+                    }
+                } else if (ifSortByLastActivity) {
+                    Comparator<Event> comparator = Comparator.comparing(Event::getLastActivity);
+                    if (!sortByLastActivityAscending) {
+                        events.sort(comparator);
+                    } else {
+                        events.sort(comparator.reversed());
+                    }
+                }
+
+                return events;
             }
         };
 
@@ -157,42 +203,113 @@ public class AdminOverviewCtrl {
             + "Participants: " + event.getParticipants() + "\n"
             + "Tags: " + event.getTags() + "\n"
             + "Expenses: " + event.getExpenses() + "\n"
-            + "Payments: " + event.getPayments() + "\n";
+            + "Payments: " + event.getPayments() + "\n"
+            + "Creation Date:" + event.getCreationDate() + "\n"
+            + "Last Activity:" + event.getLastActivity() + "\n";
     }
 
     @FXML
     private void handleSortByTitle() {
-        ObservableList<Event> events = eventContainer.getItems();
-        events.sort(Comparator.comparing(Event::getTitle));
-        eventContainer.setItems(events);
+        sort(Comparator.comparing(Event::getTitle), sortByTitleAscending);
+
+        ifSortByTitle = true;
+        ifSortByCreationDate = false;
+        ifSortByLastActivity = false;
+
+        sortByTitleAscending = !sortByTitleAscending;
+        sortByCreationDateAscending = true;
+        sortByLastActivityAscending = true;
     }
 
     @FXML
     private void handleSortByCreationDate() {
+        sort(Comparator.comparing(Event::getCreationDate), sortByCreationDateAscending);
 
+        ifSortByTitle = false;
+        ifSortByCreationDate = true;
+        ifSortByLastActivity = false;
+
+        sortByCreationDateAscending = !sortByCreationDateAscending;
+        sortByTitleAscending = true;
+        sortByLastActivityAscending = true;
     }
 
     @FXML
     private void handleSortByLastActivity() {
+        sort(Comparator.comparing(Event::getLastActivity), sortByLastActivityAscending);
 
+        ifSortByTitle = false;
+        ifSortByCreationDate = false;
+        ifSortByLastActivity = true;
+
+        sortByLastActivityAscending = !sortByLastActivityAscending;
+        sortByTitleAscending = true;
+        sortByCreationDateAscending = true;
+    }
+
+    private void sort(Comparator<Event> comparing,  boolean sortAscending) {
+        ObservableList<Event> events = eventContainer.getItems();
+
+        if (!sortAscending) {
+            events.sort(comparing.reversed());
+        } else {
+            events.sort(comparing);
+        }
+        eventContainer.setItems(events);
     }
 
     @FXML
     private void handleExportEvent() {
+        if (selectedEvent == null) {
+            showAlert("Error", "No event selected for export.");
+            return;
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialFileName(selectedEvent.getTitle() + ".json");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        File file = fileChooser.showSaveDialog(eventContainer.getScene().getWindow());
 
+        if (file != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            try {
+                mapper.writeValue(file, selectedEvent);
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to export event: " + e.getMessage());
+            }
+        }
     }
 
     @FXML
     private void handleImportEvent() {
-        if (selectedEvent != null) {
-            return;
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        File file = fileChooser.showOpenDialog(eventContainer.getScene().getWindow());
+
+        if (file != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            try {
+                Event event = mapper.readValue(file, Event.class);
+                server.addNewEvent(event);
+                loadEvents();
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to import event: " + e.getMessage());
+            }
         }
     }
 
     @FXML
     private void handleDeleteEvent() {
         if (selectedEvent != null) {
-            return;
+            UUID uuid = selectedEvent.getInviteCode();
+            server.deleteEvent(uuid);
+            selectedEvent = null;
+            loadEvents();
+        } else {
+            showAlert("Error", "No event selected for delete.");
         }
     }
 }

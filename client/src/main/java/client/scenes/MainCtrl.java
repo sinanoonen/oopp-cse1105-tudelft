@@ -52,6 +52,9 @@ public class MainCtrl {
     private Scene manageUser;
     private ManageUserCtrl manageUserCtrl;
 
+    private Scene adminLogin;
+    private AdminLoginCtrl adminLoginCtrl;
+
     /**
      * Initialize the main controller.
      *
@@ -66,7 +69,8 @@ public class MainCtrl {
                            Pair<AddEventCtrl, Parent> addEvent,
                            Pair<SettingsCtrl, Parent> settings,
                            Pair<AdminOverviewCtrl, Parent> adminOverview,
-                           Pair<ManageUserCtrl, Parent> manageUser
+                           Pair<ManageUserCtrl, Parent> manageUser,
+                           Pair<AdminLoginCtrl, Parent> adminLogin
     ) {
         this.primaryStage = primaryStage;
 
@@ -87,6 +91,9 @@ public class MainCtrl {
 
         this.manageUserCtrl = manageUser.getKey();
         this.manageUser = new Scene(manageUser.getValue());
+
+        this.adminLoginCtrl = adminLogin.getKey();
+        this.adminLogin = new Scene(adminLogin.getValue());
 
         //Set default language and currency
         ClientUtils.setCurrency(Currency.EUR);
@@ -163,5 +170,13 @@ public class MainCtrl {
         primaryStage.setTitle("Edit " + user.getEmail());
         primaryStage.setScene(manageUser);
         manageUserCtrl.refresh(ManageUserMode.EDIT, user, event);
+    }
+
+    /**
+     * Shows the admin login.
+     */
+    private void showAdminLogin() {
+        primaryStage.setTitle("Admin Login");
+        primaryStage.setScene(adminLogin);
     }
 }

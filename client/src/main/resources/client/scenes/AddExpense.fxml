@@ -12,62 +12,74 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="668.0" style="-fx-background-color: #333333; -fx-border-color: red;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="668.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
    <children>
       <Label layoutX="10.399999618530273" layoutY="10.399999618530273" style="-fx-text-fill: white;" text="Add/Edit Expense" textFill="WHITE">
          <font>
-            <Font name="System Bold" size="27.0" />
+            <Font name="SansSerif Regular" size="27.0" />
          </font>
       </Label>
       <Label layoutX="10.399999618530273" layoutY="60.0" prefHeight="26.0" prefWidth="76.0" style="-fx-text-fill: white;" text="Who paid?" textFill="WHITE">
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="SansSerif Bold" size="12.0" />
          </font>
       </Label>
       <ChoiceBox fx:id="whoPaid" layoutX="86.4000015258789" layoutY="60.0" prefWidth="150.0" />
       <Label layoutX="10.399999618530273" layoutY="98.4000015258789" prefHeight="26.0" prefWidth="80.0" style="-fx-text-fill: white;" text="Description">
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="SansSerif Bold" size="12.0" />
          </font>
       </Label>
-      <TextField layoutX="90.4000015258789" layoutY="98.4000015258789" prefHeight="26.0" prefWidth="138.0" />
+      <TextField fx:id="description" layoutX="90.4000015258789" layoutY="98.4000015258789" prefHeight="26.0" prefWidth="138.0" />
       <Label layoutX="10.399999618530273" layoutY="134.39999389648438" prefHeight="26.0" prefWidth="78.0" style="-fx-text-fill: white;" text="How much?">
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="SansSerif Bold" size="12.0" />
          </font>
       </Label>
-      <TextField layoutX="88.80000305175781" layoutY="134.39999389648438" prefHeight="26.0" prefWidth="169.0" />
+      <TextField fx:id="amount" layoutX="88.80000305175781" layoutY="134.39999389648438" prefHeight="26.0" prefWidth="169.0" />
       <ChoiceBox fx:id="currencyChoiceBox" layoutX="258.3999938964844" layoutY="134.39999389648438" prefWidth="150.0" />
       <Label layoutX="10.399999618530273" layoutY="172.79998779296875" prefHeight="26.0" prefWidth="60.0" style="-fx-text-fill: white;" text="Date:">
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="SansSerif Bold" size="12.0" />
          </font>
       </Label>
-      <DatePicker layoutX="70.4000015258789" layoutY="172.79998779296875" />
+      <DatePicker fx:id="datePicker" layoutX="70.4000015258789" layoutY="172.79998779296875" />
       <Label layoutX="4.0" layoutY="210.0" prefHeight="31.0" prefWidth="91.0" style="-fx-text-fill: white;" text="How to split?" textFill="#fffafa">
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="SansSerif Bold" size="12.0" />
          </font>
          <padding>
             <Insets right="10.0" top="10.0" />
          </padding>
       </Label>
-      <CheckBox fx:id="onlySomePeople" layoutX="314.0" layoutY="217.0" mnemonicParsing="false" onAction="#handleOnlySomePeople" style="-fx-background: #FFFFFF; -fx-text-fill: white;" text="Only Some People" textFill="WHITE" />
-      <VBox fx:id="additionalCheckboxesContainer" layoutX="480.0" layoutY="217.0" prefHeight="117.0" prefWidth="96.0" style="-fx-background-color: white;" />
+      <CheckBox fx:id="onlySomePeople" layoutX="314.0" layoutY="217.0" mnemonicParsing="false" onAction="#handleOnlySomePeople" style="-fx-background: #FFFFFF; -fx-text-fill: white;" text="Only Some People" textFill="WHITE">
+         <font>
+            <Font name="SansSerif Regular" size="12.0" />
+         </font></CheckBox>
+      <VBox fx:id="additionalCheckboxesContainer" layoutX="480.0" layoutY="217.0" prefHeight="117.0" prefWidth="96.0" style="-fx-background-color: grey;" />
       <Label layoutX="4.0" layoutY="266.0" prefHeight="18.0" prefWidth="103.0" style="-fx-text-fill: white;" text="Expense Type">
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="SansSerif Bold" size="12.0" />
          </font>
       </Label>
       <ChoiceBox fx:id="expenseTags" layoutX="113.0" layoutY="261.0" prefWidth="150.0" />
-      <Button fx:id="cancelButton" cancelButton="true" contentDisplay="RIGHT" layoutX="160.79998779296875" layoutY="410.3999938964844" mnemonicParsing="false" onAction="#handleCancelButtonClick" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052;" text="Cancel" textFill="WHITE">
+      <Button fx:id="cancelButton" cancelButton="true" contentDisplay="RIGHT" layoutX="160.79998779296875" layoutY="410.3999938964844" mnemonicParsing="false" onAction="#handleCancelButtonClick" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 8;" text="Cancel" textFill="WHITE">
          <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="SansSerif Regular" size="12.0" />
          </font>
       </Button>
-      <Button fx:id="addButton" contentDisplay="RIGHT" layoutX="414.3999938964844" layoutY="410.3999938964844" mnemonicParsing="false" onAction="#handleAddButtonClick" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052;" text="Add" textFill="WHITE" />
-      <CheckBox fx:id="equallyEverybody" layoutX="109.0" layoutY="217.0" mnemonicParsing="false" style="-fx-background: #FFFFFF; -fx-text-fill: white;" text="Equally Between Everybody" textFill="WHITE" />
-      <ListView fx:id="selectedTags" layoutX="21.0" layoutY="304.0" prefHeight="74.0" prefWidth="346.0" />
-      <Button fx:id="addTag" layoutX="288.0" layoutY="263.0" mnemonicParsing="false" onAction="#handleAddTagButtonClick" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052;" text="Add Tag" textFill="WHITE" />
+      <Button fx:id="addButton" contentDisplay="RIGHT" layoutX="414.3999938964844" layoutY="410.3999938964844" mnemonicParsing="false" onAction="#handleAddButtonClick" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 8;" text="Add" textFill="WHITE">
+         <font>
+            <Font name="SansSerif Regular" size="12.0" />
+         </font></Button>
+      <CheckBox fx:id="equallyEverybody" layoutX="98.0" layoutY="217.0" mnemonicParsing="false" style="-fx-background: #FFFFFF; -fx-text-fill: white;" text="Equally Between Everybody" textFill="WHITE">
+         <font>
+            <Font name="SansSerif Regular" size="12.0" />
+         </font></CheckBox>
+      <ListView fx:id="selectedTags" layoutX="21.0" layoutY="304.0" prefHeight="74.0" prefWidth="346.0" style="-fx-background-color: grey;" />
+      <Button fx:id="addTag" layoutX="288.0" layoutY="263.0" mnemonicParsing="false" onAction="#handleAddTagButtonClick" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 8;" text="Add Tag" textFill="WHITE">
+         <font>
+            <Font name="SansSerif Regular" size="12.0" />
+         </font></Button>
    </children>
 </AnchorPane>

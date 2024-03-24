@@ -5,7 +5,6 @@ import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
 import commons.transactions.Tag;
-import java.awt.event.ActionEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

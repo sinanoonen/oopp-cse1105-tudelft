@@ -5,9 +5,12 @@ import commons.Event;
 import commons.User;
 import commons.transactions.Tag;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.awt.Button;
 import java.awt.event.ActionEvent;
@@ -17,7 +20,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-public class AddExpenseCtrl {
+public class AddExpenseCtrl implements Initializable{
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -29,7 +32,12 @@ public class AddExpenseCtrl {
     @FXML
     private TextField amount;
     @FXML
-    private ChoiceBox<String> currencyCheckBox;
+    private ChoiceBox<String> currencyChoiceBox;
+    @FXML
+    private CheckBox onlySomePeople;
+    @FXML
+    private VBox additionalCheckboxesContainer;
+    private List<CheckBox> additionalCheckboxes = new ArrayList<>();
     @FXML
     private ChoiceBox<Tag> expenseTags;
     @FXML
@@ -55,15 +63,38 @@ public class AddExpenseCtrl {
     }
 
     @FXML
-    private void initialize(URL location, ResourceBundle resources ){
+    public void initialize(URL location, ResourceBundle resources){
+        refresh(event);
         participants = event.getParticipants().stream()
                         .map(User::getName)
                                 .toList();
         whoPaid.getItems().addAll(participants);
-        currencyCheckBox.getItems().addAll(currencies);
+        currencyChoiceBox.getItems().addAll(currencies);
         expenseTags.getItems().addAll(tags);
-
     }
+
+    @FXML
+    private void sinan(ActionEvent event) {
+        if (onlySomePeople.isSelected()) {
+            // Clear existing checkboxes
+            additionalCheckboxesContainer.getChildren().clear();
+
+            // Add checkboxes for selecting users from the event
+            for (String participant : participants) {
+                CheckBox checkBox = new CheckBox(participant);
+                additionalCheckboxes.add(checkBox);
+                additionalCheckboxesContainer.getChildren().add(checkBox);
+            }
+        } else {
+            // Remove additional checkboxes
+            additionalCheckboxesContainer.getChildren().clear();
+            additionalCheckboxes.clear();
+        }
+    }
+
+
+
+
     @FXML
     private void handleCancelButtonClick(ActionEvent event) {
         // Handle cancel button click

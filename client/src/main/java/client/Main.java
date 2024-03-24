@@ -27,6 +27,8 @@ import client.scenes.MainCtrl;
 import client.scenes.SettingsCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;
+import java.net.URISyntaxException;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -38,8 +40,9 @@ public class Main extends Application {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
-    public static void main(String[] args) {
-        launch();
+
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        launch(args);
     }
 
     @Override

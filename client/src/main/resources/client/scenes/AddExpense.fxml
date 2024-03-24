@@ -103,8 +103,8 @@
                         <Insets />
                      </opaqueInsets>
                   </CheckBox>
-                  <CheckBox mnemonicParsing="false" text="Only Some People" />
-                  <VBox prefHeight="117.0" prefWidth="96.0" />
+                  <CheckBox fx:id="onlySomePeople" mnemonicParsing="false"  text="Only Some People" />
+                  <VBox fx:id="additionalCheckboxesContainer" prefHeight="117.0" prefWidth="96.0" />
                </children>
             </HBox>
             <HBox prefHeight="75.0" prefWidth="647.0">

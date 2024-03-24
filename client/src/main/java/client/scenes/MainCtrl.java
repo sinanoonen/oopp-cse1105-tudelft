@@ -87,6 +87,9 @@ public class MainCtrl {
         ClientUtils.setLanguage(Language.ENGLISH);
 
         showHomePage();
+        this.addExpenseCtrl = addExpense.getKey();
+        this.addExpense = new Scene(addExpense.getValue());
+
         primaryStage.show();
     }
 

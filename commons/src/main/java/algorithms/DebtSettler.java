@@ -47,8 +47,7 @@ public class DebtSettler {
             }
         }
         settledDebts = new ArrayList<>();
-        //The algorithm will match the users with the largest debts / owed money, and it
-        //settles the debts between all users
+        //The algorithm will match the users, and it settles the debts between all users
         while (!positiveDebts.isEmpty() && !negativeDebts.isEmpty()) {
             Map.Entry<String, Float> senderEntry = positiveDebts.poll();
             Map.Entry<String, Float> receiverEntry = negativeDebts.poll();
@@ -73,6 +72,7 @@ public class DebtSettler {
             }
         }
 
+        //Placeholders for when an error needs to occur as a result of something getting messed up with the debts.
         if (!positiveDebts.isEmpty() || !negativeDebts.isEmpty()) {
             System.out.println("Debts cannot be settled completely.");
         } else {
@@ -97,17 +97,22 @@ public class DebtSettler {
      * @return a string representation of the debt payment
      */
     public String settleToString(float transferAmount, String sender, String receiver) {
-        String result = sender + " should send €" + transferAmount + " to " + receiver;
+        String result = sender + " should send " + transferAmount + " to " + receiver;
+        User userSender = null;
         User userReceiver = null;
         for (User user : event.getParticipants()) {
+            if (user.getName().equals(sender)) {
+                userSender = user;
+            }
             if (user.getName().equals(receiver)) {
                 userReceiver = user;
             }
         }
+        assert userSender != null;
         assert userReceiver != null;
         result += "\nYou can transfer the money to:\nIBAN: " + userReceiver.getIban()
                 + "\nBIC: " + userReceiver.getBic()
-                + "\nOr send a reminder to the E-mail: " + userReceiver.getEmail();
+                + "\n" + userReceiver.getName() + " can send a reminder to the E-mail: " + userSender.getEmail();
         return result;
     }
 }

@@ -1,20 +1,31 @@
 package algorithms;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
 import commons.transactions.Payment;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+/**
+ * A test for the DebtSettler class.
+ */
 public class DebtSettlerTest {
 
-    Event event;
+    private Event event;
+
+    /**
+     * Code to be executed before each test.
+     */
     @BeforeEach
     public void setupForTests() {
         Set<User> users = new HashSet<>();
@@ -26,6 +37,7 @@ public class DebtSettlerTest {
         users.add(eva);
         users.add(mark);
         users.add(anne);
+        event = new Event("Vacation", users);
         List<String> allParticipants = new ArrayList<>();
         allParticipants.add("Dave");
         allParticipants.add("Eva");
@@ -50,10 +62,44 @@ public class DebtSettlerTest {
     }
 
     @Test
-    public void DebtSettlerTests() {
+    public void debtSettlerTests() {
         DebtSettler debtSettler = new DebtSettler(event);
-        Map<String, Float> expectedDebts= new HashMap<>();
-        //Do more stuff
-        assertEquals(debtSettler.getDebts(), expectedDebts);
+        Map<String, Float> expectedDebts = getStringFloatMap();
+        assertEquals(expectedDebts, debtSettler.getDebts());
+
+
+        List<String> expectedSettledDebts = new ArrayList<>();
+        expectedSettledDebts.add("""
+                Dave should send 21.0 to Mark
+                You can transfer the money to:
+                IBAN: NL111122221
+                BIC: bic3
+                Mark can send a reminder to the E-mail: dave@gmail.com""");
+        expectedSettledDebts.add("""
+                Dave should send 11.0 to Eva
+                You can transfer the money to:
+                IBAN: NL987654321
+                BIC: bic2
+                Eva can send a reminder to the E-mail: dave@gmail.com""");
+        expectedSettledDebts.add("""
+                Anne should send 37.0 to Eva
+                You can transfer the money to:
+                IBAN: NL987654321
+                BIC: bic2
+                Eva can send a reminder to the E-mail: anne@gmail.com""");
+        assertEquals(expectedSettledDebts, debtSettler.getSettledDebts());
+    }
+
+    private static Map<String, Float> getStringFloatMap() {
+        Map<String, Float> expectedDebts = new HashMap<>();
+        //Dave's debt: owes (120/4)=30 + owes (68/4=)17 + owes (15/3=)5 + paid 20 = €32.00 debt
+        expectedDebts.put("Dave", 32.0f);
+        //Eva's debt: paid 120 + owes (120/4=)30 + owes (68/4=)17 + owes (15/3=)5 + owes 20 = €48.00 owed
+        expectedDebts.put("Eva", -48.0f);
+        //Mark's debt: owes (120/4=)30 + paid 68 + owes (68/4=)17 = €21.00 owed
+        expectedDebts.put("Mark", -21.0f);
+        //Anne's debts: owes (120/4)=30 + owes (68/4=)17 + paid 15 + owes (15/3=)5 = €37.00 debt
+        expectedDebts.put("Anne", 37.0f);
+        return expectedDebts;
     }
 }

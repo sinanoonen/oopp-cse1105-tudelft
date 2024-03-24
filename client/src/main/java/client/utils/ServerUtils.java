@@ -150,7 +150,7 @@ public class ServerUtils {
                 .target(SERVER).path("/api/events/" + event.getInviteCode() + "/users")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .put(Entity.entity(user, APPLICATION_JSON), Event.class);
+                .post(Entity.entity(user, APPLICATION_JSON), Event.class);
     }
 
     /**

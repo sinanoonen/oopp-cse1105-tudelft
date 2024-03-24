@@ -85,7 +85,7 @@ public class ManageUserCtrl {
     }
 
     public void cancel() {
-        mainCtrl.showHomePage();
+        mainCtrl.showEventOverview(event);
     }
 
     /**
@@ -103,7 +103,7 @@ public class ManageUserCtrl {
         User user = new User(name, email, iban, bic, event.getInviteCode());
 
         User saved = serverUtils.createUser(user);
-        mainCtrl.showHomePage();
+        mainCtrl.showEventOverview(event);
     }
 
     /**
@@ -121,7 +121,7 @@ public class ManageUserCtrl {
         User updated = new User(name, email, iban, bic, event.getInviteCode());
 
         User saved = serverUtils.updateUser(updated);
-        mainCtrl.showHomePage();
+        mainCtrl.showEventOverview(event);
     }
 
     private boolean validateInputs() {

@@ -503,6 +503,10 @@ public class EventOverviewCtrl implements Initializable {
         mainCtrl.showHomePage();
     }
 
+    public void onNewParticipantClicked() {
+        mainCtrl.showCreateUser(event);
+    }
+
     /**
      * Adds the selected participants to the event.
      */

@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import com.google.inject.Inject;
@@ -47,6 +48,15 @@ public class HomePageCtrl implements Initializable {
     private TextField codeInput;
     @FXML
     private Pane errorPopup;
+    @FXML
+    private Circle optionsButton;
+    @FXML
+    Pane settingsOverlay;
+    @FXML
+    Pane settingClickArea;
+    @FXML
+    Pane quitClickArea;
+
 
     @Inject
     public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
@@ -68,23 +78,59 @@ public class HomePageCtrl implements Initializable {
         screenDarkener.setPrefHeight(root.getPrefHeight());
         screenDarkener.setLayoutX(root.getLayoutX());
         screenDarkener.setLayoutY(root.getLayoutY());
+        settingsOverlay.setVisible(false);
 
         codeInput.setText("");
 
         reloadEventsList();
+
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            System.out.println("Deactivating high contrast mode");
+            UIUtils.deactivateHighContrastMode(root);
+        }
+    }
+
+
+
+    public void showSettings() {
+        mainCtrl.showSettings();
+    }
+
+
+    /**
+     * Shows the add event overlay.
+     */
+    public void showEventOverlay() {
+        addEventOverlay.toFront();
+        addEventOverlay.setVisible(true);
+        screenDarkener.setVisible(true);
+        addEventOverlay.setMouseTransparent(false);
+        screenDarkener.setMouseTransparent(false);
     }
 
     /**
-     * Handler method to toggle the overlay for adding a new event (hitting the + button).
+     * Shows the settings overlay.
      */
-    public void toggleEventOverlay() {
-        screenDarkener.toFront();
-        addEventOverlay.toFront();
-        addEventOverlay.setVisible(!addEventOverlay.isVisible());
-        screenDarkener.setVisible(!screenDarkener.isVisible());
-        addEventOverlay.setMouseTransparent(!addEventOverlay.isMouseTransparent());
-        screenDarkener.setMouseTransparent(!screenDarkener.isMouseTransparent());
+    public void showSettingsOverlay() {
+        settingsOverlay.toFront();
+        settingsOverlay.setVisible(true);
+        screenDarkener.setVisible(true);
+        settingsOverlay.setMouseTransparent(false);
+        screenDarkener.setMouseTransparent(false);
+    }
 
+    /**
+     * Hides all popups.
+     */
+    public void hidePopUps() {
+        addEventOverlay.setVisible(false);
+        settingsOverlay.setVisible(false);
+        screenDarkener.setVisible(false);
+        addEventOverlay.setMouseTransparent(true);
+        settingsOverlay.setMouseTransparent(true);
+        screenDarkener.setMouseTransparent(true);
     }
 
     public void createEvent() {
@@ -103,10 +149,8 @@ public class HomePageCtrl implements Initializable {
             displayInputError("Invalid invite code");
             return;
         }
-        Event event;
-        try {
-            event = serverUtils.getEventByUUID(uuid);
-        } catch (Exception e) {
+        Event event = serverUtils.getEventByUUID(uuid);
+        if (event == null) {
             displayInputError("Cannot find event");
             return;
         }
@@ -154,6 +198,10 @@ public class HomePageCtrl implements Initializable {
     }
 
     private void displayInputError(String message) {
+        displayErrorPopup(message, errorPopup);
+    }
+
+    static void displayErrorPopup(String message, Pane errorPopup) {
         if (errorPopup.getOpacity() != 0) {
             return; // avoids spamming the error popup
         }
@@ -161,6 +209,10 @@ public class HomePageCtrl implements Initializable {
         Text error = (Text) errorPopup.getChildren().getFirst();
         error.setText(message);
 
+        fadeInOutPopup(errorPopup);
+    }
+
+    static void fadeInOutPopup(Pane errorPopup) {
         FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), errorPopup);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
@@ -176,6 +228,11 @@ public class HomePageCtrl implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        UIUtils.activateHighContrastMode(root);
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            System.out.println("Deactivating high contrast mode");
+            UIUtils.deactivateHighContrastMode(root);
+        }
     }
 }

@@ -3,11 +3,15 @@ package client.utils;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 
+import java.util.HashMap;
+
 public class UIUtils {
 
     private static int CONTRAST_THRESHOLD = 75;
     private static double CONTRAST_MODIFIER = 0.86;
     private static double BRIGHTNESS_MODIFIER = 23;
+
+    private static HashMap<Node, String> colorMap = new HashMap<>();
 
     /**
      * Changes the color of a node.
@@ -30,6 +34,9 @@ public class UIUtils {
 
     private static void increaseNodeContrast(Node node) {
         String currentStyle = node.getStyle();
+        if (!colorMap.containsKey(node)) {
+            colorMap.put(node, currentStyle);
+        }
 
 
         String backgroundColor = "";
@@ -100,6 +107,8 @@ public class UIUtils {
     }
 
     public static void activateHighContrastMode(Parent root) {
+
+
         increaseNodeContrast(root);
 
         //get root children
@@ -108,6 +117,22 @@ public class UIUtils {
                 activateHighContrastMode((Parent) node);
             } else {
                 increaseNodeContrast(node);
+            }
+        });
+    }
+
+    public static void deactivateHighContrastMode(Parent root) {
+        if (colorMap.containsKey(root)) {
+            root.setStyle(colorMap.get(root));
+        }
+
+        root.getChildrenUnmodifiable().forEach(node -> {
+            if (node instanceof Parent) {
+                deactivateHighContrastMode((Parent) node);
+            } else {
+                if (colorMap.containsKey(node)) {
+                    node.setStyle(colorMap.get(node));
+                }
             }
         });
     }

@@ -139,9 +139,13 @@ public class Event {
      * @return total debt
      */
     public float getTotalDebt(User user) {
-        return (float) getExpensesByParticipant(user.getName()).stream()
+        float expenseDebt = (float) getExpensesByParticipant(user.getName()).stream()
                 .mapToDouble(expense -> expense.getDebts().get(user.getName()))
                 .sum();
+        float paymentDebt = (float) getPaymentsByParticipant(user.getName()).stream()
+                .mapToDouble(payment -> payment.getDebt().get(user.getName()))
+                .sum();
+        return expenseDebt + paymentDebt;
     }
 
     /**
@@ -248,6 +252,28 @@ public class Event {
     }
 
     /**
+     * Gets a list of payments by participant name.
+     *
+     * @param participant the participant name linked to the payments
+     * @return a list of payments of the participant
+     */
+    private List<Payment> getPaymentsByParticipant(String participant) {
+        if (participants.stream()
+                .map(User::getName)
+                .noneMatch(name -> name.equals(participant))
+        ) {
+            throw new IllegalArgumentException("Participant not found in Event");
+        }
+        List<Transaction> transactions = transactions();
+
+        return transactions.stream()
+                .filter(transaction -> transaction instanceof Payment)
+                .map(transaction -> (Payment) transaction)
+                .filter(payment -> payment.getDebt().containsKey(participant))
+                .toList();
+    }
+
+    /**
      * Gets a list of expenses by participant name.
      *
      * @param participant the participant name linked to the expenses
@@ -258,7 +284,7 @@ public class Event {
                 .map(User::getName)
                 .noneMatch(name -> name.equals(participant))
         ) {
-            throw new IllegalArgumentException("Tag not found in Event");
+            throw new IllegalArgumentException("Participant not found in Event");
         }
 
         return expenses.stream()

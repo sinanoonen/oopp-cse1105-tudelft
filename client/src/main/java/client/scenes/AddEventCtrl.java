@@ -1,27 +1,33 @@
 package client.scenes;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import com.google.inject.Inject;
 import commons.Event;
-import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * A controller for the AddEvent scene.
  */
-public class AddEventCtrl {
+public class AddEventCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
 
+    @FXML
+    private AnchorPane root;
     @FXML
     private TextField inputField;
     @FXML
@@ -40,6 +46,13 @@ public class AddEventCtrl {
         inputField.setText("");
         inputField.setEditable(false);
         errorPopup.setOpacity(0);
+
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            System.out.println("Deactivating high contrast mode");
+            UIUtils.deactivateHighContrastMode(root);
+        }
     }
 
     /**
@@ -72,10 +85,8 @@ public class AddEventCtrl {
 
     /**
      * Handles the create button logic.
-     *
-     * @param actionEvent actionEvent
      */
-    public void saveEvent(ActionEvent actionEvent) {
+    public void saveEvent() {
         if (inputField.getText().isEmpty()) {
             displayInputError("Title cannot be empty!");
             return;
@@ -91,24 +102,16 @@ public class AddEventCtrl {
     }
 
     private void displayInputError(String message) {
-        if (errorPopup.getOpacity() != 0) {
-            return; // avoids spamming the error popup
+        HomePageCtrl.displayErrorPopup(message, errorPopup);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            System.out.println("Deactivating high contrast mode");
+            UIUtils.deactivateHighContrastMode(root);
         }
-        errorPopup.toFront();
-        Text error = (Text) errorPopup.getChildren().getFirst();
-        error.setText(message);
-
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(0.5), errorPopup);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-
-        FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), errorPopup);
-        fadeOut.setFromValue(1);
-        fadeOut.setToValue(0);
-        fadeOut.setDelay(Duration.seconds(1));
-
-        fadeIn.setOnFinished(finished -> fadeOut.play());
-
-        fadeIn.play();
     }
 }

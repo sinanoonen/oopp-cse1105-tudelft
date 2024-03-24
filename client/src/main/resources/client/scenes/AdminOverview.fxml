@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="647.0" prefWidth="600.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AdminOverviewCtrl">
+   <children>
+      <TextField id="title_text" fx:id="title" editable="false" layoutX="20.0" layoutY="20.0" prefHeight="52.0" prefWidth="560.0" promptText="Title" style="-fx-text-fill: #FFFFFF; -fx-background-color: transparent;" text="Admin Page">
+         <font>
+            <Font name="SansSerif Bold" size="29.0" />
+         </font>
+      </TextField>
+
+      <VBox layoutX="20.0" layoutY="90.0" prefWidth="560.0" spacing="10">
+         <padding>
+            <Insets bottom="10" left="20" right="20" top="10" />
+         </padding>
+
+         <HBox spacing="10">
+            <Button fx:id="sortByTitleButton" onAction="#handleSortByTitle" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="Sort by Title" textFill="WHITE">
+               <font>
+                  <Font name="SansSerif Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="sortByCreationDateButton" onAction="#handleSortByCreationDate" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="Sort by Creation Date" textFill="WHITE">
+               <font>
+                  <Font name="SansSerif Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="sortByLastActivityButton" onAction="#handleSortByLastActivity" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="Sort by Last Activity" textFill="WHITE">
+               <font>
+                  <Font name="SansSerif Bold" size="12.0" />
+               </font></Button>
+         </HBox>
+         <ListView id="event_container" fx:id="eventContainer" prefHeight="400.0" prefWidth="550.0" style="-fx-background-color: #3c3c3c; -fx-background-radius: 10; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 0; -fx-background: transparent;" />
+
+         <HBox spacing="10">
+            <Button fx:id="exportEventButton" onAction="#handleExportEvent" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="Export Event (JSON)" textFill="WHITE">
+               <font>
+                  <Font name="SansSerif Bold" size="12.0" />
+               </font></Button>
+            <Button fx:id="importEventButton" onAction="#handleImportEvent" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="Import Event (JSON)" textFill="WHITE">
+               <font>
+                  <Font name="SansSerif Bold" size="12.0" />
+               </font></Button>
+
+            <Button fx:id="deleteEventButton" maxWidth="Infinity" onAction="#handleDeleteEvent" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="Delete Event" textFill="WHITE">
+               <font>
+                  <Font name="SansSerif Bold" size="12.0" />
+               </font>
+            </Button>
+         </HBox>
+      </VBox>
+   </children>
+</AnchorPane>

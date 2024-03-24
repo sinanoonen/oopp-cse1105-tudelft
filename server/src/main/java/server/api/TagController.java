@@ -122,7 +122,4 @@ public class TagController {
         return ResponseEntity.ok().build();
     }
 
-    private boolean isNullOrEmpty(String s) {
-        return s == null || s.isEmpty();
-    }
 }

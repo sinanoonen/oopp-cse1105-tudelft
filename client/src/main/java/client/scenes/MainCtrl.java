@@ -46,6 +46,8 @@ public class MainCtrl {
 
     private Scene adminOverview;
     private AdminOverviewCtrl adminOverviewCtrl;
+    private AddExpenseCtrl addExpenseCtrl;
+    private Scene addExpense;
 
     /**
      * Initialize the main controller.
@@ -60,7 +62,8 @@ public class MainCtrl {
                            Pair<EventOverviewCtrl, Parent> eventOverview,
                            Pair<AddEventCtrl, Parent> addEvent,
                             Pair<SettingsCtrl, Parent> settings,
-                            Pair<AdminOverviewCtrl, Parent> adminOverview
+                            Pair<AdminOverviewCtrl, Parent> adminOverview,
+                           Pair<AddExpenseCtrl, Parent> addExpense
     ) {
         this.primaryStage = primaryStage;
 
@@ -131,5 +134,11 @@ public class MainCtrl {
         primaryStage.setTitle("Admin Overview");
         primaryStage.setScene(adminOverview);
         adminOverviewCtrl.initialize();
+    }
+
+    private void showAddExpense(Event event) {
+        primaryStage.setTitle("New Expense");
+        primaryStage.setScene(addExpense);
+        addExpenseCtrl.refresh(event);
     }
 }

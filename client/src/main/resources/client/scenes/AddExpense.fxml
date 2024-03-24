@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="668.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
+   <children>
+      <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="10.799999999999955" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.799999999999955" AnchorPane.topAnchor="10.0">
+         <children>
+            <Label text="Add/Edit Expense" VBox.vgrow="ALWAYS">
+               <font>
+                  <Font name="System Bold" size="27.0" />
+               </font>
+            </Label>
+            <HBox prefHeight="46.0" prefWidth="429.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="76.0" text="Who paid?">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox prefWidth="150.0" />
+               </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </HBox>
+            <HBox prefHeight="46.0" prefWidth="429.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="80.0" text="Description">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="26.0" prefWidth="138.0" />
+               </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </HBox>
+            <HBox prefHeight="46.0" prefWidth="429.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="78.0" text="How much?">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="26.0" prefWidth="169.0" />
+                  <ChoiceBox prefWidth="150.0" />
+               </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </HBox>
+            <HBox prefHeight="46.0" prefWidth="429.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="60.0" text="Date:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <DatePicker />
+               </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </HBox>
+            <HBox prefHeight="46.0" prefWidth="429.0">
+               <children>
+                  <Label prefHeight="26.0" prefWidth="74.0" text="Who Paid?">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox prefWidth="150.0" />
+               </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </HBox>
+            <HBox prefHeight="82.0" prefWidth="506.0">
+               <children>
+                  <Label prefHeight="31.0" prefWidth="91.0" text="How to split?">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <padding>
+                        <Insets right="10.0" />
+                     </padding>
+                  </Label>
+                  <CheckBox mnemonicParsing="false" prefHeight="26.0" prefWidth="182.0" text="Equally Between Everybody">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </CheckBox>
+                  <CheckBox mnemonicParsing="false" text="Only Some People" />
+                  <VBox prefHeight="117.0" prefWidth="96.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="75.0" prefWidth="647.0">
+               <children>
+                  <Label prefHeight="18.0" prefWidth="103.0" text="Expense Type">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox prefWidth="150.0" />
+                  <ListView editable="true" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button cancelButton="true" contentDisplay="RIGHT" mnemonicParsing="false" text="Cancel">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="150.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button contentDisplay="RIGHT" mnemonicParsing="false" text="Add">
+                     <HBox.margin>
+                        <Insets left="200.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

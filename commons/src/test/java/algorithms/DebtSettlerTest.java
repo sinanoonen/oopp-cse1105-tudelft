@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,10 +30,10 @@ public class DebtSettlerTest {
     @BeforeEach
     public void setupForTests() {
         Set<User> users = new HashSet<>();
-        User dave = new User("Dave", "dave@gmail.com", "NL123456789", "bic1");
-        User eva = new User("Eva", "eva@gmail.com", "NL987654321", "bic2");
-        User mark = new User("Mark", "mark@gmail.com", "NL111122221", "bic3");
-        User anne = new User("Anne", "anne@gmail.com", "NL444444444", "bic4");
+        User dave = new User("Dave", "dave@gmail.com", "NL123456789", "bic1", UUID.randomUUID());
+        User eva = new User("Eva", "eva@gmail.com", "NL987654321", "bic2", UUID.randomUUID());
+        User mark = new User("Mark", "mark@gmail.com", "NL111122221", "bic3", UUID.randomUUID());
+        User anne = new User("Anne", "anne@gmail.com", "NL444444444", "bic4", UUID.randomUUID());
         users.add(dave);
         users.add(eva);
         users.add(mark);

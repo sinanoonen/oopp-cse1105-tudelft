@@ -146,7 +146,6 @@ public class MainCtrl {
     public void showAdminOverview() {
         primaryStage.setTitle("Admin Overview");
         primaryStage.setScene(adminOverview);
-        adminOverviewCtrl.initialize();
     }
 
     /**

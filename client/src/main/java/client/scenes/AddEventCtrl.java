@@ -1,24 +1,32 @@
 package client.scenes;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import com.google.inject.Inject;
 import commons.Event;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 /**
  * A controller for the AddEvent scene.
  */
-public class AddEventCtrl {
+public class AddEventCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
 
+    @FXML
+    private AnchorPane root;
     @FXML
     private TextField inputField;
     @FXML
@@ -37,6 +45,12 @@ public class AddEventCtrl {
         inputField.setText("");
         inputField.setEditable(false);
         errorPopup.setOpacity(0);
+
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
     }
 
     /**
@@ -87,5 +101,14 @@ public class AddEventCtrl {
 
     private void displayInputError(String message) {
         HomePageCtrl.displayErrorPopup(message, errorPopup);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
     }
 }

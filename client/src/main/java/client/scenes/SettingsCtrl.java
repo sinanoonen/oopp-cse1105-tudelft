@@ -4,6 +4,7 @@ import client.utils.ClientUtils;
 import client.utils.Currency;
 import client.utils.Language;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -12,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javax.inject.Inject;
 
@@ -24,6 +26,8 @@ public class SettingsCtrl implements Initializable {
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
 
+    @FXML
+    private AnchorPane root;
     @FXML
     private Text settingsTitle;
     @FXML
@@ -57,23 +61,29 @@ public class SettingsCtrl implements Initializable {
         //add listener to the currency choice box
         currencyChoiceBox.getSelectionModel().selectedItemProperty()
                 .addListener((observableValue, oldCurrency, newCurrency) -> {
-                    System.out.println("Currency changed from " + oldCurrency + " to " + newCurrency);
                     ClientUtils.setCurrency(newCurrency);
+                    refresh();
                 });
 
         //add listener to the language choice box
         languageChoiceBox.getSelectionModel().selectedItemProperty()
                 .addListener((observableValue, oldLanguage, newLanguage) -> {
-                    System.out.println("Language changed from " + oldLanguage + " to " + newLanguage);
                     ClientUtils.setLanguage(newLanguage);
+                    refresh();
                 });
 
         //add listener to the high contrast checkbox
         highContrastCheckBox.selectedProperty()
                 .addListener((observableValue, oldValue, newValue) -> {
-                    System.out.println("High contrast changed from " + oldValue + " to " + newValue);
                     ClientUtils.setHighContrast(newValue);
+                    refresh();
                 });
+
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
     }
 
     /**
@@ -96,6 +106,12 @@ public class SettingsCtrl implements Initializable {
         languageChoiceBox.setValue(ClientUtils.getLanguage());
 
         highContrastCheckBox.setSelected(ClientUtils.isHighContrast());
+
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
     }
 
 

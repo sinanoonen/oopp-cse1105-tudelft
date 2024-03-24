@@ -1,6 +1,8 @@
 package client.scenes;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
@@ -87,7 +89,11 @@ public class EventOverviewCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
     }
 
     /**
@@ -128,6 +134,12 @@ public class EventOverviewCtrl implements Initializable {
 
         resetTransactionsContainer();
         resetParticipantsContainer();
+
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
     }
 
     // ---------------- VISUAL EFFECTS HANDLERS ---------------- //

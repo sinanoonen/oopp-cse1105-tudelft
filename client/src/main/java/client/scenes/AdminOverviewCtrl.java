@@ -1,19 +1,24 @@
 package client.scenes;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
 import commons.Event;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -25,17 +30,19 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
-
 
 /**
  * The controller for the admin overview.
  */
-public class AdminOverviewCtrl {
+public class AdminOverviewCtrl implements Initializable {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
 
+    @FXML
+    private AnchorPane root;
     @FXML
     private TextField title;
     @FXML
@@ -78,7 +85,8 @@ public class AdminOverviewCtrl {
     /**
      * Initializes the scene.
      */
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         ifSortByCreationDate = false;
         ifSortByLastActivity = false;
         ifSortByTitle = false;
@@ -90,6 +98,12 @@ public class AdminOverviewCtrl {
         loadEvents();
         setupEventListView();
         setupEventSelection();
+
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
     }
 
     private void loadEvents() {

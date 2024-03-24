@@ -48,6 +48,8 @@ public class MainCtrl {
 
     private Scene adminOverview;
     private AdminOverviewCtrl adminOverviewCtrl;
+    private AddExpenseCtrl addExpenseCtrl;
+    private Scene addExpense;
 
     private Scene manageUser;
     private ManageUserCtrl manageUserCtrl;
@@ -58,10 +60,11 @@ public class MainCtrl {
     /**
      * Initialize the main controller.
      *
-     * @param primaryStage Stage
-     * @param homePage home page on which the app opens
+     * @param primaryStage  Stage
+     * @param homePage      home page on which the app opens
      * @param eventOverview the eventOverview scene
-     * @param addEvent the addEvent page
+     * @param addEvent      the addEvent page
+     * @param manageUser    the manageUser scene
      */
     public void initialize(Stage primaryStage,
                            Pair<HomePageCtrl, Parent> homePage,
@@ -69,6 +72,7 @@ public class MainCtrl {
                            Pair<AddEventCtrl, Parent> addEvent,
                            Pair<SettingsCtrl, Parent> settings,
                            Pair<AdminOverviewCtrl, Parent> adminOverview,
+                           Pair<AddExpenseCtrl, Parent> addExpense,
                            Pair<ManageUserCtrl, Parent> manageUser,
                            Pair<AdminLoginCtrl, Parent> adminLogin
     ) {
@@ -99,6 +103,8 @@ public class MainCtrl {
         ClientUtils.setCurrency(Currency.EUR);
         ClientUtils.setLanguage(Language.ENGLISH);
 
+        this.addExpenseCtrl = addExpense.getKey();
+        this.addExpense = new Scene(addExpense.getValue());
         showHomePage();
         primaryStage.show();
     }
@@ -146,6 +152,12 @@ public class MainCtrl {
     public void showAdminOverview() {
         primaryStage.setTitle("Admin Overview");
         primaryStage.setScene(adminOverview);
+    }
+
+    private void showAddExpense(Event event) {
+        primaryStage.setTitle("New Expense");
+        primaryStage.setScene(addExpense);
+        addExpenseCtrl.refresh(event);
     }
 
     /**

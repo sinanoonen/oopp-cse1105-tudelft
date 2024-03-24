@@ -83,6 +83,8 @@ public class Event {
         participants.addAll(users);
     }
 
+
+
     public void setInviteCode(UUID uuid) {
         this.inviteCode = uuid;
         setLastActivity(LocalDateTime.now());

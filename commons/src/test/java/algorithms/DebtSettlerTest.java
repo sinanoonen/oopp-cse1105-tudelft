@@ -30,10 +30,11 @@ public class DebtSettlerTest {
     @BeforeEach
     public void setupForTests() {
         Set<User> users = new HashSet<>();
-        User dave = new User("Dave", "dave@gmail.com", "NL123456789", "bic1", UUID.randomUUID());
-        User eva = new User("Eva", "eva@gmail.com", "NL987654321", "bic2", UUID.randomUUID());
-        User mark = new User("Mark", "mark@gmail.com", "NL111122221", "bic3", UUID.randomUUID());
-        User anne = new User("Anne", "anne@gmail.com", "NL444444444", "bic4", UUID.randomUUID());
+        UUID id = UUID.randomUUID();
+        User dave = new User("Dave", "dave@gmail.com", "NL123456789", "bic1", id);
+        User eva = new User("Eva", "eva@gmail.com", "NL987654321", "bic2", id);
+        User mark = new User("Mark", "mark@gmail.com", "NL111122221", "bic3", id);
+        User anne = new User("Anne", "anne@gmail.com", "NL444444444", "bic4", id);
         users.add(dave);
         users.add(eva);
         users.add(mark);

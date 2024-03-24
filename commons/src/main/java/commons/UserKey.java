@@ -3,6 +3,7 @@ package commons;
 import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Class for the composite key of User.
@@ -10,7 +11,7 @@ import java.util.Objects;
 @Embeddable
 public class UserKey implements Serializable {
     private String email;
-    private String iban;
+    private UUID eventID;
 
     /**
      * Empty constructor.
@@ -23,11 +24,11 @@ public class UserKey implements Serializable {
      * Basic constructor.
      *
      * @param email the email of the user
-     * @param iban the iban of the user
+     * @param eventID UUID of the event user is a part of
      */
-    public UserKey(String email, String iban) {
+    public UserKey(String email, UUID eventID) {
         this.email = email;
-        this.iban = iban;
+        this.eventID = eventID;
     }
 
     /**
@@ -40,12 +41,12 @@ public class UserKey implements Serializable {
     }
 
     /**
-     * Getter for iban.
+     * Getter for eventID.
      *
-     * @return the iban
+     * @return the eventID
      */
-    public String getIban() {
-        return iban;
+    public UUID getEventID() {
+        return eventID;
     }
 
     /**
@@ -58,12 +59,12 @@ public class UserKey implements Serializable {
     }
 
     /**
-     * Setter for iban.
+     * Sets the eventID.
      *
-     * @param iban the new iban
+     * @param eventID eventID to set
      */
-    public void setIban(String iban) {
-        this.iban = iban;
+    public void setEventID(UUID eventID) {
+        this.eventID = eventID;
     }
 
     /**
@@ -81,7 +82,7 @@ public class UserKey implements Serializable {
             return false;
         }
         return Objects.equals(email, userKey.email)
-            && Objects.equals(iban, userKey.iban);
+            && Objects.equals(eventID, userKey.eventID);
     }
 
     /**
@@ -91,6 +92,6 @@ public class UserKey implements Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(email, iban);
+        return Objects.hash(email, eventID);
     }
 }

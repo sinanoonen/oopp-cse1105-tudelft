@@ -45,11 +45,11 @@ public class HomePageCtrl {
     @FXML
     private Circle optionsButton;
     @FXML
-    Pane settingsOverlay;
+    private Pane settingsOverlay;
     @FXML
-    Pane settingClickArea;
+    private Pane settingClickArea;
     @FXML
-    Pane quitClickArea;
+    private Pane quitClickArea;
 
 
     @Inject
@@ -68,11 +68,10 @@ public class HomePageCtrl {
         screenDarkener.setVisible(false);
         addEventOverlay.setMouseTransparent(true);
         screenDarkener.setMouseTransparent(true);
+        settingsOverlay.setVisible(false);
+
         screenDarkener.setPrefWidth(root.getPrefWidth());
         screenDarkener.setPrefHeight(root.getPrefHeight());
-        screenDarkener.setLayoutX(root.getLayoutX());
-        screenDarkener.setLayoutY(root.getLayoutY());
-        settingsOverlay.setVisible(false);
 
         codeInput.setText("");
 
@@ -90,20 +89,22 @@ public class HomePageCtrl {
      * Shows the add event overlay.
      */
     public void showEventOverlay() {
+        screenDarkener.toFront();
+        screenDarkener.setVisible(true);
+        screenDarkener.setMouseTransparent(false);
         addEventOverlay.toFront();
         addEventOverlay.setVisible(true);
-        screenDarkener.setVisible(true);
         addEventOverlay.setMouseTransparent(false);
-        screenDarkener.setMouseTransparent(false);
     }
 
     /**
      * Shows the settings overlay.
      */
     public void showSettingsOverlay() {
+        screenDarkener.toFront();
+        screenDarkener.setVisible(true);
         settingsOverlay.toFront();
         settingsOverlay.setVisible(true);
-        screenDarkener.setVisible(true);
         settingsOverlay.setMouseTransparent(false);
         screenDarkener.setMouseTransparent(false);
     }

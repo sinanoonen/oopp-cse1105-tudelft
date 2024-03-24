@@ -20,10 +20,12 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import commons.Event;
 import commons.Quote;
+import commons.User;
 import commons.transactions.Expense;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -99,6 +101,60 @@ public class ServerUtils {
     }
 
     /**
+     * Returns all users stored in the database.
+     */
+    public List<User> getUsers() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/users")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {});
+    }
+
+    /**
+     * Creates a new user by sending a POST request to the server's API endpoint for users.
+     *
+     * @param user the User object containing the user details to be created
+     * @return the created User object returned by the server
+     */
+    public User createUser(User user) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/users")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(user, APPLICATION_JSON), User.class);
+    }
+
+    /**
+     * Updates an existing user by sending a PUT request to the server's API endpoint for users.
+     *
+     * @param updated the User object containing the user details to be updated
+     * @return the updated User object returned by the server
+     */
+    public User updateUser(User updated) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/users/" + updated.getEmail())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(updated, APPLICATION_JSON), User.class);
+    }
+
+    /**
+     * Adds a user to the provided event.
+     *
+     * @param event event to which the user should be added
+     * @param user user to be added to event
+     * @return updated event
+     */
+    public Event addUserToEvent(Event event, User user) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("/api/events/" + event.getInviteCode() + "/users")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(user, APPLICATION_JSON), Event.class);
+    }
+
+    /**
      * Removes a participant from an event.
      *
      * @param uuid uuid of event to remove from
@@ -165,5 +221,33 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(event, APPLICATION_JSON), Event.class);
+    }
+
+    /**
+     * Deletes an event.
+     *
+     * @param uuid the uuid of the event
+     */
+    public void deleteEvent(UUID uuid) {
+        ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/events/" + uuid)
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .delete();
+    }
+
+    /**
+     * This sends a post request to the admin controller.
+     *
+     * @param password the password (in string representation)
+     * @return true iff the entered password is the correct one
+     */
+    public boolean authenticate(String password) {
+        Response response = ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/auth")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(password, APPLICATION_JSON));
+        return response.getStatus() == 200;
     }
 }

@@ -10,11 +10,13 @@ import commons.transactions.Transaction;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -30,6 +32,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 /**
  * Controller for the EventOverview scene.
@@ -64,7 +67,13 @@ public class EventOverviewCtrl implements Initializable {
     @FXML
     private ListView<Node> participantsList;
     @FXML
-    private Pane overviewDarkener;
+    private Pane participantsDarkener;
+    @FXML
+    private Pane addParticipantsMenu;
+    @FXML
+    private ListView<Node> newParticipantsList;
+    @FXML
+    private Pane addParticipantsDarkener;
     @FXML
     private ListView<Node> transactionContainer;
     @FXML
@@ -98,14 +107,22 @@ public class EventOverviewCtrl implements Initializable {
         buttonDarkener.setVisible(false);
         clipboardPopup.setOpacity(0);
 
-        participantsMenu.setVisible(false);
-        overviewDarkener.setVisible(false);
-        overviewDarkener.setLayoutX(root.getLayoutX());
-        overviewDarkener.setPrefWidth(root.getPrefWidth());
-        overviewDarkener.setLayoutY(root.getLayoutY());
-        overviewDarkener.setPrefHeight(root.getPrefHeight());
+        // Ensure darkeners cover entire app
+        participantsDarkener.setLayoutX(root.getLayoutX());
+        participantsDarkener.setPrefWidth(root.getWidth());
+        participantsDarkener.setLayoutY(root.getLayoutY());
+        participantsDarkener.setPrefHeight(root.getHeight());
+        addParticipantsDarkener.setLayoutX(root.getLayoutX());
+        addParticipantsDarkener.setPrefWidth(root.getWidth());
+        addParticipantsDarkener.setLayoutY(root.getLayoutY());
+        addParticipantsDarkener.setPrefHeight(root.getHeight());
 
-        participantsMenu.setVisible(false);
+        if (participantsMenu.isVisible()) {
+            toggleParticipants();
+        }
+        if (addParticipantsMenu.isVisible()) {
+            toggleAddParticipants();
+        }
 
         changeBackgroundColor(backLink, "transparent");
 
@@ -150,9 +167,11 @@ public class EventOverviewCtrl implements Initializable {
 
     /**
      * Onclick event to copy the event's invite code to the user's clipboard.
+     *
+     * @param event MouseEvent
      */
     @FXML
-    public void copyInviteCode() {
+    public void copyInviteCode(MouseEvent event) {
         String inviteCode = this.event.getInviteCode().toString();
         Clipboard clipboard = Clipboard.getSystemClipboard();
         ClipboardContent content = new ClipboardContent();
@@ -171,7 +190,18 @@ public class EventOverviewCtrl implements Initializable {
         buttonDarkener.setVisible(!buttonDarkener.isVisible());
         if (!buttonDarkener.isVisible()) {
             clipboardPopup.toFront();
-            HomePageCtrl.fadeInOutPopup(clipboardPopup);
+            FadeTransition fadeInTransition = new FadeTransition(Duration.seconds(0.5), clipboardPopup);
+            fadeInTransition.setFromValue(0);
+            fadeInTransition.setToValue(1);
+
+            FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(0.5), clipboardPopup);
+            fadeOutTransition.setFromValue(1);
+            fadeOutTransition.setToValue(0);
+            fadeOutTransition.setDelay(Duration.seconds(1));
+
+            fadeInTransition.setOnFinished(finished -> fadeOutTransition.play());
+
+            fadeInTransition.play();
         }
     }
 
@@ -180,9 +210,9 @@ public class EventOverviewCtrl implements Initializable {
      */
     @FXML
     public void toggleParticipants() {
-        overviewDarkener.toFront();
-        overviewDarkener.setVisible(!overviewDarkener.isVisible());
-        overviewDarkener.setMouseTransparent(!overviewDarkener.isVisible());
+        participantsDarkener.toFront();
+        participantsDarkener.setVisible(!participantsDarkener.isVisible());
+        participantsDarkener.setMouseTransparent(!participantsDarkener.isVisible());
         participantsMenu.toFront();
         participantsMenu.setVisible(!participantsMenu.isVisible());
         participantsMenu.setMouseTransparent(!participantsMenu.isVisible());
@@ -192,8 +222,31 @@ public class EventOverviewCtrl implements Initializable {
         });
     }
 
-    public void onBackClicked(MouseEvent event) {
-        mainCtrl.showHomePage();
+    /**
+     * Swaps between the participants menu and the add participants menu.
+     */
+    public void swapParticipantsAddParticipants() {
+        toggleParticipants();
+        toggleAddParticipants();
+    }
+
+    /**
+     * Toggles the add participants menu.
+     */
+    public void toggleAddParticipants() {
+        addParticipantsDarkener.toFront();
+        addParticipantsDarkener.setVisible(!addParticipantsDarkener.isVisible());
+        addParticipantsDarkener.setMouseTransparent(!addParticipantsDarkener.isVisible());
+        addParticipantsMenu.toFront();
+        addParticipantsMenu.setVisible(!addParticipantsMenu.isVisible());
+        addParticipantsMenu.setMouseTransparent(!addParticipantsMenu.isMouseTransparent());
+        addParticipantsMenu.getChildren().forEach(child -> {
+            child.setVisible(addParticipantsMenu.isVisible());
+            child.setMouseTransparent(addParticipantsMenu.isMouseTransparent());
+        });
+        if (addParticipantsMenu.isVisible()) {
+            resetNewParticipantsContainer();
+        }
     }
 
     /**
@@ -204,8 +257,8 @@ public class EventOverviewCtrl implements Initializable {
     public void toggleHyperlinkBackground(MouseEvent event) {
         changeBackgroundColor(backLink,
                 backLink.getStyle().contains("transparent")
-                ? "#2b2b2b"
-                : "transparent"
+                        ? "#2b2b2b"
+                        : "transparent"
         );
     }
 
@@ -229,7 +282,8 @@ public class EventOverviewCtrl implements Initializable {
         Pane userContainer = (Pane) button.getParent();
         User user = (User) userContainer.getUserData();
         serverUtils.removeUserFromEvent(event.getInviteCode(), user.getEmail());
-        refresh(this.event);
+        Event updated = serverUtils.getEventByUUID(event.getInviteCode());
+        refresh(updated);
         toggleParticipants();
     }
 
@@ -356,6 +410,44 @@ public class EventOverviewCtrl implements Initializable {
 
         base.getChildren().addAll(username, removeButton);
         base.setUserData(user);
+        base.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() > 1) {
+                mainCtrl.showEditUser(user, event);
+            }
+        });
+
+        return base;
+    }
+
+    private Node newParticipantCellFactory(User user) {
+        Pane base = new Pane();
+        base.setPrefWidth(newParticipantsList.getPrefWidth() - 20);
+        base.setPrefHeight(50);
+        base.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: black;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
+
+        Text username = new Text(user.getName());
+        final double nameTopPadding = base.getPrefHeight() / 2 + 5;
+        final double nameLeftPadding = base.getPrefWidth() / 16;
+        username.setLayoutX(base.getLayoutX() + nameLeftPadding);
+        username.setLayoutY(base.getLayoutY() + nameTopPadding);
+        username.setFont(Font.font("SansSerif", 15));
+        username.setFill(Paint.valueOf("#FFFFFF"));
+        username.setMouseTransparent(true);
+
+        CheckBox addCheckBox = new CheckBox();
+        final double checkboxTopPadding = 15;
+        final double checkboxLeftPadding = 3 * base.getPrefWidth() / 4;
+        addCheckBox.setLayoutX(username.getLayoutX() + checkboxLeftPadding);
+        addCheckBox.setLayoutY(base.getLayoutY() + checkboxTopPadding);
+
+        base.getChildren().addAll(username, addCheckBox);
+        base.setUserData(user);
+        base.setOnMouseClicked(mouseEvent -> addCheckBox.setSelected(!addCheckBox.isSelected()));
 
         return base;
     }
@@ -382,6 +474,17 @@ public class EventOverviewCtrl implements Initializable {
         participantsList.getItems().addAll(users);
     }
 
+    private void resetNewParticipantsContainer() {
+        newParticipantsList.getItems().removeAll(newParticipantsList.getItems());
+        List<Node> users = serverUtils.getUsers()
+                .stream()
+                .filter(user -> !event.getParticipants().contains(user)) // users not already added
+                .filter(user -> user.getEventID().equals(event.getInviteCode())) // only users part of this event
+                .map(this::newParticipantCellFactory)
+                .toList();
+        newParticipantsList.getItems().addAll(users);
+    }
+
     /**
      * Changes the background color of an FXML node.
      * Will add color if not already present.
@@ -401,5 +504,42 @@ public class EventOverviewCtrl implements Initializable {
         }
 
         node.setStyle(currentStyle + newColor);
+    }
+
+    public void onBackClicked(MouseEvent event) {
+        mainCtrl.showHomePage();
+    }
+
+    public void onNewParticipantClicked() {
+        mainCtrl.showCreateUser(event);
+    }
+
+    /**
+     * Adds the selected participants to the event.
+     */
+    public void onAddParticipantsConfirm() {
+        List<Pane> selectedPanes = newParticipantsList
+                .getItems()
+                .stream()
+                .map(node -> (Pane) node)
+                .filter(pane -> pane.getChildren()
+                        .stream()
+                        .filter(child -> child instanceof CheckBox)
+                        .map(child -> (CheckBox) child)
+                        .findFirst()
+                        .get()
+                        .isSelected())
+                .toList();
+        List<User> selectedUsers = selectedPanes
+                .stream()
+                .map(pane -> (User) pane.getUserData())
+                .toList();
+
+        Event updated = event;
+        for (User u : selectedUsers) {
+            updated = serverUtils.addUserToEvent(updated, u);
+        }
+        refresh(updated);
+        toggleParticipants();
     }
 }

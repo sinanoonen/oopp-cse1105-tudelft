@@ -20,10 +20,12 @@ import static com.google.inject.Guice.createInjector;
 
 import client.scenes.AddEventCtrl;
 import client.scenes.AddExpenseCtrl;
+import client.scenes.AdminLoginCtrl;
 import client.scenes.AdminOverviewCtrl;
 import client.scenes.EventOverviewCtrl;
 import client.scenes.HomePageCtrl;
 import client.scenes.MainCtrl;
+import client.scenes.ManageUserCtrl;
 import client.scenes.SettingsCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;
@@ -46,15 +48,25 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-
         var homePage = FXML.load(HomePageCtrl.class, "client", "scenes", "HomePage.fxml");
         var eventOverview = FXML.load(EventOverviewCtrl.class, "client", "scenes", "EventOverview.fxml");
         var addEvent = FXML.load(AddEventCtrl.class, "client", "scenes", "AddEvent.fxml");
         var settings = FXML.load(SettingsCtrl.class, "client", "scenes", "Settings.fxml");
         var adminOverview = FXML.load(AdminOverviewCtrl.class, "client", "scenes", "AdminOverview.fxml");
+
         var addExpense = FXML.load(AddExpenseCtrl.class, "client", "scenes", "AddExpense.fxml");
+        var manageUser = FXML.load(ManageUserCtrl.class, "client", "scenes", "ManageUser.fxml");
+        var adminLogin = FXML.load(AdminLoginCtrl.class, "client", "scenes", "AdminLogin.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, homePage, eventOverview, addEvent, settings, adminOverview, addExpense);
+        mainCtrl.initialize(primaryStage,
+                homePage,
+                eventOverview,
+                addEvent,
+                settings,
+                adminOverview,
+                addExpense,
+                manageUser,
+                adminLogin);
     }
 }

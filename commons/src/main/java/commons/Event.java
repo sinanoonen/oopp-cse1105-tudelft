@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import java.awt.Color;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -37,6 +38,9 @@ public class Event {
     private List<Payment> payments;
     @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Tag> availableTags;
+
+    private LocalDateTime creationDate;
+    private LocalDateTime lastActivity;
 
     @SuppressWarnings("unused")
     protected Event() {
@@ -64,6 +68,8 @@ public class Event {
                     new Tag("Travel", new Color(224, 102, 102))
                 )
         );
+        this.creationDate = LocalDateTime.now();
+        this.lastActivity = LocalDateTime.now();
     }
 
     /**
@@ -81,22 +87,27 @@ public class Event {
 
     public void setInviteCode(UUID uuid) {
         this.inviteCode = uuid;
+        setLastActivity(LocalDateTime.now());
     }
 
     public void setAvailableTags(Set<Tag> availableTags) {
         this.availableTags = availableTags;
+        setLastActivity(LocalDateTime.now());
     }
 
     public void setExpenses(List<Expense> expenses) {
         this.expenses = expenses;
+        setLastActivity(LocalDateTime.now());
     }
 
     public void setParticipants(Set<User> participants) {
         this.participants = participants;
+        setLastActivity(LocalDateTime.now());
     }
 
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
+        setLastActivity(LocalDateTime.now());
     }
 
     /**
@@ -168,6 +179,7 @@ public class Event {
      */
     public void setTitle(String title) {
         this.title = title;
+        setLastActivity(LocalDateTime.now());
     }
 
     /**
@@ -177,6 +189,7 @@ public class Event {
      */
     public void addTag(Tag tag) {
         availableTags.add(tag);
+        setLastActivity(LocalDateTime.now());
     }
 
     /**
@@ -199,6 +212,7 @@ public class Event {
         if (!this.availableTags.contains(tag)) {
             throw new IllegalArgumentException("Tag not found");
         }
+        setLastActivity(LocalDateTime.now());
         return availableTags.remove(tag);
     }
 
@@ -212,6 +226,7 @@ public class Event {
         if (user == null) {
             return false;
         }
+        setLastActivity(LocalDateTime.now());
         return participants.add(user);
     }
 
@@ -222,6 +237,7 @@ public class Event {
      * @return true if operation successful, false otherwise
      */
     public boolean removeParticipant(User user) {
+        setLastActivity(LocalDateTime.now());
         return participants.remove(user);
     }
 
@@ -235,6 +251,7 @@ public class Event {
         if (transaction == null) {
             return false;
         }
+        setLastActivity(LocalDateTime.now());
         boolean trash = transaction instanceof Expense
                 ? expenses.add((Expense) transaction)
                 : payments.add((Payment) transaction);
@@ -248,6 +265,7 @@ public class Event {
      * @return true if operation successful, false otherwise
      */
     public boolean removeTransaction(Transaction transaction) {
+        setLastActivity(LocalDateTime.now());
         return transaction instanceof Expense
                 ? expenses.remove(transaction)
                 : payments.remove(transaction);
@@ -360,5 +378,41 @@ public class Event {
                 + ", commons.transactions="
                 + transactions()
                 + '}';
+    }
+
+    /**
+     * Getter for the creation date of the event.
+     *
+     * @return the creation date
+     */
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    /**
+     * Setter for the creation date.
+     *
+     * @param creationDate the new date
+     */
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    /**
+     * Getter for the last activity of the event.
+     *
+     * @return the time of the last activity
+     */
+    public LocalDateTime getLastActivity() {
+        return lastActivity;
+    }
+
+    /**
+     * Setter for the last activity.
+     *
+     * @param lastActivity the time of the last activity
+     */
+    public void setLastActivity(LocalDateTime lastActivity) {
+        this.lastActivity = lastActivity;
     }
 }

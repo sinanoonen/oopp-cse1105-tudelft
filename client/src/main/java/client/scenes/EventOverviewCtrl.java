@@ -472,7 +472,8 @@ public class EventOverviewCtrl implements Initializable {
         newParticipantsList.getItems().removeAll(newParticipantsList.getItems());
         List<Node> users = serverUtils.getUsers()
                 .stream()
-                .filter(user -> !event.getParticipants().contains(user))
+                .filter(user -> !event.getParticipants().contains(user)) // users not already added
+                .filter(user -> user.getEventID().equals(event.getInviteCode())) // only users part of this event
                 .map(this::newParticipantCellFactory)
                 .toList();
         newParticipantsList.getItems().addAll(users);

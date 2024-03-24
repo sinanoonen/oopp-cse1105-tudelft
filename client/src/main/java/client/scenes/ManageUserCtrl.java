@@ -139,7 +139,7 @@ public class ManageUserCtrl {
             HomePageCtrl.displayErrorPopup("Invalid email", errorPopup);
             return false;
         }
-        if (mode == ManageUserMode.CREATE && serverUtils.getUsers()
+        if (mode == ManageUserMode.CREATE && event.getParticipants()
                 .stream()
                 .anyMatch(user -> user.getEmail().equals(emailField.getText()))
         ) {

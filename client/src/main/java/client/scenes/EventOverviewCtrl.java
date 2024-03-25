@@ -172,6 +172,9 @@ public class EventOverviewCtrl implements Initializable {
         }
         titleBox.setVisible(false);
         title.setEditable(false);
+        if (title.getText().equals(event.getTitle())) {
+            return;
+        }
         event.setTitle(title.getText());
         Event updated = serverUtils.updateEvent(event);
         refresh(updated);
@@ -524,6 +527,10 @@ public class EventOverviewCtrl implements Initializable {
 
     public void onNewParticipantClicked() {
         mainCtrl.showCreateUser(event);
+    }
+
+    public void onNewExpenseClicked() {
+        mainCtrl.showAddExpense(event);
     }
 
     /**

@@ -154,7 +154,12 @@ public class MainCtrl {
         primaryStage.setScene(adminOverview);
     }
 
-    private void showAddExpense(Event event) {
+    /**
+     * Redirects client to a page to create a new expense.
+     *
+     * @param event event to which the expense is to be added
+     */
+    public void showAddExpense(Event event) {
         primaryStage.setTitle("New Expense");
         primaryStage.setScene(addExpense);
         addExpenseCtrl.refresh(event);
@@ -186,7 +191,7 @@ public class MainCtrl {
     /**
      * Shows the admin login.
      */
-    private void showAdminLogin() {
+    public void showAdminLogin() {
         primaryStage.setTitle("Admin Login");
         primaryStage.setScene(adminLogin);
     }

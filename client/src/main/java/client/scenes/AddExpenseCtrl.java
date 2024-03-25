@@ -99,8 +99,8 @@ public class AddExpenseCtrl {
             return;
         }
         participants = event.getParticipants().stream()
-                        .map(User::getName)
-                                .toList();
+                .map(User::getName)
+                .toList();
         whoPaid.getItems().addAll(participants);
         currencyChoiceBox.getItems().addAll(currencies);
         expenseTags.getItems().addAll(tags);
@@ -233,6 +233,7 @@ public class AddExpenseCtrl {
 
         }
         clearFields();
+        mainCtrl.showEventOverview(event);
     }
 
     private void clearFields() {

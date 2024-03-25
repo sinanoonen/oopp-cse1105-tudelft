@@ -101,5 +101,6 @@
             <Font name="SansSerif Bold" size="19.0" />
          </font>
       </Button>
+      <TextField layoutX="50.0" layoutY="188.0" prefHeight="26.0" prefWidth="302.0" promptText="Filter" />
    </children>
 </AnchorPane>

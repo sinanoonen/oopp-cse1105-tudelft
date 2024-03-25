@@ -170,12 +170,12 @@ public class HomePageCtrl implements Initializable {
             displayInputError("Invalid invite code");
             return;
         }
-        Event event = serverUtils.getEventByUUID(uuid);
-        if (event == null) {
+        try {
+            Event event = serverUtils.getEventByUUID(uuid);
+            mainCtrl.showEventOverview(event);
+        } catch (Exception e) {
             displayInputError("Cannot find event");
-            return;
         }
-        mainCtrl.showEventOverview(event);
     }
 
     private Node eventCellFactory(Event event) {

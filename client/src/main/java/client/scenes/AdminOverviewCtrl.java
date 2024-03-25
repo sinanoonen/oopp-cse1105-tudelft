@@ -326,4 +326,8 @@ public class AdminOverviewCtrl implements Initializable {
             showAlert("Error", "No event selected for delete.");
         }
     }
+
+    public void exit() {
+        mainCtrl.showHomePage();
+    }
 }

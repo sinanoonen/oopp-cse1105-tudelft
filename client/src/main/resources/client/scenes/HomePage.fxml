@@ -18,7 +18,7 @@
             <Font name="SansSerif Bold" size="27.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="177.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Definitively Not Splitser">
+      <Text fill="WHITE" layoutX="51.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Definitively Not Splitser">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
@@ -79,5 +79,6 @@
          </children>
       </Pane>
       <Pane id="darkener" fx:id="screenDarkener" mouseTransparent="true" onMouseClicked="#hidePopUps" opacity="0.3" prefHeight="623.0" prefWidth="601.0" style="-fx-background-color: black;" visible="false" />
+      <Pane fx:id="adminArea" onMouseClicked="#onAdminAreaClicked" onMouseEntered="#toggleAdminHover" onMouseExited="#toggleAdminHover" prefHeight="94.0" prefWidth="126.0" style="-fx-background-color: #333333;" />
    </children>
 </AnchorPane>

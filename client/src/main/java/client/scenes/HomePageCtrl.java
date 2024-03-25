@@ -55,12 +55,22 @@ public class HomePageCtrl implements Initializable {
     private Pane settingClickArea;
     @FXML
     private Pane quitClickArea;
-
+    @FXML
+    private Pane adminArea;
 
     @Inject
     public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
     }
 
     /**
@@ -89,12 +99,9 @@ public class HomePageCtrl implements Initializable {
         }
     }
 
-
-
     public void showSettings() {
         mainCtrl.showSettings();
     }
-
 
     /**
      * Shows the add event overlay.
@@ -132,6 +139,21 @@ public class HomePageCtrl implements Initializable {
         screenDarkener.setMouseTransparent(true);
     }
 
+    /**
+     * Handles highlighting the admin area when hovered over.
+     */
+    public void toggleAdminHover() {
+        if (adminArea.getStyle().contains("#333333")) {
+            changeStyleAttribute(adminArea, "-fx-background-color", "#2b2b2b");
+        } else {
+            changeStyleAttribute(adminArea, "-fx-background-color", "#333333");
+        }
+    }
+
+    public void onAdminAreaClicked() {
+        mainCtrl.showAdminLogin();
+    }
+
     public void createEvent() {
         mainCtrl.showAddEvent();
     }
@@ -148,12 +170,12 @@ public class HomePageCtrl implements Initializable {
             displayInputError("Invalid invite code");
             return;
         }
-        Event event = serverUtils.getEventByUUID(uuid);
-        if (event == null) {
+        try {
+            Event event = serverUtils.getEventByUUID(uuid);
+            mainCtrl.showEventOverview(event);
+        } catch (Exception e) {
             displayInputError("Cannot find event");
-            return;
         }
-        mainCtrl.showEventOverview(event);
     }
 
     private Node eventCellFactory(Event event) {
@@ -225,12 +247,26 @@ public class HomePageCtrl implements Initializable {
         fadeIn.play();
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
-        } else {
-            UIUtils.deactivateHighContrastMode(root);
+
+    /**
+     * Changes the style attribute of an FXML node.
+     * Will add attribute if not already present.
+     *
+     * @param node node whose style attribute to change
+     * @param attribute style attribute to change
+     * @param value value of the style attribute
+     */
+    private void changeStyleAttribute(Node node, String attribute, String value) {
+        String currentStyle = node.getStyle();
+        String newAttribute = attribute + ": " + value + ";";
+
+        if (currentStyle.contains(attribute)) {
+            // remove existing attribute
+            int startIndex = currentStyle.indexOf(attribute);
+            int endIndex = currentStyle.indexOf(";", startIndex);
+            currentStyle = currentStyle.substring(0, startIndex) + currentStyle.substring(endIndex + 1);
         }
+
+        node.setStyle(currentStyle + newAttribute);
     }
 }

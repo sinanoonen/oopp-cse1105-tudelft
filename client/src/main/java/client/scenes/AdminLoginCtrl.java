@@ -56,4 +56,8 @@ public class AdminLoginCtrl {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    public void cancel() {
+        mainCtrl.showHomePage();
+    }
 }

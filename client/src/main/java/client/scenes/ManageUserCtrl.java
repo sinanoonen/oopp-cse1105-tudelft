@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -23,6 +24,8 @@ public class ManageUserCtrl {
     ManageUserMode mode;
     Event event;
 
+    @FXML
+    private AnchorPane root;
     @FXML
     private Text title;
     @FXML

@@ -80,6 +80,8 @@ public class EventOverviewCtrl implements Initializable {
     private ListView<Node> transactionContainer;
     @FXML
     private Hyperlink backLink;
+    @FXML
+    private Pane errorPopup;
 
     @Inject
     public EventOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
@@ -97,7 +99,7 @@ public class EventOverviewCtrl implements Initializable {
     }
 
     /**
-     * Method to refresh the scene. This is needed for some reason.
+     * Method to refresh the scene.
      */
     public void refresh(Event event) {
 
@@ -172,6 +174,9 @@ public class EventOverviewCtrl implements Initializable {
         }
         titleBox.setVisible(false);
         title.setEditable(false);
+        if (title.getText().equals(event.getTitle())) {
+            return;
+        }
         event.setTitle(title.getText());
         Event updated = serverUtils.updateEvent(event);
         refresh(updated);
@@ -293,6 +298,19 @@ public class EventOverviewCtrl implements Initializable {
         Button button = (Button) actionEvent.getSource();
         Pane userContainer = (Pane) button.getParent();
         User user = (User) userContainer.getUserData();
+
+        System.out.println(event.transactions());
+        System.out.println(event.transactions()
+                .stream()
+                .filter(t -> t instanceof Expense)
+                .map(t -> ((Expense) t).getDebts().keySet())
+                .toList()
+        );
+
+        if (event.getTotalDebt(user) != 0) {
+            HomePageCtrl.displayErrorPopup("User has debts; cannot be deleted", errorPopup);
+            return;
+        }
         serverUtils.removeUserFromEvent(event.getInviteCode(), user.getEmail());
         Event updated = serverUtils.getEventByUUID(event.getInviteCode());
         refresh(updated);
@@ -524,6 +542,14 @@ public class EventOverviewCtrl implements Initializable {
 
     public void onNewParticipantClicked() {
         mainCtrl.showCreateUser(event);
+    }
+
+    public void onDebtsClicked() {
+        mainCtrl.showDebtOverview(event);
+    }
+
+    public void onNewExpenseClicked() {
+        mainCtrl.showAddExpense(event);
     }
 
     /**

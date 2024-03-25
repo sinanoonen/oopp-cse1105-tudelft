@@ -40,6 +40,9 @@ public class MainCtrl {
     private EventOverviewCtrl eventOverviewCtrl;
     private Scene eventOverview;
 
+    private DebtOverviewCtrl debtOverviewCtrl;
+    private Scene debtOverview;
+
     private AddEventCtrl addEventCtrl;
     private Scene addEvent;
 
@@ -69,6 +72,7 @@ public class MainCtrl {
     public void initialize(Stage primaryStage,
                            Pair<HomePageCtrl, Parent> homePage,
                            Pair<EventOverviewCtrl, Parent> eventOverview,
+                           Pair<DebtOverviewCtrl, Parent> debtOverview,
                            Pair<AddEventCtrl, Parent> addEvent,
                            Pair<SettingsCtrl, Parent> settings,
                            Pair<AdminOverviewCtrl, Parent> adminOverview,
@@ -83,6 +87,9 @@ public class MainCtrl {
 
         this.eventOverviewCtrl = eventOverview.getKey();
         this.eventOverview = new Scene(eventOverview.getValue());
+
+        this.debtOverviewCtrl = debtOverview.getKey();
+        this.debtOverview = new Scene(debtOverview.getValue());
 
         this.addEventCtrl = addEvent.getKey();
         this.addEvent = new Scene(addEvent.getValue());
@@ -136,6 +143,16 @@ public class MainCtrl {
         eventOverviewCtrl.refresh(event);
     }
 
+    /**
+     * Shows the debt overview.
+     *
+     * @param  event the event that triggered the debt overview display
+     */
+    public void showDebtOverview(Event event) {
+        primaryStage.setTitle("Debt Overview");
+        primaryStage.setScene(debtOverview);
+        debtOverviewCtrl.refresh(event);
+    }
 
     /**
      * Show the settings page.
@@ -152,9 +169,15 @@ public class MainCtrl {
     public void showAdminOverview() {
         primaryStage.setTitle("Admin Overview");
         primaryStage.setScene(adminOverview);
+        adminOverviewCtrl.refresh();
     }
 
-    private void showAddExpense(Event event) {
+    /**
+     * Redirects client to a page to create a new expense.
+     *
+     * @param event event to which the expense is to be added
+     */
+    public void showAddExpense(Event event) {
         primaryStage.setTitle("New Expense");
         primaryStage.setScene(addExpense);
         addExpenseCtrl.refresh(event);
@@ -186,7 +209,7 @@ public class MainCtrl {
     /**
      * Shows the admin login.
      */
-    private void showAdminLogin() {
+    public void showAdminLogin() {
         primaryStage.setTitle("Admin Login");
         primaryStage.setScene(adminLogin);
     }

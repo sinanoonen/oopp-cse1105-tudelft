@@ -87,6 +87,17 @@ public class AdminOverviewCtrl implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
+    }
+
+    /**
+     * Refresh method for the admin overview.
+     */
+    public void refresh() {
         ifSortByCreationDate = false;
         ifSortByLastActivity = false;
         ifSortByTitle = false;
@@ -98,12 +109,6 @@ public class AdminOverviewCtrl implements Initializable {
         loadEvents();
         setupEventListView();
         setupEventSelection();
-
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
-        } else {
-            UIUtils.deactivateHighContrastMode(root);
-        }
     }
 
     private void loadEvents() {
@@ -325,5 +330,9 @@ public class AdminOverviewCtrl implements Initializable {
         } else {
             showAlert("Error", "No event selected for delete.");
         }
+    }
+
+    public void exit() {
+        mainCtrl.showHomePage();
     }
 }

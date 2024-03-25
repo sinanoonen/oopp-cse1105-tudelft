@@ -38,6 +38,8 @@ public class Main {
         //SpringApplication.run(Main.class, args);
         ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
         AdminPasswordService passwordService = context.getBean(AdminPasswordService.class);
-        System.out.println("Admin Password: " + passwordService.getAdminPassword());
+        final String ANSI_RED = "\u001B[31m";
+        final String ANSI_RESET = "\u001B[0m";
+        System.out.println(ANSI_RED + "Admin Password: " + passwordService.getAdminPassword() + ANSI_RESET);
     }
 }

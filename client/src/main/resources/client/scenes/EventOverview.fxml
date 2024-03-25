@@ -27,7 +27,7 @@
             <Cursor fx:constant="TEXT" />
          </cursor>
       </TextField>
-      <Button fx:id="inviteCodeButton" layoutX="423.0" layoutY="76.0" mnemonicParsing="false" onMouseClicked="#copyInviteCode" onMousePressed="#toggleDarkenedButton" onMouseReleased="#toggleDarkenedButton" prefHeight="40.0" prefWidth="136.0" style="-fx-background-color: #3f3f3f; -fx-background-radius: 7; -fx-border-color: #C30052; -fx-border-width: 2; -fx-border-radius: 5;" text="Invite Code" textAlignment="CENTER" textFill="WHITE">
+      <Button fx:id="inviteCodeButton" layoutX="423.0" layoutY="45.0" mnemonicParsing="false" onMouseClicked="#copyInviteCode" onMousePressed="#toggleDarkenedButton" onMouseReleased="#toggleDarkenedButton" prefHeight="40.0" prefWidth="136.0" style="-fx-background-color: #3f3f3f; -fx-background-radius: 7; -fx-border-color: #C30052; -fx-border-width: 2; -fx-border-radius: 5;" text="Invite Code" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="SansSerif Bold" size="19.0" />
          </font>
@@ -43,7 +43,7 @@
          </children>
       </StackPane>
       <ListView id="transaction_container" fx:id="transactionContainer" layoutX="25.0" layoutY="221.0" prefHeight="400.0" prefWidth="550.0" style="-fx-background-color: #3f3f3f; -fx-background-radius: 10; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10; -fx-background-insets: 0; -fx-padding: 0; -fx-background: transparent;" />
-      <Button layoutX="52.0" layoutY="144.0" mnemonicParsing="false" onAction="#toggleParticipants" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="Participants" textFill="WHITE">
+      <Button layoutX="426.0" layoutY="102.0" mnemonicParsing="false" onAction="#toggleParticipants" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="Participants" textFill="WHITE">
          <font>
             <Font name="SansSerif Bold" size="15.0" />
          </font>
@@ -87,5 +87,19 @@
             <Font name="System Bold" size="50.0" />
          </font>
       </Text>
+      <Pane fx:id="errorPopup" layoutX="60.0" layoutY="546.0" mouseTransparent="true" opacity="0.0" prefHeight="59.0" prefWidth="486.0" style="-fx-background-color: #f65656; -fx-border-color: #78201f; -fx-border-width: 4; -fx-background-radius: 10; -fx-border-radius: 8;">
+         <children>
+            <Text layoutX="11.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;message&gt;" textAlignment="CENTER" wrappingWidth="464.53668212890625">
+               <font>
+                  <Font name="SansSerif Bold" size="19.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Button layoutX="426.0" layoutY="160.0" mnemonicParsing="false" onAction="#onDebtsClicked" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="Debts" textFill="WHITE">
+         <font>
+            <Font name="SansSerif Bold" size="19.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

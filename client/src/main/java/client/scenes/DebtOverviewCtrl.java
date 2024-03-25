@@ -27,6 +27,7 @@ public class DebtOverviewCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+    private Event event;
     private DebtSettler debtSettler;
 
     @FXML
@@ -56,10 +57,12 @@ public class DebtOverviewCtrl implements Initializable {
      */
     public void refresh(Event event) {
         this.debtSettler = new DebtSettler(event);
+        this.event = event;
 
         debtSettleButton.requestFocus();
 
         buttonDarkener.setVisible(false);
+        changeBackgroundColor(backLink, "transparent");
 
         resetParticipantsDebtContainer();
     }
@@ -70,7 +73,7 @@ public class DebtOverviewCtrl implements Initializable {
     }
 
     public void onBackClicked(MouseEvent event) {
-        mainCtrl.showHomePage();
+        mainCtrl.showEventOverview(this.event);
     }
 
     public void showDebtSettler(MouseEvent event) {

@@ -198,7 +198,7 @@ public class HomePageCtrl implements Initializable {
         final double titleLeftPadding = base.getPrefWidth() / 8;
         eventTitle.setLayoutX(base.getLayoutX() + titleLeftPadding);
         eventTitle.setLayoutY(base.getLayoutY() + titleTopPadding);
-        eventTitle.setFill(Paint.valueOf("white"));
+        eventTitle.setFill(Paint.valueOf("#FFFFFF"));
         eventTitle.setFont(Font.font("SansSerif"));
         eventTitle.setMouseTransparent(true);
 

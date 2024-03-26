@@ -89,6 +89,22 @@ public class ServerUtils {
     }
 
     /**
+     * Uses long-polling to continuously get an event from the database by its UUID.
+     *
+     * @param event event to poll
+     * @return a deferred result of the event
+     */
+    public DeferredResult<Event> longPollEvent(Event event) {
+        return ClientBuilder.newClient(new ClientConfig()
+                        .property(ClientProperties.CONNECT_TIMEOUT, 10000)
+                        .property(ClientProperties.READ_TIMEOUT, 10000))
+                .target(SERVER).path("api/events/" + event.getInviteCode().toString() + "/poll")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {});
+    }
+
+    /**
      * Sends HTTP request to add expense to db.
      *
      * @param uuid uuid of event to add expense to

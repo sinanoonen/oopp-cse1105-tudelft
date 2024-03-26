@@ -70,15 +70,27 @@ public class EventController {
      * @return the event
      */
     @GetMapping("/{uuid}")
-    public DeferredResult<Event> getById(@PathVariable("uuid") UUID uuid) {
-        final long pollTime = 2000;
+    public ResponseEntity<Event> getById(@PathVariable("uuid") UUID uuid) {
+        if (!repo.existsById(uuid)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(repo.findById(uuid).get());
+    }
+
+    /**
+     * Get an event by its UUID.
+     *
+     * @param uuid the UUID of the event
+     * @return the event
+     */
+    @GetMapping("/{uuid}/poll")
+    public DeferredResult<Event> pollById(@PathVariable("uuid") UUID uuid) {
         final long timeoutTime = 5000;
         DeferredResult<Event> res = new DeferredResult<>(timeoutTime);
         res.onTimeout(() -> res.setErrorResult("Request timed out"));
 
         Thread pollHandler = new Thread(() -> {
             try {
-                Thread.sleep(pollTime);
                 Optional<Event> optionalEvent = repo.findById(uuid);
                 if (optionalEvent.isEmpty()) {
                     throw new IllegalArgumentException("Event not found");

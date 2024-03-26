@@ -2,6 +2,7 @@ package server.api;
 
 import commons.Event;
 import commons.User;
+import commons.WebSocketMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -27,17 +28,18 @@ class WebSocketEventControllerTest {
         Event testEvent = getEvent("test");
         fakeRepo.save(testEvent);
 
-        controller.deleteEvent(testEvent.getInviteCode());
+        controller.deleteEvent(testEvent.getInviteCode().toString());
 
         assertEquals("/topic/eventsUpdated", messagingTemplate.getLastDestination());
-        assertEquals("Event deleted: " + testEvent.getInviteCode(), messagingTemplate.getLastPayload());
+        WebSocketMessage expectedMessage = new WebSocketMessage("Event deleted: " + testEvent.getInviteCode());
+        assertEquals(expectedMessage, messagingTemplate.getLastPayload());
     }
 
     @Test
     public void deleteEventWhenDoesNotExist() {
         UUID nonExistentEventId = UUID.randomUUID();
 
-        controller.deleteEvent(nonExistentEventId);
+        controller.deleteEvent(nonExistentEventId.toString());
 
         assertFalse(fakeRepo.existsById(nonExistentEventId));
 

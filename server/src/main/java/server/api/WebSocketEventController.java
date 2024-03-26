@@ -1,8 +1,11 @@
 package server.api;
 
 import java.util.UUID;
+
+import commons.WebSocketMessage;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import server.database.EventRepository;
@@ -29,13 +32,15 @@ public class WebSocketEventController {
     /**
      * Deletes an event.
      *
-     * @param uuid the uuid of the event
+     * @param uuidString the uuid string of the event
      */
     @MessageMapping("/deleteEvent")
-    public void deleteEvent(@Payload UUID uuid) {
+    public void deleteEvent(@Payload String uuidString) {
+        UUID uuid = UUID.fromString(uuidString);
         if (repo.existsById(uuid)) {
             repo.deleteById(uuid);
-            template.convertAndSend("/topic/eventsUpdated", "Event deleted: " + uuid);
+            WebSocketMessage message = new WebSocketMessage("Event deleted: " + uuid);
+            template.convertAndSend("/topic/eventsUpdated", message);
         }
     }
 }

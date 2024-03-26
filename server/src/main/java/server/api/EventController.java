@@ -7,6 +7,8 @@ import commons.transactions.Payment;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import jakarta.persistence.EntityNotFoundException;
+
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 import server.database.EventRepository;
 import server.database.ExpenseRepository;
 import server.database.PaymentRepository;
@@ -222,13 +225,27 @@ public class EventController {
      * @return list of all expenses
      */
     @GetMapping("{uuid}/transactions")
-    public ResponseEntity<List<Transaction>> getAllTransactionsForEvent(@PathVariable("uuid") UUID uuid) {
-        if (!repo.existsById(uuid)) {
-            return ResponseEntity.badRequest().build();
-        }
-        Event event = repo.findById(uuid).get();
-        List<Transaction> transactions = event.transactions();
-        return ResponseEntity.ok(transactions);
+    public DeferredResult<List<Transaction>> getAllTransactionsForEvent(@PathVariable("uuid") UUID uuid) {
+        final long pollTime = 2000;
+        final long timeoutTime = 5000;
+        DeferredResult<List<Transaction>> res = new DeferredResult<>(timeoutTime);
+        res.onTimeout(() -> res.setErrorResult("Request timed out"));
+
+        Thread pollHandler = new Thread(() -> {
+            try {
+                Thread.sleep(pollTime);
+                Optional<Event> optionalEvent = repo.findById(uuid);
+                if (optionalEvent.isEmpty()) {
+                    throw new IllegalArgumentException("Event not found");
+                }
+                Event event = optionalEvent.get();
+                res.setResult(event.transactions());
+            } catch (Exception e) {
+                res.setErrorResult("Event not found");
+            }
+        });
+        pollHandler.start();
+        return res;
     }
 
     /**

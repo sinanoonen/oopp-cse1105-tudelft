@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.ManageExpenseMode;
 import client.utils.ServerUtils;
 import commons.Event;
 import commons.User;
@@ -17,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -35,6 +37,8 @@ public class AddExpenseCtrl {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
 
+    @FXML
+    private Label title;
     @FXML
     private ChoiceBox<String> whoPaid;
     @FXML
@@ -62,17 +66,19 @@ public class AddExpenseCtrl {
     private Button cancelButton;
     @FXML
     private Button addButton;
-    private boolean initialized = false;
 
     private Event event;
     private List<String> participants = new ArrayList<>();
     private final List<String> currencies = List.of("EUR", "USD");
     private Set<Tag> tags;
 
+    private ManageExpenseMode mode;
+
     @Inject
     public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        mode = ManageExpenseMode.CREATE;
     }
 
 
@@ -81,43 +87,38 @@ public class AddExpenseCtrl {
      *
      * @param event event the expense belongs to
      */
-    public void refresh(Event event) {
+    public void refresh(ManageExpenseMode mode, Event event, Expense expense) {
         this.event = event;
         this.tags = event.getTags();
-        initialized = true;
-        initialize();
-    }
+        this.mode = mode;
+        if (mode == ManageExpenseMode.CREATE) {
+            participants = event.getParticipants().stream()
+                    .map(User::getName)
+                    .toList();
+            whoPaid.getItems().addAll(participants);
+            currencyChoiceBox.getItems().addAll(currencies);
+            expenseTags.getItems().addAll(tags);
+            expenseTags.setConverter(new StringConverter<Tag>() {
+                @Override
+                public String toString(Tag tag) {
+                    return tag != null ? tag.getName() : "";
+                }
 
-
-    /**
-     * Initializes fxml elements.
-     */
-    @FXML
-    public void initialize() {
-        if (!initialized) {
-            // Delay initialization until after refresh() is called
-            return;
+                @Override
+                public Tag fromString(String string) {
+                    return null;
+                }
+            });
+        } else {
+            title.setText("Edit Expense");
+            whoPaid.setValue(expense.getOwner());
+            description.setText(expense.getDescription());
+            amount.setText(Float.toString(expense.getAmount()));
+            datePicker.setValue(expense.getDate());
+            selectedTags.getItems().addAll(expense.getTags());
+            setupListViewCellFactory();
         }
-        participants = event.getParticipants().stream()
-                .map(User::getName)
-                .toList();
-        whoPaid.getItems().addAll(participants);
-        currencyChoiceBox.getItems().addAll(currencies);
-        expenseTags.getItems().addAll(tags);
-        expenseTags.setConverter(new StringConverter<Tag>() {
-            @Override
-            public String toString(Tag tag) {
-                return tag != null ? tag.getName() : "";
-            }
-
-            @Override
-            public Tag fromString(String string) {
-                return null;
-            }
-        });
     }
-
-
     /**
      * Shows the participants when clicked only some people button.
      */
@@ -199,30 +200,11 @@ public class AddExpenseCtrl {
     @FXML
     private void handleAddButtonClick() {
         try {
-            String owner = whoPaid.getValue();
-            String expenseDescription = description.getText();
-            float expenseAmount = Float.parseFloat(amount.getText());
-            LocalDate expenseDate = datePicker.getValue();
-            List<String> debtors = new ArrayList<>();
-            if (equallyEverybody.isSelected()) {
-                debtors = this.participants;
+            if (mode == ManageExpenseMode.CREATE) {
+                create();
             } else {
-                for (CheckBox checkBox : additionalCheckboxes) {
-                    if (checkBox.isSelected()) {
-                        debtors.add(checkBox.getText());
-                    }
-                }
+                update();
             }
-            ObservableList<Tag> selectedTagsList = selectedTags.getItems();
-            Set<Tag> selectedTagsSet = Set.copyOf(selectedTagsList);
-
-            Expense expense = new Expense(owner, expenseDate, expenseAmount, expenseDescription, debtors);
-            for (Tag tag : selectedTagsSet) {
-                expense.addTag(tag);
-            }
-
-            event.addTransaction(expense);
-            server.addExpense(event.getInviteCode(), expense);
 
         } catch (WebApplicationException e) {
 
@@ -266,6 +248,59 @@ public class AddExpenseCtrl {
             default:
                 break;
         }
+    }
+
+    public void create() {
+        String owner = whoPaid.getValue();
+        String expenseDescription = description.getText();
+        float expenseAmount = Float.parseFloat(amount.getText());
+        LocalDate expenseDate = datePicker.getValue();
+        List<String> debtors = new ArrayList<>();
+        if (equallyEverybody.isSelected()) {
+            debtors = this.participants;
+        } else {
+            for (CheckBox checkBox : additionalCheckboxes) {
+                if (checkBox.isSelected()) {
+                    debtors.add(checkBox.getText());
+                }
+            }
+        }
+        ObservableList<Tag> selectedTagsList = selectedTags.getItems();
+        Set<Tag> selectedTagsSet = Set.copyOf(selectedTagsList);
+
+        Expense expense = new Expense(owner, expenseDate, expenseAmount, expenseDescription, debtors);
+        for (Tag tag : selectedTagsSet) {
+            expense.addTag(tag);
+        }
+
+        event.addTransaction(expense);
+        server.addExpense(event.getInviteCode(), expense);
+
+    }
+
+    public void update(){
+        String owner = whoPaid.getValue();
+        String expenseDescription = description.getText();
+        float expenseAmount = Float.parseFloat(amount.getText());
+        LocalDate expenseDate = datePicker.getValue();
+        List<String> debtors = new ArrayList<>();
+        if (equallyEverybody.isSelected()) {
+            debtors = this.participants;
+        } else {
+            for (CheckBox checkBox : additionalCheckboxes) {
+                if (checkBox.isSelected()) {
+                    debtors.add(checkBox.getText());
+                }
+            }
+        }
+        ObservableList<Tag> selectedTagsList = selectedTags.getItems();
+        Set<Tag> selectedTagsSet = Set.copyOf(selectedTagsList);
+
+        Expense updated = new Expense(owner, expenseDate, expenseAmount, expenseDescription, debtors);
+        for (Tag tag : selectedTagsSet) {
+            updated.addTag(tag);
+        }
+        server.updateExpense(event.getInviteCode(), updated);
     }
 
 }

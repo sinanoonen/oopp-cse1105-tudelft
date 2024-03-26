@@ -100,6 +100,17 @@ public class ServerUtils {
                 .post(Entity.entity(expense, APPLICATION_JSON), Expense.class);
     }
 
+    //  @PutMapping("/{uuid}/transactions/expenses/{id}")
+    public Expense updateExpense(UUID uuid, Expense updated) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events/" + uuid.toString() + "/transactions/expenses/" + updated.getId())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(updated, APPLICATION_JSON), Expense.class);
+    }
+
+
+
     /**
      * Returns all users stored in the database.
      */

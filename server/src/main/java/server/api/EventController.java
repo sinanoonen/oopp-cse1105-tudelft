@@ -7,10 +7,10 @@ import commons.transactions.Payment;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+
+import java.time.LocalDate;
+import java.util.*;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -336,5 +336,43 @@ public class EventController {
         repo.save(event);
         return ResponseEntity.ok(event);
     }
+
+    @PutMapping("/{uuid}/transactions/expenses/{id}")
+    public ResponseEntity<Transaction> updateExpense( @PathVariable("uuid") UUID uuid, @PathVariable("id") Long id,
+                                                  @RequestBody Expense update) {
+        if (update == null) {
+            update = new Expense(null, null, 0, null, null, null);
+        }
+        if (id == null || update.getId() != id ) {
+            System.out.println("Received bad PUT request");
+            return ResponseEntity.badRequest().build();
+        }
+        var response = getTransactionByIdforEvent(uuid, id);
+        if (response.getStatusCode().isError()) {
+            System.out.println(" Received bad PUT request");
+            return response;
+        }
+        System.out.println("Received valid PUT request");
+        Expense expense = exRepo.findById(id).orElse(null);
+        assert expense != null;
+        //public Expense(String owner, LocalDate date, float amount, String description, List<String> participants
+        String owner = isNullOrEmpty(update.getOwner()) ? expense.getOwner() : update.getOwner();
+        LocalDate date = isNullOrEmpty(update.getOwner()) ? expense.getDate() : update.getDate();
+        float amount = update.getAmount() == 0 ? expense.getAmount() : update.getAmount();
+        String description = isNullOrEmpty(update.getDescription()) ? expense.getDescription() : update.getDescription();
+        Map<String, Float> debts = (update.getDebts().isEmpty() || update.getDebts() == null)
+                ? expense.getDebts() : update.getDebts();
+
+        expense.setOwner(owner);
+        expense.setDate(date);
+        expense.setAmount(amount);
+        expense.setDescription(description);
+        expense.setDebts(debts);
+
+        Expense savedExpense = exRepo.save(expense);
+        return ResponseEntity.ok(savedExpense);
+    }
+
+
 
 }

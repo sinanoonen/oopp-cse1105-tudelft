@@ -16,12 +16,10 @@
 
 package client.scenes;
 
-import client.utils.ClientUtils;
-import client.utils.Currency;
-import client.utils.Language;
-import client.utils.ManageUserMode;
+import client.utils.*;
 import commons.Event;
 import commons.User;
+import commons.transactions.Expense;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -180,7 +178,18 @@ public class MainCtrl {
     public void showAddExpense(Event event) {
         primaryStage.setTitle("New Expense");
         primaryStage.setScene(addExpense);
-        addExpenseCtrl.refresh(event);
+        addExpenseCtrl.refresh(ManageExpenseMode.CREATE,event,null);
+    }
+
+    /**
+     * Redirects client to a page to edit an exissting expense.
+     *
+     * @param event event to which the expense is to be edited
+     */
+    public void showEditExpense(Event event, Expense expense) {
+        primaryStage.setTitle("New Expense");
+        primaryStage.setScene(addExpense);
+        addExpenseCtrl.refresh(ManageExpenseMode.EDIT, event, expense);
     }
 
     /**

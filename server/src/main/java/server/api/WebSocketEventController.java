@@ -3,6 +3,7 @@ package server.api;
 import java.util.UUID;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import server.database.EventRepository;
 
@@ -13,29 +14,28 @@ import server.database.EventRepository;
 public class WebSocketEventController {
 
     private final EventRepository repo;
+    private final SimpMessagingTemplate template;
 
     /**
      * Constructor for the web socket controller.
      *
      * @param repo the event repository
      */
-    public WebSocketEventController(EventRepository repo) {
+    public WebSocketEventController(EventRepository repo, SimpMessagingTemplate template) {
         this.repo = repo;
+        this.template = template;
     }
 
     /**
      * Deletes an event.
      *
      * @param uuid the uuid of the event
-     * @return a message with the result
      */
     @MessageMapping("/deleteEvent")
-    public String deleteEvent(@Payload UUID uuid) {
+    public void deleteEvent(@Payload UUID uuid) {
         if (repo.existsById(uuid)) {
             repo.deleteById(uuid);
-            return "Deleted event with UUID: " + uuid;
-        } else {
-            return "Event not found with UUID: " + uuid;
+            template.convertAndSend("/topic/eventsUpdated", "Event deleted: " + uuid);
         }
     }
 }

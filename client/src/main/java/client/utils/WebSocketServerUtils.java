@@ -1,12 +1,13 @@
 package client.utils;
 
 import java.lang.reflect.Type;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.converter.StringMessageConverter;
-import org.springframework.messaging.simp.stomp.*;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
@@ -54,10 +55,15 @@ public class WebSocketServerUtils {
         });
     }
 
-
-    public void sendWebSocketMessage(String destination, String uuid) {
+    /**
+     * A method used to send web socket messages.
+     *
+     * @param destination the destination of the message
+     * @param message the message
+     */
+    public void sendWebSocketMessage(String destination, String message) {
         if (session != null && session.isConnected()) {
-            session.send(destination, uuid);
+            session.send(destination, message);
         }
     }
 }

@@ -1,11 +1,10 @@
 package server.api;
 
-import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * This is used to emulate a SimpMessagingTemplate for testing.
+ */
 public class TestSimpMessagingTemplate extends SimpMessagingTemplate {
     private String lastDestination;
     private Object lastPayload;

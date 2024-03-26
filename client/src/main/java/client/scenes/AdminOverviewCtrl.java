@@ -8,12 +8,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
 import commons.Event;
+import commons.WebSocketMessage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
-
-import commons.WebSocketMessage;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.UUID;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -334,7 +337,8 @@ public class AdminOverviewCtrl implements Initializable {
             Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationDialog.setTitle("Confirm Deletion");
             confirmationDialog.setHeaderText("Delete Event");
-            confirmationDialog.setContentText("Are you sure you want to delete the event: " + selectedEvent.getTitle() + "?");
+            confirmationDialog.setContentText("Are you sure you want to delete the event: "
+                + selectedEvent.getTitle() + "?");
 
             Optional<ButtonType> result = confirmationDialog.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {

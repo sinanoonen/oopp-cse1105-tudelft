@@ -2,6 +2,9 @@ package commons;
 
 import java.util.Objects;
 
+/**
+ * This class is used to send web socket messages with a specific format.
+ */
 public class WebSocketMessage {
     private String content;
 
@@ -21,8 +24,12 @@ public class WebSocketMessage {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (!(object instanceof WebSocketMessage that)) return false;
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof WebSocketMessage that)) {
+            return false;
+        }
         return Objects.equals(content, that.content);
     }
 

@@ -1,15 +1,17 @@
 package server.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import commons.Event;
 import commons.User;
 import commons.WebSocketMessage;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class WebSocketEventControllerTest {
     private WebSocketEventController controller;

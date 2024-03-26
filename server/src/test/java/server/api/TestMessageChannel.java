@@ -3,6 +3,9 @@ package server.api;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 
+/**
+ * This is a test class to simulate a message channel.
+ */
 public class TestMessageChannel implements MessageChannel {
     private Message<?> lastSentMessage;
 

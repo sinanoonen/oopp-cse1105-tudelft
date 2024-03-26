@@ -70,11 +70,27 @@ public class EventController {
      * @return the event
      */
     @GetMapping("/{uuid}")
-    public ResponseEntity<Event> getById(@PathVariable("uuid") UUID uuid) {
-        if (!repo.existsById(uuid)) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(repo.findById(uuid).get());
+    public DeferredResult<Event> getById(@PathVariable("uuid") UUID uuid) {
+        final long pollTime = 2000;
+        final long timeoutTime = 5000;
+        DeferredResult<Event> res = new DeferredResult<>(timeoutTime);
+        res.onTimeout(() -> res.setErrorResult("Request timed out"));
+
+        Thread pollHandler = new Thread(() -> {
+            try {
+                Thread.sleep(pollTime);
+                Optional<Event> optionalEvent = repo.findById(uuid);
+                if (optionalEvent.isEmpty()) {
+                    throw new IllegalArgumentException("Event not found");
+                }
+                Event event = optionalEvent.get();
+                res.setResult(event);
+            } catch (Exception e) {
+                res.setErrorResult("Event not found");
+            }
+        });
+        pollHandler.start();
+        return res;
     }
 
     /**
@@ -220,32 +236,19 @@ public class EventController {
     }
 
     /**
-     * Get all the expenses belong to an event.
+     * Get all transactions belong to an event.
      *
-     * @return list of all expenses
+     * @param uuid id of the event
+     * @return list of transactions
      */
     @GetMapping("{uuid}/transactions")
-    public DeferredResult<List<Transaction>> getAllTransactionsForEvent(@PathVariable("uuid") UUID uuid) {
-        final long pollTime = 2000;
-        final long timeoutTime = 5000;
-        DeferredResult<List<Transaction>> res = new DeferredResult<>(timeoutTime);
-        res.onTimeout(() -> res.setErrorResult("Request timed out"));
-
-        Thread pollHandler = new Thread(() -> {
-            try {
-                Thread.sleep(pollTime);
-                Optional<Event> optionalEvent = repo.findById(uuid);
-                if (optionalEvent.isEmpty()) {
-                    throw new IllegalArgumentException("Event not found");
-                }
-                Event event = optionalEvent.get();
-                res.setResult(event.transactions());
-            } catch (Exception e) {
-                res.setErrorResult("Event not found");
-            }
-        });
-        pollHandler.start();
-        return res;
+    public ResponseEntity<List<Transaction>> getAllTransactionsForEvent(@PathVariable("uuid") UUID uuid) {
+        if (!repo.existsById(uuid)) {
+            return ResponseEntity.badRequest().build();
+        }
+        Event event = repo.findById(uuid).get();
+        List<Transaction> transactions = event.transactions();
+        return ResponseEntity.ok(transactions);
     }
 
     /**

@@ -22,6 +22,7 @@ import commons.Event;
 import commons.Quote;
 import commons.User;
 import commons.transactions.Expense;
+import commons.transactions.Transaction;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -34,6 +35,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
+import org.springframework.web.context.request.async.DeferredResult;
 
 /**
  * Utilities for the server.

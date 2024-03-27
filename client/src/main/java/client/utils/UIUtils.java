@@ -3,12 +3,10 @@ package client.utils;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
 /**

@@ -123,6 +123,10 @@ public class MainCtrl {
         primaryStage.show();
     }
 
+    public Stage getPrimaryStage() {
+        return this.primaryStage;
+    }
+
     /**
      * Displays the home page.
      */

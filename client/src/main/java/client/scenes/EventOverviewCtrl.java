@@ -97,6 +97,16 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        serverUtils.longPollEvents(e -> {
+            // If we have not yet opened the overview ever or if we are not looking at the event
+            if (event == null
+                    || !e.getInviteCode().equals(event.getInviteCode())
+                    || !mainCtrl.getPrimaryStage().getTitle().equals(event.getTitle())) {
+                return;
+            }
+            refresh(e);
+        });
     }
 
     /**

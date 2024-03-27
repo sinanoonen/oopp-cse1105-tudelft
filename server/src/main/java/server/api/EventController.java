@@ -8,11 +8,9 @@ import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import jakarta.persistence.EntityNotFoundException;
 
-import java.time.Duration;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +36,8 @@ public class EventController {
     private final ExpenseRepository exRepo;
     private final PaymentRepository payRepo;
 
+    private final Map<Object, Consumer<Event>> listeners;
+
     /**
      * Constructor for the event controller.
      *
@@ -51,6 +51,7 @@ public class EventController {
         this.repo = repo;
         this.exRepo = exRepo;
         this.payRepo = payRepo;
+        this.listeners = new HashMap<>();
     }
 
     /**
@@ -84,25 +85,15 @@ public class EventController {
      * @return the event
      */
     @GetMapping("/{uuid}/poll")
-    public DeferredResult<Event> pollById(@PathVariable("uuid") UUID uuid) {
+    public DeferredResult<ResponseEntity<Event>> pollById(@PathVariable("uuid") UUID uuid) {
         final long timeoutTime = 5000;
-        DeferredResult<Event> res = new DeferredResult<>(timeoutTime);
-        res.onTimeout(() -> res.setErrorResult("Request timed out"));
+        ResponseEntity<Event> noContent = ResponseEntity.noContent().build();
+        DeferredResult<ResponseEntity<Event>> res = new DeferredResult<>(timeoutTime, noContent);
 
-        Thread pollHandler = new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-                Optional<Event> optionalEvent = repo.findById(uuid);
-                if (optionalEvent.isEmpty()) {
-                    throw new IllegalArgumentException("Event not found");
-                }
-                Event event = optionalEvent.get();
-                res.setResult(event);
-            } catch (Exception e) {
-                res.setErrorResult("Event not found");
-            }
-        });
-        pollHandler.start();
+        Object key = new Object();
+        listeners.put(key, e -> res.setResult(ResponseEntity.ok(e)));
+        res.onCompletion(() -> listeners.remove(key));
+
         return res;
     }
 
@@ -119,6 +110,7 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
         Event saved = repo.save(updatedEvent);
+        listeners.forEach((k, fn) -> fn.accept(saved));
         return ResponseEntity.ok(saved);
     }
 
@@ -147,6 +139,8 @@ public class EventController {
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> deleteEvent(@PathVariable UUID uuid) {
         if (repo.existsById(uuid)) {
+            listeners.forEach((k, fn) -> fn.accept(null));
+
             repo.deleteById(uuid);
             return ResponseEntity.ok().build();
         } else {

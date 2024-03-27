@@ -33,9 +33,12 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
-import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.http.HttpStatus;
 
 /**
  * Utilities for the server.
@@ -43,6 +46,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 public class ServerUtils {
 
     private static final String SERVER = "http://localhost:8080/";
+    private static final ExecutorService EXEC = Executors.newFixedThreadPool(10);
 
     /**
      * Get quotes the hard way.
@@ -90,17 +94,27 @@ public class ServerUtils {
     /**
      * Uses long-polling to continuously get an event from the database by its UUID.
      *
-     * @param event event to poll
-     * @return a deferred result of the event
+     * @param callback function to perform on end of poll
      */
-    public DeferredResult<Event> longPollEvent(Event event) {
-        return ClientBuilder.newClient(new ClientConfig()
-                        .property(ClientProperties.CONNECT_TIMEOUT, 10000)
-                        .property(ClientProperties.READ_TIMEOUT, 10000))
-                .target(SERVER).path("api/events/" + event.getInviteCode().toString() + "/poll")
-                .request(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-                .get(new GenericType<>() {});
+    public void longPollEvent(Event event, Consumer<Event> callback) {
+        EXEC.submit(() -> {
+            while (true) {
+                var res = ClientBuilder.newClient(new ClientConfig()
+                                .property(ClientProperties.CONNECT_TIMEOUT, 10000)
+                                .property(ClientProperties.READ_TIMEOUT, 10000))
+                        .target(SERVER).path("api/events/" + event.getInviteCode().toString() + "/poll")
+                        .request(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .get(Response.class);
+
+                var status = res.getStatus();
+                if (status == HttpStatus.NO_CONTENT.value()) {
+                    continue;
+                }
+                Event updated = res.readEntity(Event.class);
+                callback.accept(updated);
+            }
+        });
     }
 
     /**

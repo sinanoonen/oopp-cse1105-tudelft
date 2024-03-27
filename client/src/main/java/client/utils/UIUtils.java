@@ -1,8 +1,14 @@
 package client.utils;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 
 /**
  * A utility class for UI operations.
@@ -14,6 +20,8 @@ public class UIUtils {
     private static final double BRIGHTNESS_MODIFIER = 23;
 
     private static final HashMap<Node, String> colorMap = new HashMap<>();
+
+    private static final List<Node> activePages = new LinkedList<>();
 
     /**
      * Changes the color of a node.
@@ -57,8 +65,6 @@ public class UIUtils {
             fillColor = fillColor.replace("-fx-fill: ", "");
         }
 
-
-
         String borderColor = "";
         if (currentStyle.contains("-fx-border-color")) {
             int startIndex = currentStyle.indexOf("-fx-border-color");
@@ -74,7 +80,16 @@ public class UIUtils {
             changeColor(node, newColor, "-fx-background-color");
         }
 
-        if (!fillColor.isEmpty() && !fillColor.equals("transparent")) {
+        if (node instanceof Text) {
+            Paint textFill = ((Text) node).getFill();
+            String textColor = textFill.toString();
+            if (textColor.startsWith("0x")) {
+                textColor = textColor.substring(2);
+            }
+            colorMap.put(node, "-fx-fill: " + textColor + ";");
+            String newColor = String.format("#%02x%02x%02x", 255, 255, 255);
+            changeColor(node, newColor, "-fx-fill");
+        } else if (!fillColor.isEmpty() && !fillColor.equals("transparent")) {
             int[] rgb = hexToRGB(fillColor);
             increaseColorContrast(rgb);
             String newColor = String.format("#%02x%02x%02x", rgb[0], rgb[1], rgb[2]);
@@ -115,12 +130,17 @@ public class UIUtils {
      */
     public static void activateHighContrastMode(Parent root) {
 
+        if (activePages.contains(root)) {
+            return;
+        }
+
+        activePages.add(root);
 
         increaseNodeContrast(root);
 
         //get root children
         root.getChildrenUnmodifiable().forEach(node -> {
-            if (node instanceof Parent) {
+            if (node instanceof Parent && !(node instanceof ChoiceBox)) {
                 activateHighContrastMode((Parent) node);
             } else {
                 increaseNodeContrast(node);
@@ -133,20 +153,27 @@ public class UIUtils {
      *
      * @param root the root node
      */
-    public static void deactivateHighContrastMode(Parent root) {
-        if (colorMap.containsKey(root)) {
-            root.setStyle(colorMap.get(root));
+    public static void deactivateHighContrastMode(Node root) {
+
+        if (!activePages.contains(root)) {
+            return;
         }
 
-        root.getChildrenUnmodifiable().forEach(node -> {
-            if (node instanceof Parent) {
-                deactivateHighContrastMode((Parent) node);
-            } else {
-                if (colorMap.containsKey(node)) {
+        activePages.remove(root);
+
+        if (root instanceof Parent) {
+            ((Parent) root).getChildrenUnmodifiable().forEach(node -> {
+                if (node instanceof Parent) {
+                    deactivateHighContrastMode(node);
+                } else if (colorMap.containsKey(node)) {
                     node.setStyle(colorMap.get(node));
                 }
-            }
-        });
+            });
+        }
+
+        if(colorMap.containsKey(root)) {
+            root.setStyle(colorMap.get(root));
+        }
     }
 
     private static int[] hexToRGB(String hex) {

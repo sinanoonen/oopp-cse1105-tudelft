@@ -3,13 +3,17 @@ package client.scenes;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
+
+import commons.WebSocketMessage;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -30,6 +34,7 @@ public class HomePageCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
 
     private List<Event> events;
 
@@ -59,9 +64,10 @@ public class HomePageCtrl implements Initializable {
     private Pane adminArea;
 
     @Inject
-    public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
     }
 
     @Override
@@ -71,6 +77,13 @@ public class HomePageCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                events = serverUtils.getEvents();
+                reloadEventsList();
+            });
+        });
     }
 
     /**

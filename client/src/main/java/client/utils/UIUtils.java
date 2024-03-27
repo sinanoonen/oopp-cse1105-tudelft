@@ -3,6 +3,7 @@ package client.utils;
 import java.util.HashMap;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 
 /**
  * A utility class for UI operations.
@@ -176,5 +177,13 @@ public class UIUtils {
             case "gray" -> "#808080";
             default -> color;
         };
+    }
+
+    public static void showEventDeletedWarning(String eventTitle) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Event Deleted");
+        alert.setHeaderText(null);
+        alert.setContentText("The event '" + eventTitle + "' has been deleted.");
+        alert.showAndWait();
     }
 }

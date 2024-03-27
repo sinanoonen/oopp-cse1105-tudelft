@@ -1,8 +1,12 @@
 package client.scenes;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import commons.Event;
 import commons.User;
+import commons.WebSocketMessage;
 import commons.transactions.Expense;
 import commons.transactions.Tag;
 import jakarta.ws.rs.WebApplicationException;
@@ -10,6 +14,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -34,6 +41,8 @@ public class AddExpenseCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
+
 
     @FXML
     private ChoiceBox<String> whoPaid;
@@ -70,9 +79,10 @@ public class AddExpenseCtrl {
     private Set<Tag> tags;
 
     @Inject
-    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
     }
 
 
@@ -114,6 +124,16 @@ public class AddExpenseCtrl {
             public Tag fromString(String string) {
                 return null;
             }
+        });
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    //UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
         });
     }
 

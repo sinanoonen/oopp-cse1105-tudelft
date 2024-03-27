@@ -3,25 +3,26 @@ package client.scenes;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
+import commons.WebSocketMessage;
 import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Transaction;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
+
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -49,6 +50,7 @@ public class EventOverviewCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
 
     private Event event;
 
@@ -84,9 +86,11 @@ public class EventOverviewCtrl implements Initializable {
     private Pane errorPopup;
 
     @Inject
-    public EventOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public EventOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl,
+                             WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
     }
 
     @Override
@@ -96,7 +100,19 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
+        });
     }
+
+
 
     /**
      * Method to refresh the scene.

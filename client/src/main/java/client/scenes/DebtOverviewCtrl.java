@@ -1,12 +1,19 @@
 package client.scenes;
 
 import algorithms.DebtSettler;
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
+
+import commons.WebSocketMessage;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -27,6 +34,8 @@ public class DebtOverviewCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
+
     private Event event;
     private DebtSettler debtSettler;
 
@@ -42,14 +51,25 @@ public class DebtOverviewCtrl implements Initializable {
     private Hyperlink backLink;
 
     @Inject
-    public DebtOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public DebtOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Add the stuff for high contrast mode
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    //UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
+        });
     }
 
     /**

@@ -1,11 +1,15 @@
 package client.scenes;
 
-import client.utils.ManageUserMode;
-import client.utils.ServerUtils;
+import client.utils.*;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
+
+import java.util.UUID;
 import java.util.regex.Pattern;
+
+import commons.WebSocketMessage;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -20,6 +24,8 @@ import javafx.scene.text.Text;
 public class ManageUserCtrl {
     private ServerUtils serverUtils;
     private MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
+
 
     ManageUserMode mode;
     Event event;
@@ -45,12 +51,14 @@ public class ManageUserCtrl {
      * Constructor for the ManageUser controller.
      *
      * @param serverUtils serverUtils
-     * @param mainCtrl mainCtrl
+     * @param mainCtrl    mainCtrl
+     * @param socket      socket
      */
     @Inject
-    public ManageUserCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public ManageUserCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
         mode = ManageUserMode.CREATE;
     }
 
@@ -85,6 +93,16 @@ public class ManageUserCtrl {
 
             confirmButton.setText("SAVE");
         }
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    //UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
+        });
     }
 
     public void cancel() {

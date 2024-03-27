@@ -7,6 +7,7 @@ import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
@@ -80,13 +81,10 @@ public class UIUtils {
             changeColor(node, newColor, "-fx-background-color");
         }
 
-        if (node instanceof Text) {
-            Paint textFill = ((Text) node).getFill();
-            String textColor = textFill.toString();
-            if (textColor.startsWith("0x")) {
-                textColor = textColor.substring(2);
-            }
-            colorMap.put(node, "-fx-fill: " + textColor + ";");
+        if (node instanceof Hyperlink) {
+            String newColor = String.format("#%02x%02x%02x", 255, 255, 255);
+            changeColor(node, newColor, "-fx-text-fill");
+        } else if (node instanceof Text) {
             String newColor = String.format("#%02x%02x%02x", 255, 255, 255);
             changeColor(node, newColor, "-fx-fill");
         } else if (!fillColor.isEmpty() && !fillColor.equals("transparent")) {
@@ -128,24 +126,19 @@ public class UIUtils {
      *
      * @param root the root node
      */
-    public static void activateHighContrastMode(Parent root) {
+    public static void activateHighContrastMode(Node root) {
 
         if (activePages.contains(root)) {
             return;
         }
 
+        increaseNodeContrast(root);
         activePages.add(root);
 
-        increaseNodeContrast(root);
+        if (root instanceof Parent && !(root instanceof ChoiceBox) && !(root instanceof Hyperlink)) {
+            ((Parent) root).getChildrenUnmodifiable().forEach(UIUtils::activateHighContrastMode);
+        }
 
-        //get root children
-        root.getChildrenUnmodifiable().forEach(node -> {
-            if (node instanceof Parent && !(node instanceof ChoiceBox)) {
-                activateHighContrastMode((Parent) node);
-            } else {
-                increaseNodeContrast(node);
-            }
-        });
     }
 
     /**
@@ -159,21 +152,15 @@ public class UIUtils {
             return;
         }
 
-        activePages.remove(root);
-
         if (root instanceof Parent) {
-            ((Parent) root).getChildrenUnmodifiable().forEach(node -> {
-                if (node instanceof Parent) {
-                    deactivateHighContrastMode(node);
-                } else if (colorMap.containsKey(node)) {
-                    node.setStyle(colorMap.get(node));
-                }
-            });
+            ((Parent) root).getChildrenUnmodifiable().forEach(UIUtils::deactivateHighContrastMode);
         }
 
-        if(colorMap.containsKey(root)) {
+        if (colorMap.containsKey(root)) {
             root.setStyle(colorMap.get(root));
+            activePages.remove(root);
         }
+
     }
 
     private static int[] hexToRGB(String hex) {

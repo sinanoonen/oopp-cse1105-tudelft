@@ -74,7 +74,7 @@ public class HomePageCtrl implements Initializable {
             UIUtils.deactivateHighContrastMode(root);
         }
 
-        serverUtils.longPollEvents(e -> refresh());
+        serverUtils.longPollEvents(e -> refresh()); // register for polling; on update, refresh
     }
 
     /**

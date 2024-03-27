@@ -35,7 +35,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import org.springframework.web.context.request.async.DeferredResult;
 
 /**
  * Controller for the EventOverview scene.

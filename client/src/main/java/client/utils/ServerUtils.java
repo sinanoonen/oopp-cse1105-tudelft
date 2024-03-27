@@ -131,12 +131,12 @@ public class ServerUtils {
     }
 
     /**
-     * Uses long-polling to continuously get an event from the database by its UUID.
+     * Uses long-polling to continuously check if events are updated or deleted.
      *
      * @param callback function to perform on end of poll
      */
     public void longPollEvents(Consumer<Event> callback) {
-        EXEC.submit(() -> {
+        EXEC.submit(() -> { // use new thread so that application is not stuck waiting for response
             while (!Thread.interrupted()) {
                 var res = ClientBuilder.newClient(new ClientConfig()
                                 .property(ClientProperties.CONNECT_TIMEOUT, 10000)

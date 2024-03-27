@@ -88,16 +88,16 @@ public class EventController {
      */
     @GetMapping("/poll")
     public DeferredResult<ResponseEntity<Event>> pollById() {
-        final long timeoutTime = 5000;
-        ResponseEntity<Event> noContent = ResponseEntity.noContent().build();
+        final long timeoutTime = 5000; // 5000 ms == 5s
+        ResponseEntity<Event> noContent = ResponseEntity.noContent().build(); // Default return (on timeout)
         DeferredResult<ResponseEntity<Event>> res = new DeferredResult<>(timeoutTime, noContent);
 
-        Object key = new Object();
+        Object key = new Object(); // Generate unique listener key
         listeners.put(key, e -> {
-            System.out.println("Received event: " + e);
-            res.setResult(ResponseEntity.ok(e));
+            System.out.println("Received event: " + e); // DEBUG: Listener is working?
+            res.setResult(ResponseEntity.ok(e)); // Returns change
         });
-        res.onCompletion(() -> listeners.remove(key));
+        res.onCompletion(() -> listeners.remove(key)); // Remove listener on completion (timeout/return)
 
         return res;
     }
@@ -115,7 +115,7 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
         Event saved = repo.save(updatedEvent);
-        listeners.forEach((k, fn) -> fn.accept(saved));
+        listeners.forEach((k, fn) -> fn.accept(saved)); // Inform listeners that an event was updated
         return ResponseEntity.ok(saved);
     }
 
@@ -144,6 +144,8 @@ public class EventController {
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> deleteEvent(@PathVariable UUID uuid) {
         if (repo.existsById(uuid)) {
+            // Inform all listeners of an event being deleted
+            // Null is sent as the event will disappear, and we just need to send a signal to refresh
             listeners.forEach((k, fn) -> fn.accept(null));
 
             repo.deleteById(uuid);

@@ -164,7 +164,7 @@ public class TestEventRepository implements EventRepository {
 
     @Override
     public void deleteById(UUID id) {
-        // TODO Auto-generated method stub
+        events.removeIf(e -> e.getInviteCode().equals(id));
     }
 
     @Override

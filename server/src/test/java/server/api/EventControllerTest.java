@@ -1,18 +1,20 @@
 package server.api;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
 import commons.transactions.Payment;
+import commons.transactions.Tag;
 import commons.transactions.Transaction;
+
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -286,6 +288,125 @@ public class EventControllerTest {
 
         ResponseEntity<Payment> response = sut.addPaymentToEvent(testUuid, payment);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void updateEventWhenExists() {
+        Event originalEvent = new Event("Original Event");
+        originalEvent.setInviteCode(UUID.randomUUID());
+        repo.save(originalEvent);
+
+        Event updatedEvent = new Event("Updated Event");
+        updatedEvent.setInviteCode(originalEvent.getInviteCode());
+
+        ResponseEntity<Event> response = sut.updateById(originalEvent.getInviteCode(), updatedEvent);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedEvent.getTitle(), response.getBody().getTitle());
+    }
+
+    @Test
+    public void updateEventWhenNotExists() {
+        Event updatedEvent = new Event("Updated Event");
+        updatedEvent.setInviteCode(UUID.randomUUID());
+
+        ResponseEntity<Event> response = sut.updateById(updatedEvent.getInviteCode(), updatedEvent);
+
+        assertEquals(BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void deleteEventWhenExists() {
+        Event event = new Event("Test Event");
+        UUID uuid = event.getInviteCode();
+        repo.save(event);
+
+        ResponseEntity<?> response = sut.deleteEvent(uuid);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertFalse(repo.existsById(uuid));
+    }
+
+    @Test
+    public void deleteEventWhenNotExists() {
+        ResponseEntity<?> response = sut.deleteEvent(UUID.randomUUID());
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void getTagsWhenEventExists() {
+        Event event = new Event("Test Event");
+        UUID uuid = event.getInviteCode();
+        Tag tag = new Tag("test tag", Color.BLACK);
+        event.addTag(tag);
+        repo.save(event);
+
+        Set<Tag> tags = sut.getTags(uuid);
+
+        // the size is 4 since there are already 3 tags by default
+        assertEquals(4, tags.size());
+        assertTrue(tags.contains(tag));
+    }
+
+    @Test
+    public void getTagsWhenEventNotExists() {
+        Set<Tag> tags = sut.getTags(UUID.randomUUID());
+
+        assertNull(tags);
+    }
+
+    @Test
+    public void addTagToEventWhenExists() {
+        Event event = new Event("Test Event");
+        UUID uuid = event.getInviteCode();
+        repo.save(event);
+        Tag tag = new Tag("test tag", Color.BLACK);
+        ResponseEntity<Event> response = sut.addTagToEvent(uuid, tag);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().getTags().contains(tag));
+    }
+
+    @Test
+    public void addTagToEventWhenNotExists() {
+        ResponseEntity<Event> response = sut.addTagToEvent(UUID.randomUUID(), new Tag("New Tag", Color.BLACK));
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void removeTransactionFromEventWhenExists() {
+        Event event = new Event("Test Event");
+        UUID uuid = event.getInviteCode();
+        LocalDate baseDate = LocalDate.of(2024, 3, 1);
+        Transaction transaction = new Payment(baseDate, 100f, "Person1", "Person2");
+        long id = transaction.getId();
+        event.addTransaction(transaction);
+        repo.save(event);
+
+        ResponseEntity<Event> response = sut.removeTransactionFromEvent(uuid, id);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody().transactions().isEmpty());
+    }
+
+    @Test
+    public void removeTransactionFromEventWhenTransactionNotExists() {
+        Event event = new Event("Test Event");
+        UUID uuid = event.getInviteCode();
+        repo.save(event);
+
+        ResponseEntity<Event> response = sut.removeTransactionFromEvent(uuid, 1L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void removeTransactionFromEventWhenEventNotExists() {
+        ResponseEntity<Event> response = sut.removeTransactionFromEvent(UUID.randomUUID(), 1L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
 }

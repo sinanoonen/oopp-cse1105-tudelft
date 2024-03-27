@@ -36,6 +36,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+import javafx.application.Platform;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.springframework.http.HttpStatus;
@@ -151,7 +152,12 @@ public class ServerUtils {
                     continue;
                 }
                 Event updated = res.readEntity(Event.class);
-                callback.accept(updated);
+
+                //Execute the UI Update on the
+                // thread that is responsible for the JavaFX application
+                Platform.runLater(() -> {
+                    callback.accept(updated);
+                });
             }
         });
     }

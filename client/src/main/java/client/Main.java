@@ -18,7 +18,17 @@ package client;
 
 import static com.google.inject.Guice.createInjector;
 
-import client.scenes.*;
+import client.scenes.AddEventCtrl;
+import client.scenes.AddExpenseCtrl;
+import client.scenes.AdminLoginCtrl;
+import client.scenes.AdminOverviewCtrl;
+import client.scenes.DebtOverviewCtrl;
+import client.scenes.DebtPaymentOverviewCtrl;
+import client.scenes.EventOverviewCtrl;
+import client.scenes.HomePageCtrl;
+import client.scenes.MainCtrl;
+import client.scenes.ManageUserCtrl;
+import client.scenes.SettingsCtrl;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -43,7 +53,8 @@ public class Main extends Application {
         var homePage = FXML.load(HomePageCtrl.class, "client", "scenes", "HomePage.fxml");
         var eventOverview = FXML.load(EventOverviewCtrl.class, "client", "scenes", "EventOverview.fxml");
         var debtOverview = FXML.load(DebtOverviewCtrl.class, "client", "scenes", "DebtOverview.fxml");
-        var debtPaymentOverview = FXML.load(DebtPaymentOverviewCtrl.class, "client", "scenes", "DebtPaymentOverview.fxml");
+        var debtPaymentOverview = FXML.load(DebtPaymentOverviewCtrl.class, "client", "scenes",
+                "DebtPaymentOverview.fxml");
         var addEvent = FXML.load(AddEventCtrl.class, "client", "scenes", "AddEvent.fxml");
         var settings = FXML.load(SettingsCtrl.class, "client", "scenes", "Settings.fxml");
         var adminOverview = FXML.load(AdminOverviewCtrl.class, "client", "scenes", "AdminOverview.fxml");

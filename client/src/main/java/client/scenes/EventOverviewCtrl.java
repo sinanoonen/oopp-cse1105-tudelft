@@ -35,6 +35,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.springframework.web.context.request.async.DeferredResult;
 
 /**
  * Controller for the EventOverview scene.
@@ -51,6 +52,7 @@ public class EventOverviewCtrl implements Initializable {
     private final MainCtrl mainCtrl;
 
     private Event event;
+    private Thread pollingThread;
 
     @FXML
     private AnchorPane root;
@@ -142,6 +144,12 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        DeferredResult<Event> deferredResult = serverUtils.longPollEvent(event);
+        deferredResult.onCompletion(() -> {
+            System.out.println("DEFERRED RESULT COMPLETED");
+            refresh((Event) deferredResult.getResult());
+        });
     }
 
     // ---------------- VISUAL EFFECTS HANDLERS ---------------- //

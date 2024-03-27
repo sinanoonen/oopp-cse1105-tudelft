@@ -22,7 +22,6 @@ import commons.Event;
 import commons.Quote;
 import commons.User;
 import commons.transactions.Expense;
-import commons.transactions.Transaction;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;

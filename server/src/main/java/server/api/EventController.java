@@ -91,6 +91,7 @@ public class EventController {
 
         Thread pollHandler = new Thread(() -> {
             try {
+                Thread.sleep(2000);
                 Optional<Event> optionalEvent = repo.findById(uuid);
                 if (optionalEvent.isEmpty()) {
                     throw new IllegalArgumentException("Event not found");

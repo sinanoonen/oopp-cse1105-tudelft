@@ -96,13 +96,13 @@ public class ServerUtils {
      *
      * @param callback function to perform on end of poll
      */
-    public void longPollEvents(Consumer<Event> callback) {
+    public void longPollEvent(Event event, Consumer<Event> callback) {
         EXEC.submit(() -> {
-            while (!Thread.interrupted()) {
+            while (true) {
                 var res = ClientBuilder.newClient(new ClientConfig()
                                 .property(ClientProperties.CONNECT_TIMEOUT, 10000)
                                 .property(ClientProperties.READ_TIMEOUT, 10000))
-                        .target(SERVER).path("api/events/poll")
+                        .target(SERVER).path("api/events/" + event.getInviteCode().toString() + "/poll")
                         .request(APPLICATION_JSON)
                         .accept(APPLICATION_JSON)
                         .get(Response.class);
@@ -281,9 +281,5 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .post(Entity.entity(password, APPLICATION_JSON));
         return response.getStatus() == 200;
-    }
-
-    public void stop() {
-        EXEC.shutdownNow();
     }
 }

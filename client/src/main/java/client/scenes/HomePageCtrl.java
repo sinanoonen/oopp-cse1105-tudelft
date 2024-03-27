@@ -71,8 +71,6 @@ public class HomePageCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
-
-        serverUtils.longPollEvents(e -> refresh());
     }
 
     /**
@@ -270,9 +268,5 @@ public class HomePageCtrl implements Initializable {
         }
 
         node.setStyle(currentStyle + newAttribute);
-    }
-
-    public void stop() {
-        serverUtils.stop();
     }
 }

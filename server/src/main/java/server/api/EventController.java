@@ -7,13 +7,10 @@ import commons.transactions.Payment;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+
+import java.util.*;
 import java.util.function.Consumer;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,19 +81,17 @@ public class EventController {
     /**
      * Get an event by its UUID.
      *
+     * @param uuid the UUID of the event
      * @return the event
      */
-    @GetMapping("/poll")
-    public DeferredResult<ResponseEntity<Event>> pollById() {
+    @GetMapping("/{uuid}/poll")
+    public DeferredResult<ResponseEntity<Event>> pollById(@PathVariable("uuid") UUID uuid) {
         final long timeoutTime = 5000;
         ResponseEntity<Event> noContent = ResponseEntity.noContent().build();
         DeferredResult<ResponseEntity<Event>> res = new DeferredResult<>(timeoutTime, noContent);
 
         Object key = new Object();
-        listeners.put(key, e -> {
-            System.out.println("Received event: " + e);
-            res.setResult(ResponseEntity.ok(e));
-        });
+        listeners.put(key, e -> res.setResult(ResponseEntity.ok(e)));
         res.onCompletion(() -> listeners.remove(key));
 
         return res;

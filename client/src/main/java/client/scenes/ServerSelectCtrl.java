@@ -32,6 +32,9 @@ public class ServerSelectCtrl {
         this.mainCtrl = mainCtrl;
     }
 
+    /**
+     * Refresh method for ServerSelect scene.
+     */
     public void refresh() {
         ipField.setText(ServerUtils.getIp());
         portField.setText(ServerUtils.getPort());

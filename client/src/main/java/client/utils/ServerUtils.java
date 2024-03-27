@@ -40,7 +40,43 @@ import org.glassfish.jersey.client.ClientConfig;
  */
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    private static String ip = "localhost";
+    private static String port = "8080";
+    private static String SERVER = "http://localhost:8080/";
+
+    /**
+     * Sets the server.
+     *
+     * @param ip ip of server to connect to
+     * @param port port to connect to
+     */
+    public static void setServer(String ip, String port) {
+        ServerUtils.ip = ip;
+        ServerUtils.port = port;
+        SERVER = "http://" + ip + ":" + port + "/";
+    }
+
+    public static String getServer() {
+        return SERVER;
+    }
+
+    public static String getIp() {
+        return ip;
+    }
+
+    public static void setIp(String ip) {
+        ServerUtils.ip = ip;
+        ServerUtils.setServer(ip, port);
+    }
+
+    public static String getPort() {
+        return port;
+    }
+
+    public static void setPort(String port) {
+        ServerUtils.port = port;
+        ServerUtils.setServer(ip, port);
+    }
 
     /**
      * Get quotes the hard way.

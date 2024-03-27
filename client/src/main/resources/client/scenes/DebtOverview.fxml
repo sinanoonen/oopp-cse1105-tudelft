@@ -22,7 +22,7 @@
             <Font size="14.0" />
          </font>
       </Hyperlink>
-      <Button fx:id="debtSettleButton" layoutX="425.0" layoutY="134.0" mnemonicParsing="false" onMouseClicked="#showDebtSettler" onMousePressed="#toggleDarkenedDebtsButton" onMouseReleased="#toggleDarkenedDebtsButton" prefHeight="40.0" prefWidth="146.0" style="-fx-background-color: #3f3f3f; -fx-background-radius: 7; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 5;" text="Settle Debts" textFill="WHITE">
+      <Button fx:id="debtSettleButton" layoutX="425.0" layoutY="134.0" mnemonicParsing="false" onAction="#showDebtSettler" onMouseClicked="#showDebtSettler" onMousePressed="#toggleDarkenedDebtsButton" onMouseReleased="#toggleDarkenedDebtsButton" prefHeight="40.0" prefWidth="146.0" style="-fx-background-color: #3f3f3f; -fx-background-radius: 7; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 5;" text="Settle Debts" textFill="WHITE">
          <font>
             <Font name="SansSerif Bold" size="19.0" />
          </font>

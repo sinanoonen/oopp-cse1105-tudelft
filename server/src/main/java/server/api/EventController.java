@@ -94,7 +94,6 @@ public class EventController {
 
         Object key = new Object(); // Generate unique listener key
         listeners.put(key, e -> {
-            //System.out.println("Received event: " + e); // DEBUG: Listener is working?
             res.setResult(ResponseEntity.ok(e)); // Returns change
         });
         res.onCompletion(() -> listeners.remove(key)); // Remove listener on completion (timeout/return)
@@ -144,10 +143,6 @@ public class EventController {
     @DeleteMapping("/{uuid}")
     public ResponseEntity<?> deleteEvent(@PathVariable UUID uuid) {
         if (repo.existsById(uuid)) {
-            // Inform all listeners of an event being deleted
-            // Null is sent as the event will disappear, and we just need to send a signal to refresh
-            //listeners.forEach((k, fn) -> fn.accept(null));
-
             repo.deleteById(uuid);
             return ResponseEntity.ok().build();
         } else {
@@ -203,11 +198,12 @@ public class EventController {
         Event event = repo.findById(uuid).get();
         event.addParticipant(user);
         try {
-            repo.save(event);
+            Event saved = repo.save(event);
+            listeners.forEach((k, fn) -> fn.accept(saved));
+            return ResponseEntity.ok(saved);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(event);
     }
 
     /**
@@ -235,8 +231,9 @@ public class EventController {
             return ResponseEntity.notFound().build();
         }
         event.removeParticipant(toRemove.get());
-        repo.save(event);
-        return ResponseEntity.ok(event);
+        Event saved = repo.save(event);
+        listeners.forEach((k, fn) -> fn.accept(saved));
+        return ResponseEntity.ok(saved);
     }
 
     /**
@@ -313,6 +310,7 @@ public class EventController {
         Event event = repo.findById(uuid).get();
         event.addTransaction(expense);
         Expense saved = exRepo.save(expense);
+        listeners.forEach((k, fn) -> fn.accept(repo.findById(uuid).get()));
         return ResponseEntity.ok(saved);
     }
 
@@ -340,6 +338,7 @@ public class EventController {
         Event event = repo.findById(uuid).get();
         event.addTransaction(payment);
         Payment saved = payRepo.save(payment);
+        listeners.forEach((k, fn) -> fn.accept(repo.findById(uuid).get()));
         return ResponseEntity.ok(saved);
     }
 
@@ -367,8 +366,9 @@ public class EventController {
             return ResponseEntity.notFound().build();
         }
         event.removeTransaction(toRemove.get());
-        repo.save(event);
-        return ResponseEntity.ok(event);
+        Event saved = repo.save(event);
+        listeners.forEach((k, fn) -> fn.accept(saved));
+        return ResponseEntity.ok(saved);
     }
 
 }

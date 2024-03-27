@@ -144,12 +144,6 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
-
-        DeferredResult<Event> deferredResult = serverUtils.longPollEvent(event);
-        deferredResult.onCompletion(() -> {
-            System.out.println("DEFERRED RESULT COMPLETED");
-            refresh((Event) deferredResult.getResult());
-        });
     }
 
     // ---------------- VISUAL EFFECTS HANDLERS ---------------- //

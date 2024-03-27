@@ -70,5 +70,7 @@ public class Main extends Application {
                 addExpense,
                 manageUser,
                 adminLogin);
+
+        primaryStage.setOnCloseRequest(e -> homePage.getKey().stop());
     }
 }

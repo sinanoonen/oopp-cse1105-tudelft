@@ -100,16 +100,6 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
-
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
-            Platform.runLater(() -> {
-                UUID uuid = UUID.fromString(message.getContent().substring(15));
-                if (event != null && uuid.equals(event.getInviteCode())) {
-                    UIUtils.showEventDeletedWarning(event.getTitle());
-                    mainCtrl.showHomePage();
-                }
-            });
-        });
     }
 
 
@@ -158,6 +148,16 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
+        });
     }
 
     // ---------------- VISUAL EFFECTS HANDLERS ---------------- //
@@ -458,6 +458,7 @@ public class EventOverviewCtrl implements Initializable {
         base.setUserData(user);
         base.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() > 1) {
+                onExit();
                 mainCtrl.showEditUser(user, event);
             }
         });
@@ -553,18 +554,22 @@ public class EventOverviewCtrl implements Initializable {
     }
 
     public void onBackClicked(MouseEvent event) {
+        onExit();
         mainCtrl.showHomePage();
     }
 
     public void onNewParticipantClicked() {
+        onExit();
         mainCtrl.showCreateUser(event);
     }
 
     public void onDebtsClicked() {
+        onExit();
         mainCtrl.showDebtOverview(event);
     }
 
     public void onNewExpenseClicked() {
+        onExit();
         mainCtrl.showAddExpense(event);
     }
 
@@ -595,5 +600,12 @@ public class EventOverviewCtrl implements Initializable {
         }
         refresh(updated);
         toggleParticipants();
+    }
+
+    /**
+     * Unsubscribe from sockets and any other clean-up code
+     */
+    public void onExit() {
+        socket.unregisterFromMessages("/topic/eventsUpdated");
     }
 }

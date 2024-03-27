@@ -98,7 +98,7 @@ public class ManageUserCtrl {
             Platform.runLater(() -> {
                 UUID uuid = UUID.fromString(message.getContent().substring(15));
                 if (event != null && uuid.equals(event.getInviteCode())) {
-                    //UIUtils.showEventDeletedWarning(event.getTitle());
+                    UIUtils.showEventDeletedWarning(event.getTitle());
                     mainCtrl.showHomePage();
                 }
             });
@@ -106,6 +106,7 @@ public class ManageUserCtrl {
     }
 
     public void cancel() {
+        onExit();
         mainCtrl.showEventOverview(event);
     }
 
@@ -133,7 +134,7 @@ public class ManageUserCtrl {
         String iban = ibanField.getText();
         String bic = bicField.getText();
         User user = new User(name, email, iban, bic, event.getInviteCode());
-
+        onExit();
         User saved = serverUtils.createUser(user);
         mainCtrl.showEventOverview(event);
     }
@@ -153,6 +154,7 @@ public class ManageUserCtrl {
         User updated = new User(name, email, iban, bic, event.getInviteCode());
 
         User saved = serverUtils.updateUser(updated);
+        onExit();
         mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
@@ -224,5 +226,12 @@ public class ManageUserCtrl {
         }
 
         node.setStyle(currentStyle + newAttribute);
+    }
+
+    /**
+     * Unsubscribe from sockets and any other clean-up code
+     */
+    public void onExit() {
+        socket.unregisterFromMessages("/topic/eventsUpdated");
     }
 }

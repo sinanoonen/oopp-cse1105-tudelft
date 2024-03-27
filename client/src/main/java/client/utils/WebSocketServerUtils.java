@@ -1,6 +1,8 @@
 package client.utils;
 
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -18,6 +20,8 @@ public class WebSocketServerUtils {
 
     private static final String SERVER = "http://localhost:8080/";
     private StompSession session = connect("ws://localhost:8080/websocket");
+
+    private Map<String, StompSession.Subscription> subscriptions = new HashMap<>();
 
     private StompSession connect(String url) {
         var client = new StandardWebSocketClient();
@@ -42,7 +46,7 @@ public class WebSocketServerUtils {
      * @param <T> the type
      */
     public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
-        session.subscribe(dest, new StompFrameHandler() {
+        StompSession.Subscription subscription = session.subscribe(dest, new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
                 return type;
@@ -53,6 +57,8 @@ public class WebSocketServerUtils {
                 consumer.accept((T) payload);
             }
         });
+
+        subscriptions.put(dest, subscription);
     }
 
     /**
@@ -64,6 +70,14 @@ public class WebSocketServerUtils {
     public void sendWebSocketMessage(String destination, String message) {
         if (session != null && session.isConnected()) {
             session.send(destination, message);
+        }
+    }
+
+    public void unregisterFromMessages(String dest) {
+        StompSession.Subscription subscription = subscriptions.get(dest);
+        if (subscription != null) {
+            subscription.unsubscribe();
+            subscriptions.remove(dest);
         }
     }
 }

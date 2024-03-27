@@ -60,16 +60,6 @@ public class DebtOverviewCtrl implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Add the stuff for high contrast mode
-
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
-            Platform.runLater(() -> {
-                UUID uuid = UUID.fromString(message.getContent().substring(15));
-                if (event != null && uuid.equals(event.getInviteCode())) {
-                    //UIUtils.showEventDeletedWarning(event.getTitle());
-                    mainCtrl.showHomePage();
-                }
-            });
-        });
     }
 
     /**
@@ -85,6 +75,16 @@ public class DebtOverviewCtrl implements Initializable {
         changeBackgroundColor(backLink, "transparent");
 
         resetParticipantsDebtContainer();
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
+        });
     }
 
     @FXML
@@ -93,6 +93,7 @@ public class DebtOverviewCtrl implements Initializable {
     }
 
     public void onBackClicked(MouseEvent event) {
+        onExit();
         mainCtrl.showEventOverview(this.event);
     }
 
@@ -176,5 +177,12 @@ public class DebtOverviewCtrl implements Initializable {
         }
 
         node.setStyle(currentStyle + newColor);
+    }
+
+    /**
+     * Unsubscribe from sockets and any other clean-up code
+     */
+    public void onExit() {
+        socket.unregisterFromMessages("/topic/eventsUpdated");
     }
 }

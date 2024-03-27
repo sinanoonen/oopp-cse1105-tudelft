@@ -96,6 +96,16 @@ public class AddExpenseCtrl {
         this.tags = event.getTags();
         initialized = true;
         initialize();
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
+        });
     }
 
 
@@ -124,16 +134,6 @@ public class AddExpenseCtrl {
             public Tag fromString(String string) {
                 return null;
             }
-        });
-
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
-            Platform.runLater(() -> {
-                UUID uuid = UUID.fromString(message.getContent().substring(15));
-                if (event != null && uuid.equals(event.getInviteCode())) {
-                    //UIUtils.showEventDeletedWarning(event.getTitle());
-                    mainCtrl.showHomePage();
-                }
-            });
         });
     }
 
@@ -213,6 +213,7 @@ public class AddExpenseCtrl {
     @FXML
     private void handleCancelButtonClick() {
         // Handle cancel button click
+        onExit();
         mainCtrl.showEventOverview(event);
     }
 
@@ -253,6 +254,7 @@ public class AddExpenseCtrl {
 
         }
         clearFields();
+        onExit();
         mainCtrl.showEventOverview(event);
     }
 
@@ -288,4 +290,10 @@ public class AddExpenseCtrl {
         }
     }
 
+    /**
+     * Unsubscribe from sockets and any other clean-up code
+     */
+    public void onExit() {
+        socket.unregisterFromMessages("/topic/eventsUpdated");
+    }
 }

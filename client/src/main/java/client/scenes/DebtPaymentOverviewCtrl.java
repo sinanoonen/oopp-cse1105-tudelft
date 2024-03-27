@@ -37,6 +37,8 @@ public class DebtPaymentOverviewCtrl implements Initializable {
     private ListView<Node> participantsPaymentContainer;
     @FXML
     private Hyperlink backLink;
+    @FXML
+    private Text instructionText;
 
     @Inject
     public DebtPaymentOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
@@ -66,8 +68,10 @@ public class DebtPaymentOverviewCtrl implements Initializable {
 
         if (ClientUtils.isHighContrast()) {
             UIUtils.activateHighContrastMode(root);
+            instructionText.setFill(javafx.scene.paint.Color.WHITE);
         } else {
             UIUtils.deactivateHighContrastMode(root);
+            instructionText.setFill(javafx.scene.paint.Color.web("#8e8e8e"));
         }
     }
 

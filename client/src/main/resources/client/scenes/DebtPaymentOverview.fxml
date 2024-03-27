@@ -8,7 +8,7 @@
 
 <AnchorPane fx:id="root" prefHeight="623.0" prefWidth="600.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.DebtPaymentOverviewCtrl">
     <children>
-        <Text fill="#8e8e8e" layoutX="45.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PAYMENT INSTRUCTIONS">
+        <Text fx:id="instructionText" fill="#8e8e8e" layoutX="45.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PAYMENT INSTRUCTIONS">
             <font>
                 <Font name="SansSerif Bold" size="27.0" />
             </font>

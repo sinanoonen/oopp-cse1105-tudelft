@@ -42,6 +42,8 @@ public class DebtOverviewCtrl implements Initializable {
     private Pane buttonDarkener;
     @FXML
     private Hyperlink backLink;
+    @FXML
+    private Text balanceText;
 
     @Inject
     public DebtOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
@@ -74,8 +76,10 @@ public class DebtOverviewCtrl implements Initializable {
 
         if (ClientUtils.isHighContrast()) {
             UIUtils.activateHighContrastMode(root);
+            balanceText.setFill(javafx.scene.paint.Color.WHITE);
         } else {
             UIUtils.deactivateHighContrastMode(root);
+            balanceText.setFill(javafx.scene.paint.Color.web("#8e8e8e"));
         }
     }
 

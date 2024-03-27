@@ -89,7 +89,7 @@ public class DebtOverviewCtrl implements Initializable {
     }
 
     public void showDebtSettler() {
-    // mainCtrl.showDebtPaymentOverview(event, debtSettler);
+        mainCtrl.showDebtPaymentOverview(event, debtSettler);
     }
 
     /**

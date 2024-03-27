@@ -56,7 +56,7 @@ public class DebtPaymentOverviewCtrl implements Initializable {
     /**
      * Method to refresh the scene. This is needed for some reason.
      */
-    public void refresh(DebtSettler debtSettler, Event event) {
+    public void refresh(Event event, DebtSettler debtSettler) {
         this.debtSettler = debtSettler;
         this.event = event;
 
@@ -103,7 +103,7 @@ public class DebtPaymentOverviewCtrl implements Initializable {
     private Node debtPaymentCellFactory(String settlement) {
         Pane base = new Pane();
         base.setPrefWidth(participantsPaymentContainer.getPrefWidth() - 20);
-        base.setPrefHeight(100);
+        base.setPrefHeight(120);
         base.setStyle("-fx-background-color: #444444;"
                 + " -fx-border-width: 3;"
                 + " -fx-border-color: black;"
@@ -112,8 +112,8 @@ public class DebtPaymentOverviewCtrl implements Initializable {
         );
 
         Text username = new Text(settlement);
-        final double nameTopPadding = base.getPrefHeight() / 2 + 5;
-        final double nameLeftPadding = 0.12f * base.getPrefWidth();
+        final double nameTopPadding = 0.20f * base.getPrefHeight();
+        final double nameLeftPadding = 0.07f * base.getPrefWidth();
         username.setLayoutX(base.getLayoutX() + nameLeftPadding);
         username.setLayoutY(base.getLayoutY() + nameTopPadding);
         username.setFont(Font.font("SansSerif", 15));

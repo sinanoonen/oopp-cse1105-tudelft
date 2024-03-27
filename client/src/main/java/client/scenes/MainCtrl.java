@@ -60,6 +60,9 @@ public class MainCtrl {
     private Scene adminLogin;
     private AdminLoginCtrl adminLoginCtrl;
 
+    private Scene serverSelect;
+    private ServerSelectCtrl serverSelectCtrl;
+
     /**
      * Initialize the main controller.
      *
@@ -78,7 +81,8 @@ public class MainCtrl {
                            Pair<AdminOverviewCtrl, Parent> adminOverview,
                            Pair<AddExpenseCtrl, Parent> addExpense,
                            Pair<ManageUserCtrl, Parent> manageUser,
-                           Pair<AdminLoginCtrl, Parent> adminLogin
+                           Pair<AdminLoginCtrl, Parent> adminLogin,
+                           Pair<ServerSelectCtrl, Parent> serverSelect
     ) {
         this.primaryStage = primaryStage;
 
@@ -105,6 +109,9 @@ public class MainCtrl {
 
         this.adminLoginCtrl = adminLogin.getKey();
         this.adminLogin = new Scene(adminLogin.getValue());
+
+        this.serverSelectCtrl = serverSelect.getKey();
+        this.serverSelect = new Scene(serverSelect.getValue());
 
         //Set default language and currency
         ClientUtils.setCurrency(Currency.EUR);
@@ -212,5 +219,14 @@ public class MainCtrl {
     public void showAdminLogin() {
         primaryStage.setTitle("Admin Login");
         primaryStage.setScene(adminLogin);
+    }
+
+    /**
+     * Shows the server selection page.
+     */
+    public void showServerSelect() {
+        primaryStage.setTitle("Server Selection");
+        primaryStage.setScene(serverSelect);
+        serverSelectCtrl.refresh();
     }
 }

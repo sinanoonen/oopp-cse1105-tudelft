@@ -34,6 +34,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 
 /**
  * Utilities for the server.
@@ -54,6 +55,7 @@ public class ServerUtils {
         ServerUtils.ip = ip;
         ServerUtils.port = port;
         SERVER = "http://" + ip + ":" + port + "/";
+        System.out.println("SERVER UPDATED TO: " + SERVER);
     }
 
     public static String getServer() {
@@ -100,7 +102,9 @@ public class ServerUtils {
      * @return List of all events on DB
      */
     public List<Event> getEvents() {
-        return ClientBuilder.newClient(new ClientConfig())
+        return ClientBuilder.newClient(new ClientConfig()
+                        .property(ClientProperties.CONNECT_TIMEOUT, 5000)
+                        .property(ClientProperties.READ_TIMEOUT, 5000))
                 .target(SERVER).path("api/events")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)

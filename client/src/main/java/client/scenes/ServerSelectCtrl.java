@@ -57,8 +57,16 @@ public class ServerSelectCtrl implements Initializable {
         if (!validateFields()) {
             return;
         }
+        String prevIp = ServerUtils.getIp();
+        String prevPort = ServerUtils.getPort();
         ServerUtils.setServer(ipField.getText(), portField.getText());
-        mainCtrl.showHomePage();
+        try {
+            mainCtrl.showHomePage();
+        } catch (Exception e) {
+            mainCtrl.showServerSelect();
+            HomePageCtrl.displayErrorPopup("Could not connect to server.", errorPopup);
+            ServerUtils.setServer(prevIp, prevPort);
+        }
     }
 
     @FXML

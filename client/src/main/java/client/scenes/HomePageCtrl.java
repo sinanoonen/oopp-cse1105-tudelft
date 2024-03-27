@@ -100,6 +100,8 @@ public class HomePageCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        serverUtils.longPollEvents(e -> refresh()); // register for polling; on update, refresh
     }
 
     public void showSettings() {

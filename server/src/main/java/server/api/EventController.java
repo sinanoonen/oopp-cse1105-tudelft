@@ -94,7 +94,7 @@ public class EventController {
 
         Object key = new Object(); // Generate unique listener key
         listeners.put(key, e -> {
-            System.out.println("Received event: " + e); // DEBUG: Listener is working?
+            //System.out.println("Received event: " + e); // DEBUG: Listener is working?
             res.setResult(ResponseEntity.ok(e)); // Returns change
         });
         res.onCompletion(() -> listeners.remove(key)); // Remove listener on completion (timeout/return)
@@ -146,7 +146,7 @@ public class EventController {
         if (repo.existsById(uuid)) {
             // Inform all listeners of an event being deleted
             // Null is sent as the event will disappear, and we just need to send a signal to refresh
-            listeners.forEach((k, fn) -> fn.accept(null));
+            //listeners.forEach((k, fn) -> fn.accept(null));
 
             repo.deleteById(uuid);
             return ResponseEntity.ok().build();

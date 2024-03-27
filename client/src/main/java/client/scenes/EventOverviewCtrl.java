@@ -115,6 +115,7 @@ public class EventOverviewCtrl implements Initializable {
     public void refresh(Event event) {
 
         this.event = event;
+        mainCtrl.getPrimaryStage().setTitle(event.getTitle());
 
         inviteCodeButton.requestFocus();
 

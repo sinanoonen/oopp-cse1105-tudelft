@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -78,6 +76,13 @@ public class AddExpenseCtrl {
     private final List<String> currencies = List.of("EUR", "USD");
     private Set<Tag> tags;
 
+    /**
+     * The constructor for the controller.
+     *
+     * @param server the server
+     * @param mainCtrl the main controller
+     * @param socket the web socket
+     */
     @Inject
     public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.server = server;
@@ -291,7 +296,7 @@ public class AddExpenseCtrl {
     }
 
     /**
-     * Unsubscribe from sockets and any other clean-up code
+     * Unsubscribe from sockets and any other clean-up code.
      */
     public void onExit() {
         socket.unregisterFromMessages("/topic/eventsUpdated");

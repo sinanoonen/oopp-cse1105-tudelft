@@ -179,6 +179,11 @@ public class UIUtils {
         };
     }
 
+    /**
+     * This warning is shown when the event was deleted.
+     *
+     * @param eventTitle the title of the event
+     */
     public static void showEventDeletedWarning(String eventTitle) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Event Deleted");

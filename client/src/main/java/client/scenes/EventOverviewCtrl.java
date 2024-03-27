@@ -15,14 +15,17 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
-
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -85,6 +88,13 @@ public class EventOverviewCtrl implements Initializable {
     @FXML
     private Pane errorPopup;
 
+    /**
+     * Constructor for the EventOverview controller.
+     *
+     * @param serverUtils serverUtils
+     * @param mainCtrl    mainCtrl
+     * @param socket      socket
+     */
     @Inject
     public EventOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl,
                              WebSocketServerUtils socket) {
@@ -603,7 +613,7 @@ public class EventOverviewCtrl implements Initializable {
     }
 
     /**
-     * Unsubscribe from sockets and any other clean-up code
+     * Unsubscribe from sockets and any other clean-up code.
      */
     public void onExit() {
         socket.unregisterFromMessages("/topic/eventsUpdated");

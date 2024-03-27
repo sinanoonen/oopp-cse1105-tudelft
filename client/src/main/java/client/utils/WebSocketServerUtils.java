@@ -73,6 +73,11 @@ public class WebSocketServerUtils {
         }
     }
 
+    /**
+     * This unregisters the client for messages.
+     *
+     * @param dest the destination of the message
+     */
     public void unregisterFromMessages(String dest) {
         StompSession.Subscription subscription = subscriptions.get(dest);
         if (subscription != null) {

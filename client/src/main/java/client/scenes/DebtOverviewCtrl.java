@@ -1,18 +1,16 @@
 package client.scenes;
 
 import algorithms.DebtSettler;
-import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
+import commons.WebSocketMessage;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
-
-import commons.WebSocketMessage;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -50,6 +48,13 @@ public class DebtOverviewCtrl implements Initializable {
     @FXML
     private Hyperlink backLink;
 
+    /**
+     * Constructor for the DebtOverview controller.
+     *
+     * @param serverUtils serverUtils
+     * @param mainCtrl    mainCtrl
+     * @param socket      socket
+     */
     @Inject
     public DebtOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;
@@ -180,7 +185,7 @@ public class DebtOverviewCtrl implements Initializable {
     }
 
     /**
-     * Unsubscribe from sockets and any other clean-up code
+     * Unsubscribe from sockets and any other clean-up code.
      */
     public void onExit() {
         socket.unregisterFromMessages("/topic/eventsUpdated");

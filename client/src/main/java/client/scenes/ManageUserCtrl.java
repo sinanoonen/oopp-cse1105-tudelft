@@ -1,14 +1,15 @@
 package client.scenes;
 
-import client.utils.*;
+import client.utils.ManageUserMode;
+import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
-
+import commons.WebSocketMessage;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
-import commons.WebSocketMessage;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -229,7 +230,7 @@ public class ManageUserCtrl {
     }
 
     /**
-     * Unsubscribe from sockets and any other clean-up code
+     * Unsubscribe from sockets and any other clean-up code.
      */
     public void onExit() {
         socket.unregisterFromMessages("/topic/eventsUpdated");

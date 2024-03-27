@@ -6,12 +6,11 @@ import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
+import commons.WebSocketMessage;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
-
-import commons.WebSocketMessage;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -63,6 +62,13 @@ public class HomePageCtrl implements Initializable {
     @FXML
     private Pane adminArea;
 
+    /**
+     * Constructor for the HomePage controller.
+     *
+     * @param serverUtils serverUtils
+     * @param mainCtrl    mainCtrl
+     * @param socket      socket
+     */
     @Inject
     public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;

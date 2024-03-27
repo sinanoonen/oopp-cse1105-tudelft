@@ -16,7 +16,7 @@ import javafx.scene.layout.Pane;
 /**
  * Controller for ServerSelect scene.
  */
-public class ServerSelectCtrl implements Initializable {
+public class ServerSelectCtrl {
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
 
@@ -35,18 +35,15 @@ public class ServerSelectCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void refresh() {
+        ipField.setText(ServerUtils.getIp());
+        portField.setText(ServerUtils.getPort());
+
         if (ClientUtils.isHighContrast()) {
             UIUtils.activateHighContrastMode(root);
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
-    }
-
-    public void refresh() {
-        ipField.setText(ServerUtils.getIp());
-        portField.setText(ServerUtils.getPort());
     }
 
     /**

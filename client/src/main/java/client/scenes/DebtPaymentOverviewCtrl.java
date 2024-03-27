@@ -5,6 +5,9 @@ import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import commons.Event;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -16,12 +19,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import javax.inject.Inject;
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
 
+/**
+ * Controller for the DebtPaymentOverview scene. 
+ */
 public class DebtPaymentOverviewCtrl implements Initializable {
 
     private final ServerUtils serverUtils;

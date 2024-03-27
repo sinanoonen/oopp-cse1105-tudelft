@@ -56,7 +56,9 @@ public class HomePageCtrl implements Initializable {
     @FXML
     private Pane quitClickArea;
     @FXML
-    private Pane adminArea;
+    private Pane adminClickArea;
+    @FXML
+    private Text serverText;
 
     @Inject
     public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
@@ -91,6 +93,7 @@ public class HomePageCtrl implements Initializable {
         screenDarkener.setPrefHeight(root.getPrefHeight());
 
         codeInput.setText("");
+        serverText.setText("Current server: " + ServerUtils.getServer());
 
         reloadEventsList();
 
@@ -141,19 +144,12 @@ public class HomePageCtrl implements Initializable {
         screenDarkener.setMouseTransparent(true);
     }
 
-    /**
-     * Handles highlighting the admin area when hovered over.
-     */
-    public void toggleAdminHover() {
-        if (adminArea.getStyle().contains("#333333")) {
-            changeStyleAttribute(adminArea, "-fx-background-color", "#2b2b2b");
-        } else {
-            changeStyleAttribute(adminArea, "-fx-background-color", "#333333");
-        }
-    }
-
     public void onAdminAreaClicked() {
         mainCtrl.showAdminLogin();
+    }
+
+    public void onServerAreaClicked() {
+        mainCtrl.showServerSelect();
     }
 
     public void createEvent() {

@@ -45,8 +45,45 @@ import org.springframework.http.HttpStatus;
  */
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    private static String ip = "localhost";
+    private static String port = "8080";
+    private static String SERVER = "http://localhost:8080/";
     private static final ExecutorService EXEC = Executors.newFixedThreadPool(10);
+
+    /**
+     * Sets the server.
+     *
+     * @param ip ip of server to connect to
+     * @param port port to connect to
+     */
+    public static void setServer(String ip, String port) {
+        ServerUtils.ip = ip;
+        ServerUtils.port = port;
+        SERVER = "http://" + ip + ":" + port + "/";
+        System.out.println("SERVER UPDATED TO: " + SERVER);
+    }
+
+    public static String getServer() {
+        return SERVER;
+    }
+
+    public static String getIp() {
+        return ip;
+    }
+
+    public static void setIp(String ip) {
+        ServerUtils.ip = ip;
+        ServerUtils.setServer(ip, port);
+    }
+
+    public static String getPort() {
+        return port;
+    }
+
+    public static void setPort(String port) {
+        ServerUtils.port = port;
+        ServerUtils.setServer(ip, port);
+    }
 
     /**
      * Get quotes the hard way.
@@ -70,7 +107,9 @@ public class ServerUtils {
      * @return List of all events on DB
      */
     public List<Event> getEvents() {
-        return ClientBuilder.newClient(new ClientConfig())
+        return ClientBuilder.newClient(new ClientConfig()
+                        .property(ClientProperties.CONNECT_TIMEOUT, 5000)
+                        .property(ClientProperties.READ_TIMEOUT, 5000))
                 .target(SERVER).path("api/events")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)

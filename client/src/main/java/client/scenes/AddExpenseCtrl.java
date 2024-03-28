@@ -11,6 +11,7 @@ import jakarta.ws.rs.WebApplicationException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -276,7 +277,18 @@ public class AddExpenseCtrl {
             if (mode == ManageExpenseMode.CREATE) {
                 create();
             } else {
-                update();
+                ObservableList<Tag> selectedTagsList = selectedTags.getItems();
+                List<Tag> selectedTagsSet = List.copyOf(selectedTagsList);
+                Expense expense = event.transactions().stream()
+                        .filter(e -> e instanceof Expense)
+                        .map(e -> (Expense) e)
+                        .filter(e -> e.getOwner().equals(whoPaid.getValue())
+                                && e.getAmount() == Float.parseFloat(amount.getText())
+                                && e.getDescription().equals(description.getText())
+                                && e.getDate().equals(datePicker.getValue())
+                                && e.getTags().equals(selectedTagsSet))
+                        .findFirst().get();
+                update(expense);
             }
 
         } catch (WebApplicationException e) {
@@ -351,7 +363,7 @@ public class AddExpenseCtrl {
 
     }
 
-    public void update(){
+    public void update(Expense expense){
         String owner = whoPaid.getValue();
         String expenseDescription = description.getText();
         float expenseAmount = Float.parseFloat(amount.getText());
@@ -374,8 +386,8 @@ public class AddExpenseCtrl {
         for (Tag tag : selectedTagsSet) {
             updated.addTag(tag);
         }
-        server.addExpense(event.getInviteCode(), updated);
-        server.updateExpense(event.getInviteCode(), updated);
+        server.updateExpense(event.getInviteCode(), expense.getId(), updated);
+
     }
 
 }

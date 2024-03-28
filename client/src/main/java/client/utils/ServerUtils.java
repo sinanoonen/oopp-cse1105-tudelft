@@ -101,9 +101,9 @@ public class ServerUtils {
     }
 
     //  @PutMapping("/{uuid}/transactions/expenses/{id}")
-    public Expense updateExpense(UUID uuid, Expense updated) {
+    public Expense updateExpense(UUID uuid, long id, Expense updated) {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/events/" + uuid.toString() + "/transactions/expenses/" + updated.getId())
+                .target(SERVER).path("api/events/" + uuid.toString() + "/transactions/expenses/" + id)
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(updated, APPLICATION_JSON), Expense.class);

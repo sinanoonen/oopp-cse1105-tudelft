@@ -134,10 +134,10 @@ public class EventOverviewCtrl implements Initializable {
         addParticipantsDarkener.setPrefWidth(root.getWidth());
         addParticipantsDarkener.setLayoutY(root.getLayoutY());
         addParticipantsDarkener.setPrefHeight(root.getHeight());
-        participantsDarkener.setLayoutX(root.getLayoutX());
-        participantsDarkener.setPrefWidth(root.getWidth());
-        participantsDarkener.setLayoutY(root.getLayoutY());
-        participantsDarkener.setPrefHeight(root.getHeight());
+        expenseDarkener.setLayoutX(root.getLayoutX());
+        expenseDarkener.setPrefWidth(root.getWidth());
+        expenseDarkener.setLayoutY(root.getLayoutY());
+        expenseDarkener.setPrefHeight(root.getHeight());
 
         if (participantsMenu.isVisible()) {
             toggleParticipants();
@@ -589,21 +589,23 @@ public class EventOverviewCtrl implements Initializable {
         mainCtrl.showDebtOverview(event);
     }
 
-    public void onNewExpenseClicked(Expense expense) {
+    public void onNewExpenseClicked() {
         mainCtrl.showAddExpense(event);
     }
 
     public void removeExpense() {
         Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
-        if (selectedNode != null && selectedNode.getUserData() instanceof Expense) {
+        if (selectedNode != null) {
             Expense expenseToRemove = (Expense) selectedNode.getUserData();
             serverUtils.removeExpense(event.getInviteCode(), expenseToRemove);
-            transactionContainer.getItems().remove(selectedNode);
+            event.removeTransaction(expenseToRemove);
+            resetTransactionsContainer();
         }
+        mainCtrl.showEventOverview(event);
     }
     public void editExpense() {
         Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
-        if (selectedNode != null && selectedNode.getUserData() instanceof Expense) {
+        if (selectedNode != null) {
             Expense expenseToUpdate = (Expense) selectedNode.getUserData();
             mainCtrl.showEditExpense(event, expenseToUpdate);
         }

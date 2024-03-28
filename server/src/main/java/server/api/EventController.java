@@ -372,9 +372,4 @@ public class EventController {
         Expense savedExpense = exRepo.save(expense);
         return ResponseEntity.ok(savedExpense);
     }
-
-
-
-
-
 }

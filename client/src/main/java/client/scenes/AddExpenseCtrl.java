@@ -8,13 +8,14 @@ import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Tag;
 import jakarta.ws.rs.WebApplicationException;
+
+import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -35,7 +36,7 @@ import javax.inject.Inject;
 /**
  * Controller for adding an expense to an event.
  */
-public class AddExpenseCtrl {
+public class AddExpenseCtrl{
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -84,7 +85,12 @@ public class AddExpenseCtrl {
         this.mainCtrl = mainCtrl;
         mode = ManageExpenseMode.CREATE;
     }
-
+    /**
+     * @param location  The location used to resolve relative paths for the root object, or
+     *                  {@code null} if the location is not known.
+     * @param resources The resources used to localize the root object, or {@code null} if
+     *                  the root object was not localized.
+     */
     /**
      * Refreshes the scene.
      *
@@ -94,6 +100,11 @@ public class AddExpenseCtrl {
         this.event = event;
         this.tags = event.getTags();
         this.mode = mode;
+
+        whoPaid.getItems().clear();
+        currencyChoiceBox.getItems().clear();
+        expenseTags.getItems().clear();
+
         if (mode == ManageExpenseMode.CREATE) {
             participants = event.getParticipants().stream()
                     .map(User::getName)
@@ -419,4 +430,5 @@ public class AddExpenseCtrl {
     public void setExpenseToUpdate(Expense expenseToUpdate) {
         this.expenseToUpdate = expenseToUpdate;
     }
+
 }

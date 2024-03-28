@@ -334,6 +334,7 @@ public class EventController {
         }
         event.removeTransaction(toRemove.get());
         repo.save(event);
+
         return ResponseEntity.ok(event);
     }
 

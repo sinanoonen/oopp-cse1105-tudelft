@@ -611,8 +611,6 @@ public class EventOverviewCtrl implements Initializable {
         }
     }
 
-
-
     /**
      * Adds the selected participants to the event.
      */

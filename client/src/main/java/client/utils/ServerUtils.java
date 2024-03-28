@@ -101,12 +101,12 @@ public class ServerUtils {
     }
 
     //  @PutMapping("/{uuid}/transactions/expenses/{id}")
-    public Expense updateExpense(UUID uuid, long id, Expense updated) {
+    public Expense updateExpense(UUID uuid, Expense expense) {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/events/" + uuid.toString() + "/transactions/expenses/" + id)
+                .target(SERVER).path("api/events/" + uuid.toString() + "/transactions/expenses/" + expense.getId())
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .put(Entity.entity(updated, APPLICATION_JSON), Expense.class);
+                .put(Entity.entity(expense, APPLICATION_JSON), Expense.class);
     }
 
     //"/{uuid}/transactions/{id}"

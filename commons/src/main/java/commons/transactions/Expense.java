@@ -23,6 +23,8 @@ public class Expense extends Transaction {
     @ElementCollection
     Map<String, Float> debts;
 
+    private boolean splitEqually = false;
+
     @SuppressWarnings("unused")
     protected Expense() {
         this.debts = new HashMap<>();
@@ -78,6 +80,14 @@ public class Expense extends Transaction {
         } else {
             debts.put(owner, -1 * amount);
         }
+    }
+
+    public boolean isSplitEqually() {
+        return splitEqually;
+    }
+
+    public void setSplitEqually(boolean splitEqually) {
+        this.splitEqually = splitEqually;
     }
 
     /**

@@ -179,18 +179,19 @@ public class MainCtrl {
     public void showAddExpense(Event event) {
         primaryStage.setTitle("New Expense");
         primaryStage.setScene(addExpense);
-        Expense expense = null;
-        addExpenseCtrl.refresh(ManageExpenseMode.CREATE,event,expense);
+        Expense nullExpense = null;
+        addExpenseCtrl.refresh(ManageExpenseMode.CREATE, event, nullExpense);
     }
 
     /**
-     * Redirects client to a page to edit an exissting expense.
+     * Redirects client to a page to edit an existing expense.
      *
      * @param event event to which the expense is to be edited
      */
     public void showEditExpense(Event event, Expense expense) {
         primaryStage.setTitle("Edit Expense");
         primaryStage.setScene(addExpense);
+        addExpenseCtrl.setExpenseToUpdate(expense);
         addExpenseCtrl.refresh(ManageExpenseMode.EDIT, event, expense);
     }
     /**

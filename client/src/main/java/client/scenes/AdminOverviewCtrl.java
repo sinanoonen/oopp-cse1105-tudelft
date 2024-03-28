@@ -111,7 +111,7 @@ public class AdminOverviewCtrl implements Initializable {
         setupEventSelection();
     }
 
-    private void loadEvents() {
+    public void loadEvents() {
         Task<List<Event>> task = new Task<>() {
             @Override
             protected List<Event> call() throws Exception {
@@ -153,7 +153,7 @@ public class AdminOverviewCtrl implements Initializable {
         new Thread(task).start();
     }
 
-    private void showAlert(String title, String message) {
+    public void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -216,7 +216,7 @@ public class AdminOverviewCtrl implements Initializable {
     }
 
     // to be improved
-    private String formatEventDetails(Event event) {
+    public String formatEventDetails(Event event) {
         return "Title: " + event.getTitle() + "\n"
             + "Invite Code: " + event.getInviteCode() + "\n"
             + "Participants: " + event.getParticipants() + "\n"
@@ -228,7 +228,7 @@ public class AdminOverviewCtrl implements Initializable {
     }
 
     @FXML
-    private void handleSortByTitle() {
+    public void handleSortByTitle() {
         sort(Comparator.comparing(Event::getTitle), sortByTitleAscending);
 
         ifSortByTitle = true;
@@ -241,7 +241,7 @@ public class AdminOverviewCtrl implements Initializable {
     }
 
     @FXML
-    private void handleSortByCreationDate() {
+    public void handleSortByCreationDate() {
         sort(Comparator.comparing(Event::getCreationDate), sortByCreationDateAscending);
 
         ifSortByTitle = false;
@@ -254,7 +254,7 @@ public class AdminOverviewCtrl implements Initializable {
     }
 
     @FXML
-    private void handleSortByLastActivity() {
+    public void handleSortByLastActivity() {
         sort(Comparator.comparing(Event::getLastActivity), sortByLastActivityAscending);
 
         ifSortByTitle = false;
@@ -321,7 +321,7 @@ public class AdminOverviewCtrl implements Initializable {
     }
 
     @FXML
-    private void handleDeleteEvent() {
+    public void handleDeleteEvent() {
         if (selectedEvent != null) {
             UUID uuid = selectedEvent.getInviteCode();
             server.deleteEvent(uuid);
@@ -334,5 +334,70 @@ public class AdminOverviewCtrl implements Initializable {
 
     public void exit() {
         mainCtrl.showHomePage();
+    }
+
+
+    public ListView<Event> getEventContainer() {
+        return eventContainer;
+    }
+
+    public void setEventContainer(ListView<Event> eventContainer) {
+        this.eventContainer = eventContainer;
+    }
+
+    public boolean isIfSortByTitle() {
+        return ifSortByTitle;
+    }
+
+    public void setIfSortByTitle(boolean ifSortByTitle) {
+        this.ifSortByTitle = ifSortByTitle;
+    }
+
+    public boolean isIfSortByCreationDate() {
+        return ifSortByCreationDate;
+    }
+
+    public void setIfSortByCreationDate(boolean ifSortByCreationDate) {
+        this.ifSortByCreationDate = ifSortByCreationDate;
+    }
+
+    public boolean isIfSortByLastActivity() {
+        return ifSortByLastActivity;
+    }
+
+    public void setIfSortByLastActivity(boolean ifSortByLastActivity) {
+        this.ifSortByLastActivity = ifSortByLastActivity;
+    }
+
+    public boolean isSortByTitleAscending() {
+        return sortByTitleAscending;
+    }
+
+    public void setSortByTitleAscending(boolean sortByTitleAscending) {
+        this.sortByTitleAscending = sortByTitleAscending;
+    }
+
+    public boolean isSortByCreationDateAscending() {
+        return sortByCreationDateAscending;
+    }
+
+    public void setSortByCreationDateAscending(boolean sortByCreationDateAscending) {
+        this.sortByCreationDateAscending = sortByCreationDateAscending;
+    }
+
+    public boolean isSortByLastActivityAscending() {
+        return sortByLastActivityAscending;
+    }
+
+    public void setSortByLastActivityAscending(boolean sortByLastActivityAscending) {
+        this.sortByLastActivityAscending = sortByLastActivityAscending;
+    }
+
+    public Event getSelectedEvent() {
+        return selectedEvent;
+    }
+
+    public void setSelectedEvent(Event selectedEvent) {
+        this.selectedEvent = selectedEvent;
     }
 }

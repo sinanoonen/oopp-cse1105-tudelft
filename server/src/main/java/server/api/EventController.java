@@ -93,9 +93,7 @@ public class EventController {
         DeferredResult<ResponseEntity<Event>> res = new DeferredResult<>(timeoutTime, noContent);
 
         Object key = new Object(); // Generate unique listener key
-        listeners.put(key, e -> {
-            res.setResult(ResponseEntity.ok(e)); // Returns change
-        });
+        listeners.put(key, e -> res.setResult(ResponseEntity.ok(e)));
         res.onCompletion(() -> listeners.remove(key)); // Remove listener on completion (timeout/return)
 
         return res;

@@ -10,6 +10,7 @@ import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Transaction;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
@@ -105,7 +106,16 @@ public class EventOverviewCtrl implements Initializable {
                     || !mainCtrl.getPrimaryStage().getTitle().equals(event.getTitle())) {
                 return;
             }
+            boolean hadParticipantsOpen = participantsMenu.isVisible();
+            boolean hadAddParticipantsOpen = addParticipantsMenu.isVisible();
             refresh(e);
+            if (hadParticipantsOpen) {
+                toggleParticipants();
+                return;
+            }
+            if (hadAddParticipantsOpen) {
+                toggleAddParticipants();
+            }
         });
     }
 

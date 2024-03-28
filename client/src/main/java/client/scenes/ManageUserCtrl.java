@@ -88,7 +88,7 @@ public class ManageUserCtrl {
     }
 
     public void cancel() {
-        mainCtrl.showEventOverview(event);
+        mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
     /**
@@ -117,7 +117,7 @@ public class ManageUserCtrl {
         User user = new User(name, email, iban, bic, event.getInviteCode());
 
         User saved = serverUtils.createUser(user);
-        mainCtrl.showEventOverview(event);
+        mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
     /**

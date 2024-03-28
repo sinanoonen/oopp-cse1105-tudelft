@@ -10,7 +10,6 @@ import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Transaction;
 import java.net.URL;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;

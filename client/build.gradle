@@ -37,6 +37,6 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-websocket:3.2.2'
 
-	testImplementation 'org.testfx:testfx-junit5:4.0.16-alpha'
-	testImplementation 'org.testfx:openjfx-monocle:21.0.2'
+//	testImplementation 'org.testfx:testfx-junit5:4.0.16-alpha'
+//	testImplementation 'org.testfx:openjfx-monocle:21.0.2'
 }

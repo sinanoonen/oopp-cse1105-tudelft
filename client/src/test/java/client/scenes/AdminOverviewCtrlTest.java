@@ -1,12 +1,15 @@
 package client.scenes;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import client.utils.ServerUtils;
-
-
 import commons.Event;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListView;
@@ -18,12 +21,10 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.ArrayList;
-
-
-
+/**
+ * This class is used to test the Admin Overview
+ * It uses Mockito and TestFX.
+ */
 public class AdminOverviewCtrlTest extends ApplicationTest {
 
     @Mock
@@ -34,6 +35,9 @@ public class AdminOverviewCtrlTest extends ApplicationTest {
     @InjectMocks
     private AdminOverviewCtrl controller;
 
+    /**
+     * This is the setUp for testing.
+     */
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -90,9 +94,9 @@ public class AdminOverviewCtrlTest extends ApplicationTest {
     @Test
     public void testHandleSortByCreationDate() {
         Event event1 = mock(Event.class);
-        when(event1.getCreationDate()).thenReturn(LocalDateTime.of(2024, 3, 29, 2, 1, 1));
+        when(event1.getCreationDate()).thenReturn(LocalDateTime.of(2024, 3, 29, 2,  1, 1));
         Event event2 = mock(Event.class);
-        when(event2.getCreationDate()).thenReturn(LocalDateTime.of(2024, 3, 28, 2,2,2));
+        when(event2.getCreationDate()).thenReturn(LocalDateTime.of(2024, 3, 28, 2, 2, 2));
 
         controller.getEventContainer().setItems(FXCollections.observableArrayList(event1, event2));
 

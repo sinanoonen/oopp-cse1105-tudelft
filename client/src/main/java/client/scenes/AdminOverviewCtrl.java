@@ -111,6 +111,9 @@ public class AdminOverviewCtrl implements Initializable {
         setupEventSelection();
     }
 
+    /**
+     * This loads the events from the server.
+     */
     public void loadEvents() {
         Task<List<Event>> task = new Task<>() {
             @Override
@@ -153,7 +156,7 @@ public class AdminOverviewCtrl implements Initializable {
         new Thread(task).start();
     }
 
-    public void showAlert(String title, String message) {
+    private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
@@ -216,7 +219,7 @@ public class AdminOverviewCtrl implements Initializable {
     }
 
     // to be improved
-    public String formatEventDetails(Event event) {
+    private String formatEventDetails(Event event) {
         return "Title: " + event.getTitle() + "\n"
             + "Invite Code: " + event.getInviteCode() + "\n"
             + "Participants: " + event.getParticipants() + "\n"
@@ -227,6 +230,9 @@ public class AdminOverviewCtrl implements Initializable {
             + "Last Activity:" + event.getLastActivity() + "\n";
     }
 
+    /**
+     * This sorts the events by title.
+     */
     @FXML
     public void handleSortByTitle() {
         sort(Comparator.comparing(Event::getTitle), sortByTitleAscending);
@@ -240,6 +246,9 @@ public class AdminOverviewCtrl implements Initializable {
         sortByLastActivityAscending = true;
     }
 
+    /**
+     * This sorts the events by creation date.
+     */
     @FXML
     public void handleSortByCreationDate() {
         sort(Comparator.comparing(Event::getCreationDate), sortByCreationDateAscending);
@@ -253,6 +262,9 @@ public class AdminOverviewCtrl implements Initializable {
         sortByLastActivityAscending = true;
     }
 
+    /**
+     * This sorts the events by last activity.
+     */
     @FXML
     public void handleSortByLastActivity() {
         sort(Comparator.comparing(Event::getLastActivity), sortByLastActivityAscending);
@@ -321,7 +333,7 @@ public class AdminOverviewCtrl implements Initializable {
     }
 
     @FXML
-    public void handleDeleteEvent() {
+    private void handleDeleteEvent() {
         if (selectedEvent != null) {
             UUID uuid = selectedEvent.getInviteCode();
             server.deleteEvent(uuid);

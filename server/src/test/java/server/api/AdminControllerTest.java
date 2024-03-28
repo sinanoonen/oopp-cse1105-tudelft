@@ -1,19 +1,25 @@
 package server.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import server.AdminPasswordService;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * This is used to test the Admin Controller.
+ */
 public class AdminControllerTest {
 
     private AdminPasswordService adminPasswordService;
     private AdminController adminController;
     private String validPassword;
 
+    /**
+     * This is the setUp for testing.
+     */
     @BeforeEach
     public void setUp() {
         adminPasswordService = new AdminPasswordService();

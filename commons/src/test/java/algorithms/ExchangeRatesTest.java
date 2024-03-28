@@ -1,12 +1,16 @@
 package algorithms;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import java.util.HashMap;
-import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+/**
+ * This tests the ExchangeRates class.
+ */
 public class ExchangeRatesTest {
 
     private ExchangeRates exchangeRates;
@@ -16,6 +20,9 @@ public class ExchangeRatesTest {
     private final String testLicense = "Test License";
     private final Map<String, Double> testRates = new HashMap<>();
 
+    /**
+     * This is the setup for testing.
+     */
     @BeforeEach
     public void setup() {
         exchangeRates = new ExchangeRates();

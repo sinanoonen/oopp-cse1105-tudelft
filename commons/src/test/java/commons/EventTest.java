@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +34,9 @@ public class EventTest {
     private List<Expense> newExpenses;
     private List<Payment> newPayments;
 
+    /**
+     * This is the setup for testing.
+     */
     @BeforeEach
     public void setup() {
         event = new Event("Test Event");

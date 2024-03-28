@@ -1,10 +1,15 @@
 package commons;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.UUID;
+import org.junit.jupiter.api.Test;
 
+/**
+ * This tests the UserKey class.
+ */
 public class UserKeyTest {
 
     @Test

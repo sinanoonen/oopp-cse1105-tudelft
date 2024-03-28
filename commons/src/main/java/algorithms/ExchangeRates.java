@@ -111,11 +111,16 @@ public class ExchangeRates {
      */
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (!(object instanceof ExchangeRates that)) return false;
-        return timestamp == that.timestamp && Objects.equals(disclaimer, that.disclaimer) &&
-            Objects.equals(license, that.license) &&
-            Objects.equals(base, that.base) && Objects.equals(rates, that.rates);
+        if (this == object) {
+            return true;
+        }
+        if (!(object instanceof ExchangeRates that)) {
+            return false;
+        }
+        return timestamp == that.timestamp && Objects.equals(disclaimer, that.disclaimer)
+            && Objects.equals(license, that.license)
+            && Objects.equals(base, that.base)
+            && Objects.equals(rates, that.rates);
     }
 
     /**

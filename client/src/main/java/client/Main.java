@@ -29,6 +29,7 @@ import client.scenes.MainCtrl;
 import client.scenes.ManageUserCtrl;
 import client.scenes.ServerSelectCtrl;
 import client.scenes.SettingsCtrl;
+import client.utils.ConfigReader;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -45,6 +46,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws URISyntaxException, IOException {
+        ConfigReader.initialize();
         launch();
     }
 

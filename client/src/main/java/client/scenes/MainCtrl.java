@@ -17,9 +17,9 @@
 package client.scenes;
 
 import client.utils.ClientUtils;
-import client.utils.Currency;
-import client.utils.Language;
+import client.utils.ConfigReader;
 import client.utils.ManageUserMode;
+import client.utils.ServerUtils;
 import commons.Event;
 import commons.User;
 import javafx.scene.Parent;
@@ -114,8 +114,9 @@ public class MainCtrl {
         this.serverSelect = new Scene(serverSelect.getValue());
 
         //Set default language and currency
-        ClientUtils.setCurrency(Currency.EUR);
-        ClientUtils.setLanguage(Language.ENGLISH);
+        ClientUtils.setCurrency(ConfigReader.getCurrency());
+        ClientUtils.setLanguage(ConfigReader.getLanguage());
+        ServerUtils.setServer(ConfigReader.getIP(), ConfigReader.getPort());
 
         this.addExpenseCtrl = addExpense.getKey();
         this.addExpense = new Scene(addExpense.getValue());

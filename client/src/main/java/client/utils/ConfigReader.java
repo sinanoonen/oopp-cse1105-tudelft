@@ -11,6 +11,8 @@ import java.util.Properties;
 public class ConfigReader {
     private static final String CONFIG_FILE = "config.properties";
     private static final Properties PROPERTIES = new Properties();
+    private static final String DEFAULT_IP = "localhost";
+    private static final String DEFAULT_PORT = "8080";
 
     private ConfigReader() {}
 
@@ -41,11 +43,13 @@ public class ConfigReader {
     }
 
     public static String getIP() {
-        return PROPERTIES.getProperty("ip");
+        String ip = PROPERTIES.getProperty("ip");
+        return ip == null ? DEFAULT_IP : ip;
     }
 
     public static String getPort() {
-        return PROPERTIES.getProperty("port");
+        String port = PROPERTIES.getProperty("port");
+        return port == null ? DEFAULT_PORT : port;
     }
 
     /**

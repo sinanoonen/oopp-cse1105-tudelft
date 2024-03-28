@@ -16,7 +16,11 @@
 
 package client.scenes;
 
-import client.utils.*;
+import client.utils.ClientUtils;
+import client.utils.Currency;
+import client.utils.Language;
+import client.utils.ManageExpenseMode;
+import client.utils.ManageUserMode;
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
@@ -199,6 +203,7 @@ public class MainCtrl {
      *
      * @param event event to which the expense is to be edited
      */
+
     public void showEditPayment(Event event, Payment payment) {
         primaryStage.setTitle("Edit Payment");
         primaryStage.setScene(addExpense);

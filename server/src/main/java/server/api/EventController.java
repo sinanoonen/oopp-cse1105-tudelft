@@ -7,10 +7,12 @@ import commons.transactions.Payment;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import jakarta.persistence.EntityNotFoundException;
-
 import java.time.LocalDate;
-import java.util.*;
-
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -338,13 +340,21 @@ public class EventController {
         return ResponseEntity.ok(event);
     }
 
+    /**
+     * Updates the expenses in the server.
+     *
+     * @param uuid id of the event
+     * @param id id of the expense
+     * @param update updated expense
+     * @return updated expense
+     */
     @PutMapping("/{uuid}/transactions/expenses/{id}")
-    public ResponseEntity<Transaction> updateExpense( @PathVariable("uuid") UUID uuid, @PathVariable("id") Long id,
+    public ResponseEntity<Transaction> updateExpense(@PathVariable("uuid") UUID uuid, @PathVariable("id") Long id,
                                                   @RequestBody Expense update) {
         if (update == null) {
             update = new Expense(null, null, 0, null, null, null);
         }
-        if (id == null || update.getId() != id ) {
+        if (id == null || update.getId() != id) {
             System.out.println("Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }
@@ -360,7 +370,9 @@ public class EventController {
         String owner = isNullOrEmpty(update.getOwner()) ? expense.getOwner() : update.getOwner();
         LocalDate date = isNullOrEmpty(update.getOwner()) ? expense.getDate() : update.getDate();
         float amount = update.getAmount() == 0 ? expense.getAmount() : update.getAmount();
-        String description = isNullOrEmpty(update.getDescription()) ? expense.getDescription() : update.getDescription();
+        String description = isNullOrEmpty(update.getDescription())
+                ? expense.getDescription()
+                : update.getDescription();
         Map<String, Float> debts = (update.getDebts().isEmpty() || update.getDebts() == null)
                 ? expense.getDebts() : update.getDebts();
 

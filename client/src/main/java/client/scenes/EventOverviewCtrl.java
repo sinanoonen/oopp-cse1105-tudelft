@@ -12,8 +12,6 @@ import commons.transactions.Transaction;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.UUID;
-
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -256,6 +254,9 @@ public class EventOverviewCtrl implements Initializable {
         });
     }
 
+    /**
+     * toggles expense menu which shows edit or remove expenses.
+     */
     @FXML
     public void toggleExpenseMenu() {
         expenseDarkener.toFront();
@@ -593,6 +594,9 @@ public class EventOverviewCtrl implements Initializable {
         mainCtrl.showAddExpense(event);
     }
 
+    /**
+     * Removes expenses from UI and server.
+     */
     public void removeExpense() {
         Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
         if (selectedNode != null) {
@@ -603,6 +607,10 @@ public class EventOverviewCtrl implements Initializable {
         }
         mainCtrl.showEventOverview(event);
     }
+
+    /**
+     * Edits expense.
+     */
     public void editExpense() {
         Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
         if (selectedNode != null) {

@@ -3,7 +3,6 @@ package commons.transactions;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;

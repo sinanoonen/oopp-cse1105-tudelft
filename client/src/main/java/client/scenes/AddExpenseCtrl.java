@@ -8,14 +8,12 @@ import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Tag;
 import jakarta.ws.rs.WebApplicationException;
-
-import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -36,7 +34,7 @@ import javax.inject.Inject;
 /**
  * Controller for adding an expense to an event.
  */
-public class AddExpenseCtrl{
+public class AddExpenseCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -79,18 +77,19 @@ public class AddExpenseCtrl{
     private Expense expenseToUpdate = null;
     private boolean initialized = false;
 
+    /**
+     * Creates add expense scene controller.
+     *
+     * @param server   server
+     * @param mainCtrl main controller
+     */
     @Inject
     public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         mode = ManageExpenseMode.CREATE;
     }
-    /**
-     * @param location  The location used to resolve relative paths for the root object, or
-     *                  {@code null} if the location is not known.
-     * @param resources The resources used to localize the root object, or {@code null} if
-     *                  the root object was not localized.
-     */
+
     /**
      * Refreshes the scene.
      *
@@ -146,33 +145,34 @@ public class AddExpenseCtrl{
                 for (Node node : additionalCheckboxesContainer.getChildren()) {
                     if (node instanceof CheckBox) {
                         CheckBox checkBox = (CheckBox) node;
-                        if (selectedDebtors.contains(checkBox.getText()) && !checkBox.getText().equals(whoPaid.getValue())) {
+                        if (selectedDebtors.contains(checkBox.getText())
+                                && !checkBox.getText().equals(whoPaid.getValue())) {
                             checkBox.setSelected(true);
                         }
                     }
                 }
             }
-                expenseTags.setConverter(new StringConverter<Tag>() {
-                    @Override
-                    public String toString(Tag tag) {
-                        return tag != null ? tag.getName() : "";
-                    }
+            expenseTags.setConverter(new StringConverter<Tag>() {
+                @Override
+                public String toString(Tag tag) {
+                    return tag != null ? tag.getName() : "";
+                }
 
-                    @Override
-                    public Tag fromString(String string) {
-                        return null;
-                    }
-                });
+                @Override
+                public Tag fromString(String string) {
+                    return null;
+                }
+            });
 
-                title.setText("Edit Expense");
-                whoPaid.setValue(expense.getOwner());
-                description.setText(expense.getDescription());
-                amount.setText(Float.toString(expense.getAmount()));
-                datePicker.setValue(expense.getDate());
-                selectedTags.getItems().addAll(expense.getTags());
-                setupListViewCellFactory();
-            }
+            title.setText("Edit Expense");
+            whoPaid.setValue(expense.getOwner());
+            description.setText(expense.getDescription());
+            amount.setText(Float.toString(expense.getAmount()));
+            datePicker.setValue(expense.getDate());
+            selectedTags.getItems().addAll(expense.getTags());
+            setupListViewCellFactory();
         }
+    }
 
     /**
      * Refreshes the scene.
@@ -229,6 +229,7 @@ public class AddExpenseCtrl{
             setupListViewCellFactory();
         }
     }
+
     /**
      * Shows the participants when clicked only some people button.
      */
@@ -264,7 +265,7 @@ public class AddExpenseCtrl{
     }
 
     /**
-     *  Sets up the list view that shows the selected tags.
+     * Sets up the list view that shows the selected tags.
      */
     public void setupListViewCellFactory() {
         selectedTags.setCellFactory(new Callback<ListView<Tag>, ListCell<Tag>>() {
@@ -360,6 +361,9 @@ public class AddExpenseCtrl{
         }
     }
 
+    /**
+     * Creates new expense.
+     */
     public void create() {
         String owner = whoPaid.getValue();
         String expenseDescription = description.getText();
@@ -381,8 +385,7 @@ public class AddExpenseCtrl{
         Expense expense = new Expense(owner, expenseDate, expenseAmount, expenseDescription, debtors);
         if (equallyEverybody.isSelected()) {
             expense.setSplitEqually(true);
-        }
-        else {
+        } else {
             expense.setSplitEqually(false);
         }
         for (Tag tag : selectedTagsSet) {
@@ -394,7 +397,12 @@ public class AddExpenseCtrl{
 
     }
 
-    public void update(Expense expense){
+    /**
+     * Updates the expense.
+     *
+     * @param expense expense to be updated.
+     */
+    public void update(Expense expense) {
         String owner = whoPaid.getValue();
         String expenseDescription = description.getText();
         float expenseAmount = Float.parseFloat(amount.getText());

@@ -100,6 +100,13 @@ public class ServerUtils {
                 .post(Entity.entity(expense, APPLICATION_JSON), Expense.class);
     }
 
+    /**
+     * Updates expense in the db.
+     *
+     * @param uuid of the event
+     * @param expense expense to be updated
+     * @return updated expense
+     */
     //  @PutMapping("/{uuid}/transactions/expenses/{id}")
     public Expense updateExpense(UUID uuid, Expense expense) {
         return ClientBuilder.newClient(new ClientConfig())
@@ -109,6 +116,12 @@ public class ServerUtils {
                 .put(Entity.entity(expense, APPLICATION_JSON), Expense.class);
     }
 
+    /**
+     * Removes expense from the server.
+     *
+     * @param uuid event id
+     * @param expense expense to be removed
+     */
     //"/{uuid}/transactions/{id}"
     public void removeExpense(UUID uuid, Expense expense) {
         ClientBuilder.newClient(new ClientConfig())

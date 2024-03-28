@@ -12,6 +12,8 @@ import commons.transactions.Transaction;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
+
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -82,6 +84,14 @@ public class EventOverviewCtrl implements Initializable {
     private Hyperlink backLink;
     @FXML
     private Pane errorPopup;
+    @FXML
+    private Pane expenseMenu;
+    @FXML
+    private Pane expenseDarkener;
+    @FXML
+    private Button editExpense;
+    @FXML
+    private Button removeExpense;
 
     @Inject
     public EventOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
@@ -124,12 +134,19 @@ public class EventOverviewCtrl implements Initializable {
         addParticipantsDarkener.setPrefWidth(root.getWidth());
         addParticipantsDarkener.setLayoutY(root.getLayoutY());
         addParticipantsDarkener.setPrefHeight(root.getHeight());
+        participantsDarkener.setLayoutX(root.getLayoutX());
+        participantsDarkener.setPrefWidth(root.getWidth());
+        participantsDarkener.setLayoutY(root.getLayoutY());
+        participantsDarkener.setPrefHeight(root.getHeight());
 
         if (participantsMenu.isVisible()) {
             toggleParticipants();
         }
         if (addParticipantsMenu.isVisible()) {
             toggleAddParticipants();
+        }
+        if (expenseMenu.isVisible()) {
+            toggleExpenseMenu();
         }
 
         changeBackgroundColor(backLink, "transparent");
@@ -239,6 +256,22 @@ public class EventOverviewCtrl implements Initializable {
         });
     }
 
+    @FXML
+    public void toggleExpenseMenu() {
+        expenseDarkener.toFront();
+        expenseDarkener.setVisible(!expenseDarkener.isVisible());
+        expenseDarkener.setMouseTransparent(!expenseDarkener.isVisible());
+        expenseMenu.toFront();
+        expenseMenu.setVisible(!expenseMenu.isVisible());
+        expenseMenu.setMouseTransparent(!expenseMenu.isVisible());
+        expenseMenu.getChildren().forEach(child -> {
+            child.setVisible(expenseMenu.isVisible());
+            child.setMouseTransparent(expenseMenu.isMouseTransparent());
+        });
+
+
+    }
+
     /**
      * Swaps between the participants menu and the add participants menu.
      */
@@ -287,11 +320,7 @@ public class EventOverviewCtrl implements Initializable {
         }
         Node source = (Node) mouseEvent.getSource();
         Transaction transaction = (Transaction) source.getUserData();
-        if (transaction instanceof Expense) {
-            // mainCtrl.showExpenseOverview((Expense) transaction);
-        } else {
-            // mainCtrl.showPaymentOverview((Payment) transaction);
-        }
+        toggleExpenseMenu();
     }
 
     private void participantClickHandler(ActionEvent actionEvent) {
@@ -362,6 +391,13 @@ public class EventOverviewCtrl implements Initializable {
 
         base.getChildren().addAll(expenseTitle, amount);
 
+        base.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() > 1) {
+                toggleExpenseMenu();
+            }
+        });
+
+
         return base;
     }
 
@@ -404,6 +440,11 @@ public class EventOverviewCtrl implements Initializable {
         amount.setMouseTransparent(true);
 
         base.getChildren().addAll(sender, recipient, amount);
+        base.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() > 1) {
+                toggleExpenseMenu();
+            }
+        });
 
         return base;
     }
@@ -548,9 +589,27 @@ public class EventOverviewCtrl implements Initializable {
         mainCtrl.showDebtOverview(event);
     }
 
-    public void onNewExpenseClicked() {
+    public void onNewExpenseClicked(Expense expense) {
         mainCtrl.showAddExpense(event);
     }
+
+    public void removeExpense() {
+        Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
+        if (selectedNode != null && selectedNode.getUserData() instanceof Expense) {
+            Expense expenseToRemove = (Expense) selectedNode.getUserData();
+            serverUtils.removeExpense(event.getInviteCode(), expenseToRemove);
+            transactionContainer.getItems().remove(selectedNode);
+        }
+    }
+    public void editExpense() {
+        Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
+        if (selectedNode != null && selectedNode.getUserData() instanceof Expense) {
+            Expense expenseToUpdate = (Expense) selectedNode.getUserData();
+            mainCtrl.showEditExpense(event, expenseToUpdate);
+        }
+    }
+
+
 
     /**
      * Adds the selected participants to the event.

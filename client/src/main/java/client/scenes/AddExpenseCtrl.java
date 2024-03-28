@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
+import commons.transactions.Payment;
 import commons.transactions.Tag;
 import jakarta.ws.rs.WebApplicationException;
 import java.time.LocalDate;
@@ -110,12 +111,84 @@ public class AddExpenseCtrl {
                 }
             });
         } else {
+            participants = event.getParticipants().stream()
+                    .map(User::getName)
+                    .toList();
+            whoPaid.getItems().addAll(participants);
+            currencyChoiceBox.getItems().addAll(currencies);
+            expenseTags.getItems().addAll(tags);
+            expenseTags.setConverter(new StringConverter<Tag>() {
+                @Override
+                public String toString(Tag tag) {
+                    return tag != null ? tag.getName() : "";
+                }
+
+                @Override
+                public Tag fromString(String string) {
+                    return null;
+                }
+            });
+
             title.setText("Edit Expense");
             whoPaid.setValue(expense.getOwner());
             description.setText(expense.getDescription());
             amount.setText(Float.toString(expense.getAmount()));
             datePicker.setValue(expense.getDate());
             selectedTags.getItems().addAll(expense.getTags());
+            setupListViewCellFactory();
+        }
+    }
+    /**
+     * Refreshes the scene.
+     *
+     * @param event event the payment belongs to
+     */
+    public void refresh(ManageExpenseMode mode, Event event, Payment payment) {
+        this.event = event;
+        this.tags = event.getTags();
+        this.mode = mode;
+        if (mode == ManageExpenseMode.CREATE) {
+            participants = event.getParticipants().stream()
+                    .map(User::getName)
+                    .toList();
+            whoPaid.getItems().addAll(participants);
+            currencyChoiceBox.getItems().addAll(currencies);
+            expenseTags.getItems().addAll(tags);
+            expenseTags.setConverter(new StringConverter<Tag>() {
+                @Override
+                public String toString(Tag tag) {
+                    return tag != null ? tag.getName() : "";
+                }
+
+                @Override
+                public Tag fromString(String string) {
+                    return null;
+                }
+            });
+        } else {
+            participants = event.getParticipants().stream()
+                    .map(User::getName)
+                    .toList();
+            whoPaid.getItems().addAll(participants);
+            currencyChoiceBox.getItems().addAll(currencies);
+            expenseTags.getItems().addAll(tags);
+            expenseTags.setConverter(new StringConverter<Tag>() {
+                @Override
+                public String toString(Tag tag) {
+                    return tag != null ? tag.getName() : "";
+                }
+
+                @Override
+                public Tag fromString(String string) {
+                    return null;
+                }
+            });
+            title.setText("Edit Payment");
+            whoPaid.setValue(payment.getOwner());
+            //description.setText(payment.getDescription());
+            amount.setText(Float.toString(payment.getAmount()));
+            datePicker.setValue(payment.getDate());
+            selectedTags.getItems().addAll(payment.getTags());
             setupListViewCellFactory();
         }
     }
@@ -297,9 +370,11 @@ public class AddExpenseCtrl {
         Set<Tag> selectedTagsSet = Set.copyOf(selectedTagsList);
 
         Expense updated = new Expense(owner, expenseDate, expenseAmount, expenseDescription, debtors);
+
         for (Tag tag : selectedTagsSet) {
             updated.addTag(tag);
         }
+        server.addExpense(event.getInviteCode(), updated);
         server.updateExpense(event.getInviteCode(), updated);
     }
 

@@ -102,5 +102,16 @@
          </font>
       </Button>
       <TextField layoutX="50.0" layoutY="188.0" prefHeight="26.0" prefWidth="302.0" promptText="Filter" />
+      <Pane fx:id="expenseMenu" layoutX="51.0" layoutY="238.0" mouseTransparent="true" prefHeight="245.0" prefWidth="272.0" style="-fx-background-color: #333333; -fx-background-radius: 12; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10;" visible="false">
+         <children>
+            <Button fx:id="editExpense" layoutX="22.0" layoutY="505.0" mnemonicParsing="false" mouseTransparent="true" onAction="#editExpense" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Edit Expense" textFill="WHITE" visible="false" />
+            <Button fx:id="removeExpense" layoutX="199.0" layoutY="505.0" mnemonicParsing="false" mouseTransparent="true" onAction="#removeExpense" prefHeight="40.0" prefWidth="130.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Remove Expense" textFill="WHITE" visible="false">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Pane fx:id="expenseDarkener" layoutX="-6.0" layoutY="-6.0" prefHeight="658.0" prefWidth="610.0" />
    </children>
 </AnchorPane>

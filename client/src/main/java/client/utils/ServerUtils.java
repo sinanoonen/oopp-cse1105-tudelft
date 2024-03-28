@@ -109,6 +109,16 @@ public class ServerUtils {
                 .put(Entity.entity(updated, APPLICATION_JSON), Expense.class);
     }
 
+    //"/{uuid}/transactions/{id}"
+    public void removeExpense(UUID uuid, Expense expense) {
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events/" + uuid.toString() + "/transactions/" + expense.getId())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete();
+
+    }
+
 
 
     /**

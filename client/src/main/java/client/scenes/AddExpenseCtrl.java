@@ -1,8 +1,11 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import commons.Event;
 import commons.User;
+import commons.WebSocketMessage;
 import commons.transactions.Expense;
 import commons.transactions.Tag;
 import jakarta.ws.rs.WebApplicationException;
@@ -10,6 +13,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -34,6 +39,8 @@ public class AddExpenseCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
+
 
     @FXML
     private ChoiceBox<String> whoPaid;
@@ -69,10 +76,18 @@ public class AddExpenseCtrl {
     private final List<String> currencies = List.of("EUR", "USD");
     private Set<Tag> tags;
 
+    /**
+     * The constructor for the controller.
+     *
+     * @param server the server
+     * @param mainCtrl the main controller
+     * @param socket the web socket
+     */
     @Inject
-    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
     }
 
 
@@ -86,6 +101,16 @@ public class AddExpenseCtrl {
         this.tags = event.getTags();
         initialized = true;
         initialize();
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
+        });
     }
 
 
@@ -193,6 +218,7 @@ public class AddExpenseCtrl {
     @FXML
     private void handleCancelButtonClick() {
         // Handle cancel button click
+        onExit();
         mainCtrl.showEventOverview(event);
     }
 
@@ -233,6 +259,7 @@ public class AddExpenseCtrl {
 
         }
         clearFields();
+        onExit();
         mainCtrl.showEventOverview(event);
     }
 
@@ -268,4 +295,10 @@ public class AddExpenseCtrl {
         }
     }
 
+    /**
+     * Unsubscribe from sockets and any other clean-up code.
+     */
+    public void onExit() {
+        socket.unregisterFromMessages("/topic/eventsUpdated");
+    }
 }

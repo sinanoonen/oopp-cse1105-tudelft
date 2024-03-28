@@ -26,7 +26,7 @@ public class TestEventRepository implements EventRepository {
     }
 
     private Optional<Event> find(UUID code) {
-        return events.stream().filter(q -> q.getInviteCode() == code).findFirst();
+        return events.stream().filter(q -> q.getInviteCode().equals(code)).findFirst();
     }
 
     @Override

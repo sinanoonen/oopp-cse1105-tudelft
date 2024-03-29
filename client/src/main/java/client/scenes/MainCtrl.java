@@ -17,10 +17,8 @@
 package client.scenes;
 
 import client.utils.ClientUtils;
-import client.utils.Currency;
-import client.utils.Language;
-import client.utils.ManageExpenseMode;
 import client.utils.ConfigReader;
+import client.utils.ManageExpenseMode;
 import client.utils.ManageUserMode;
 import client.utils.ServerUtils;
 import commons.Event;

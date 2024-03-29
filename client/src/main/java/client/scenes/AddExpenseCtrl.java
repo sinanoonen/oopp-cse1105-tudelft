@@ -87,7 +87,6 @@ public class AddExpenseCtrl {
     private Set<Tag> tags;
     private ManageExpenseMode mode;
     private Expense expenseToUpdate = null;
-    private boolean initialized = false;
 
     /**
      * The constructor for the controller.
@@ -98,6 +97,7 @@ public class AddExpenseCtrl {
      */
     @Inject
     public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket) {
+        System.out.println("Constructing add expense ctrl");
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.socket = socket;
@@ -126,6 +126,7 @@ public class AddExpenseCtrl {
         whoPaid.getItems().clear();
         currencyChoiceBox.getItems().clear();
         expenseTags.getItems().clear();
+        selectedTags.getItems().clear();
 
         if (mode == ManageExpenseMode.CREATE) {
             participants = event.getParticipants().stream()
@@ -206,6 +207,7 @@ public class AddExpenseCtrl {
                 onlySomePeople.setSelected(false);
             }
         });
+        System.out.println("Refreshing add expense scene");
     }
 
     /**
@@ -329,7 +331,7 @@ public class AddExpenseCtrl {
 
                             // Create a button for removing the tag
                             Button removeButton = new Button("X");
-                            removeButton.setStyle("-fx-background-color: transparent; -fx-text-fill: red;");
+                            removeButton.setStyle("-fx-background-color: transparent;");
                             removeButton.setOnAction(e -> {
                                 // Retrieve the selected tag and remove it from the list
                                 Tag selectedTag = getItem();

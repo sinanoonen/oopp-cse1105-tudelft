@@ -20,6 +20,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -182,6 +183,12 @@ public class EventOverviewCtrl implements Initializable {
                     mainCtrl.showHomePage();
                 }
             });
+        });
+        root.setOnMouseClicked(e -> {
+            if (!isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
+                // Close the expenseMenu pane
+                mainCtrl.showEventOverview(event);
+            }
         });
     }
 
@@ -678,6 +685,12 @@ public class EventOverviewCtrl implements Initializable {
         refresh(updated);
         toggleParticipants();
     }
+
+    private boolean isClickInsideNode(Node node, double sceneX, double sceneY) {
+        Bounds bounds = node.localToScene(node.getBoundsInLocal());
+        return bounds.contains(sceneX, sceneY);
+    }
+
 
     /**
      * Unsubscribe from sockets and any other clean-up code.

@@ -28,7 +28,9 @@ import client.scenes.EventOverviewCtrl;
 import client.scenes.HomePageCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.ManageUserCtrl;
+import client.scenes.ServerSelectCtrl;
 import client.scenes.SettingsCtrl;
+import client.utils.ConfigReader;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -45,6 +47,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) throws URISyntaxException, IOException {
+        ConfigReader.initialize();
         launch();
     }
 
@@ -61,6 +64,7 @@ public class Main extends Application {
         var addExpense = FXML.load(AddExpenseCtrl.class, "client", "scenes", "AddExpense.fxml");
         var manageUser = FXML.load(ManageUserCtrl.class, "client", "scenes", "ManageUser.fxml");
         var adminLogin = FXML.load(AdminLoginCtrl.class, "client", "scenes", "AdminLogin.fxml");
+        var serverSelect = FXML.load(ServerSelectCtrl.class, "client", "scenes", "ServerSelect.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initialize(primaryStage,
@@ -73,6 +77,7 @@ public class Main extends Application {
                 adminOverview,
                 addExpense,
                 manageUser,
-                adminLogin);
+                adminLogin,
+                serverSelect);
     }
 }

@@ -34,6 +34,9 @@ public class WebSocketEventController {
      */
     @MessageMapping("/deleteEvent")
     public void deleteEvent(@Payload String uuidString) {
+        if (uuidString == null) {
+            throw new IllegalArgumentException();
+        }
         UUID uuid = UUID.fromString(uuidString);
         if (repo.existsById(uuid)) {
             repo.deleteById(uuid);

@@ -19,6 +19,7 @@ import java.util.UUID;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -30,7 +31,11 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -190,6 +195,17 @@ public class AddExpenseCtrl {
             selectedTags.getItems().addAll(expense.getTags());
             setupListViewCellFactory();
         }
+        onlySomePeople.setOnAction(e -> {
+            if (onlySomePeople.isSelected()) {
+                equallyEverybody.setSelected(false);
+            }
+        });
+
+        equallyEverybody.setOnAction(e -> {
+            if (equallyEverybody.isSelected()) {
+                onlySomePeople.setSelected(false);
+            }
+        });
     }
 
     /**
@@ -246,6 +262,17 @@ public class AddExpenseCtrl {
             selectedTags.getItems().addAll(payment.getTags());
             setupListViewCellFactory();
         }
+        onlySomePeople.setOnAction(e -> {
+            if (onlySomePeople.isSelected()) {
+                equallyEverybody.setSelected(false);
+            }
+        });
+
+        equallyEverybody.setOnAction(e -> {
+            if (equallyEverybody.isSelected()) {
+                onlySomePeople.setSelected(false);
+            }
+        });
     }
 
     /**
@@ -285,6 +312,29 @@ public class AddExpenseCtrl {
     /**
      * Sets up the list view that shows the selected tags.
      */
+//    public void setupListViewCellFactory() {
+//        selectedTags.setCellFactory(new Callback<ListView<Tag>, ListCell<Tag>>() {
+//            @Override
+//            public ListCell<Tag> call(ListView<Tag> listView) {
+//                return new ListCell<>() {
+//                    @Override
+//                    protected void updateItem(Tag tag, boolean empty) {
+//                        super.updateItem(tag, empty);
+//                        if (tag == null || empty) {
+//                            setText(null);
+//                        } else {
+//                            setText(tag.getName()); // Display only the name of the tag
+//                            int color = tag.getColor();
+//                            String newColor = intToString(color);
+//                            setStyle("-fx-background-color: " + newColor);
+//                        }
+//                    }
+//                };
+//            }
+//        });
+//
+//
+//    }
     public void setupListViewCellFactory() {
         selectedTags.setCellFactory(new Callback<ListView<Tag>, ListCell<Tag>>() {
             @Override
@@ -295,11 +345,30 @@ public class AddExpenseCtrl {
                         super.updateItem(tag, empty);
                         if (tag == null || empty) {
                             setText(null);
+                            setGraphic(null); // Clear the graphic if the cell is empty
                         } else {
-                            setText(tag.getName()); // Display only the name of the tag
+                            // Display the name of the tag
+                            setText(tag.getName());
+
+                            // Create a button for removing the tag
+                            Button removeButton = new Button("X");
+                            removeButton.setStyle("-fx-background-color: transparent; -fx-text-fill: red;");
+                            removeButton.setOnAction(e -> {
+                                // Retrieve the selected tag and remove it from the list
+                                Tag selectedTag = getItem();
+                                if (selectedTag != null) {
+                                    getListView().getItems().remove(selectedTag);
+                                }
+                            });
+
+                            // Set the button as the graphic for the cell
+                            setGraphic(removeButton);
+
+                            // Set the background color of the cell
                             int color = tag.getColor();
                             String newColor = intToString(color);
-                            setStyle("-fx-background-color: " + newColor);
+                            setBackground(new Background(new BackgroundFill(Color.web(newColor),
+                                    CornerRadii.EMPTY, Insets.EMPTY)));
                         }
                     }
                 };

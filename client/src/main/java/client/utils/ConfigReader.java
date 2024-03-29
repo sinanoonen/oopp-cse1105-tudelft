@@ -3,7 +3,6 @@ package client.utils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -24,16 +23,9 @@ public class ConfigReader {
      * @throws IOException if error occurred while reading config file
      */
     public static void initialize() throws IOException {
-//        FileInputStream is = new FileInputStream(CONFIG_FILE);
-//        PROPERTIES.load(is);
-//        is.close();
-        try (InputStream is = ConfigReader.class.getClassLoader().getResourceAsStream(CONFIG_FILE)) {
-            if (is != null) {
-                PROPERTIES.load(is);
-            } else {
-                throw new FileNotFoundException("config.properties not found in the classpath");
-            }
-        }
+        FileInputStream is = new FileInputStream(CONFIG_FILE);
+        PROPERTIES.load(is);
+        is.close();
     }
 
     /**

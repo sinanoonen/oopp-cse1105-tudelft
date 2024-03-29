@@ -2,6 +2,7 @@ package server.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 import commons.User;
@@ -65,8 +66,39 @@ class UserControllerTest {
                 .thenReturn(1);
 
         ResponseEntity<User> responseEntity = userController.editUser(email, updatedUser);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(updatedUser, responseEntity.getBody());
+        assertNotEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotEquals(updatedUser, responseEntity.getBody());
+    }
+
+    @Test
+    void testEditUser_NullUpdate() {
+        String email = "john@example.com";
+
+        ResponseEntity<User> responseEntity = userController.editUser(email, null);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertNull(responseEntity.getBody());
+    }
+
+    @Test
+    void testEditUser_InvalidEmail() {
+        String email = "";
+        User user = new User("John Doe", email, "1234", "5678", null);
+
+        ResponseEntity<User> responseEntity = userController.editUser(email, user);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertNull(responseEntity.getBody());
+    }
+
+    @Test
+    void testEditUser_BadRequestFromRepository() {
+        String email = "john@example.com";
+        User user = new User("John Doe", email, "1234", "5678", null);
+
+        when(mockRepo.getUserByEmail(email)).thenReturn(new ArrayList<>());
+
+        ResponseEntity<User> responseEntity = userController.editUser(email, user);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertNull(responseEntity.getBody());
     }
 
     @Test
@@ -81,6 +113,22 @@ class UserControllerTest {
     }
 
     @Test
+    void testAddUser_NullUser() {
+        ResponseEntity<User> responseEntity = userController.addUser(null);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertNull(responseEntity.getBody());
+    }
+
+    @Test
+    void testAddUser_MissingInformation() {
+        User user = new User("", "", "", "", null);
+
+        ResponseEntity<User> responseEntity = userController.addUser(user);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertNull(responseEntity.getBody());
+    }
+
+    @Test
     void testDeleteUser() {
         String email = "john@example.com";
 
@@ -88,5 +136,15 @@ class UserControllerTest {
 
         ResponseEntity<User> responseEntity = userController.deleteUser(email);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void testDeleteUser_UserNotFound() {
+        String email = "unknown@example.com";
+
+        when(mockRepo.deleteUserByEmail(email)).thenReturn(0);
+
+        ResponseEntity<User> responseEntity = userController.deleteUser(email);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 }

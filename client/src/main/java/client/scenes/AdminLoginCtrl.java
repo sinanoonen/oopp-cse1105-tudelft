@@ -36,6 +36,9 @@ public class AdminLoginCtrl {
         loginButton.setDefaultButton(true);
     }
 
+    /**
+     * This is triggered when the login button is clicked.
+     */
     @FXML
     public void loginButtonClicked() {
         String password = passwordField.getText();

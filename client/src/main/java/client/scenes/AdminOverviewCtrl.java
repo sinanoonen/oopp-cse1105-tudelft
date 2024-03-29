@@ -218,6 +218,13 @@ public class AdminOverviewCtrl implements Initializable {
         dialog.showAndWait();
     }
 
+    /**
+     * This is used to return the
+     * event details in a string format.
+     *
+     * @param event the event
+     * @return the string representation of the event
+     */
     // to be improved
     public String formatEventDetails(Event event) {
         return "Title: " + event.getTitle() + "\n"
@@ -332,6 +339,9 @@ public class AdminOverviewCtrl implements Initializable {
         }
     }
 
+    /**
+     * This is triggered when the delete button is pressed.
+     */
     @FXML
     public void handleDeleteEvent() {
         if (selectedEvent != null) {

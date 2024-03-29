@@ -1,22 +1,25 @@
 package client.scenes;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import client.utils.ServerUtils;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.Button;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
+/**
+ * This is used to test the AdminLoginCtrl.
+ * It extends ApplicationTest to use TestFX.
+ */
 public class AdminLoginCtrlTest extends ApplicationTest {
 
     @Mock

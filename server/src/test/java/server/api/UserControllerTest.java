@@ -2,7 +2,10 @@ package server.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -11,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import server.database.UserRepository;
@@ -60,10 +62,10 @@ class UserControllerTest {
         User updatedUser = new User("Jane Smith", email, "4321", "8765", null);
 
         when(mockRepo.updateUser(
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString()))
+                anyString(),
+                anyString(),
+                anyString(),
+                anyString()))
                 .thenReturn(1);
 
         ResponseEntity<User> responseEntity = userController.editUser(email, updatedUser);
@@ -147,5 +149,59 @@ class UserControllerTest {
 
         ResponseEntity<User> responseEntity = userController.deleteUser(email);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void testDeleteUser_NullEmail() {
+        ResponseEntity<User> responseEntity = userController.deleteUser(null);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void testGetAllUsers_NoUsersFound() {
+        when(mockRepo.findAll()).thenReturn(new ArrayList<>());
+
+        List<User> result = userController.getAllUsers();
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testGetAllUsers_NullResult() {
+        when(mockRepo.findAll()).thenReturn(null);
+
+        List<User> result = userController.getAllUsers();
+        assertNull(result);
+    }
+
+    @Test
+    void testGetAllUsers_MultipleUsersFound() {
+        List<User> users = new ArrayList<>();
+        users.add(new User("John Doe", "john@example.com", "1234", "5678", null));
+        users.add(new User("Jane Smith", "jane@example.com", "4321", "8765", null));
+
+        when(mockRepo.findAll()).thenReturn(users);
+
+        List<User> result = userController.getAllUsers();
+        assertEquals(users.size(), result.size());
+        assertTrue(result.containsAll(users));
+    }
+
+    @Test
+    void testEditUser_ValidRequest_SuccessfulUpdate() {
+        String email = "john@example.com";
+        User existingUser = new User("John Doe", email, "1234", "5678", null);
+        User updatedUser = new User("Jane Smith", email, "4321", "8765", null);
+
+        when(mockRepo.getUserByEmail(email)).thenReturn(List.of(existingUser));
+        when(mockRepo.updateUser(anyString(), anyString(), anyString(), anyString())).thenReturn(1);
+
+        ResponseEntity<User> responseEntity = userController.editUser(email, updatedUser);
+
+        User updatedResult = responseEntity.getBody();
+        assertNotNull(updatedResult);
+        assertEquals(updatedUser.getName(), updatedResult.getName());
+        assertEquals(updatedUser.getIban(), updatedResult.getIban());
+        assertEquals(updatedUser.getBic(), updatedResult.getBic());
+        assertEquals(existingUser.getEventID(), updatedResult.getEventID());
     }
 }

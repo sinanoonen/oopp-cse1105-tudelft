@@ -37,7 +37,7 @@ public class AdminLoginCtrl {
     }
 
     @FXML
-    private void loginButtonClicked() {
+    public void loginButtonClicked() {
         String password = passwordField.getText();
         boolean result = server.authenticate(password);
         if (result) {
@@ -60,4 +60,13 @@ public class AdminLoginCtrl {
     public void cancel() {
         mainCtrl.showHomePage();
     }
+
+    public PasswordField getPasswordField() {
+        return passwordField;
+    }
+
+    public void setPasswordField(PasswordField passwordField) {
+        this.passwordField = passwordField;
+    }
+
 }

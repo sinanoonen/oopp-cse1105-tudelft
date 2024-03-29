@@ -219,15 +219,15 @@ public class AdminOverviewCtrl implements Initializable {
     }
 
     // to be improved
-    private String formatEventDetails(Event event) {
+    public String formatEventDetails(Event event) {
         return "Title: " + event.getTitle() + "\n"
             + "Invite Code: " + event.getInviteCode() + "\n"
             + "Participants: " + event.getParticipants() + "\n"
             + "Tags: " + event.getTags() + "\n"
             + "Expenses: " + event.getExpenses() + "\n"
             + "Payments: " + event.getPayments() + "\n"
-            + "Creation Date:" + event.getCreationDate() + "\n"
-            + "Last Activity:" + event.getLastActivity() + "\n";
+            + "Creation Date: " + event.getCreationDate() + "\n"
+            + "Last Activity: " + event.getLastActivity() + "\n";
     }
 
     /**
@@ -333,7 +333,7 @@ public class AdminOverviewCtrl implements Initializable {
     }
 
     @FXML
-    private void handleDeleteEvent() {
+    public void handleDeleteEvent() {
         if (selectedEvent != null) {
             UUID uuid = selectedEvent.getInviteCode();
             server.deleteEvent(uuid);

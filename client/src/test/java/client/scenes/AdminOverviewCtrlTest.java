@@ -1,15 +1,18 @@
 package client.scenes;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import client.utils.ServerUtils;
 import commons.Event;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListView;
@@ -150,4 +153,61 @@ public class AdminOverviewCtrlTest extends ApplicationTest {
         assertTrue(controller.isSortByCreationDateAscending());
     }
 
+    @Test
+    public void testFormatEventDetails() {
+        Event event = new Event("Test");
+        String uuid = event.getInviteCode().toString();
+        String date1 = event.getCreationDate().toString();
+        String date2 = event.getLastActivity().toString();
+
+
+        String expected = "Title: Test\n"
+            + "Invite Code: " + uuid + "\n"
+            + "Participants: []\n"
+            + "Tags: [commons.transactions.Tag{name='Food', color=-7093123}, "
+            + "commons.transactions.Tag{name='Entrance Fees', color=-11893016}, "
+            + "commons.transactions.Tag{name='Travel', color=-2070938}]\n"
+            + "Expenses: []\n"
+            + "Payments: []\n"
+            + "Creation Date: " + date1 + "\n"
+            + "Last Activity: " + date2 + "\n";
+
+        assertEquals(expected, controller.formatEventDetails(event));
+    }
+
+    @Test
+    public void testDeleteEventMultiple() {
+        Event event1 = mock(Event.class);
+        UUID uuid1 = UUID.randomUUID();
+        when(event1.getInviteCode()).thenReturn(uuid1);
+
+        Event event2 = mock(Event.class);
+        UUID uuid2 = UUID.randomUUID();
+        when(event2.getInviteCode()).thenReturn(uuid2);
+
+        when(serverUtils.getEvents()).thenReturn(Arrays.asList(event1, event2));
+
+        controller.setSelectedEvent(event1);
+        controller.handleDeleteEvent();
+
+        verify(serverUtils).deleteEvent(uuid1);
+    }
+
+    @Test
+    public void testDeleteEventNullEvent() {
+        controller.setSelectedEvent(null);
+
+        Platform.runLater(() -> {
+            controller.handleDeleteEvent();
+        });
+
+        verify(serverUtils, never()).deleteEvent(any(UUID.class));
+    }
+
+    @Test
+    public void testCancel() {
+        controller.exit();
+
+        verify(mainCtrl, times(1)).showHomePage();
+    }
 }

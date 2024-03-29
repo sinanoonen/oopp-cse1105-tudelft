@@ -310,31 +310,8 @@ public class AddExpenseCtrl {
     }
 
     /**
-     * Sets up the list view that shows the selected tags.
+     * Sets up the list view cell factory for the tags.
      */
-//    public void setupListViewCellFactory() {
-//        selectedTags.setCellFactory(new Callback<ListView<Tag>, ListCell<Tag>>() {
-//            @Override
-//            public ListCell<Tag> call(ListView<Tag> listView) {
-//                return new ListCell<>() {
-//                    @Override
-//                    protected void updateItem(Tag tag, boolean empty) {
-//                        super.updateItem(tag, empty);
-//                        if (tag == null || empty) {
-//                            setText(null);
-//                        } else {
-//                            setText(tag.getName()); // Display only the name of the tag
-//                            int color = tag.getColor();
-//                            String newColor = intToString(color);
-//                            setStyle("-fx-background-color: " + newColor);
-//                        }
-//                    }
-//                };
-//            }
-//        });
-//
-//
-//    }
     public void setupListViewCellFactory() {
         selectedTags.setCellFactory(new Callback<ListView<Tag>, ListCell<Tag>>() {
             @Override

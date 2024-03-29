@@ -184,12 +184,6 @@ public class EventOverviewCtrl implements Initializable {
                 }
             });
         });
-        root.setOnMouseClicked(e -> {
-            if (!isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
-                // Close the expenseMenu pane
-                mainCtrl.showEventOverview(event);
-            }
-        });
     }
 
     // ---------------- VISUAL EFFECTS HANDLERS ---------------- //
@@ -302,7 +296,12 @@ public class EventOverviewCtrl implements Initializable {
             child.setVisible(expenseMenu.isVisible());
             child.setMouseTransparent(expenseMenu.isMouseTransparent());
         });
-
+        root.setOnMouseClicked(e -> {
+            if (!isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
+                // Close the expenseMenu pane
+                mainCtrl.showEventOverview(event);
+            }
+        });
 
     }
 

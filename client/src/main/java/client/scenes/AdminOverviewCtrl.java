@@ -3,17 +3,21 @@ package client.scenes;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
 import commons.Event;
+import commons.WebSocketMessage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -40,6 +44,7 @@ public class AdminOverviewCtrl implements Initializable {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
 
     @FXML
     private AnchorPane root;
@@ -73,13 +78,15 @@ public class AdminOverviewCtrl implements Initializable {
     /**
      * The constructor for the controller.
      *
-     * @param server the server utils
+     * @param server   the server utils
      * @param mainCtrl the main controller
+     * @param socket the web socket utils
      */
     @Inject
-    public AdminOverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public AdminOverviewCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
     }
 
     /**
@@ -92,6 +99,10 @@ public class AdminOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(this::loadEvents);
+        });
     }
 
     /**
@@ -323,10 +334,18 @@ public class AdminOverviewCtrl implements Initializable {
     @FXML
     private void handleDeleteEvent() {
         if (selectedEvent != null) {
-            UUID uuid = selectedEvent.getInviteCode();
-            server.deleteEvent(uuid);
-            selectedEvent = null;
-            loadEvents();
+            Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationDialog.setTitle("Confirm Deletion");
+            confirmationDialog.setHeaderText("Delete Event");
+            confirmationDialog.setContentText("Are you sure you want to delete the event: "
+                + selectedEvent.getTitle() + "?");
+
+            Optional<ButtonType> result = confirmationDialog.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                UUID uuid = selectedEvent.getInviteCode();
+                socket.sendWebSocketMessage("/app/deleteEvent", uuid.toString());
+                selectedEvent = null;
+            }
         } else {
             showAlert("Error", "No event selected for delete.");
         }

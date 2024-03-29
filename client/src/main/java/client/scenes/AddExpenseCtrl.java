@@ -2,8 +2,11 @@ package client.scenes;
 
 import client.utils.ManageExpenseMode;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import commons.Event;
 import commons.User;
+import commons.WebSocketMessage;
 import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Tag;
@@ -12,6 +15,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -38,6 +43,8 @@ public class AddExpenseCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
+
 
     @FXML
     private Label title;
@@ -78,16 +85,17 @@ public class AddExpenseCtrl {
     private boolean initialized = false;
 
     /**
-     * Creates add expense scene controller.
+     * The constructor for the controller.
      *
-     * @param server   server
-     * @param mainCtrl main controller
+     * @param server the server
+     * @param mainCtrl the main controller
+     * @param socket the web socket
      */
     @Inject
-    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.server = server;
         this.mainCtrl = mainCtrl;
-        mode = ManageExpenseMode.CREATE;
+        this.socket = socket;
     }
 
     /**
@@ -99,6 +107,16 @@ public class AddExpenseCtrl {
         this.event = event;
         this.tags = event.getTags();
         this.mode = mode;
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
+        });
 
         whoPaid.getItems().clear();
         currencyChoiceBox.getItems().clear();
@@ -305,6 +323,7 @@ public class AddExpenseCtrl {
     @FXML
     private void handleCancelButtonClick() {
         // Handle cancel button click
+        onExit();
         mainCtrl.showEventOverview(event);
     }
 
@@ -326,6 +345,7 @@ public class AddExpenseCtrl {
 
         }
         clearFields();
+        onExit();
         mainCtrl.showEventOverview(event);
     }
 
@@ -362,6 +382,7 @@ public class AddExpenseCtrl {
     }
 
     /**
+<<<<<<< client/src/main/java/client/scenes/AddExpenseCtrl.java
      * Creates new expense.
      */
     public void create() {
@@ -439,4 +460,9 @@ public class AddExpenseCtrl {
         this.expenseToUpdate = expenseToUpdate;
     }
 
+     * Unsubscribe from sockets and any other clean-up code.
+     */
+    public void onExit() {
+        socket.unregisterFromMessages("/topic/eventsUpdated");
+    }
 }

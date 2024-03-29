@@ -2,11 +2,16 @@ package client.scenes;
 
 import algorithms.DebtSettler;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
+import commons.WebSocketMessage;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -27,6 +32,8 @@ public class DebtOverviewCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
+
     private Event event;
     private DebtSettler debtSettler;
 
@@ -41,10 +48,18 @@ public class DebtOverviewCtrl implements Initializable {
     @FXML
     private Hyperlink backLink;
 
+    /**
+     * Constructor for the DebtOverview controller.
+     *
+     * @param serverUtils serverUtils
+     * @param mainCtrl    mainCtrl
+     * @param socket      socket
+     */
     @Inject
-    public DebtOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public DebtOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
     }
 
     @Override
@@ -65,6 +80,16 @@ public class DebtOverviewCtrl implements Initializable {
         changeBackgroundColor(backLink, "transparent");
 
         resetParticipantsDebtContainer();
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
+        });
     }
 
     @FXML
@@ -73,6 +98,7 @@ public class DebtOverviewCtrl implements Initializable {
     }
 
     public void onBackClicked(MouseEvent event) {
+        onExit();
         mainCtrl.showEventOverview(this.event);
     }
 
@@ -156,5 +182,12 @@ public class DebtOverviewCtrl implements Initializable {
         }
 
         node.setStyle(currentStyle + newColor);
+    }
+
+    /**
+     * Unsubscribe from sockets and any other clean-up code.
+     */
+    public void onExit() {
+        socket.unregisterFromMessages("/topic/eventsUpdated");
     }
 }

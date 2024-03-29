@@ -3,13 +3,16 @@ package client.scenes;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
+import commons.WebSocketMessage;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -30,6 +33,7 @@ public class HomePageCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
 
     private List<Event> events;
 
@@ -56,12 +60,22 @@ public class HomePageCtrl implements Initializable {
     @FXML
     private Pane quitClickArea;
     @FXML
-    private Pane adminArea;
+    private Pane adminClickArea;
+    @FXML
+    private Text serverText;
 
+    /**
+     * Constructor for the HomePage controller.
+     *
+     * @param serverUtils serverUtils
+     * @param mainCtrl    mainCtrl
+     * @param socket      socket
+     */
     @Inject
-    public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
     }
 
     @Override
@@ -71,6 +85,13 @@ public class HomePageCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                events = serverUtils.getEvents();
+                reloadEventsList();
+            });
+        });
     }
 
     /**
@@ -89,6 +110,7 @@ public class HomePageCtrl implements Initializable {
         screenDarkener.setPrefHeight(root.getPrefHeight());
 
         codeInput.setText("");
+        serverText.setText("Current server: " + ServerUtils.getServer());
 
         reloadEventsList();
 
@@ -139,19 +161,12 @@ public class HomePageCtrl implements Initializable {
         screenDarkener.setMouseTransparent(true);
     }
 
-    /**
-     * Handles highlighting the admin area when hovered over.
-     */
-    public void toggleAdminHover() {
-        if (adminArea.getStyle().contains("#333333")) {
-            changeStyleAttribute(adminArea, "-fx-background-color", "#2b2b2b");
-        } else {
-            changeStyleAttribute(adminArea, "-fx-background-color", "#333333");
-        }
-    }
-
     public void onAdminAreaClicked() {
         mainCtrl.showAdminLogin();
+    }
+
+    public void onServerAreaClicked() {
+        mainCtrl.showServerSelect();
     }
 
     public void createEvent() {

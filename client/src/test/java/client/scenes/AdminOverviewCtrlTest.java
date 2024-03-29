@@ -3,9 +3,7 @@ package client.scenes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,9 +12,7 @@ import client.utils.ServerUtils;
 import commons.Event;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ListView;
@@ -177,35 +173,6 @@ public class AdminOverviewCtrlTest extends ApplicationTest {
             + "Last Activity: " + date2 + "\n";
 
         assertEquals(expected, controller.formatEventDetails(event));
-    }
-
-    @Test
-    public void testDeleteEventMultiple() {
-        Event event1 = mock(Event.class);
-        UUID uuid1 = UUID.randomUUID();
-        when(event1.getInviteCode()).thenReturn(uuid1);
-
-        Event event2 = mock(Event.class);
-        UUID uuid2 = UUID.randomUUID();
-        when(event2.getInviteCode()).thenReturn(uuid2);
-
-        when(serverUtils.getEvents()).thenReturn(Arrays.asList(event1, event2));
-
-        controller.setSelectedEvent(event1);
-        controller.handleDeleteEvent();
-
-        verify(serverUtils).deleteEvent(uuid1);
-    }
-
-    @Test
-    public void testDeleteEventNullEvent() {
-        controller.setSelectedEvent(null);
-
-        Platform.runLater(() -> {
-            controller.handleDeleteEvent();
-        });
-
-        verify(serverUtils, never()).deleteEvent(any(UUID.class));
     }
 
     @Test

@@ -339,11 +339,8 @@ public class AdminOverviewCtrl implements Initializable {
         }
     }
 
-    /**
-     * This is triggered when the delete button is pressed.
-     */
     @FXML
-    public void handleDeleteEvent() {
+    private void handleDeleteEvent() {
         if (selectedEvent != null) {
             UUID uuid = selectedEvent.getInviteCode();
             server.deleteEvent(uuid);

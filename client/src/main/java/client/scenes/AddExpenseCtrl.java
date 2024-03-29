@@ -460,8 +460,6 @@ public class AddExpenseCtrl {
         this.expenseToUpdate = expenseToUpdate;
     }
 
-     * Unsubscribe from sockets and any other clean-up code.
-     */
     public void onExit() {
         socket.unregisterFromMessages("/topic/eventsUpdated");
     }

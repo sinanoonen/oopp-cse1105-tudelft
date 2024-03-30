@@ -11,15 +11,16 @@ import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Tag;
 import jakarta.ws.rs.WebApplicationException;
-
-import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -41,7 +42,6 @@ import javafx.stage.Modality;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javax.inject.Inject;
-import javax.print.DocFlavor;
 
 /**
  * Controller for adding an expense to an event.
@@ -499,7 +499,8 @@ public class AddExpenseCtrl {
             }
         }
         ObservableList<Tag> selectedTagsList = selectedTags.getItems();
-        Set<Tag> selectedTagsSet = Set.copyOf(selectedTagsList);
+        Set<Tag> selectedTagsSet;
+        selectedTagsSet = Set.copyOf(selectedTagsList);
 
         // Check if the expense is split equally
         boolean splitEqually = equallyEverybody.isSelected();

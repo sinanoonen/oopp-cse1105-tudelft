@@ -305,6 +305,7 @@ public class EventOverviewCtrl implements Initializable {
         });
         toggleExpenseMenuVisibility(expenseMenu.isVisible());
     }
+
     public void toggleExpenseMenuVisibility(boolean visible) {
         expenseMenuVisible = visible;
     }

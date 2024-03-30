@@ -189,6 +189,7 @@ public class EventOverviewCtrl implements Initializable {
             if (expenseMenuVisible && !isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
                 // Close the expenseMenu pane
                 toggleExpenseMenu();
+                mainCtrl.showEventOverview(event);
             }
         });
     }

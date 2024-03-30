@@ -4,19 +4,13 @@ import algorithms.DebtSettler;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
-import client.utils.WebSocketServerUtils;
-import com.google.inject.Inject;
 import commons.Event;
-import commons.WebSocketMessage;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.UUID;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
@@ -25,44 +19,31 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javax.inject.Inject;
 
 /**
- * Controller for the DebtOverview scene.
+ * Controller for the DebtPaymentOverview scene. 
  */
-public class DebtOverviewCtrl implements Initializable {
+public class DebtPaymentOverviewCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
-    private final WebSocketServerUtils socket;
-
     private Event event;
     private DebtSettler debtSettler;
 
     @FXML
     private AnchorPane root;
     @FXML
-    private ListView<Node> participantsDebtContainer;
-    @FXML
-    private Button debtSettleButton;
-    @FXML
-    private Pane buttonDarkener;
+    private ListView<Node> participantsPaymentContainer;
     @FXML
     private Hyperlink backLink;
     @FXML
-    private Text balanceText;
+    private Text instructionText;
 
-    /**
-     * Constructor for the DebtOverview controller.
-     *
-     * @param serverUtils serverUtils
-     * @param mainCtrl    mainCtrl
-     * @param socket      socket
-     */
     @Inject
-    public DebtOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
+    public DebtPaymentOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
-        this.socket = socket;
     }
 
     @Override
@@ -77,48 +58,26 @@ public class DebtOverviewCtrl implements Initializable {
     /**
      * Method to refresh the scene. This is needed for some reason.
      */
-    public void refresh(Event event) {
-        this.debtSettler = new DebtSettler(event);
+    public void refresh(Event event, DebtSettler debtSettler) {
+        this.debtSettler = debtSettler;
         this.event = event;
 
-        debtSettleButton.requestFocus();
-
-        buttonDarkener.setVisible(false);
         changeBackgroundColor(backLink, "transparent");
 
-        resetParticipantsDebtContainer();
+        resetParticipantsPaymentContainer();
 
         if (ClientUtils.isHighContrast()) {
             UIUtils.activateHighContrastMode(root);
-            balanceText.setFill(javafx.scene.paint.Color.WHITE);
+            instructionText.setFill(javafx.scene.paint.Color.WHITE);
         } else {
             UIUtils.deactivateHighContrastMode(root);
-            balanceText.setFill(javafx.scene.paint.Color.web("#8e8e8e"));
+            instructionText.setFill(javafx.scene.paint.Color.web("#8e8e8e"));
         }
-
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
-            Platform.runLater(() -> {
-                UUID uuid = UUID.fromString(message.getContent().substring(15));
-                if (event != null && uuid.equals(event.getInviteCode())) {
-                    UIUtils.showEventDeletedWarning(event.getTitle());
-                    mainCtrl.showHomePage();
-                }
-            });
-        });
     }
 
-    @FXML
-    public void toggleDarkenedDebtsButton(MouseEvent event) {
-        buttonDarkener.setVisible(!buttonDarkener.isVisible());
-    }
 
     public void onBackClicked(MouseEvent event) {
-        onExit();
-        mainCtrl.showEventOverview(this.event);
-    }
-
-    public void showDebtSettler() {
-        mainCtrl.showDebtPaymentOverview(event, debtSettler);
+        mainCtrl.showDebtOverview(this.event);
     }
 
     /**
@@ -134,21 +93,21 @@ public class DebtOverviewCtrl implements Initializable {
         );
     }
 
-    private void resetParticipantsDebtContainer() {
-        participantsDebtContainer.getItems().removeAll(participantsDebtContainer.getItems());
-        List<Node> participantsDebt = debtSettler
-                .getDebts()
-                .keySet()
+
+    private void resetParticipantsPaymentContainer() {
+        participantsPaymentContainer.getItems().removeAll(participantsPaymentContainer.getItems());
+        List<Node> participantsDebtPayment = debtSettler
+                .getSettledDebts()
                 .stream()
-                .map(this::debtCellFactory)
+                .map(this::debtPaymentCellFactory)
                 .toList();
-        participantsDebtContainer.getItems().addAll(participantsDebt);
+        participantsPaymentContainer.getItems().addAll(participantsDebtPayment);
     }
 
-    private Node debtCellFactory(String user) {
+    private Node debtPaymentCellFactory(String settlement) {
         Pane base = new Pane();
-        base.setPrefWidth(participantsDebtContainer.getPrefWidth() - 20);
-        base.setPrefHeight(100);
+        base.setPrefWidth(participantsPaymentContainer.getPrefWidth() - 20);
+        base.setPrefHeight(120);
         base.setStyle("-fx-background-color: #444444;"
                 + " -fx-border-width: 3;"
                 + " -fx-border-color: black;"
@@ -156,24 +115,16 @@ public class DebtOverviewCtrl implements Initializable {
                 + " -fx-border-radius: 5;"
         );
 
-        Text username = new Text(user);
-        final double nameTopPadding = base.getPrefHeight() / 2 + 5;
-        final double nameLeftPadding = 0.12f * base.getPrefWidth();
+        Text username = new Text(settlement);
+        final double nameTopPadding = 0.20f * base.getPrefHeight();
+        final double nameLeftPadding = 0.07f * base.getPrefWidth();
         username.setLayoutX(base.getLayoutX() + nameLeftPadding);
         username.setLayoutY(base.getLayoutY() + nameTopPadding);
         username.setFont(Font.font("SansSerif", 15));
         username.setFill(Paint.valueOf("#FFFFFF"));
         username.setMouseTransparent(true);
 
-        Text debt = new Text(String.valueOf(-1 * (debtSettler.getDebts().get(user))));
-        final double debtLeftPadding = 0.75f * base.getPrefWidth();
-        debt.setLayoutX(base.getLayoutX() + debtLeftPadding);
-        debt.setLayoutY(base.getLayoutY() + nameTopPadding);
-        debt.setFont(Font.font("SansSerif", 15));
-        debt.setFill(Paint.valueOf("#FFFFFF"));
-        debt.setMouseTransparent(true);
-
-        base.getChildren().addAll(username, debt);
+        base.getChildren().addAll(username);
 
         return base;
     }
@@ -199,10 +150,4 @@ public class DebtOverviewCtrl implements Initializable {
         node.setStyle(currentStyle + newColor);
     }
 
-    /**
-     * Unsubscribe from sockets and any other clean-up code.
-     */
-    public void onExit() {
-        socket.unregisterFromMessages("/topic/eventsUpdated");
-    }
 }

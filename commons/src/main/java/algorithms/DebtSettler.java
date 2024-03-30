@@ -74,7 +74,17 @@ public class DebtSettler {
 
         //Placeholders for when an error needs to occur as a result of something getting messed up with the debts.
         if (!positiveDebts.isEmpty() || !negativeDebts.isEmpty()) {
-            System.out.println("Debts cannot be settled completely.");
+            if (!positiveDebts.isEmpty()) {
+                if (Math.abs(positiveDebts.remove().getValue()) >= 0.01f) {
+                    System.out.println("Debts cannot be settled completely.");
+                }
+            } else {
+                if (Math.abs(negativeDebts.remove().getValue()) >= 0.01f) {
+                    System.out.println("Debts cannot be settled completely.");
+                } else {
+                    System.out.println("All debts settles successfully.");
+                }
+            }
         } else {
             System.out.println("All debts settled successfully.");
         }
@@ -110,7 +120,7 @@ public class DebtSettler {
         }
         assert userSender != null;
         assert userReceiver != null;
-        result += "\nYou can transfer the money to:\nIBAN: " + userReceiver.getIban()
+        result += "\n\nYou can transfer the money to:\nIBAN: " + userReceiver.getIban()
                 + "\nBIC: " + userReceiver.getBic()
                 + "\n" + userReceiver.getName() + " can send a reminder to the E-mail: " + userSender.getEmail();
         return result;

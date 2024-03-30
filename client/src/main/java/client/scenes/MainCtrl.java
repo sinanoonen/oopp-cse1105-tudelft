@@ -16,6 +16,7 @@
 
 package client.scenes;
 
+import algorithms.DebtSettler;
 import client.utils.ClientUtils;
 import client.utils.ConfigReader;
 import client.utils.ManageUserMode;
@@ -42,6 +43,9 @@ public class MainCtrl {
 
     private DebtOverviewCtrl debtOverviewCtrl;
     private Scene debtOverview;
+
+    private DebtPaymentOverviewCtrl debtPaymentOverviewCtrl;
+    private Scene debtPaymentOverview;
 
     private AddEventCtrl addEventCtrl;
     private Scene addEvent;
@@ -76,6 +80,7 @@ public class MainCtrl {
                            Pair<HomePageCtrl, Parent> homePage,
                            Pair<EventOverviewCtrl, Parent> eventOverview,
                            Pair<DebtOverviewCtrl, Parent> debtOverview,
+                           Pair<DebtPaymentOverviewCtrl, Parent> debtPaymentOverview,
                            Pair<AddEventCtrl, Parent> addEvent,
                            Pair<SettingsCtrl, Parent> settings,
                            Pair<AdminOverviewCtrl, Parent> adminOverview,
@@ -94,6 +99,9 @@ public class MainCtrl {
 
         this.debtOverviewCtrl = debtOverview.getKey();
         this.debtOverview = new Scene(debtOverview.getValue());
+
+        this.debtPaymentOverviewCtrl = debtPaymentOverview.getKey();
+        this.debtPaymentOverview = new Scene(debtPaymentOverview.getValue());
 
         this.addEventCtrl = addEvent.getKey();
         this.addEvent = new Scene(addEvent.getValue());
@@ -160,6 +168,18 @@ public class MainCtrl {
         primaryStage.setTitle("Debt Overview");
         primaryStage.setScene(debtOverview);
         debtOverviewCtrl.refresh(event);
+    }
+
+    /**
+     * Shows the debt payment overview.
+     *
+     * @param event the event from the debt overview, required to go back
+     * @param debtSettler the debtSettler from debt overview, contains the payment instructions
+     */
+    public void showDebtPaymentOverview(Event event, DebtSettler debtSettler) {
+        primaryStage.setTitle("Debt Payment Overview");
+        primaryStage.setScene(debtPaymentOverview);
+        debtPaymentOverviewCtrl.refresh(event, debtSettler);
     }
 
     /**

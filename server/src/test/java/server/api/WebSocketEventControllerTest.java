@@ -3,6 +3,7 @@ package server.api;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import commons.Event;
 import commons.User;
@@ -44,6 +45,30 @@ class WebSocketEventControllerTest {
         controller.deleteEvent(nonExistentEventId.toString());
 
         assertFalse(fakeRepo.existsById(nonExistentEventId));
+
+        assertNull(messagingTemplate.getLastDestination());
+        assertNull(messagingTemplate.getLastPayload());
+    }
+
+    @Test
+    public void deleteEventWithInvalidUUID() {
+        assertThrows(IllegalArgumentException.class, () -> controller.deleteEvent("invalid-uuid"));
+
+        assertNull(messagingTemplate.getLastDestination());
+        assertNull(messagingTemplate.getLastPayload());
+    }
+
+    @Test
+    public void deleteEventWithNullUUID() {
+        assertThrows(IllegalArgumentException.class, () -> controller.deleteEvent(null));
+
+        assertNull(messagingTemplate.getLastDestination());
+        assertNull(messagingTemplate.getLastPayload());
+    }
+
+    @Test
+    public void deleteEventWithEmptyUUID() {
+        assertThrows(IllegalArgumentException.class, () -> controller.deleteEvent(""));
 
         assertNull(messagingTemplate.getLastDestination());
         assertNull(messagingTemplate.getLastPayload());

@@ -11,14 +11,15 @@ import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Tag;
 import jakarta.ws.rs.WebApplicationException;
+
+import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -40,6 +41,7 @@ import javafx.stage.Modality;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javax.inject.Inject;
+import javax.print.DocFlavor;
 
 /**
  * Controller for adding an expense to an event.
@@ -80,6 +82,8 @@ public class AddExpenseCtrl {
     private Button cancelButton;
     @FXML
     private Button addButton;
+    @FXML
+    private Button addTag;
 
     private Event event;
     private List<String> participants = new ArrayList<>();
@@ -102,6 +106,7 @@ public class AddExpenseCtrl {
         this.mainCtrl = mainCtrl;
         this.socket = socket;
     }
+
 
     /**
      * Refreshes the scene.
@@ -127,8 +132,10 @@ public class AddExpenseCtrl {
         currencyChoiceBox.getItems().clear();
         expenseTags.getItems().clear();
         selectedTags.getItems().clear();
+        clearFields();
 
-        if (mode == ManageExpenseMode.CREATE) {
+        if (mode.equals(ManageExpenseMode.CREATE)) {
+            title.setText("Add Expense");
             participants = event.getParticipants().stream()
                     .map(User::getName)
                     .toList();
@@ -199,6 +206,11 @@ public class AddExpenseCtrl {
         onlySomePeople.setOnAction(e -> {
             if (onlySomePeople.isSelected()) {
                 equallyEverybody.setSelected(false);
+            }
+        });
+        onlySomePeople.setOnAction(c -> {
+            if (onlySomePeople.isSelected()) {
+                handleOnlySomePeople();
             }
         });
 
@@ -498,10 +510,14 @@ public class AddExpenseCtrl {
         expense.setAmount(expenseAmount);
         expense.setDate(expenseDate);
         expense.setSplitEqually(splitEqually);
+        Map<String, Float> debts = new HashMap<>();
+        for (String debtor : debtors) {
+            debts.put(debtor, 0f);
+        }
+        expense.setDebts(debts);
         // Clear existing tags and add the updated tags
         expense.setTags(selectedTagsSet.stream().toList());
         server.updateExpense(event.getInviteCode(), expense);
-
     }
 
     public void setExpenseToUpdate(Expense expenseToUpdate) {

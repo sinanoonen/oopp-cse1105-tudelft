@@ -96,6 +96,7 @@ public class EventOverviewCtrl implements Initializable {
     private Button editExpense;
     @FXML
     private Button removeExpense;
+    private boolean expenseMenuVisible = false;
 
     /**
      * Constructor for the EventOverview controller.
@@ -183,6 +184,12 @@ public class EventOverviewCtrl implements Initializable {
                     mainCtrl.showHomePage();
                 }
             });
+        });
+        root.setOnMouseClicked(e -> {
+            if (expenseMenuVisible && !isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
+                // Close the expenseMenu pane
+                toggleExpenseMenu();
+            }
         });
     }
 
@@ -296,13 +303,10 @@ public class EventOverviewCtrl implements Initializable {
             child.setVisible(expenseMenu.isVisible());
             child.setMouseTransparent(expenseMenu.isMouseTransparent());
         });
-        root.setOnMouseClicked(e -> {
-            if (!isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
-                // Close the expenseMenu pane
-                mainCtrl.showEventOverview(event);
-            }
-        });
-
+        toggleExpenseMenuVisibility(expenseMenu.isVisible());
+    }
+    public void toggleExpenseMenuVisibility(boolean visible) {
+        expenseMenuVisible = visible;
     }
 
     /**
@@ -654,6 +658,7 @@ public class EventOverviewCtrl implements Initializable {
             Expense expenseToUpdate = (Expense) selectedNode.getUserData();
             mainCtrl.showEditExpense(event, expenseToUpdate);
         }
+
     }
 
     /**

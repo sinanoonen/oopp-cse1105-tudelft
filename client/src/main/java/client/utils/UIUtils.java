@@ -81,9 +81,25 @@ public class UIUtils {
 
         if (node instanceof Hyperlink) {
             String newColor = String.format("#%02x%02x%02x", 255, 255, 255);
+
+            String oldColor = ((Hyperlink) node).getTextFill().toString();
+            oldColor = "#" + oldColor.substring(2, 8);
+
+            if (!colorMap.get(node).contains("-fx-text-fill")) {
+                colorMap.put(node, colorMap.get(node) + "-fx-text-fill: " + oldColor + ";");
+            }
+
             changeColor(node, newColor, "-fx-text-fill");
         } else if (node instanceof Text) {
             String newColor = String.format("#%02x%02x%02x", 255, 255, 255);
+
+            String oldColor = ((Text) node).getFill().toString();
+            oldColor = "#" + oldColor.substring(2, 8);
+
+            if (!colorMap.get(node).contains("-fx-fill")) {
+                colorMap.put(node, colorMap.get(node) + "-fx-fill: " + oldColor + ";");
+            }
+
             changeColor(node, newColor, "-fx-fill");
         } else if (!fillColor.isEmpty() && !fillColor.equals("transparent")) {
             int[] rgb = hexToRGB(fillColor);

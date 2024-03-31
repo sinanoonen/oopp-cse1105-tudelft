@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.text.Text;
-import javafx.scene.control.Alert;
 
 /**
  * A utility class for UI operations.

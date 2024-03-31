@@ -141,6 +141,40 @@ public class ServerUtils {
     }
 
     /**
+     * Updates expense in the db.
+     *
+     * @param uuid of the event
+     * @param expense expense to be updated
+     * @return updated expense
+     */
+    //  @PutMapping("/{uuid}/transactions/expenses/{id}")
+    public Expense updateExpense(UUID uuid, Expense expense) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events/" + uuid.toString() + "/transactions/expenses/" + expense.getId())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(expense, APPLICATION_JSON), Expense.class);
+    }
+
+    /**
+     * Removes expense from the server.
+     *
+     * @param uuid event id
+     * @param expense expense to be removed
+     */
+    //"/{uuid}/transactions/{id}"
+    public void removeExpense(UUID uuid, Expense expense) {
+        ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events/" + uuid.toString() + "/transactions/" + expense.getId())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete();
+
+    }
+
+
+
+    /**
      * Returns all users stored in the database.
      */
     public List<User> getUsers() {

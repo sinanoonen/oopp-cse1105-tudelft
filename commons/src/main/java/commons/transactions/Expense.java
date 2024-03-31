@@ -2,6 +2,7 @@ package commons.transactions;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -13,12 +14,15 @@ import java.util.Objects;
  * Expense class that extends from the transaction class.
  */
 @Entity
+@Table(name = "expenses")
 public class Expense extends Transaction {
     // Title of the expense
     private String description;
     // a map of each participant's debt within this expense
     @ElementCollection
     Map<String, Float> debts;
+
+    private boolean splitEqually = false;
 
     @SuppressWarnings("unused")
     protected Expense() {
@@ -75,6 +79,14 @@ public class Expense extends Transaction {
         } else {
             debts.put(owner, -1 * amount);
         }
+    }
+
+    public boolean isSplitEqually() {
+        return splitEqually;
+    }
+
+    public void setSplitEqually(boolean splitEqually) {
+        this.splitEqually = splitEqually;
     }
 
     /**

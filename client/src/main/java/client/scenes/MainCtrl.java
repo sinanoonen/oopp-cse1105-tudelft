@@ -19,10 +19,13 @@ package client.scenes;
 import algorithms.DebtSettler;
 import client.utils.ClientUtils;
 import client.utils.ConfigReader;
+import client.utils.ManageExpenseMode;
 import client.utils.ManageUserMode;
 import client.utils.ServerUtils;
 import commons.Event;
 import commons.User;
+import commons.transactions.Expense;
+import commons.transactions.Payment;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -208,8 +211,34 @@ public class MainCtrl {
     public void showAddExpense(Event event) {
         primaryStage.setTitle("New Expense");
         primaryStage.setScene(addExpense);
-        addExpenseCtrl.refresh(event);
+        Expense nullExpense = null;
+        addExpenseCtrl.refresh(ManageExpenseMode.CREATE, event, nullExpense);
     }
+
+    /**
+     * Redirects client to a page to edit an existing expense.
+     *
+     * @param event event to which the expense is to be edited
+     */
+    public void showEditExpense(Event event, Expense expense) {
+        primaryStage.setTitle("Edit Expense");
+        primaryStage.setScene(addExpense);
+        addExpenseCtrl.setExpenseToUpdate(expense);
+        addExpenseCtrl.refresh(ManageExpenseMode.EDIT, event, expense);
+    }
+    /**
+     * Redirects client to a page to edit an existing expense.
+     *
+     * @param event event to which the expense is to be edited
+     */
+
+    public void showEditPayment(Event event, Payment payment) {
+        primaryStage.setTitle("Edit Payment");
+        primaryStage.setScene(addExpense);
+        addExpenseCtrl.refresh(ManageExpenseMode.EDIT, event, payment);
+    }
+
+
 
     /**
      * Shows the page to create a new user.

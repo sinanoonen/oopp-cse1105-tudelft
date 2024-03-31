@@ -46,6 +46,14 @@ public abstract class Transaction {
         this.tags = new ArrayList<>();
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
     public long getId() {
         return id;
     }

@@ -14,7 +14,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="668.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
    <children>
-      <Label layoutX="10.399999618530273" layoutY="10.399999618530273" style="-fx-text-fill: white;" text="Add/Edit Expense" textFill="WHITE">
+      <Label fx:id="title" layoutX="10.399999618530273" layoutY="10.399999618530273" style="-fx-text-fill: white;" text="Add Expense" textFill="WHITE">
          <font>
             <Font name="SansSerif Regular" size="27.0" />
          </font>

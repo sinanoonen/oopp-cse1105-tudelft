@@ -20,6 +20,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -87,6 +88,15 @@ public class EventOverviewCtrl implements Initializable {
     private Hyperlink backLink;
     @FXML
     private Pane errorPopup;
+    @FXML
+    private Pane expenseMenu;
+    @FXML
+    private Pane expenseDarkener;
+    @FXML
+    private Button editExpense;
+    @FXML
+    private Button removeExpense;
+    private boolean expenseMenuVisible = false;
 
     /**
      * Constructor for the EventOverview controller.
@@ -140,12 +150,19 @@ public class EventOverviewCtrl implements Initializable {
         addParticipantsDarkener.setPrefWidth(root.getWidth());
         addParticipantsDarkener.setLayoutY(root.getLayoutY());
         addParticipantsDarkener.setPrefHeight(root.getHeight());
+        expenseDarkener.setLayoutX(root.getLayoutX());
+        expenseDarkener.setPrefWidth(root.getWidth());
+        expenseDarkener.setLayoutY(root.getLayoutY());
+        expenseDarkener.setPrefHeight(root.getHeight());
 
         if (participantsMenu.isVisible()) {
             toggleParticipants();
         }
         if (addParticipantsMenu.isVisible()) {
             toggleAddParticipants();
+        }
+        if (expenseMenu.isVisible()) {
+            toggleExpenseMenu();
         }
 
         changeBackgroundColor(backLink, "transparent");
@@ -167,6 +184,13 @@ public class EventOverviewCtrl implements Initializable {
                     mainCtrl.showHomePage();
                 }
             });
+        });
+        root.setOnMouseClicked(e -> {
+            if (expenseMenuVisible && !isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
+                // Close the expenseMenu pane
+                toggleExpenseMenu();
+                mainCtrl.showEventOverview(event);
+            }
         });
     }
 
@@ -266,6 +290,28 @@ public class EventOverviewCtrl implements Initializable {
     }
 
     /**
+     * toggles expense menu which shows edit or remove expenses.
+     */
+    @FXML
+    public void toggleExpenseMenu() {
+        expenseDarkener.toFront();
+        expenseDarkener.setVisible(!expenseDarkener.isVisible());
+        expenseDarkener.setMouseTransparent(!expenseDarkener.isVisible());
+        expenseMenu.toFront();
+        expenseMenu.setVisible(!expenseMenu.isVisible());
+        expenseMenu.setMouseTransparent(!expenseMenu.isVisible());
+        expenseMenu.getChildren().forEach(child -> {
+            child.setVisible(expenseMenu.isVisible());
+            child.setMouseTransparent(expenseMenu.isMouseTransparent());
+        });
+        toggleExpenseMenuVisibility(expenseMenu.isVisible());
+    }
+
+    public void toggleExpenseMenuVisibility(boolean visible) {
+        expenseMenuVisible = visible;
+    }
+
+    /**
      * Swaps between the participants menu and the add participants menu.
      */
     public void swapParticipantsAddParticipants() {
@@ -313,11 +359,7 @@ public class EventOverviewCtrl implements Initializable {
         }
         Node source = (Node) mouseEvent.getSource();
         Transaction transaction = (Transaction) source.getUserData();
-        if (transaction instanceof Expense) {
-            // mainCtrl.showExpenseOverview((Expense) transaction);
-        } else {
-            // mainCtrl.showPaymentOverview((Payment) transaction);
-        }
+        toggleExpenseMenu();
     }
 
     private void participantClickHandler(ActionEvent actionEvent) {
@@ -388,6 +430,13 @@ public class EventOverviewCtrl implements Initializable {
 
         base.getChildren().addAll(expenseTitle, amount);
 
+        base.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() > 1) {
+                toggleExpenseMenu();
+            }
+        });
+
+
         return base;
     }
 
@@ -430,6 +479,11 @@ public class EventOverviewCtrl implements Initializable {
         amount.setMouseTransparent(true);
 
         base.getChildren().addAll(sender, recipient, amount);
+        base.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() > 1) {
+                toggleExpenseMenu();
+            }
+        });
 
         return base;
     }
@@ -584,6 +638,32 @@ public class EventOverviewCtrl implements Initializable {
     }
 
     /**
+     * Removes expenses from UI and server.
+     */
+    public void removeExpense() {
+        Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
+        if (selectedNode != null) {
+            Expense expenseToRemove = (Expense) selectedNode.getUserData();
+            serverUtils.removeExpense(event.getInviteCode(), expenseToRemove);
+            event.removeTransaction(expenseToRemove);
+            resetTransactionsContainer();
+        }
+        mainCtrl.showEventOverview(event);
+    }
+
+    /**
+     * Edits expense.
+     */
+    public void editExpense() {
+        Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
+        if (selectedNode != null) {
+            Expense expenseToUpdate = (Expense) selectedNode.getUserData();
+            mainCtrl.showEditExpense(event, expenseToUpdate);
+        }
+
+    }
+
+    /**
      * Adds the selected participants to the event.
      */
     public void onAddParticipantsConfirm() {
@@ -611,6 +691,12 @@ public class EventOverviewCtrl implements Initializable {
         refresh(updated);
         toggleParticipants();
     }
+
+    private boolean isClickInsideNode(Node node, double sceneX, double sceneY) {
+        Bounds bounds = node.localToScene(node.getBoundsInLocal());
+        return bounds.contains(sceneX, sceneY);
+    }
+
 
     /**
      * Unsubscribe from sockets and any other clean-up code.

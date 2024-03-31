@@ -1,9 +1,14 @@
 package client.utils;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.text.Text;
 
 /**
  * A utility class for UI operations.
@@ -15,6 +20,8 @@ public class UIUtils {
     private static final double BRIGHTNESS_MODIFIER = 23;
 
     private static final HashMap<Node, String> colorMap = new HashMap<>();
+
+    private static final List<Node> activePages = new LinkedList<>();
 
     /**
      * Changes the color of a node.
@@ -58,8 +65,6 @@ public class UIUtils {
             fillColor = fillColor.replace("-fx-fill: ", "");
         }
 
-
-
         String borderColor = "";
         if (currentStyle.contains("-fx-border-color")) {
             int startIndex = currentStyle.indexOf("-fx-border-color");
@@ -75,7 +80,29 @@ public class UIUtils {
             changeColor(node, newColor, "-fx-background-color");
         }
 
-        if (!fillColor.isEmpty() && !fillColor.equals("transparent")) {
+        if (node instanceof Hyperlink) {
+            String newColor = String.format("#%02x%02x%02x", 255, 255, 255);
+
+            String oldColor = ((Hyperlink) node).getTextFill().toString();
+            oldColor = "#" + oldColor.substring(2, 8);
+
+            if (!colorMap.get(node).contains("-fx-text-fill")) {
+                colorMap.put(node, colorMap.get(node) + "-fx-text-fill: " + oldColor + ";");
+            }
+
+            changeColor(node, newColor, "-fx-text-fill");
+        } else if (node instanceof Text) {
+            String newColor = String.format("#%02x%02x%02x", 255, 255, 255);
+
+            String oldColor = ((Text) node).getFill().toString();
+            oldColor = "#" + oldColor.substring(2, 8);
+
+            if (!colorMap.get(node).contains("-fx-fill")) {
+                colorMap.put(node, colorMap.get(node) + "-fx-fill: " + oldColor + ";");
+            }
+
+            changeColor(node, newColor, "-fx-fill");
+        } else if (!fillColor.isEmpty() && !fillColor.equals("transparent")) {
             int[] rgb = hexToRGB(fillColor);
             increaseColorContrast(rgb);
             String newColor = String.format("#%02x%02x%02x", rgb[0], rgb[1], rgb[2]);
@@ -114,19 +141,19 @@ public class UIUtils {
      *
      * @param root the root node
      */
-    public static void activateHighContrastMode(Parent root) {
+    public static void activateHighContrastMode(Node root) {
 
+        if (activePages.contains(root)) {
+            return;
+        }
 
         increaseNodeContrast(root);
+        activePages.add(root);
 
-        //get root children
-        root.getChildrenUnmodifiable().forEach(node -> {
-            if (node instanceof Parent) {
-                activateHighContrastMode((Parent) node);
-            } else {
-                increaseNodeContrast(node);
-            }
-        });
+        if (root instanceof Parent && !(root instanceof ChoiceBox) && !(root instanceof Hyperlink)) {
+            ((Parent) root).getChildrenUnmodifiable().forEach(UIUtils::activateHighContrastMode);
+        }
+
     }
 
     /**
@@ -134,20 +161,21 @@ public class UIUtils {
      *
      * @param root the root node
      */
-    public static void deactivateHighContrastMode(Parent root) {
-        if (colorMap.containsKey(root)) {
-            root.setStyle(colorMap.get(root));
+    public static void deactivateHighContrastMode(Node root) {
+
+        if (!activePages.contains(root)) {
+            return;
         }
 
-        root.getChildrenUnmodifiable().forEach(node -> {
-            if (node instanceof Parent) {
-                deactivateHighContrastMode((Parent) node);
-            } else {
-                if (colorMap.containsKey(node)) {
-                    node.setStyle(colorMap.get(node));
-                }
-            }
-        });
+        if (root instanceof Parent) {
+            ((Parent) root).getChildrenUnmodifiable().forEach(UIUtils::deactivateHighContrastMode);
+        }
+
+        if (colorMap.containsKey(root)) {
+            root.setStyle(colorMap.get(root));
+            activePages.remove(root);
+        }
+
     }
 
     private static int[] hexToRGB(String hex) {

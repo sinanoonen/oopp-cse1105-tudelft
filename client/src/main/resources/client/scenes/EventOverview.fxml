@@ -60,7 +60,7 @@
             </Button>
          </children>
       </Pane>
-      <Hyperlink fx:id="backLink" layoutX="30.0" layoutY="31.0" onMouseClicked="#onBackClicked" onMouseEntered="#toggleHyperlinkBackground" onMouseExited="#toggleHyperlinkBackground" text="&lt;-- back" textFill="#8e8e8e" underline="true">
+      <Hyperlink fx:id="backLink" layoutX="30.0" layoutY="31.0" onMouseClicked="#onBackClicked" onMouseEntered="#toggleHyperlinkBackground" onMouseExited="#toggleHyperlinkBackground" text="&lt;-- back" textFill="#a1a1a1" underline="true">
          <font>
             <Font size="14.0" />
          </font>

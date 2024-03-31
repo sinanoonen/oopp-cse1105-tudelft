@@ -36,8 +36,11 @@ public class AdminLoginCtrl {
         loginButton.setDefaultButton(true);
     }
 
+    /**
+     * This is triggered when the login button is clicked.
+     */
     @FXML
-    private void loginButtonClicked() {
+    public void loginButtonClicked() {
         String password = passwordField.getText();
         boolean result = server.authenticate(password);
         if (result) {
@@ -60,4 +63,13 @@ public class AdminLoginCtrl {
     public void cancel() {
         mainCtrl.showHomePage();
     }
+
+    public PasswordField getPasswordField() {
+        return passwordField;
+    }
+
+    public void setPasswordField(PasswordField passwordField) {
+        this.passwordField = passwordField;
+    }
+
 }

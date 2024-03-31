@@ -16,12 +16,16 @@
 
 package client.scenes;
 
+import algorithms.DebtSettler;
 import client.utils.ClientUtils;
-import client.utils.Currency;
-import client.utils.Language;
+import client.utils.ConfigReader;
+import client.utils.ManageExpenseMode;
 import client.utils.ManageUserMode;
+import client.utils.ServerUtils;
 import commons.Event;
 import commons.User;
+import commons.transactions.Expense;
+import commons.transactions.Payment;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -43,6 +47,9 @@ public class MainCtrl {
     private DebtOverviewCtrl debtOverviewCtrl;
     private Scene debtOverview;
 
+    private DebtPaymentOverviewCtrl debtPaymentOverviewCtrl;
+    private Scene debtPaymentOverview;
+
     private AddEventCtrl addEventCtrl;
     private Scene addEvent;
 
@@ -60,6 +67,9 @@ public class MainCtrl {
     private Scene adminLogin;
     private AdminLoginCtrl adminLoginCtrl;
 
+    private Scene serverSelect;
+    private ServerSelectCtrl serverSelectCtrl;
+
     /**
      * Initialize the main controller.
      *
@@ -73,12 +83,14 @@ public class MainCtrl {
                            Pair<HomePageCtrl, Parent> homePage,
                            Pair<EventOverviewCtrl, Parent> eventOverview,
                            Pair<DebtOverviewCtrl, Parent> debtOverview,
+                           Pair<DebtPaymentOverviewCtrl, Parent> debtPaymentOverview,
                            Pair<AddEventCtrl, Parent> addEvent,
                            Pair<SettingsCtrl, Parent> settings,
                            Pair<AdminOverviewCtrl, Parent> adminOverview,
                            Pair<AddExpenseCtrl, Parent> addExpense,
                            Pair<ManageUserCtrl, Parent> manageUser,
-                           Pair<AdminLoginCtrl, Parent> adminLogin
+                           Pair<AdminLoginCtrl, Parent> adminLogin,
+                           Pair<ServerSelectCtrl, Parent> serverSelect
     ) {
         this.primaryStage = primaryStage;
 
@@ -90,6 +102,9 @@ public class MainCtrl {
 
         this.debtOverviewCtrl = debtOverview.getKey();
         this.debtOverview = new Scene(debtOverview.getValue());
+
+        this.debtPaymentOverviewCtrl = debtPaymentOverview.getKey();
+        this.debtPaymentOverview = new Scene(debtPaymentOverview.getValue());
 
         this.addEventCtrl = addEvent.getKey();
         this.addEvent = new Scene(addEvent.getValue());
@@ -106,9 +121,13 @@ public class MainCtrl {
         this.adminLoginCtrl = adminLogin.getKey();
         this.adminLogin = new Scene(adminLogin.getValue());
 
+        this.serverSelectCtrl = serverSelect.getKey();
+        this.serverSelect = new Scene(serverSelect.getValue());
+
         //Set default language and currency
-        ClientUtils.setCurrency(Currency.EUR);
-        ClientUtils.setLanguage(Language.ENGLISH);
+        ClientUtils.setCurrency(ConfigReader.getCurrency());
+        ClientUtils.setLanguage(ConfigReader.getLanguage());
+        ServerUtils.setServer(ConfigReader.getIP(), ConfigReader.getPort());
 
         this.addExpenseCtrl = addExpense.getKey();
         this.addExpense = new Scene(addExpense.getValue());
@@ -155,6 +174,18 @@ public class MainCtrl {
     }
 
     /**
+     * Shows the debt payment overview.
+     *
+     * @param event the event from the debt overview, required to go back
+     * @param debtSettler the debtSettler from debt overview, contains the payment instructions
+     */
+    public void showDebtPaymentOverview(Event event, DebtSettler debtSettler) {
+        primaryStage.setTitle("Debt Payment Overview");
+        primaryStage.setScene(debtPaymentOverview);
+        debtPaymentOverviewCtrl.refresh(event, debtSettler);
+    }
+
+    /**
      * Show the settings page.
      */
     public void showSettings() {
@@ -180,8 +211,34 @@ public class MainCtrl {
     public void showAddExpense(Event event) {
         primaryStage.setTitle("New Expense");
         primaryStage.setScene(addExpense);
-        addExpenseCtrl.refresh(event);
+        Expense nullExpense = null;
+        addExpenseCtrl.refresh(ManageExpenseMode.CREATE, event, nullExpense);
     }
+
+    /**
+     * Redirects client to a page to edit an existing expense.
+     *
+     * @param event event to which the expense is to be edited
+     */
+    public void showEditExpense(Event event, Expense expense) {
+        primaryStage.setTitle("Edit Expense");
+        primaryStage.setScene(addExpense);
+        addExpenseCtrl.setExpenseToUpdate(expense);
+        addExpenseCtrl.refresh(ManageExpenseMode.EDIT, event, expense);
+    }
+    /**
+     * Redirects client to a page to edit an existing expense.
+     *
+     * @param event event to which the expense is to be edited
+     */
+
+    public void showEditPayment(Event event, Payment payment) {
+        primaryStage.setTitle("Edit Payment");
+        primaryStage.setScene(addExpense);
+        addExpenseCtrl.refresh(ManageExpenseMode.EDIT, event, payment);
+    }
+
+
 
     /**
      * Shows the page to create a new user.
@@ -212,5 +269,14 @@ public class MainCtrl {
     public void showAdminLogin() {
         primaryStage.setTitle("Admin Login");
         primaryStage.setScene(adminLogin);
+    }
+
+    /**
+     * Shows the server selection page.
+     */
+    public void showServerSelect() {
+        primaryStage.setTitle("Server Selection");
+        primaryStage.setScene(serverSelect);
+        serverSelectCtrl.refresh();
     }
 }

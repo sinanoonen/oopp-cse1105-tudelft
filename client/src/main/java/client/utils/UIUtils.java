@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.text.Text;
+import javafx.scene.control.Alert;
 
 /**
  * A utility class for UI operations.
@@ -204,5 +205,18 @@ public class UIUtils {
             case "gray" -> "#808080";
             default -> color;
         };
+    }
+
+    /**
+     * This warning is shown when the event was deleted.
+     *
+     * @param eventTitle the title of the event
+     */
+    public static void showEventDeletedWarning(String eventTitle) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Event Deleted");
+        alert.setHeaderText(null);
+        alert.setContentText("The event '" + eventTitle + "' has been deleted.");
+        alert.showAndWait();
     }
 }

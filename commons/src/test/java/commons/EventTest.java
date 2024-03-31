@@ -12,6 +12,7 @@ import commons.transactions.Payment;
 import commons.transactions.Tag;
 import java.awt.Color;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -19,12 +20,98 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
  * A test for the Event class.
  */
 public class EventTest {
+
+    private Event event;
+    private Set<Tag> newTags;
+    private Set<User> newParticipants;
+    private List<Expense> newExpenses;
+    private List<Payment> newPayments;
+
+    /**
+     * This is the setup for testing.
+     */
+    @BeforeEach
+    public void setup() {
+        event = new Event("Test Event");
+
+        newTags = new HashSet<>();
+        newTags.add(new Tag("NewTag1", new Color(120, 120, 120)));
+
+        User user1 = new User("Alice", "alice@gmail.com", "NL11BANK0123456789", "BICCODE1", UUID.randomUUID());
+        newParticipants = new HashSet<>();
+        newParticipants.add(user1);
+
+        newExpenses = List.of(
+            new Expense("Alice", LocalDate.now(), 10.0f, "Test Expense 1", List.of("Alice"))
+        );
+
+        newPayments = List.of(
+            new Payment(LocalDate.now(), 20.0f, "Alice", "Bob")
+        );
+    }
+
+    @Test
+    public void testCreationAndLastActivityDates() {
+        LocalDateTime creationDateBeforeSet = event.getCreationDate();
+        LocalDateTime lastActivityBeforeSet = event.getLastActivity();
+        LocalDateTime newDate = LocalDateTime.of(2023, 12, 1, 1, 1, 1);
+
+        event.setCreationDate(newDate);
+        event.setLastActivity(newDate);
+
+        assertEquals(newDate, event.getCreationDate());
+        assertNotEquals(creationDateBeforeSet, event.getCreationDate());
+
+        assertEquals(newDate, event.getLastActivity());
+        assertNotEquals(lastActivityBeforeSet, event.getLastActivity());
+    }
+
+    @Test
+    public void testGetExpenses() {
+        assertEquals(0, event.getExpenses().size());
+        event.setExpenses(newExpenses);
+        assertEquals(newExpenses, event.getExpenses());
+    }
+
+    @Test
+    public void testGetPayments() {
+        assertEquals(0, event.getPayments().size());
+        event.setPayments(newPayments);
+        assertEquals(newPayments, event.getPayments());
+    }
+
+    @Test
+    public void testSetAvailableTags() {
+        Set<Tag> originalTags = event.getTags();
+        assertNotEquals(newTags, originalTags);
+        event.setAvailableTags(newTags);
+        assertEquals(newTags, event.getTags());
+    }
+
+    @Test
+    public void testSetExpenses() {
+        event.setExpenses(newExpenses);
+        assertEquals(newExpenses, event.getExpenses());
+    }
+
+    @Test
+    public void testSetParticipants() {
+        event.setParticipants(newParticipants);
+        assertEquals(newParticipants, event.getParticipants());
+    }
+
+    @Test
+    public void testSetPayments() {
+        event.setPayments(newPayments);
+        assertEquals(newPayments, event.getPayments());
+    }
 
     @Test
     public void testAlternativeConstructor() {

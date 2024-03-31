@@ -23,6 +23,11 @@
             <Font name="System Bold" size="26.0" />
          </font>
       </Text>
+      <Text fx:id="serverText" fill="WHITE" layoutX="37.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current server: ">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Text>
       <ListView fx:id="eventsList" layoutX="38.0" layoutY="263.0" prefHeight="330.0" prefWidth="319.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-width: 3;" />
       <Circle fx:id="addButton" fill="#3f3f3f" layoutX="525.0" layoutY="560.0" onMouseClicked="#showEventOverlay" radius="33.0" stroke="#c30052" strokeType="INSIDE" strokeWidth="2.0" />
       <Text fill="#999999" layoutX="504.0" layoutY="578.0" mouseTransparent="true" strokeType="OUTSIDE" strokeWidth="0.0" text="+" textAlignment="CENTER">
@@ -64,21 +69,37 @@
          </children>
       </Pane>
       <Circle fx:id="optionsButton" fill="#797979" layoutX="558.0" layoutY="52.0" onMouseClicked="#showSettingsOverlay" radius="23.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-      <Pane fx:id="settingsOverlay" layoutX="386.0" layoutY="29.0" prefHeight="68.0" prefWidth="195.0">
+      <Pane fx:id="settingsOverlay" layoutX="386.0" layoutY="29.0" prefHeight="140.0" prefWidth="195.0">
          <children>
-            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#727272" height="68.0" layoutX="1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="194.0" />
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#727272" height="140.0" layoutX="1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="194.0" />
+            <Line endX="98.0" layoutX="97.0" layoutY="35.0" startX="-96.0" stroke="#979797" />
+            <Line endX="98.0" layoutX="97.0" layoutY="65.0" startX="-96.0" stroke="#979797" />
+            <Line endX="98.0" layoutX="97.0" layoutY="95.0" startX="-96.0" stroke="#979797" />
             <Text fill="WHITE" layoutX="13.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" wrappingWidth="169.37109375">
                <font>
                   <Font size="14.0" />
                </font>
             </Text>
-            <Line endX="98.0" layoutX="97.0" layoutY="34.0" startX="-96.0" stroke="#979797" />
-            <Text fill="WHITE" layoutX="13.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Close" wrappingWidth="169.37109375" />
+            <Text fill="WHITE" layoutX="11.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Close" wrappingWidth="169.37109375">
+               <font>
+                  <Font name="SansSerif Regular" size="14.0" />
+               </font></Text>
+            <Text fill="WHITE" layoutX="13.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Admin Login" wrappingWidth="169.37109375">
+               <font>
+                  <Font name="SansSerif Regular" size="14.0" />
+               </font>
+            </Text>
+            <Text fill="WHITE" layoutX="13.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server Select" wrappingWidth="169.37109375">
+               <font>
+                  <Font name="SansSerif Regular" size="14.0" />
+               </font>
+            </Text>
             <Pane fx:id="settingClickArea" layoutY="-3.0" onMouseClicked="#showSettings" prefHeight="38.0" prefWidth="195.0" />
-            <Pane fx:id="quitClickArea" layoutX="1.0" layoutY="35.0" onMouseClicked="#hidePopUps" prefHeight="31.0" prefWidth="195.0" />
+            <Pane fx:id="adminClickArea" layoutY="33.0" onMouseClicked="#onAdminAreaClicked" prefHeight="35.0" prefWidth="195.0" />
+            <Pane fx:id="quitClickArea" layoutX="-1.0" layoutY="101.0" onMouseClicked="#hidePopUps" prefHeight="31.0" prefWidth="195.0" />
+            <Pane fx:id="serverClickArea" layoutY="66.0" onMouseClicked="#onServerAreaClicked" prefHeight="30.0" prefWidth="195.0" />
          </children>
       </Pane>
       <Pane id="darkener" fx:id="screenDarkener" mouseTransparent="true" onMouseClicked="#hidePopUps" opacity="0.3" prefHeight="623.0" prefWidth="601.0" style="-fx-background-color: black;" visible="false" />
-      <Pane fx:id="adminArea" onMouseClicked="#onAdminAreaClicked" onMouseEntered="#toggleAdminHover" onMouseExited="#toggleAdminHover" prefHeight="94.0" prefWidth="126.0" style="-fx-background-color: #333333;" />
    </children>
 </AnchorPane>

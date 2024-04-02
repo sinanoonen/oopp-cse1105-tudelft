@@ -189,6 +189,7 @@ public class EventOverviewCtrl implements Initializable {
             if (expenseMenuVisible && !isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
                 // Close the expenseMenu pane
                 toggleExpenseMenu();
+                onExit();
                 mainCtrl.showEventOverview(event);
             }
         });
@@ -648,6 +649,7 @@ public class EventOverviewCtrl implements Initializable {
             event.removeTransaction(expenseToRemove);
             resetTransactionsContainer();
         }
+        onExit();
         mainCtrl.showEventOverview(event);
     }
 
@@ -658,6 +660,7 @@ public class EventOverviewCtrl implements Initializable {
         Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
         if (selectedNode != null) {
             Expense expenseToUpdate = (Expense) selectedNode.getUserData();
+            onExit();
             mainCtrl.showEditExpense(event, expenseToUpdate);
         }
 

@@ -118,6 +118,7 @@ public class DebtOverviewCtrl implements Initializable {
     }
 
     public void showDebtSettler() {
+        onExit();
         mainCtrl.showDebtPaymentOverview(event, debtSettler);
     }
 

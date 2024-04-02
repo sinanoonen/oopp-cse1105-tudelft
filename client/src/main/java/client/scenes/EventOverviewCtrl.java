@@ -452,8 +452,22 @@ public class EventOverviewCtrl implements Initializable {
             tagBase.getChildren().forEach(child -> child.setMouseTransparent(true));
             return tagBase;
         };
+        List<Pane> tagNodes = tags
+                .stream()
+                .map(tagCellFactory)
+                .map(node -> (Pane) node)
+                .toList();
+        final double baseTopPadding = base.getPrefHeight() / 5;
+        final double tagLeftPadding = base.getPrefWidth() / 2 - 50;
+        for (int i = 0; i < tagNodes.size(); i++) {
+            Pane tagNode = tagNodes.get(i);
+            double tagTopPadding = baseTopPadding + i * 20;
+            tagNode.setLayoutX(tagLeftPadding);
+            tagNode.setLayoutY(tagTopPadding);
+        }
 
         base.getChildren().addAll(expenseTitle, amount);
+        base.getChildren().addAll(tagNodes);
 
         base.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() > 1) {

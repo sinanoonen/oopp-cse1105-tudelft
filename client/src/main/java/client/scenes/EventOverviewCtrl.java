@@ -14,9 +14,7 @@ import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import java.awt.Color;
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
@@ -608,8 +606,8 @@ public class EventOverviewCtrl implements Initializable {
 
     private void resetTransactionsContainer() {
         transactionContainer.getItems().removeAll(transactionContainer.getItems());
-        List<Transaction> filteredTransactions = event.transactions();
-        filteredTransactions = filteredTransactions
+        List<Transaction> filteredExpenses = new ArrayList<>(event.transactions());
+        filteredExpenses = filteredExpenses
                 .stream()
                 .filter(t -> t instanceof Expense)
                 .map(t -> (Expense) t)
@@ -617,7 +615,16 @@ public class EventOverviewCtrl implements Initializable {
                         .contains(filterTextField.getText()))
                 .map(e -> (Transaction) e)
                 .toList();
-        System.out.println(filterTextField.getText());
+
+        List<Transaction> filteredTransactions = new ArrayList<>();
+        for (Transaction t : event.transactions()) {
+            if (t instanceof Payment) {
+                filteredTransactions.add(t);
+            }
+        }
+
+
+
         List<Node> transactions = filteredTransactions
                 .stream()
                 .map(this::transactionCellFactory)

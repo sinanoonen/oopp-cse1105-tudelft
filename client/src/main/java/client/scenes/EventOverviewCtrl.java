@@ -23,11 +23,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -99,6 +95,8 @@ public class EventOverviewCtrl implements Initializable {
     private Button removeExpense;
     @FXML
     private TextField filterTextField;
+    @FXML
+    private ChoiceBox<String> tagFilterChoiceBox;
     private boolean expenseMenuVisible = false;
 
     /**
@@ -123,6 +121,18 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        tagFilterChoiceBox.setOnAction((event) -> {
+            int selectedIndex = tagFilterChoiceBox.getSelectionModel().getSelectedIndex();
+            Object selectedItem = tagFilterChoiceBox.getSelectionModel().getSelectedItem();
+
+            if (tagFilterChoiceBox.getValue() != null && tagFilterChoiceBox.getValue().equals("All")) {
+                tagFilterChoiceBox.setValue(null);
+            }
+
+            resetTransactionsContainer();
+        });
+
     }
 
 
@@ -178,6 +188,18 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        Set<String> tags = new HashSet<>();
+        for (Transaction t : event.transactions()) {
+            tags.addAll(t.getTags().stream().map(Tag::getName).toList());
+        }
+
+        tagFilterChoiceBox.getItems().removeAll(tagFilterChoiceBox.getItems());
+        tagFilterChoiceBox.getItems().addAll(tags);
+        tagFilterChoiceBox.getItems().addFirst("All");
+
+        resetTransactionsContainer();
+
 
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
             Platform.runLater(() -> {
@@ -616,11 +638,20 @@ public class EventOverviewCtrl implements Initializable {
                 .map(e -> (Transaction) e)
                 .toList();
 
-        List<Transaction> filteredTransactions = new ArrayList<>();
+        List<Transaction> filteredTransactions = new ArrayList<>(filteredExpenses);
         for (Transaction t : event.transactions()) {
             if (t instanceof Payment) {
                 filteredTransactions.add(t);
             }
+        }
+
+
+        if (tagFilterChoiceBox.getValue() != null) {
+            filteredTransactions = filteredTransactions.stream()
+                    .filter(t -> t.getTags().stream()
+                            .map(Tag::getName).toList()
+                            .contains(tagFilterChoiceBox.getValue()))
+                    .toList();
         }
 
 

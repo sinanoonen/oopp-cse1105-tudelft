@@ -9,8 +9,10 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="668.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.AddExpenseCtrl">
    <children>
@@ -81,5 +83,14 @@
          <font>
             <Font name="SansSerif Regular" size="12.0" />
          </font></Button>
+      <Pane fx:id="errorPopup" layoutX="70.0" layoutY="393.0" mouseTransparent="true" opacity="0.0" prefHeight="74.0" prefWidth="499.0" style="-fx-background-color: #f65656; -fx-border-color: #78201f; -fx-border-width: 4; -fx-background-radius: 10; -fx-border-radius: 8;">
+         <children>
+            <Text layoutX="11.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;message&gt;" textAlignment="CENTER" wrappingWidth="464.53668212890625">
+               <font>
+                  <Font name="SansSerif Bold" size="19.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
    </children>
 </AnchorPane>

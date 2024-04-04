@@ -1,9 +1,6 @@
 package client.scenes;
 
-import client.utils.ManageExpenseMode;
-import client.utils.ServerUtils;
-import client.utils.UIUtils;
-import client.utils.WebSocketServerUtils;
+import client.utils.*;
 import commons.Event;
 import commons.User;
 import commons.WebSocketMessage;
@@ -36,12 +33,16 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javax.inject.Inject;
+
+import static client.scenes.HomePageCtrl.fadeInOutPopup;
 
 /**
  * Controller for adding an expense to an event.
@@ -84,6 +85,8 @@ public class AddExpenseCtrl {
     private Button addButton;
     @FXML
     private Button addTag;
+    @FXML
+    private Pane errorPopup;
 
     private Event event;
     private List<String> participants = new ArrayList<>();
@@ -404,9 +407,7 @@ public class AddExpenseCtrl {
             alert.showAndWait();
 
         }
-        clearFields();
         onExit();
-        mainCtrl.showEventOverview(event);
     }
 
     private void clearFields() {
@@ -442,10 +443,12 @@ public class AddExpenseCtrl {
     }
 
     /**
-<<<<<<< client/src/main/java/client/scenes/AddExpenseCtrl.java
      * Creates new expense.
      */
     public void create() {
+        if (!validateInputs()) {
+            return;
+        }
         String owner = whoPaid.getValue();
         String expenseDescription = description.getText();
         float expenseAmount = Float.parseFloat(amount.getText());
@@ -475,6 +478,8 @@ public class AddExpenseCtrl {
 
         event.addTransaction(expense);
         server.addExpense(event.getInviteCode(), expense);
+        clearFields();
+        mainCtrl.showEventOverview(event);
 
     }
 
@@ -484,6 +489,10 @@ public class AddExpenseCtrl {
      * @param expense expense to be updated.
      */
     public void update(Expense expense) {
+        if (!validateInputs()) {
+            return;
+        }
+
         String owner = whoPaid.getValue();
         String expenseDescription = description.getText();
         float expenseAmount = Float.parseFloat(amount.getText());
@@ -519,6 +528,58 @@ public class AddExpenseCtrl {
         // Clear existing tags and add the updated tags
         expense.setTags(selectedTagsSet.stream().toList());
         server.updateExpense(event.getInviteCode(), expense);
+        clearFields();
+        mainCtrl.showEventOverview(event);
+    }
+    private boolean validateInputs() {
+        // OWNER CHECKING
+        if (isNullOrEmpty(whoPaid.getValue())) {
+            AddExpenseCtrl.displayErrorPopup("Name cannot be empty", errorPopup);
+            return false;
+        }
+        // DESCRIPTION CHECKING
+        if (isNullOrEmpty(description.getText())) {
+            AddExpenseCtrl.displayErrorPopup("Description cannot be empty", errorPopup);
+            return false;
+        }
+        if (!isValidAmount(amount.getText())) {
+            AddExpenseCtrl.displayErrorPopup("Amount cannot be more than 6 digits", errorPopup);
+            return false;
+        }
+        // DATE CHECKING
+        if (isNullOrEmpty(String.valueOf(datePicker.getValue()))) {
+            AddExpenseCtrl.displayErrorPopup("Date cannot be empty", errorPopup);
+            return false;
+        }
+        // SPLIT CHECKING
+        if (!equallyEverybody.isSelected() || onlySomePeople.isSelected()) {
+            AddExpenseCtrl.displayErrorPopup("You have to choose a split option", errorPopup);
+            return false;
+        }
+
+        return true;
+    }
+    static void displayErrorPopup(String message, Pane errorPopup) {
+        if (errorPopup.getOpacity() != 0) {
+            return; // avoids spamming the error popup
+        }
+        errorPopup.toFront();
+        Text error = (Text) errorPopup.getChildren().getFirst();
+        error.setText(message);
+
+        fadeInOutPopup(errorPopup);
+    }
+
+    private boolean isValidAmount(String amountText) {
+        if (amountText == null || amountText.isEmpty()) {
+            return false;
+        }
+        amountText = amountText.trim();
+        // Check if the amount is a valid number and has at most 6 digits
+        return amountText.matches("\\d{1,6}\\.?\\d{0,2}");
+    }
+    private boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
     }
 
     public void setExpenseToUpdate(Expense expenseToUpdate) {

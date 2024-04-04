@@ -99,6 +99,8 @@ public class EventOverviewCtrl implements Initializable {
     private Button editExpense;
     @FXML
     private Button removeExpense;
+    @FXML
+    private TextField filterTextField;
     private boolean expenseMenuVisible = false;
 
     /**
@@ -606,12 +608,25 @@ public class EventOverviewCtrl implements Initializable {
 
     private void resetTransactionsContainer() {
         transactionContainer.getItems().removeAll(transactionContainer.getItems());
-        List<Node> transactions = event
-                .transactions()
+        List<Transaction> filteredTransactions = event.transactions();
+        filteredTransactions = filteredTransactions
+                .stream()
+                .filter(t -> t instanceof Expense)
+                .map(t -> (Expense) t)
+                .filter(t -> t.getDescription()
+                        .contains(filterTextField.getText()))
+                .map(e -> (Transaction) e)
+                .toList();
+        System.out.println(filterTextField.getText());
+        List<Node> transactions = filteredTransactions
                 .stream()
                 .map(this::transactionCellFactory)
                 .toList();
         transactionContainer.getItems().addAll(transactions);
+    }
+
+    public void filterTransactionTextFieldRefresher() {
+        resetTransactionsContainer();
     }
 
     private void resetParticipantsContainer() {

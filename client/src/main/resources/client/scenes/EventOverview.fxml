@@ -101,7 +101,7 @@
             <Font name="SansSerif Bold" size="19.0" />
          </font>
       </Button>
-      <TextField layoutX="50.0" layoutY="188.0" prefHeight="26.0" prefWidth="302.0" promptText="Filter" />
+      <TextField fx:id="filterTextField" layoutX="50.0" layoutY="188.0" onKeyReleased="#filterTransactionTextFieldRefresher" prefHeight="26.0" prefWidth="302.0" promptText="Filter" />
       <Pane fx:id="expenseMenu" layoutX="86.0" layoutY="241.0" mouseTransparent="true" prefHeight="370.0" prefWidth="399.0" style="-fx-background-color: #333333; -fx-background-radius: 12; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10;" visible="false">
          <children>
             <Button fx:id="editExpense" layoutX="48.0" layoutY="43.0" mnemonicParsing="false" onAction="#editExpense" prefHeight="83.0" prefWidth="274.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Edit Expense" textFill="WHITE" />

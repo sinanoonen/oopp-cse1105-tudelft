@@ -14,8 +14,11 @@ import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import java.awt.Color;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import javafx.animation.FadeTransition;
@@ -27,6 +30,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -99,6 +103,10 @@ public class EventOverviewCtrl implements Initializable {
     private Button editExpense;
     @FXML
     private Button removeExpense;
+    @FXML
+    private TextField filterTextField;
+    @FXML
+    private ChoiceBox<String> tagFilterChoiceBox;
     private boolean expenseMenuVisible = false;
 
     /**
@@ -123,6 +131,18 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        tagFilterChoiceBox.setOnAction((event) -> {
+            int selectedIndex = tagFilterChoiceBox.getSelectionModel().getSelectedIndex();
+            Object selectedItem = tagFilterChoiceBox.getSelectionModel().getSelectedItem();
+
+            if (tagFilterChoiceBox.getValue() != null && tagFilterChoiceBox.getValue().equals("All")) {
+                tagFilterChoiceBox.setValue(null);
+            }
+
+            resetTransactionsContainer();
+        });
+
     }
 
 
@@ -178,6 +198,18 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        Set<String> tags = new HashSet<>();
+        for (Transaction t : event.transactions()) {
+            tags.addAll(t.getTags().stream().map(Tag::getName).toList());
+        }
+
+        tagFilterChoiceBox.getItems().removeAll(tagFilterChoiceBox.getItems());
+        tagFilterChoiceBox.getItems().addAll(tags);
+        tagFilterChoiceBox.getItems().addFirst("All");
+
+        resetTransactionsContainer();
+
 
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
             Platform.runLater(() -> {
@@ -606,12 +638,43 @@ public class EventOverviewCtrl implements Initializable {
 
     private void resetTransactionsContainer() {
         transactionContainer.getItems().removeAll(transactionContainer.getItems());
-        List<Node> transactions = event
-                .transactions()
+        List<Transaction> filteredExpenses = new ArrayList<>(event.transactions());
+        filteredExpenses = filteredExpenses
+                .stream()
+                .filter(t -> t instanceof Expense)
+                .map(t -> (Expense) t)
+                .filter(t -> t.getDescription()
+                        .contains(filterTextField.getText()))
+                .map(e -> (Transaction) e)
+                .toList();
+
+        List<Transaction> filteredTransactions = new ArrayList<>(filteredExpenses);
+        for (Transaction t : event.transactions()) {
+            if (t instanceof Payment) {
+                filteredTransactions.add(t);
+            }
+        }
+
+
+        if (tagFilterChoiceBox.getValue() != null) {
+            filteredTransactions = filteredTransactions.stream()
+                    .filter(t -> t.getTags().stream()
+                            .map(Tag::getName).toList()
+                            .contains(tagFilterChoiceBox.getValue()))
+                    .toList();
+        }
+
+
+
+        List<Node> transactions = filteredTransactions
                 .stream()
                 .map(this::transactionCellFactory)
                 .toList();
         transactionContainer.getItems().addAll(transactions);
+    }
+
+    public void filterTransactionTextFieldRefresher() {
+        resetTransactionsContainer();
     }
 
     private void resetParticipantsContainer() {

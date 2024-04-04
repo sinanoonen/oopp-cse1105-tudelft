@@ -1,5 +1,7 @@
 package client.utils;
 
+import commons.Currency;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,7 +71,6 @@ public class ConfigReader {
      */
     public static Currency getCurrency() {
         return switch (PROPERTIES.getProperty("currency")) {
-            case "EUR" -> Currency.EUR;
             case "USD" -> Currency.USD;
             case "GBP" -> Currency.GBP;
             case "JPY" -> Currency.JPY;

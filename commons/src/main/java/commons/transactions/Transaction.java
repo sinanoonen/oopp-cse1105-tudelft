@@ -1,5 +1,6 @@
 package commons.transactions;
 
+import commons.Currency;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +26,7 @@ public abstract class Transaction {
     private String owner;
     private LocalDate date;
     private float amount;
+    private Currency currency;
     @ManyToMany
     private List<Tag> tags;
 
@@ -39,11 +41,12 @@ public abstract class Transaction {
      * @param date the date of the transaction
      * @param amount the amount of the transaction
      */
-    public Transaction(String owner, LocalDate date, float amount) {
+    public Transaction(String owner, LocalDate date, float amount, Currency currency) {
         this.owner = owner;
         this.date = date;
         this.amount = Float.parseFloat(new DecimalFormat("#.##").format(amount));
         this.tags = new ArrayList<>();
+        this.currency = currency;
     }
 
     public void setId(long id) {
@@ -52,6 +55,14 @@ public abstract class Transaction {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public Currency getCurrency() {
+        return currency;
     }
 
     public long getId() {

@@ -16,6 +16,8 @@ import java.net.http.HttpResponse;
  */
 public class ExchangeProvider {
 
+    private static ExchangeRates exchangeRates;
+
     private static final String API_URL = "https://openexchangerates.org/api/latest.json";
     private static final String API_KEY = "4503cd84a4754c90b993b4952cbd3b37";
 
@@ -33,6 +35,9 @@ public class ExchangeProvider {
      * @return A map of currency codes and exchange rates
      */
     public static ExchangeRates getExchangeRates() {
+        if (exchangeRates != null) {
+            return exchangeRates;
+        }
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(API_URL + "?base=USD&app_id=" + API_KEY))
@@ -51,11 +56,18 @@ public class ExchangeProvider {
         ObjectMapper mapper = new ObjectMapper();
         try {
             ExchangeRates exchangeRates = mapper.readValue(response.body(), ExchangeRates.class);
+            ExchangeProvider.exchangeRates = exchangeRates;
             return exchangeRates;
         } catch (IOException e) {
             throw new RuntimeException("Error parsing JSON", e);
         }
 
+    }
+
+    public static double convertCurrency(double amount, String fromCurrency, String toCurrency) {
+        ExchangeRates exchangeRates = getExchangeRates();
+        double rate = exchangeRates.getRates().get(toCurrency) / exchangeRates.getRates().get(fromCurrency);
+        return amount * rate;
     }
 
 }

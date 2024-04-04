@@ -206,23 +206,15 @@ public class AddExpenseCtrl {
             selectedTags.getItems().addAll(expense.getTags());
             setupListViewCellFactory();
         }
-        onlySomePeople.setOnAction(e -> {
-            if (onlySomePeople.isSelected()) {
-                equallyEverybody.setSelected(false);
-            }
-        });
-        onlySomePeople.setOnAction(c -> {
-            if (onlySomePeople.isSelected()) {
-                handleOnlySomePeople();
-            }
-        });
-
         equallyEverybody.setOnAction(e -> {
             if (equallyEverybody.isSelected()) {
                 onlySomePeople.setSelected(false);
+                equallyEverybody.setSelected(true);
+            }
+            for (CheckBox checkBox : additionalCheckboxes) {
+                checkBox.setSelected(false);
             }
         });
-        System.out.println("Refreshing add expense scene");
     }
 
     /**
@@ -279,15 +271,12 @@ public class AddExpenseCtrl {
             selectedTags.getItems().addAll(payment.getTags());
             setupListViewCellFactory();
         }
-        onlySomePeople.setOnAction(e -> {
-            if (onlySomePeople.isSelected()) {
-                equallyEverybody.setSelected(false);
-            }
-        });
-
         equallyEverybody.setOnAction(e -> {
             if (equallyEverybody.isSelected()) {
                 onlySomePeople.setSelected(false);
+            }
+            for (CheckBox checkBox : additionalCheckboxes) {
+                checkBox.setSelected(false);
             }
         });
     }
@@ -296,6 +285,10 @@ public class AddExpenseCtrl {
      * Shows the participants when clicked only some people button.
      */
     public void handleOnlySomePeople() {
+        if (onlySomePeople.isSelected()) {
+            equallyEverybody.setSelected(false);
+        }
+
         if (onlySomePeople.isSelected()) {
             additionalCheckboxesContainer.getChildren().clear();
 
@@ -552,7 +545,7 @@ public class AddExpenseCtrl {
             return false;
         }
         // SPLIT CHECKING
-        if (!equallyEverybody.isSelected() || onlySomePeople.isSelected()) {
+        if (!equallyEverybody.isSelected() && !onlySomePeople.isSelected()) {
             AddExpenseCtrl.displayErrorPopup("You have to choose a split option", errorPopup);
             return false;
         }

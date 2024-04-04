@@ -10,11 +10,14 @@ import commons.User;
 import commons.WebSocketMessage;
 import commons.transactions.Expense;
 import commons.transactions.Payment;
+import commons.transactions.Tag;
 import commons.transactions.Transaction;
+import java.awt.Color;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.function.Function;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -428,7 +431,43 @@ public class EventOverviewCtrl implements Initializable {
         amount.setFill(Paint.valueOf("#FFFFFF"));
         amount.setMouseTransparent(true);
 
+        List<Tag> tags = expense.getTags().subList(0, Math.min(3, expense.getTags().size()));
+        Function<Tag, Node> tagCellFactory = tag -> {
+            Pane tagBase = new Pane();
+            tagBase.setPrefWidth(100);
+            tagBase.setPrefHeight(20);
+            Color color = new Color(tag.getColor());
+            String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+            changeBackgroundColor(tagBase, hex);
+
+            Text tagText = new Text(tag.getName());
+            tagText.setFont(Font.font("SansSerif", 12));
+            final double tagLeftPadding = 5;
+            final double tagTopPadding = tagBase.getPrefHeight() / 2 + 5;
+            tagText.setLayoutX(tagBase.getLayoutX() + tagLeftPadding);
+            tagText.setLayoutY(tagBase.getLayoutY() + tagTopPadding);
+
+            tagBase.getChildren().addAll(tagText);
+            tagBase.setMouseTransparent(true);
+            tagBase.getChildren().forEach(child -> child.setMouseTransparent(true));
+            return tagBase;
+        };
+        List<Pane> tagNodes = tags
+                .stream()
+                .map(tagCellFactory)
+                .map(node -> (Pane) node)
+                .toList();
+        final double baseTopPadding = base.getPrefHeight() / 5;
+        final double tagLeftPadding = base.getPrefWidth() / 2 - 50;
+        for (int i = 0; i < tagNodes.size(); i++) {
+            Pane tagNode = tagNodes.get(i);
+            double tagTopPadding = baseTopPadding + i * 20;
+            tagNode.setLayoutX(tagLeftPadding);
+            tagNode.setLayoutY(tagTopPadding);
+        }
+
         base.getChildren().addAll(expenseTitle, amount);
+        base.getChildren().addAll(tagNodes);
 
         base.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() > 1) {

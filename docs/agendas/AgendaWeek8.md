@@ -4,7 +4,7 @@ Date:           April 1st, 2024\
 Time:           2:45 PM\
 Location:       Cubicle 13, DW PC1\
 Chair:          Sinan Onen\
-Note taker:     tbd\
+Note taker:     Emilio Costanza
 
 ## Agenda Items (6 min)
 - Opening by Chair (1 min)

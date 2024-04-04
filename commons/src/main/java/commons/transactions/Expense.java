@@ -6,7 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Expense class that extends from the transaction class.
@@ -36,7 +39,8 @@ public class Expense extends Transaction {
      * @param description short description of what the expense was
      * @param participants list containing initial participants of expense
      */
-    public Expense(String owner, LocalDate date, float amount, Currency currency, String description, List<String> participants) {
+    public Expense(String owner, LocalDate date, float amount,
+                   Currency currency, String description, List<String> participants) {
         super(owner, date, amount, currency);
         this.description = description;
         this.debts = new HashMap<>();
@@ -62,7 +66,8 @@ public class Expense extends Transaction {
      * @param participants list containing initial participants of expense
      * @param multiplier map containing how should the amount be split
      */
-    public Expense(String owner, LocalDate date, float amount, Currency currency, String description, List<String> participants,
+    public Expense(String owner, LocalDate date, float amount,
+                   Currency currency, String description, List<String> participants,
                    Map<String, Integer> multiplier) {
         super(owner, date, amount, currency);
         this.description = description;

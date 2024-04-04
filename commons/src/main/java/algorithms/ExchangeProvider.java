@@ -64,6 +64,14 @@ public class ExchangeProvider {
 
     }
 
+    /**
+     * Convert an amount from one currency to another.
+     *
+     * @param amount The amount to convert
+     * @param fromCurrency The currency to convert from
+     * @param toCurrency The currency to convert to
+     * @return The converted amount
+     */
     public static double convertCurrency(double amount, String fromCurrency, String toCurrency) {
         ExchangeRates exchangeRates = getExchangeRates();
         double rate = exchangeRates.getRates().get(toCurrency) / exchangeRates.getRates().get(fromCurrency);

@@ -1,6 +1,9 @@
 package client.scenes;
 
-import client.utils.*;
+import client.utils.ManageExpenseMode;
+import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import commons.Currency;
 import commons.Event;
 import commons.User;

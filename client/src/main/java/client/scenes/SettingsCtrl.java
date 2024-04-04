@@ -4,11 +4,10 @@ import client.utils.ClientUtils;
 import client.utils.Language;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
+import commons.Currency;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-
-import commons.Currency;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;

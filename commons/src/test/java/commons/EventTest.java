@@ -184,17 +184,17 @@ public class EventTest {
         event.addTransaction(new Payment("Barry", LocalDate.of(2024, 1, 1), 10.0f, Currency.EUR,
                 "Alice"));
 
-        assertEquals(-40.0f, event.getTotalDebt(user1));
+        assertEquals(-40.0f, event.getTotalEURDebt(user1));
         // Alice had cocktails and champagne and received 10 from Barry, so 40/4 + 30/3 + 10 = 30.0f of debt
         // She also paid for two expenses so her actual debt should be 30 - 40 - 30 = -40.0f
 
-        assertEquals(10.0f, event.getTotalDebt(user2));
+        assertEquals(10.0f, event.getTotalEURDebt(user2));
         // Gerard only had cocktails, so 40/4 = 10.0f debt
 
-        assertEquals(10.0f, event.getTotalDebt(user3));
+        assertEquals(10.0f, event.getTotalEURDebt(user3));
         // Barry had cocktails and champagne but already paid 10 to Alice, so 40/4 + 30/3 - 10 = 10.0f of debt
 
-        assertEquals(20.0f, event.getTotalDebt(user4));
+        assertEquals(20.0f, event.getTotalEURDebt(user4));
         // Lisa had cocktails and champagne, so 40/4 + 30/3 = 20.0f of debt
     }
 

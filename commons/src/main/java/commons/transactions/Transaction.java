@@ -118,21 +118,25 @@ public abstract class Transaction {
                 + '}';
     }
 
+
     @Override
-    public boolean equals(Object object) {
-        if (this == object) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (object == null || getClass() != object.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Transaction that = (Transaction) object;
-        return Float.compare(amount, that.amount) == 0 && Objects.equals(owner, that.owner)
-                && Objects.equals(date, that.date);
+        Transaction that = (Transaction) o;
+        return id == that.id && Float.compare(amount, that.amount) == 0
+                && Objects.equals(owner, that.owner)
+                && Objects.equals(date, that.date)
+                && currency == that.currency
+                && Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(owner, date, amount);
+        return Objects.hash(id, owner, date, amount, currency, tags);
     }
 }

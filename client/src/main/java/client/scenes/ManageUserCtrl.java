@@ -1,20 +1,23 @@
 package client.scenes;
 
-import client.utils.ManageUserMode;
-import client.utils.ServerUtils;
-import client.utils.UIUtils;
-import client.utils.WebSocketServerUtils;
+import client.utils.*;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
 import commons.WebSocketMessage;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -22,7 +25,7 @@ import javafx.scene.text.Text;
 /**
  * A controller for the create-user page, as well as edit-user.
  */
-public class ManageUserCtrl {
+public class ManageUserCtrl implements Initializable {
     private ServerUtils serverUtils;
     private MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
@@ -61,6 +64,26 @@ public class ManageUserCtrl {
         this.mainCtrl = mainCtrl;
         this.socket = socket;
         mode = ManageUserMode.CREATE;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                cancel();
+                return;
+            }
+            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                confirm();
+                return;
+            }
+        });
     }
 
     /**

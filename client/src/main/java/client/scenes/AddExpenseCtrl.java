@@ -2,10 +2,7 @@ package client.scenes;
 
 import static client.scenes.HomePageCtrl.fadeInOutPopup;
 
-import client.utils.ManageExpenseMode;
-import client.utils.ServerUtils;
-import client.utils.UIUtils;
-import client.utils.WebSocketServerUtils;
+import client.utils.*;
 import commons.Currency;
 import commons.Event;
 import commons.User;
@@ -14,16 +11,15 @@ import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Tag;
 import jakarta.ws.rs.WebApplicationException;
+
+import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -36,11 +32,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -51,13 +43,15 @@ import javax.inject.Inject;
 /**
  * Controller for adding an expense to an event.
  */
-public class AddExpenseCtrl {
+public class AddExpenseCtrl implements Initializable {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
 
 
+    @FXML
+    private AnchorPane root;
     @FXML
     private Label title;
     @FXML
@@ -114,6 +108,14 @@ public class AddExpenseCtrl {
         this.socket = socket;
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
+    }
 
     /**
      * Refreshes the scene.
@@ -569,6 +571,11 @@ public class AddExpenseCtrl {
         // DATE CHECKING
         if (isNullOrEmpty(String.valueOf(datePicker.getValue()))) {
             AddExpenseCtrl.displayErrorPopup("Date cannot be empty", errorPopup);
+            return false;
+        }
+        //CURRENCY CHECK
+        if (currencyChoiceBox.getValue() == null) {
+            AddExpenseCtrl.displayErrorPopup("Currency cannot be empty", errorPopup);
             return false;
         }
         // SPLIT CHECKING

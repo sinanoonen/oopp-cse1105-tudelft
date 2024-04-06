@@ -469,8 +469,8 @@ public class AddExpenseCtrl {
             expense.addTag(tag);
         }
 
+        expense = server.addExpense(event.getInviteCode(), expense);
         event.addTransaction(expense);
-        server.addExpense(event.getInviteCode(), expense);
         clearFields();
         mainCtrl.showEventOverview(event);
 
@@ -518,9 +518,18 @@ public class AddExpenseCtrl {
             debts.put(debtor, 0f);
         }
         expense.setDebts(debts);
+        if (splitEqually) {
+            expense.splitEqually(expenseAmount);
+        } else {
+            Map<String, Integer> usersMultiplierMap = new HashMap<>();
+            debtors.forEach(p -> {
+                usersMultiplierMap.put(p, 1);
+            });
+            expense.splitAmong(expenseAmount, usersMultiplierMap);
+        }
         // Clear existing tags and add the updated tags
         expense.setTags(selectedTagsSet.stream().toList());
-        server.updateExpense(event.getInviteCode(), expense);
+        expense = server.updateExpense(event.getInviteCode(), expense);
         clearFields();
         mainCtrl.showEventOverview(event);
     }

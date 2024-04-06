@@ -13,17 +13,17 @@
 
 <AnchorPane fx:id="root" prefHeight="623.0" prefWidth="601.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HomePageCtrl">
    <children>
-      <Text fill="#8e8e8e" layoutX="52.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="RECENTLY VIEWED">
+      <Text fill="#8e8e8e" layoutX="52.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EVENTS">
          <font>
             <Font name="SansSerif Bold" size="27.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="51.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Definitively Not Splitser">
+      <Text fill="WHITE" layoutX="72.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="!Splitser">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
       </Text>
-      <Text fx:id="serverText" fill="WHITE" layoutX="37.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current server: ">
+      <Text fx:id="serverText" fill="WHITE" layoutX="36.0" layoutY="614.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current server: ">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>

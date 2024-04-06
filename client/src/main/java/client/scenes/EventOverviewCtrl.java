@@ -1,5 +1,6 @@
 package client.scenes;
 
+import algorithms.ExchangeProvider;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -14,8 +15,11 @@ import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import java.awt.Color;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import javafx.animation.FadeTransition;
@@ -27,6 +31,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -42,6 +47,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 /**
@@ -99,6 +105,10 @@ public class EventOverviewCtrl implements Initializable {
     private Button editExpense;
     @FXML
     private Button removeExpense;
+    @FXML
+    private TextField filterTextField;
+    @FXML
+    private ChoiceBox<String> tagFilterChoiceBox;
     private boolean expenseMenuVisible = false;
 
     /**
@@ -123,6 +133,18 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        tagFilterChoiceBox.setOnAction((event) -> {
+            int selectedIndex = tagFilterChoiceBox.getSelectionModel().getSelectedIndex();
+            Object selectedItem = tagFilterChoiceBox.getSelectionModel().getSelectedItem();
+
+            if (tagFilterChoiceBox.getValue() != null && tagFilterChoiceBox.getValue().equals("All")) {
+                tagFilterChoiceBox.setValue(null);
+            }
+
+            resetTransactionsContainer();
+        });
+
     }
 
 
@@ -178,6 +200,18 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        Set<String> tags = new HashSet<>();
+        for (Transaction t : event.transactions()) {
+            tags.addAll(t.getTags().stream().map(Tag::getName).toList());
+        }
+
+        tagFilterChoiceBox.getItems().removeAll(tagFilterChoiceBox.getItems());
+        tagFilterChoiceBox.getItems().addAll(tags);
+        tagFilterChoiceBox.getItems().addFirst("All");
+
+        resetTransactionsContainer();
+
 
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
             Platform.runLater(() -> {
@@ -378,7 +412,7 @@ public class EventOverviewCtrl implements Initializable {
                 .toList()
         );
 
-        if (event.getTotalDebt(user) != 0) {
+        if (event.getTotalEURDebt(user) != 0) {
             HomePageCtrl.displayErrorPopup("User has debts; cannot be deleted", errorPopup);
             return;
         }
@@ -422,14 +456,33 @@ public class EventOverviewCtrl implements Initializable {
         expenseTitle.setFill(Paint.valueOf("#FFFFFF"));
         expenseTitle.setMouseTransparent(true);
 
-        Text amount = new Text(String.valueOf(expense.getAmount()));
+
+        double convertedValue = expense.getAmount();
+        convertedValue = ExchangeProvider.convertCurrency(convertedValue,
+                expense.getCurrency().toString(),
+                ClientUtils.getCurrency().toString());
+        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+        Text amount = new Text(String.valueOf(convertedValue));
+
+
         final double amountTopPadding = titleTopPadding;
-        final double amountLeftPadding = 3f / 4f * base.getPrefWidth();
+        final double amountLeftPadding = 2.8 / 4f * base.getPrefWidth();
         amount.setLayoutX(base.getLayoutX() + amountLeftPadding);
         amount.setLayoutY(base.getLayoutY() + amountTopPadding);
         amount.setFont(Font.font("SansSerif", 15));
         amount.setFill(Paint.valueOf("#FFFFFF"));
         amount.setMouseTransparent(true);
+        amount.setTextAlignment(TextAlignment.RIGHT);
+
+        Text currency = new Text(ClientUtils.getCurrency().toString());
+        final double currencyTopPadding = titleTopPadding;
+        final double currencyLeftPadding = amountLeftPadding + amount.getText().length() * 9;
+        currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
+        currency.setLayoutY(base.getLayoutY() + currencyTopPadding);
+        currency.setFont(Font.font("SansSerif", 15));
+        currency.setFill(Paint.valueOf("#FFFFFF"));
+        currency.setMouseTransparent(true);
+
 
         List<Tag> tags = expense.getTags().subList(0, Math.min(3, expense.getTags().size()));
         Function<Tag, Node> tagCellFactory = tag -> {
@@ -466,7 +519,7 @@ public class EventOverviewCtrl implements Initializable {
             tagNode.setLayoutY(tagTopPadding);
         }
 
-        base.getChildren().addAll(expenseTitle, amount);
+        base.getChildren().addAll(expenseTitle, amount, currency);
         base.getChildren().addAll(tagNodes);
 
         base.setOnMouseClicked(mouseEvent -> {
@@ -508,7 +561,14 @@ public class EventOverviewCtrl implements Initializable {
         recipient.setFill(Paint.valueOf("#FFFFFF"));
         recipient.setMouseTransparent(true);
 
-        Text amount = new Text(String.valueOf(payment.getAmount()));
+        double convertedValue = payment.getAmount();
+        convertedValue = ExchangeProvider.convertCurrency(convertedValue,
+                payment.getCurrency().toString(),
+                ClientUtils.getCurrency().toString());
+        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+        Text amount = new Text(String.valueOf(convertedValue));
+
+        amount.setTextAlignment(TextAlignment.CENTER);
         final double amountTopPadding = senderTopPadding;
         final double amountLeftPadding = 0.4f * base.getPrefWidth();
         amount.setLayoutX(base.getLayoutX() + amountLeftPadding);
@@ -516,6 +576,15 @@ public class EventOverviewCtrl implements Initializable {
         amount.setFont(Font.font("SansSerif", 15));
         amount.setFill(Paint.valueOf("#FFFFFF"));
         amount.setMouseTransparent(true);
+
+        Text currency = new Text(ClientUtils.getCurrency().toString());
+        final double currencyTopPadding = senderTopPadding;
+        final double currencyLeftPadding = amountLeftPadding + amount.getText().length() * 9;
+        currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
+        currency.setLayoutY(base.getLayoutY() + currencyTopPadding);
+        currency.setFont(Font.font("SansSerif", 15));
+        currency.setFill(Paint.valueOf("#FFFFFF"));
+        currency.setMouseTransparent(true);
 
         base.getChildren().addAll(sender, recipient, amount);
         base.setOnMouseClicked(mouseEvent -> {
@@ -606,12 +675,43 @@ public class EventOverviewCtrl implements Initializable {
 
     private void resetTransactionsContainer() {
         transactionContainer.getItems().removeAll(transactionContainer.getItems());
-        List<Node> transactions = event
-                .transactions()
+        List<Transaction> filteredExpenses = new ArrayList<>(event.transactions());
+        filteredExpenses = filteredExpenses
+                .stream()
+                .filter(t -> t instanceof Expense)
+                .map(t -> (Expense) t)
+                .filter(t -> t.getDescription()
+                        .contains(filterTextField.getText()))
+                .map(e -> (Transaction) e)
+                .toList();
+
+        List<Transaction> filteredTransactions = new ArrayList<>(filteredExpenses);
+        for (Transaction t : event.transactions()) {
+            if (t instanceof Payment) {
+                filteredTransactions.add(t);
+            }
+        }
+
+
+        if (tagFilterChoiceBox.getValue() != null) {
+            filteredTransactions = filteredTransactions.stream()
+                    .filter(t -> t.getTags().stream()
+                            .map(Tag::getName).toList()
+                            .contains(tagFilterChoiceBox.getValue()))
+                    .toList();
+        }
+
+
+
+        List<Node> transactions = filteredTransactions
                 .stream()
                 .map(this::transactionCellFactory)
                 .toList();
         transactionContainer.getItems().addAll(transactions);
+    }
+
+    public void filterTransactionTextFieldRefresher() {
+        resetTransactionsContainer();
     }
 
     private void resetParticipantsContainer() {

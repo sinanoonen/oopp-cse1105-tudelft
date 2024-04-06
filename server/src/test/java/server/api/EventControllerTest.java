@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
+import commons.Currency;
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
@@ -182,9 +183,9 @@ public class EventControllerTest {
 
         Event testEvent = getEvent("Test Event");
         LocalDate baseDate = LocalDate.of(2024, 3, 1);
-        Transaction transaction1 = new Expense("TestExpense", baseDate, 90f,
+        Transaction transaction1 = new Expense("TestExpense", baseDate, 90f, Currency.EUR,
             "Just a test", new ArrayList<>());
-        Transaction transaction2 = new Payment(baseDate, 100f, "Person1", "Person2");
+        Transaction transaction2 = new Payment(baseDate, 100f, Currency.EUR, "Person1", "Person2");
 
         testEvent.addTransaction(transaction1);
         testEvent.addTransaction(transaction2);
@@ -208,7 +209,7 @@ public class EventControllerTest {
     public void getTransactionByIdForEventWhenTransactionExists() {
         Event testEvent = getEvent("Test Event");
         LocalDate baseDate = LocalDate.of(2024, 3, 1);
-        Transaction transaction = new Expense("TestExpense", baseDate, 90f,
+        Transaction transaction = new Expense("TestExpense", baseDate, 90f, Currency.EUR,
             "Just a test", new ArrayList<>());
         testEvent.addTransaction(transaction);
 
@@ -232,7 +233,7 @@ public class EventControllerTest {
     @Test
     public void getTransactionByIdForEventWhenEventDoesNotExist() {
         LocalDate baseDate = LocalDate.of(2024, 3, 1);
-        Transaction transaction = new Expense("TestExpense", baseDate, 90f,
+        Transaction transaction = new Expense("TestExpense", baseDate, 90f, Currency.EUR,
             "Just a test", new ArrayList<>());
         UUID testUuid = UUID.randomUUID();
 
@@ -244,7 +245,7 @@ public class EventControllerTest {
     public void addExpenseToEventSuccessfully() {
         Event testEvent = getEvent("Test Event");
         LocalDate baseDate = LocalDate.of(2024, 3, 1);
-        Expense expense = new Expense("TestExpense", baseDate, 90f,
+        Expense expense = new Expense("TestExpense", baseDate, 90f, Currency.EUR,
             "Just a test", new ArrayList<>());
 
         repo.save(testEvent);
@@ -260,7 +261,7 @@ public class EventControllerTest {
     public void addExpenseToNonExistingEvent() {
         UUID testUuid = UUID.randomUUID();
         LocalDate baseDate = LocalDate.of(2024, 3, 1);
-        Expense expense = new Expense("TestExpense", baseDate, 90f,
+        Expense expense = new Expense("TestExpense", baseDate, 90f, Currency.EUR,
             "Just a test", new ArrayList<>());
 
         ResponseEntity<Expense> response = sut.addExpenseToEvent(testUuid, expense);
@@ -271,7 +272,7 @@ public class EventControllerTest {
     public void addPaymentToEventSuccessfully() {
         Event testEvent = getEvent("Test Event");
         LocalDate baseDate = LocalDate.of(2024, 3, 1);
-        Payment payment = new Payment(baseDate, 100f, "Person1", "Person2");
+        Payment payment = new Payment(baseDate, 100f, Currency.EUR, "Person1", "Person2");
         UUID testUuid = testEvent.getInviteCode();
         repo.save(testEvent);
 
@@ -286,7 +287,7 @@ public class EventControllerTest {
     public void addPaymentToNonExistingEvent() {
         UUID testUuid = UUID.randomUUID();
         LocalDate baseDate = LocalDate.of(2024, 3, 1);
-        Payment payment = new Payment(baseDate, 100f, "Person1", "Person2");
+        Payment payment = new Payment(baseDate, 100f, Currency.EUR, "Person1", "Person2");
 
         ResponseEntity<Payment> response = sut.addPaymentToEvent(testUuid, payment);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -382,7 +383,7 @@ public class EventControllerTest {
         Event event = new Event("Test Event");
         UUID uuid = event.getInviteCode();
         LocalDate baseDate = LocalDate.of(2024, 3, 1);
-        Transaction transaction = new Payment(baseDate, 100f, "Person1", "Person2");
+        Transaction transaction = new Payment(baseDate, 100f, Currency.EUR, "Person1", "Person2");
         long id = transaction.getId();
         event.addTransaction(transaction);
         repo.save(event);

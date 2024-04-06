@@ -1,5 +1,6 @@
 package commons.transactions;
 
+import commons.Currency;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import java.time.LocalDate;
@@ -30,8 +31,8 @@ public class Payment extends Transaction {
      * @param recipient the recipient of the payment
      * @param sender the sender of the payment
      */
-    public Payment(LocalDate date, float amount, String recipient, String sender) {
-        super(sender, date, amount);
+    public Payment(LocalDate date, float amount, Currency currency, String recipient, String sender) {
+        super(sender, date, amount, currency);
         this.recipient = recipient;
         this.sender = sender;
         debtPutter(sender, recipient, amount);
@@ -45,8 +46,8 @@ public class Payment extends Transaction {
      * @param amount the amount of the transaction
      * @param recipient the recipient of the payment
      */
-    public Payment(String owner, LocalDate date, float amount, String recipient) {
-        super(owner, date, amount);
+    public Payment(String owner, LocalDate date, float amount, Currency currency, String recipient) {
+        super(owner, date, amount, currency);
         this.recipient = recipient;
         this.sender = owner;
         debtPutter(owner, recipient, amount);

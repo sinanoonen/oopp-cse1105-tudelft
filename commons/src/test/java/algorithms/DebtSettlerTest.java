@@ -2,6 +2,7 @@ package algorithms;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import commons.Currency;
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
@@ -50,13 +51,13 @@ public class DebtSettlerTest {
         allButMark.add("Eva");
         allButMark.add("Anne");
         Expense expense1 = new Expense("Eva", LocalDate.of(2023, 7, 16),
-                120.0f, "Train tickets", allParticipants);
+                120.0f, Currency.EUR, "Train tickets", allParticipants);
         Expense expense2 = new Expense("Mark", LocalDate.of(2023, 7, 16),
-                68.0f, "Lunch day 1", allParticipants);
+                68.0f, Currency.EUR, "Lunch day 1", allParticipants);
         Expense expense3 = new Expense("Anne", LocalDate.of(2023, 7, 18),
-                15.0f, "Beers", allButMark);
+                15.0f, Currency.EUR, "Beers", allButMark);
         Payment payment1 = new Payment("Dave", LocalDate.of(2023, 7, 19),
-                20.0f, "Eva");
+                20.0f, Currency.EUR, "Eva");
         event.addTransaction(expense1);
         event.addTransaction(expense2);
         event.addTransaction(expense3);

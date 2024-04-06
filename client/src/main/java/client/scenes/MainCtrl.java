@@ -17,6 +17,7 @@
 package client.scenes;
 
 import algorithms.DebtSettler;
+import algorithms.ExchangeProvider;
 import client.utils.ClientUtils;
 import client.utils.ConfigReader;
 import client.utils.ManageExpenseMode;
@@ -133,6 +134,8 @@ public class MainCtrl {
         this.addExpense = new Scene(addExpense.getValue());
         showHomePage();
         primaryStage.show();
+
+        ExchangeProvider.getExchangeRates();
     }
 
     /**

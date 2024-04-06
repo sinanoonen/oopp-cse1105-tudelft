@@ -3,6 +3,7 @@ package commons.transactions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import commons.Currency;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ class ExpenseTest {
     void setupForTests() {
         List<String> participants = Arrays.asList("Ivo", "Filip", "Sinan");
         baseDate = LocalDate.of(2015, 3, 2);
-        expense = new Expense("Yannick", baseDate, 90f,
+        expense = new Expense("Yannick", baseDate, 90f, Currency.EUR,
                 "Meeting Lunch", participants);
     }
 
@@ -83,22 +84,22 @@ class ExpenseTest {
         assertNotEquals(expense, null);
 
         Expense expenseIdentical = new Expense("Yannick", baseDate,
-                90f, "Meeting Lunch",
+                90f, Currency.EUR, "Meeting Lunch",
                 participantsIdentical);
         Expense expenseParticipantsDifferent = new Expense("Yannick", baseDate,
-                90f, "Meeting Lunch",
+                90f, Currency.EUR, "Meeting Lunch",
                 participantsDifferent);
-        Expense expenseOwnerDifferent = new Expense("Ivo", baseDate, 90f,
+        Expense expenseOwnerDifferent = new Expense("Ivo", baseDate, 90f, Currency.EUR,
                 "Meeting Lunch",
                 participantsIdentical);
         LocalDate otherDate = LocalDate.of(2020, 1, 16);
-        Expense expenseDateDifferent = new Expense("Yannick", otherDate, 90f,
+        Expense expenseDateDifferent = new Expense("Yannick", otherDate, 90f, Currency.EUR,
                 "Meeting Lunch",
                 participantsIdentical);
-        Expense expenseAmountDifferent = new Expense("Yannick", baseDate, 30f,
+        Expense expenseAmountDifferent = new Expense("Yannick", baseDate, 30f, Currency.EUR,
                 "Meeting Lunch",
                 participantsIdentical);
-        Expense expenseDescriptionDifferent = new Expense("Yannick", baseDate, 90f,
+        Expense expenseDescriptionDifferent = new Expense("Yannick", baseDate, 90f, Currency.EUR,
                 "Snacks",
                 participantsIdentical);
 
@@ -176,7 +177,7 @@ class ExpenseTest {
         userMultiplierMap.put("Ivo", 2);
         userMultiplierMap.put("Filip", 1);
         userMultiplierMap.put("Sinan", 1);
-        expense = new Expense("Yannick", baseDate, 40f,
+        expense = new Expense("Yannick", baseDate, 40f, Currency.EUR,
                 "Meeting Lunch", participants, userMultiplierMap);
         Map<String, Float> debts = new HashMap<>();
         debts.put("Ivo", 20f);
@@ -194,7 +195,7 @@ class ExpenseTest {
         userMultiplierMap.put("Ivo", 2);
         userMultiplierMap.put("Filip", 1);
         userMultiplierMap.put("Sinan", 3);
-        expense = new Expense("Yannick", baseDate, 40f,
+        expense = new Expense("Yannick", baseDate, 40f, Currency.EUR,
                 "Meeting Lunch", participants, userMultiplierMap);
         Map<String, Float> debts = new HashMap<>();
         debts.put("Ivo", 13.34f);

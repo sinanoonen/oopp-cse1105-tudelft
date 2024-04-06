@@ -71,7 +71,7 @@ public class AddExpenseCtrl {
     @FXML
     private TextField amount;
     @FXML
-    private ChoiceBox<String> currencyChoiceBox;
+    private ChoiceBox<Currency> currencyChoiceBox;
     @FXML
     private CheckBox equallyEverybody;
     @FXML
@@ -98,7 +98,7 @@ public class AddExpenseCtrl {
 
     private Event event;
     private List<String> participants = new ArrayList<>();
-    private final List<String> currencies = List.of("EUR", "USD");
+    private final List<Currency> currencies = List.of(Currency.values());
     private Set<Tag> tags;
     private ManageExpenseMode mode;
     private Expense expenseToUpdate = null;
@@ -211,8 +211,10 @@ public class AddExpenseCtrl {
             description.setText(expense.getDescription());
             amount.setText(Float.toString(expense.getAmount()));
             datePicker.setValue(expense.getDate());
+            currencyChoiceBox.setValue(expense.getCurrency());
             selectedTags.getItems().addAll(expense.getTags());
             setupListViewCellFactory();
+
         }
         equallyEverybody.setOnAction(e -> {
             if (equallyEverybody.isSelected()) {
@@ -258,6 +260,7 @@ public class AddExpenseCtrl {
                     .toList();
             whoPaid.getItems().addAll(participants);
             currencyChoiceBox.getItems().addAll(currencies);
+            currencyChoiceBox.setValue(payment.getCurrency());
             expenseTags.getItems().addAll(tags);
             expenseTags.setConverter(new StringConverter<Tag>() {
                 @Override
@@ -470,7 +473,7 @@ public class AddExpenseCtrl {
         Expense expense = new Expense(owner,
                 expenseDate,
                 expenseAmount,
-                Currency.valueOf(currencyChoiceBox.getValue()),
+                currencyChoiceBox.getValue(),
                 expenseDescription,
                 debtors
         );
@@ -506,6 +509,7 @@ public class AddExpenseCtrl {
         float expenseAmount = Float.parseFloat(amount.getText());
         LocalDate expenseDate = datePicker.getValue();
         List<String> debtors = new ArrayList<>();
+        Currency currency = currencyChoiceBox.getValue();
         if (equallyEverybody.isSelected()) {
             debtors = this.participants;
         } else {
@@ -528,6 +532,7 @@ public class AddExpenseCtrl {
         expense.setAmount(expenseAmount);
         expense.setDate(expenseDate);
         expense.setSplitEqually(splitEqually);
+        expense.setCurrency(currency);
         Map<String, Float> debts = new HashMap<>();
         for (String debtor : debtors) {
             debts.put(debtor, 0f);

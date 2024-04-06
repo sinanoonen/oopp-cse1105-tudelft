@@ -1,12 +1,10 @@
 package client.scenes;
 
-import client.utils.ManageExpenseMode;
+import static client.scenes.HomePageCtrl.fadeInOutPopup;
+
 import client.utils.ManageExpenseMode;
 import client.utils.ServerUtils;
-import client.utils.ServerUtils;
 import client.utils.UIUtils;
-import client.utils.UIUtils;
-import client.utils.WebSocketServerUtils;
 import client.utils.WebSocketServerUtils;
 import commons.Currency;
 import commons.Event;
@@ -49,8 +47,6 @@ import javafx.stage.Modality;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javax.inject.Inject;
-
-import static client.scenes.HomePageCtrl.fadeInOutPopup;
 
 /**
  * Controller for adding an expense to an event.
@@ -499,6 +495,7 @@ public class AddExpenseCtrl {
      *
      * @param expense expense to be updated.
      */
+    @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
     public void update(Expense expense) {
         if (!validateInputs()) {
             return;
@@ -553,6 +550,7 @@ public class AddExpenseCtrl {
         clearFields();
         mainCtrl.showEventOverview(event);
     }
+
     private boolean validateInputs() {
         // OWNER CHECKING
         if (isNullOrEmpty(whoPaid.getValue())) {
@@ -581,6 +579,7 @@ public class AddExpenseCtrl {
 
         return true;
     }
+
     static void displayErrorPopup(String message, Pane errorPopup) {
         if (errorPopup.getOpacity() != 0) {
             return; // avoids spamming the error popup
@@ -600,6 +599,7 @@ public class AddExpenseCtrl {
         // Check if the amount is a valid number and has at most 6 digits
         return amountText.matches("\\d{1,6}\\.?\\d{0,2}");
     }
+
     private boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
     }

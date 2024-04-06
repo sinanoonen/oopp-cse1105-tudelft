@@ -4,7 +4,6 @@ import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import com.google.inject.Inject;
-import com.sun.javafx.scene.control.InputField;
 import commons.Event;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -115,5 +114,9 @@ public class AddEventCtrl implements Initializable {
 
     public void setInputField(TextField inputField) {
         this.inputField = inputField;
+    }
+
+    public void setErrorPopup(Pane errorPopUp) {
+        this.errorPopup = errorPopUp;
     }
 }

@@ -10,6 +10,7 @@ import client.utils.ServerUtils;
 import commons.Event;
 import javafx.application.Platform;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,10 +34,10 @@ public class AddEventCtrlTest extends ApplicationTest {
     private MainCtrl mainCtrl;
     @Mock
     private TextField inputField;
-
+    @Mock
+    private Pane errorPopUp;
     @InjectMocks
     private AddEventCtrl controller;
-
     @Captor
     private ArgumentCaptor<Event> eventCaptor;
 
@@ -63,8 +64,10 @@ public class AddEventCtrlTest extends ApplicationTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         inputField = new TextField();
+        errorPopUp = new Pane();
         controller = new AddEventCtrl(serverUtils, mainCtrl);
         controller.setInputField(inputField);
+        controller.setErrorPopup(errorPopUp);
     }
 
 
@@ -81,5 +84,16 @@ public class AddEventCtrlTest extends ApplicationTest {
         assertTrue(capturedEvent.getParticipants().isEmpty(), "Participants list should be empty");
         assertTrue(capturedEvent.getExpenses().isEmpty(), "Transactions list should be empty");
         verify(mainCtrl, times(1)).showEventOverview(any());
+    }
+
+    @Test
+    public void testSaveEventWithEmptyTitle() {
+        Platform.runLater(() -> {
+            inputField.setText("");
+            controller.saveEvent();
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+        verify(serverUtils, times(0)).addNewEvent(any());
+        verify(mainCtrl, times(0)).showEventOverview(any());
     }
 }

@@ -1,11 +1,14 @@
 package client.scenes;
 
-import client.utils.*;
+import client.utils.ClientUtils;
+import client.utils.ManageUserMode;
+import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
 import commons.WebSocketMessage;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.UUID;

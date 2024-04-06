@@ -2,7 +2,11 @@ package client.scenes;
 
 import static client.scenes.HomePageCtrl.fadeInOutPopup;
 
-import client.utils.*;
+import client.utils.ClientUtils;
+import client.utils.ManageExpenseMode;
+import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import commons.Currency;
 import commons.Event;
 import commons.User;
@@ -11,11 +15,15 @@ import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Tag;
 import jakarta.ws.rs.WebApplicationException;
-
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.UUID;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -32,7 +40,12 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;

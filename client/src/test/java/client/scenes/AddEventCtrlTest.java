@@ -1,6 +1,7 @@
 package client.scenes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -9,7 +10,12 @@ import static org.mockito.Mockito.verify;
 import client.utils.ServerUtils;
 import commons.Event;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -63,9 +69,10 @@ public class AddEventCtrlTest extends ApplicationTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        controller = new AddEventCtrl(serverUtils, mainCtrl);
+
         inputField = new TextField();
         errorPopUp = new Pane();
-        controller = new AddEventCtrl(serverUtils, mainCtrl);
         controller.setInputField(inputField);
         controller.setErrorPopup(errorPopUp);
     }
@@ -95,5 +102,61 @@ public class AddEventCtrlTest extends ApplicationTest {
         WaitForAsyncUtils.waitForFxEvents();
         verify(serverUtils, times(0)).addNewEvent(any());
         verify(mainCtrl, times(0)).showEventOverview(any());
+    }
+
+    @Test
+    public void testSaveEventWithTitleExceedingMaxLength() {
+        Platform.runLater(() -> {
+            inputField.setText("This is a very long title exceeding the maximum length");
+            controller.saveEvent();
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+        verify(serverUtils, times(0)).addNewEvent(any());
+        verify(mainCtrl, times(0)).showEventOverview(any());
+    }
+
+    @Test
+    public void testCancelButton() {
+        Platform.runLater(() -> {
+            controller.cancel(new ActionEvent());
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+        verify(mainCtrl, times(1)).showHomePage();
+    }
+
+    @Test
+    public void testInputFieldTypeHandlerEnterKeyPressed() {
+        KeyEvent enterKeyEvent = new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER,
+                false, false, false, false);
+        inputField.setText("Some text");
+        controller.inputFieldTypeHandler(enterKeyEvent);
+        assertFalse(inputField.isEditable());
+    }
+
+    @Test
+    public void testInputFieldTypeHandlerEnterKeyPressedEmptyText() {
+        KeyEvent enterKeyEvent = new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER,
+                false, false, false, false);
+        inputField.setText("");
+        controller.inputFieldTypeHandler(enterKeyEvent);
+        assertTrue(inputField.isEditable());
+    }
+
+    @Test
+    public void testInputFieldTypeHandlerOtherKeyPressed() {
+        KeyEvent otherKeyEvent = new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.SPACE,
+                false, false, false, false);
+        controller.inputFieldTypeHandler(otherKeyEvent);
+        assertTrue(inputField.isEditable());
+    }
+
+    @Test
+    public void testInputFieldClickHandler_ClickCountGreaterThanEqualTwo() {
+        MouseEvent mouseEvent = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
+                MouseButton.PRIMARY, 2, false, false, false,
+                false, true, false, false, false,
+                false, false, null);
+        controller.inputFieldClickHandler(mouseEvent);
+        assertTrue(inputField.isEditable());
     }
 }

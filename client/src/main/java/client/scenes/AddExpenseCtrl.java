@@ -4,6 +4,7 @@ import client.utils.ManageExpenseMode;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
+import commons.Currency;
 import commons.Event;
 import commons.User;
 import commons.WebSocketMessage;
@@ -463,7 +464,14 @@ public class AddExpenseCtrl {
         ObservableList<Tag> selectedTagsList = selectedTags.getItems();
         Set<Tag> selectedTagsSet = Set.copyOf(selectedTagsList);
 
-        Expense expense = new Expense(owner, expenseDate, expenseAmount, expenseDescription, debtors);
+        Expense expense = new Expense(owner,
+                expenseDate,
+                expenseAmount,
+                Currency.valueOf(currencyChoiceBox.getValue()),
+                expenseDescription,
+                debtors
+        );
+
         if (equallyEverybody.isSelected()) {
             expense.setSplitEqually(true);
         } else {

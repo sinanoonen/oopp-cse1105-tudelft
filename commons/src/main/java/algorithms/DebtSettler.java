@@ -29,7 +29,7 @@ public class DebtSettler {
         //Get all participants of an Event and their debts
         debts = new HashMap<>();
         for (User user : event.getParticipants()) {
-            debts.put(user.getName(), event.getTotalDebt(user));
+            debts.put(user.getName(), event.getTotalEURDebt(user));
         }
         //Users will be ordered by the absolute value of their debt
         //Positive debt means someone owes another participant money

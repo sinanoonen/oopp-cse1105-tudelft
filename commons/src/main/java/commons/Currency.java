@@ -1,4 +1,4 @@
-package client.utils;
+package commons;
 
 /**
  * Enum for the currency.

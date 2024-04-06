@@ -1,5 +1,7 @@
 package client.utils;
 
+import commons.Currency;
+
 /**
  * Utility class for the client.
  */

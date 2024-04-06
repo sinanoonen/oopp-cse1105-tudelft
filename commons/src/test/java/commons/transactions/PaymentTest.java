@@ -3,6 +3,7 @@ package commons.transactions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import commons.Currency;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
@@ -20,8 +21,8 @@ public class PaymentTest {
     @BeforeEach
     void setUpForTests() {
         paymentDate = LocalDate.of(2024, 2, 23);
-        paymentSenderNotOwner = new Payment(paymentDate, 20f, "Yannick", "Filip");
-        paymentSenderOwner = new Payment(paymentDate, 30f, "Yannick", "Emilio");
+        paymentSenderNotOwner = new Payment(paymentDate, 20f, Currency.EUR, "Yannick", "Filip");
+        paymentSenderOwner = new Payment(paymentDate, 30f, Currency.EUR, "Yannick", "Emilio");
     }
 
     @Test
@@ -71,23 +72,24 @@ public class PaymentTest {
         assertNotEquals(paymentSenderNotOwner, null);
 
         Payment paymentIdentical = new Payment(paymentDate,
-                20f, "Yannick", "Filip");
+                20f, Currency.EUR, "Yannick", "Filip");
         assertEquals(paymentSenderNotOwner, paymentIdentical);
 
         Payment paymentDifferent = new Payment(paymentDate,
-                30f, "Yannick", "Filip");
+                30f, Currency.EUR, "Yannick", "Filip");
         assertNotEquals(paymentSenderNotOwner, paymentDifferent);
 
         Payment paymentIdentical2 = new Payment(paymentDate,
-                30f, "Yannick", "Emilio");
+                30f, Currency.EUR, "Yannick", "Emilio");
         assertEquals(paymentSenderOwner, paymentIdentical2);
 
         Payment paymentDifferent2 =  new Payment(paymentDate,
-                40f, "Yannick", "Ivo");
+                40f, Currency.EUR, "Yannick", "Ivo");
         assertNotEquals(paymentSenderOwner, paymentDifferent2);
 
         Expense expense = new Expense("Emilio", paymentDate, 20f,
-                "Yannick", List.of("Filip"));
+                Currency.EUR, "Yannick", List.of("Filip"));
+
         assertNotEquals(paymentSenderNotOwner, expense);
 
         assertNotEquals(paymentSenderNotOwner.hashCode(), paymentSenderOwner.hashCode());

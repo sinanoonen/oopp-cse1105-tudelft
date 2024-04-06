@@ -1,5 +1,6 @@
 package client.scenes;
 
+import algorithms.ExchangeProvider;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -46,6 +47,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 /**
@@ -410,7 +412,7 @@ public class EventOverviewCtrl implements Initializable {
                 .toList()
         );
 
-        if (event.getTotalDebt(user) != 0) {
+        if (event.getTotalEURDebt(user) != 0) {
             HomePageCtrl.displayErrorPopup("User has debts; cannot be deleted", errorPopup);
             return;
         }
@@ -454,14 +456,33 @@ public class EventOverviewCtrl implements Initializable {
         expenseTitle.setFill(Paint.valueOf("#FFFFFF"));
         expenseTitle.setMouseTransparent(true);
 
-        Text amount = new Text(String.valueOf(expense.getAmount()));
+
+        double convertedValue = expense.getAmount();
+        convertedValue = ExchangeProvider.convertCurrency(convertedValue,
+                expense.getCurrency().toString(),
+                ClientUtils.getCurrency().toString());
+        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+        Text amount = new Text(String.valueOf(convertedValue));
+
+
         final double amountTopPadding = titleTopPadding;
-        final double amountLeftPadding = 3f / 4f * base.getPrefWidth();
+        final double amountLeftPadding = 2.8 / 4f * base.getPrefWidth();
         amount.setLayoutX(base.getLayoutX() + amountLeftPadding);
         amount.setLayoutY(base.getLayoutY() + amountTopPadding);
         amount.setFont(Font.font("SansSerif", 15));
         amount.setFill(Paint.valueOf("#FFFFFF"));
         amount.setMouseTransparent(true);
+        amount.setTextAlignment(TextAlignment.RIGHT);
+
+        Text currency = new Text(ClientUtils.getCurrency().toString());
+        final double currencyTopPadding = titleTopPadding;
+        final double currencyLeftPadding = amountLeftPadding + amount.getText().length() * 9;
+        currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
+        currency.setLayoutY(base.getLayoutY() + currencyTopPadding);
+        currency.setFont(Font.font("SansSerif", 15));
+        currency.setFill(Paint.valueOf("#FFFFFF"));
+        currency.setMouseTransparent(true);
+
 
         List<Tag> tags = expense.getTags().subList(0, Math.min(3, expense.getTags().size()));
         Function<Tag, Node> tagCellFactory = tag -> {
@@ -498,7 +519,7 @@ public class EventOverviewCtrl implements Initializable {
             tagNode.setLayoutY(tagTopPadding);
         }
 
-        base.getChildren().addAll(expenseTitle, amount);
+        base.getChildren().addAll(expenseTitle, amount, currency);
         base.getChildren().addAll(tagNodes);
 
         base.setOnMouseClicked(mouseEvent -> {
@@ -540,7 +561,14 @@ public class EventOverviewCtrl implements Initializable {
         recipient.setFill(Paint.valueOf("#FFFFFF"));
         recipient.setMouseTransparent(true);
 
-        Text amount = new Text(String.valueOf(payment.getAmount()));
+        double convertedValue = payment.getAmount();
+        convertedValue = ExchangeProvider.convertCurrency(convertedValue,
+                payment.getCurrency().toString(),
+                ClientUtils.getCurrency().toString());
+        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+        Text amount = new Text(String.valueOf(convertedValue));
+
+        amount.setTextAlignment(TextAlignment.CENTER);
         final double amountTopPadding = senderTopPadding;
         final double amountLeftPadding = 0.4f * base.getPrefWidth();
         amount.setLayoutX(base.getLayoutX() + amountLeftPadding);
@@ -548,6 +576,15 @@ public class EventOverviewCtrl implements Initializable {
         amount.setFont(Font.font("SansSerif", 15));
         amount.setFill(Paint.valueOf("#FFFFFF"));
         amount.setMouseTransparent(true);
+
+        Text currency = new Text(ClientUtils.getCurrency().toString());
+        final double currencyTopPadding = senderTopPadding;
+        final double currencyLeftPadding = amountLeftPadding + amount.getText().length() * 9;
+        currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
+        currency.setLayoutY(base.getLayoutY() + currencyTopPadding);
+        currency.setFont(Font.font("SansSerif", 15));
+        currency.setFill(Paint.valueOf("#FFFFFF"));
+        currency.setMouseTransparent(true);
 
         base.getChildren().addAll(sender, recipient, amount);
         base.setOnMouseClicked(mouseEvent -> {

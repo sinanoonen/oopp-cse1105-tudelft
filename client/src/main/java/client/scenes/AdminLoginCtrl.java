@@ -4,6 +4,8 @@ import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import com.google.inject.Inject;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -12,9 +14,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * This is a controller for the admin login page.

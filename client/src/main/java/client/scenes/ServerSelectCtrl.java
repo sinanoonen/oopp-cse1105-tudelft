@@ -4,7 +4,6 @@ import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import com.google.inject.Inject;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;

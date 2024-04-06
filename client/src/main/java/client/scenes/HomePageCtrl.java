@@ -16,6 +16,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -47,6 +48,10 @@ public class HomePageCtrl implements Initializable {
     private Circle addButton;
     @FXML
     private Pane addEventOverlay;
+    @FXML
+    private Button newEventButton;
+    @FXML
+    private Button joinButton;
     @FXML
     private Pane screenDarkener;
     @FXML
@@ -87,6 +92,10 @@ public class HomePageCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        UIUtils.addTooltip(addButton, "CTRL + N: Add event");
+        UIUtils.addTooltip(newEventButton, "CTRL + N: Create new event");
+        UIUtils.addTooltip(joinButton, "Enter: Join event");
 
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
             Platform.runLater(() -> {

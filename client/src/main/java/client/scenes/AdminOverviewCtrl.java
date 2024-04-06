@@ -59,6 +59,8 @@ public class AdminOverviewCtrl implements Initializable {
     @FXML
     private Button sortByLastActivityButton;
     @FXML
+    private Button exitButton;
+    @FXML
     private ListView<Event> eventContainer;
     @FXML
     private Button exportEventButton;
@@ -105,6 +107,8 @@ public class AdminOverviewCtrl implements Initializable {
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
             Platform.runLater(this::loadEvents);
         });
+
+        UIUtils.addTooltip(exitButton, "ESC: Exit");
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {

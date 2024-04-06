@@ -197,7 +197,7 @@ public class ManageUserCtrl implements Initializable {
             return false;
         }
         if (!validateEmail(emailField.getText())) {
-            HomePageCtrl.displayErrorPopup("Invalid email", errorPopup);
+            HomePageCtrl.displayErrorPopup("Invalid email format", errorPopup);
             return false;
         }
         if (mode == ManageUserMode.CREATE && event.getParticipants()

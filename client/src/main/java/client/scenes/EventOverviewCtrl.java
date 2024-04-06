@@ -143,6 +143,44 @@ public class EventOverviewCtrl implements Initializable {
             resetTransactionsContainer();
         });
 
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (!participantsMenu.isVisible()               // NO MENUS OPEN
+                    && !addParticipantsMenu.isVisible()
+                    && !expenseMenu.isVisible()) {
+                if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                    onBackClicked(null);
+                    return;
+                }
+                if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.C)) {
+                    toggleDarkenedButton(null);
+                    toggleDarkenedButton(null);
+                    copyInviteCode(null);
+                    return;
+                }
+                if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.N)) {
+                    onNewExpenseClicked();
+                }
+            } else {
+                if (participantsMenu.isVisible()) {
+                    if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                        toggleParticipants();
+                        return;
+                    }
+                    if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.N)) {
+                        swapParticipantsAddParticipants();
+                    }
+                }
+                if (addParticipantsMenu.isVisible()) {
+                    if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                        swapParticipantsAddParticipants();
+                        return;
+                    }
+                    if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.N)) {
+                        onNewParticipantClicked();
+                    }
+                }
+            }
+        });
     }
 
 

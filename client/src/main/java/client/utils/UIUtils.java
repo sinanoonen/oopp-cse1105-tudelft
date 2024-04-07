@@ -1,8 +1,14 @@
 package client.utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+
+import client.Main;
+import client.interfaces.LanguageInterface;
+import client.scenes.*;
+import com.google.inject.Injector;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -218,5 +224,28 @@ public class UIUtils {
         alert.setHeaderText(null);
         alert.setContentText("The event '" + eventTitle + "' has been deleted.");
         alert.showAndWait();
+    }
+
+    /**
+     * Updates the language across the entire client.
+     *
+     * @param language language to be changed to
+     */
+    public static void updateClientLanguage(Language language) {
+        Injector injector = Main.injector();
+        List<LanguageInterface> controllers = Arrays.asList(
+                injector.getInstance(AddEventCtrl.class),
+                injector.getInstance(AddExpenseCtrl.class),
+                injector.getInstance(AdminLoginCtrl.class),
+                injector.getInstance(AdminOverviewCtrl.class),
+                injector.getInstance(DebtOverviewCtrl.class),
+                injector.getInstance(DebtPaymentOverviewCtrl.class),
+                injector.getInstance(EventOverviewCtrl.class),
+                injector.getInstance(HomePageCtrl.class),
+                injector.getInstance(ManageUserCtrl.class),
+                injector.getInstance(ServerSelectCtrl.class),
+                injector.getInstance(SettingsCtrl.class)
+        );
+        controllers.forEach(c -> c.changeLanguage(language));
     }
 }

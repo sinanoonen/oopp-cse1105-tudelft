@@ -286,6 +286,8 @@ public class HomePageCtrl implements Initializable {
     }
 
     public void onTestEmailClicked() {
+        showInfo("Loading", "The request has been sent. It might take a while before you receive confirmation.");
+
         EmailConfig emailConfig = ConfigReader.getEmailConfig();
         if(!emailConfig.isComplete()) {
             showAlert("Email Configuration", "Please set up your email configuration before sending a test mail");
@@ -298,7 +300,7 @@ public class HomePageCtrl implements Initializable {
         boolean isSuccess = serverUtils.sendMail(emailRequest);
 
         if (isSuccess) {
-            showAlert("Success", "Email sent successfully!");
+            showInfo("Success", "Email sent successfully!");
         } else {
             showAlert("Error", "Failed to send email. Please check your email credentials.");
         }
@@ -306,6 +308,14 @@ public class HomePageCtrl implements Initializable {
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

@@ -1,24 +1,37 @@
 package client.scenes;
 
+import algorithms.ExchangeProvider;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
+import commons.WebSocketMessage;
 import commons.transactions.Expense;
 import commons.transactions.Payment;
+import commons.transactions.Tag;
 import commons.transactions.Transaction;
+import java.awt.Color;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -32,8 +45,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 /**
@@ -49,6 +64,7 @@ public class EventOverviewCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
 
     private Event event;
     private Thread pollingThread;
@@ -83,11 +99,41 @@ public class EventOverviewCtrl implements Initializable {
     private Hyperlink backLink;
     @FXML
     private Pane errorPopup;
+    @FXML
+    private Pane expenseMenu;
+    @FXML
+    private Pane expenseDarkener;
+    @FXML
+    private Circle addExpense;
+    @FXML
+    private Button addParticipantButton;
+    @FXML
+    private Button newParticipantButton;
+    @FXML
+    private Button confirmButton;
+    @FXML
+    private Button editExpense;
+    @FXML
+    private Button removeExpense;
+    @FXML
+    private TextField filterTextField;
+    @FXML
+    private ChoiceBox<String> tagFilterChoiceBox;
+    private boolean expenseMenuVisible = false;
 
+    /**
+     * Constructor for the EventOverview controller.
+     *
+     * @param serverUtils serverUtils
+     * @param mainCtrl    mainCtrl
+     * @param socket      socket
+     */
     @Inject
-    public EventOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public EventOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl,
+                             WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
     }
 
     @Override
@@ -116,7 +162,78 @@ public class EventOverviewCtrl implements Initializable {
                 toggleAddParticipants();
             }
         });
+
+        tagFilterChoiceBox.setOnAction((event) -> {
+            int selectedIndex = tagFilterChoiceBox.getSelectionModel().getSelectedIndex();
+            Object selectedItem = tagFilterChoiceBox.getSelectionModel().getSelectedItem();
+
+            if (tagFilterChoiceBox.getValue() != null && tagFilterChoiceBox.getValue().equals("All")) {
+                tagFilterChoiceBox.setValue(null);
+            }
+
+            resetTransactionsContainer();
+        });
+
+        UIUtils.addTooltip(inviteCodeButton, "CTRL + C: Copy invite code");
+        UIUtils.addTooltip(backLink, "ESC: Back");
+        UIUtils.addTooltip(addExpense, "CTRL + N: Add expense");
+        UIUtils.addTooltip(addParticipantButton, "CTRL + N: Add participant");
+        UIUtils.addTooltip(newParticipantButton, "CTRL + N: Create participant");
+        UIUtils.addTooltip(confirmButton, "ENTER: Confirm");
+        UIUtils.addTooltip(filterTextField, "CTRL + F: Filter");
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (!participantsMenu.isVisible()               // NO MENUS OPEN
+                    && !addParticipantsMenu.isVisible()
+                    && !expenseMenu.isVisible()) {
+                if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                    onBackClicked(null);
+                    return;
+                }
+                if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.C)) {
+                    toggleDarkenedButton(null);
+                    toggleDarkenedButton(null);
+                    copyInviteCode(null);
+                    return;
+                }
+                if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.F)) {
+                    filterTextField.requestFocus();
+                    filterTextField.setEditable(true);
+                    return;
+                }
+                if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.N)) {
+                    onNewExpenseClicked();
+                }
+            } else {
+                if (participantsMenu.isVisible()) {
+                    if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                        toggleParticipants();
+                        return;
+                    }
+                    if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.N)) {
+                        swapParticipantsAddParticipants();
+                        return;
+                    }
+                }
+                if (addParticipantsMenu.isVisible()) {
+                    if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                        swapParticipantsAddParticipants();
+                        return;
+                    }
+                    if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.N)) {
+                        onNewParticipantClicked();
+                        return;
+                    }
+                    if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                        onAddParticipantsConfirm();
+                        return;
+                    }
+                }
+            }
+        });
     }
+
+
 
     /**
      * Method to refresh the scene.
@@ -145,12 +262,19 @@ public class EventOverviewCtrl implements Initializable {
         addParticipantsDarkener.setPrefWidth(root.getWidth());
         addParticipantsDarkener.setLayoutY(root.getLayoutY());
         addParticipantsDarkener.setPrefHeight(root.getHeight());
+        expenseDarkener.setLayoutX(root.getLayoutX());
+        expenseDarkener.setPrefWidth(root.getWidth());
+        expenseDarkener.setLayoutY(root.getLayoutY());
+        expenseDarkener.setPrefHeight(root.getHeight());
 
         if (participantsMenu.isVisible()) {
             toggleParticipants();
         }
         if (addParticipantsMenu.isVisible()) {
             toggleAddParticipants();
+        }
+        if (expenseMenu.isVisible()) {
+            toggleExpenseMenu();
         }
 
         changeBackgroundColor(backLink, "transparent");
@@ -163,6 +287,36 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        Set<String> tags = new HashSet<>();
+        for (Transaction t : event.transactions()) {
+            tags.addAll(t.getTags().stream().map(Tag::getName).toList());
+        }
+
+        tagFilterChoiceBox.getItems().removeAll(tagFilterChoiceBox.getItems());
+        tagFilterChoiceBox.getItems().addAll(tags);
+        tagFilterChoiceBox.getItems().addFirst("All");
+
+        resetTransactionsContainer();
+
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
+        });
+        root.setOnMouseClicked(e -> {
+            if (expenseMenuVisible && !isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
+                // Close the expenseMenu pane
+                toggleExpenseMenu();
+                onExit();
+                mainCtrl.showEventOverview(event);
+            }
+        });
     }
 
     // ---------------- VISUAL EFFECTS HANDLERS ---------------- //
@@ -261,6 +415,28 @@ public class EventOverviewCtrl implements Initializable {
     }
 
     /**
+     * toggles expense menu which shows edit or remove expenses.
+     */
+    @FXML
+    public void toggleExpenseMenu() {
+        expenseDarkener.toFront();
+        expenseDarkener.setVisible(!expenseDarkener.isVisible());
+        expenseDarkener.setMouseTransparent(!expenseDarkener.isVisible());
+        expenseMenu.toFront();
+        expenseMenu.setVisible(!expenseMenu.isVisible());
+        expenseMenu.setMouseTransparent(!expenseMenu.isVisible());
+        expenseMenu.getChildren().forEach(child -> {
+            child.setVisible(expenseMenu.isVisible());
+            child.setMouseTransparent(expenseMenu.isMouseTransparent());
+        });
+        toggleExpenseMenuVisibility(expenseMenu.isVisible());
+    }
+
+    public void toggleExpenseMenuVisibility(boolean visible) {
+        expenseMenuVisible = visible;
+    }
+
+    /**
      * Swaps between the participants menu and the add participants menu.
      */
     public void swapParticipantsAddParticipants() {
@@ -308,11 +484,7 @@ public class EventOverviewCtrl implements Initializable {
         }
         Node source = (Node) mouseEvent.getSource();
         Transaction transaction = (Transaction) source.getUserData();
-        if (transaction instanceof Expense) {
-            // mainCtrl.showExpenseOverview((Expense) transaction);
-        } else {
-            // mainCtrl.showPaymentOverview((Payment) transaction);
-        }
+        toggleExpenseMenu();
     }
 
     private void participantClickHandler(ActionEvent actionEvent) {
@@ -328,12 +500,13 @@ public class EventOverviewCtrl implements Initializable {
                 .toList()
         );
 
-        if (event.getTotalDebt(user) != 0) {
+        if (event.getTotalEURDebt(user) != 0) {
             HomePageCtrl.displayErrorPopup("User has debts; cannot be deleted", errorPopup);
             return;
         }
         serverUtils.removeUserFromEvent(event.getInviteCode(), user.getEmail());
         Event updated = serverUtils.getEventByUUID(event.getInviteCode());
+        onExit();
         refresh(updated);
         toggleParticipants();
     }
@@ -372,16 +545,78 @@ public class EventOverviewCtrl implements Initializable {
         expenseTitle.setFill(Paint.valueOf("#FFFFFF"));
         expenseTitle.setMouseTransparent(true);
 
-        Text amount = new Text(String.valueOf(expense.getAmount()));
+
+        double convertedValue = expense.getAmount();
+        convertedValue = ExchangeProvider.convertCurrency(convertedValue,
+                expense.getCurrency().toString(),
+                ClientUtils.getCurrency().toString());
+        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+        Text amount = new Text(String.valueOf(convertedValue));
+
+
         final double amountTopPadding = titleTopPadding;
-        final double amountLeftPadding = 3f / 4f * base.getPrefWidth();
+        final double amountLeftPadding = 2.8 / 4f * base.getPrefWidth();
         amount.setLayoutX(base.getLayoutX() + amountLeftPadding);
         amount.setLayoutY(base.getLayoutY() + amountTopPadding);
         amount.setFont(Font.font("SansSerif", 15));
         amount.setFill(Paint.valueOf("#FFFFFF"));
         amount.setMouseTransparent(true);
+        amount.setTextAlignment(TextAlignment.RIGHT);
 
-        base.getChildren().addAll(expenseTitle, amount);
+        Text currency = new Text(ClientUtils.getCurrency().toString());
+        final double currencyTopPadding = titleTopPadding;
+        final double currencyLeftPadding = amountLeftPadding + amount.getText().length() * 9;
+        currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
+        currency.setLayoutY(base.getLayoutY() + currencyTopPadding);
+        currency.setFont(Font.font("SansSerif", 15));
+        currency.setFill(Paint.valueOf("#FFFFFF"));
+        currency.setMouseTransparent(true);
+
+
+        List<Tag> tags = expense.getTags().subList(0, Math.min(3, expense.getTags().size()));
+        Function<Tag, Node> tagCellFactory = tag -> {
+            Pane tagBase = new Pane();
+            tagBase.setPrefWidth(100);
+            tagBase.setPrefHeight(20);
+            Color color = new Color(tag.getColor());
+            String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+            changeBackgroundColor(tagBase, hex);
+
+            Text tagText = new Text(tag.getName());
+            tagText.setFont(Font.font("SansSerif", 12));
+            final double tagLeftPadding = 5;
+            final double tagTopPadding = tagBase.getPrefHeight() / 2 + 5;
+            tagText.setLayoutX(tagBase.getLayoutX() + tagLeftPadding);
+            tagText.setLayoutY(tagBase.getLayoutY() + tagTopPadding);
+
+            tagBase.getChildren().addAll(tagText);
+            tagBase.setMouseTransparent(true);
+            tagBase.getChildren().forEach(child -> child.setMouseTransparent(true));
+            return tagBase;
+        };
+        List<Pane> tagNodes = tags
+                .stream()
+                .map(tagCellFactory)
+                .map(node -> (Pane) node)
+                .toList();
+        final double baseTopPadding = base.getPrefHeight() / 5;
+        final double tagLeftPadding = base.getPrefWidth() / 2 - 50;
+        for (int i = 0; i < tagNodes.size(); i++) {
+            Pane tagNode = tagNodes.get(i);
+            double tagTopPadding = baseTopPadding + i * 20;
+            tagNode.setLayoutX(tagLeftPadding);
+            tagNode.setLayoutY(tagTopPadding);
+        }
+
+        base.getChildren().addAll(expenseTitle, amount, currency);
+        base.getChildren().addAll(tagNodes);
+
+        base.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() > 1) {
+                toggleExpenseMenu();
+            }
+        });
+
 
         return base;
     }
@@ -415,7 +650,14 @@ public class EventOverviewCtrl implements Initializable {
         recipient.setFill(Paint.valueOf("#FFFFFF"));
         recipient.setMouseTransparent(true);
 
-        Text amount = new Text(String.valueOf(payment.getAmount()));
+        double convertedValue = payment.getAmount();
+        convertedValue = ExchangeProvider.convertCurrency(convertedValue,
+                payment.getCurrency().toString(),
+                ClientUtils.getCurrency().toString());
+        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+        Text amount = new Text(String.valueOf(convertedValue));
+
+        amount.setTextAlignment(TextAlignment.CENTER);
         final double amountTopPadding = senderTopPadding;
         final double amountLeftPadding = 0.4f * base.getPrefWidth();
         amount.setLayoutX(base.getLayoutX() + amountLeftPadding);
@@ -424,7 +666,21 @@ public class EventOverviewCtrl implements Initializable {
         amount.setFill(Paint.valueOf("#FFFFFF"));
         amount.setMouseTransparent(true);
 
-        base.getChildren().addAll(sender, recipient, amount);
+        Text currency = new Text(ClientUtils.getCurrency().toString());
+        final double currencyTopPadding = senderTopPadding;
+        final double currencyLeftPadding = amountLeftPadding + amount.getText().length() * 9;
+        currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
+        currency.setLayoutY(base.getLayoutY() + currencyTopPadding);
+        currency.setFont(Font.font("SansSerif", 15));
+        currency.setFill(Paint.valueOf("#FFFFFF"));
+        currency.setMouseTransparent(true);
+
+        base.getChildren().addAll(sender, recipient, amount, currency);
+        base.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() > 1) {
+                toggleExpenseMenu();
+            }
+        });
 
         return base;
     }
@@ -463,6 +719,7 @@ public class EventOverviewCtrl implements Initializable {
         base.setUserData(user);
         base.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() > 1) {
+                onExit();
                 mainCtrl.showEditUser(user, event);
             }
         });
@@ -507,12 +764,44 @@ public class EventOverviewCtrl implements Initializable {
 
     private void resetTransactionsContainer() {
         transactionContainer.getItems().removeAll(transactionContainer.getItems());
-        List<Node> transactions = event
-                .transactions()
+        List<Transaction> filteredExpenses = new ArrayList<>(event.transactions());
+        filteredExpenses = filteredExpenses
+                .stream()
+                .filter(t -> t instanceof Expense)
+                .map(t -> (Expense) t)
+                .filter(t -> t.getDescription()
+                        .contains(filterTextField.getText()) || t.getDebts()
+                        .containsKey(filterTextField.getText()))
+                .map(e -> (Transaction) e)
+                .toList();
+
+        List<Transaction> filteredTransactions = new ArrayList<>(filteredExpenses);
+        for (Transaction t : event.transactions()) {
+            if (t instanceof Payment) {
+                filteredTransactions.add(t);
+            }
+        }
+
+
+        if (tagFilterChoiceBox.getValue() != null) {
+            filteredTransactions = filteredTransactions.stream()
+                    .filter(t -> t.getTags().stream()
+                            .map(Tag::getName).toList()
+                            .contains(tagFilterChoiceBox.getValue()))
+                    .toList();
+        }
+
+
+
+        List<Node> transactions = filteredTransactions
                 .stream()
                 .map(this::transactionCellFactory)
                 .toList();
         transactionContainer.getItems().addAll(transactions);
+    }
+
+    public void filterTransactionTextFieldRefresher() {
+        resetTransactionsContainer();
     }
 
     private void resetParticipantsContainer() {
@@ -558,19 +847,51 @@ public class EventOverviewCtrl implements Initializable {
     }
 
     public void onBackClicked(MouseEvent event) {
+        onExit();
         mainCtrl.showHomePage();
     }
 
     public void onNewParticipantClicked() {
+        onExit();
         mainCtrl.showCreateUser(event);
     }
 
     public void onDebtsClicked() {
+        onExit();
         mainCtrl.showDebtOverview(event);
     }
 
     public void onNewExpenseClicked() {
+        onExit();
         mainCtrl.showAddExpense(event);
+    }
+
+    /**
+     * Removes expenses from UI and server.
+     */
+    public void removeExpense() {
+        Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
+        if (selectedNode != null) {
+            Expense expenseToRemove = (Expense) selectedNode.getUserData();
+            serverUtils.removeExpense(event.getInviteCode(), expenseToRemove);
+            event.removeTransaction(expenseToRemove);
+            resetTransactionsContainer();
+        }
+        onExit();
+        mainCtrl.showEventOverview(event);
+    }
+
+    /**
+     * Edits expense.
+     */
+    public void editExpense() {
+        Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
+        if (selectedNode != null) {
+            Expense expenseToUpdate = (Expense) selectedNode.getUserData();
+            onExit();
+            mainCtrl.showEditExpense(event, expenseToUpdate);
+        }
+
     }
 
     /**
@@ -598,7 +919,21 @@ public class EventOverviewCtrl implements Initializable {
         for (User u : selectedUsers) {
             updated = serverUtils.addUserToEvent(updated, u);
         }
+        onExit();
         refresh(updated);
         toggleParticipants();
+    }
+
+    private boolean isClickInsideNode(Node node, double sceneX, double sceneY) {
+        Bounds bounds = node.localToScene(node.getBoundsInLocal());
+        return bounds.contains(sceneX, sceneY);
+    }
+
+
+    /**
+     * Unsubscribe from sockets and any other clean-up code.
+     */
+    public void onExit() {
+        socket.unregisterFromMessages("/topic/eventsUpdated");
     }
 }

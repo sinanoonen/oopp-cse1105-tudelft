@@ -38,6 +38,8 @@ public class AddEventCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
     }
 
+
+
     /**
      * Refresh method for this scene.
      */
@@ -110,5 +112,22 @@ public class AddEventCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                cancel(null);
+            }
+            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                saveEvent();
+            }
+        });
+    }
+
+    public void setInputField(TextField inputField) {
+        this.inputField = inputField;
+    }
+
+    public void setErrorPopup(Pane errorPopUp) {
+        this.errorPopup = errorPopUp;
     }
 }

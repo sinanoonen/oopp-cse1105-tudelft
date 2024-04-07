@@ -13,17 +13,17 @@
 
 <AnchorPane fx:id="root" prefHeight="623.0" prefWidth="601.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HomePageCtrl">
    <children>
-      <Text fill="#8e8e8e" layoutX="52.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="RECENTLY VIEWED">
+      <Text fill="#8e8e8e" layoutX="52.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EVENTS">
          <font>
             <Font name="SansSerif Bold" size="27.0" />
          </font>
       </Text>
-      <Text fill="WHITE" layoutX="51.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Definitively Not Splitser">
+      <Text fill="WHITE" layoutX="72.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="!Splitser">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
       </Text>
-      <Text fx:id="serverText" fill="WHITE" layoutX="37.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current server: ">
+      <Text fx:id="serverText" fill="WHITE" layoutX="36.0" layoutY="614.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current server: ">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
@@ -47,12 +47,12 @@
                   <Font size="15.0" />
                </font>
             </TextField>
-            <Button layoutX="345.0" layoutY="195.0" mnemonicParsing="false" onAction="#joinEvent" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 5;" text="JOIN" textFill="WHITE">
+            <Button fx:id="joinButton" layoutX="345.0" layoutY="195.0" mnemonicParsing="false" onAction="#joinEvent" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 5;" text="JOIN" textFill="WHITE">
                <font>
                   <Font name="SansSerif Bold" size="24.0" />
                </font>
             </Button>
-            <Button layoutX="92.0" layoutY="195.0" mnemonicParsing="false" onAction="#createEvent" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 5;" text="NEW" textFill="WHITE">
+            <Button fx:id="newEventButton" layoutX="92.0" layoutY="195.0" mnemonicParsing="false" onAction="#createEvent" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 5;" text="NEW" textFill="WHITE">
                <font>
                   <Font name="SansSerif Bold" size="24.0" />
                </font>
@@ -71,19 +71,16 @@
       <Circle fx:id="optionsButton" fill="#797979" layoutX="558.0" layoutY="52.0" onMouseClicked="#showSettingsOverlay" radius="23.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <Pane fx:id="settingsOverlay" layoutX="386.0" layoutY="29.0" prefHeight="140.0" prefWidth="195.0">
          <children>
-            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#727272" height="140.0" layoutX="1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="194.0" />
+            <Rectangle arcHeight="20.0" arcWidth="20.0" fill="#727272" height="175.0" layoutX="1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="194.0" />
             <Line endX="98.0" layoutX="97.0" layoutY="35.0" startX="-96.0" stroke="#979797" />
             <Line endX="98.0" layoutX="97.0" layoutY="65.0" startX="-96.0" stroke="#979797" />
             <Line endX="98.0" layoutX="97.0" layoutY="95.0" startX="-96.0" stroke="#979797" />
+            <Line endX="98.0" layoutX="97.0" layoutY="125.0" startX="-96.0" stroke="#979797" />
             <Text fill="WHITE" layoutX="13.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" wrappingWidth="169.37109375">
                <font>
                   <Font size="14.0" />
                </font>
             </Text>
-            <Text fill="WHITE" layoutX="11.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Close" wrappingWidth="169.37109375">
-               <font>
-                  <Font name="SansSerif Regular" size="14.0" />
-               </font></Text>
             <Text fill="WHITE" layoutX="13.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Admin Login" wrappingWidth="169.37109375">
                <font>
                   <Font name="SansSerif Regular" size="14.0" />
@@ -94,10 +91,22 @@
                   <Font name="SansSerif Regular" size="14.0" />
                </font>
             </Text>
+            <Text fill="WHITE" layoutX="13.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Close" wrappingWidth="169.37109375">
+               <font>
+                  <Font name="SansSerif Regular" size="14.0" />
+               </font>
+            </Text>
+            <Text fill="WHITE" layoutX="13.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Test Mail" wrappingWidth="169.37109375">
+               <font>
+                  <Font name="SansSerif Regular" size="14.0" />
+               </font>
+            </Text>
             <Pane fx:id="settingClickArea" layoutY="-3.0" onMouseClicked="#showSettings" prefHeight="38.0" prefWidth="195.0" />
             <Pane fx:id="adminClickArea" layoutY="33.0" onMouseClicked="#onAdminAreaClicked" prefHeight="35.0" prefWidth="195.0" />
-            <Pane fx:id="quitClickArea" layoutX="-1.0" layoutY="101.0" onMouseClicked="#hidePopUps" prefHeight="31.0" prefWidth="195.0" />
+            <Pane fx:id="quitClickArea" layoutX="-2.0" layoutY="125.0" onMouseClicked="#hidePopUps" prefHeight="53.0" prefWidth="195.0" />
             <Pane fx:id="serverClickArea" layoutY="66.0" onMouseClicked="#onServerAreaClicked" prefHeight="30.0" prefWidth="195.0" />
+            <Pane fx:id="mailClickArea" layoutY="96.0" onMouseClicked="#onTestEmailClicked" prefHeight="30.0" prefWidth="195.0" />
+
          </children>
       </Pane>
       <Pane id="darkener" fx:id="screenDarkener" mouseTransparent="true" onMouseClicked="#hidePopUps" opacity="0.3" prefHeight="623.0" prefWidth="601.0" style="-fx-background-color: black;" visible="false" />

@@ -1,5 +1,6 @@
 package commons.transactions;
 
+import commons.Currency;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +26,7 @@ public abstract class Transaction {
     private String owner;
     private LocalDate date;
     private float amount;
+    private Currency currency;
     @ManyToMany
     private List<Tag> tags;
 
@@ -39,11 +41,28 @@ public abstract class Transaction {
      * @param date the date of the transaction
      * @param amount the amount of the transaction
      */
-    public Transaction(String owner, LocalDate date, float amount) {
+    public Transaction(String owner, LocalDate date, float amount, Currency currency) {
         this.owner = owner;
         this.date = date;
         this.amount = Float.parseFloat(new DecimalFormat("#.##").format(amount));
         this.tags = new ArrayList<>();
+        this.currency = currency;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public Currency getCurrency() {
+        return currency;
     }
 
     public long getId() {
@@ -99,21 +118,25 @@ public abstract class Transaction {
                 + '}';
     }
 
+
     @Override
-    public boolean equals(Object object) {
-        if (this == object) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (object == null || getClass() != object.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Transaction that = (Transaction) object;
-        return Float.compare(amount, that.amount) == 0 && Objects.equals(owner, that.owner)
-                && Objects.equals(date, that.date);
+        Transaction that = (Transaction) o;
+        return id == that.id && Float.compare(amount, that.amount) == 0
+                && Objects.equals(owner, that.owner)
+                && Objects.equals(date, that.date)
+                && currency == that.currency
+                && Objects.equals(tags, that.tags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(owner, date, amount);
+        return Objects.hash(id, owner, date, amount, currency, tags);
     }
 }

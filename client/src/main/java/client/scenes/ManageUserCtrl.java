@@ -1,15 +1,26 @@
 package client.scenes;
 
+import client.utils.ClientUtils;
 import client.utils.ManageUserMode;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
+import commons.WebSocketMessage;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.regex.Pattern;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -17,9 +28,11 @@ import javafx.scene.text.Text;
 /**
  * A controller for the create-user page, as well as edit-user.
  */
-public class ManageUserCtrl {
+public class ManageUserCtrl implements Initializable {
     private ServerUtils serverUtils;
     private MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
+
 
     ManageUserMode mode;
     Event event;
@@ -45,19 +58,46 @@ public class ManageUserCtrl {
      * Constructor for the ManageUser controller.
      *
      * @param serverUtils serverUtils
-     * @param mainCtrl mainCtrl
+     * @param mainCtrl    mainCtrl
+     * @param socket      socket
      */
     @Inject
-    public ManageUserCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public ManageUserCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
         mode = ManageUserMode.CREATE;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                cancel();
+                return;
+            }
+            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                confirm();
+                return;
+            }
+        });
     }
 
     /**
      * A refresh method for this scene, sets scene back to initial setting.
      */
     public void refresh(ManageUserMode mode, User user, Event event) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
         this.mode = mode;
         this.event = event;
         if (mode == ManageUserMode.CREATE) {
@@ -85,9 +125,20 @@ public class ManageUserCtrl {
 
             confirmButton.setText("SAVE");
         }
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                UUID uuid = UUID.fromString(message.getContent().substring(15));
+                if (event != null && uuid.equals(event.getInviteCode())) {
+                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    mainCtrl.showHomePage();
+                }
+            });
+        });
     }
 
     public void cancel() {
+        onExit();
         mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
@@ -115,7 +166,7 @@ public class ManageUserCtrl {
         String iban = ibanField.getText();
         String bic = bicField.getText();
         User user = new User(name, email, iban, bic, event.getInviteCode());
-
+        onExit();
         User saved = serverUtils.createUser(user);
         mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
@@ -135,6 +186,7 @@ public class ManageUserCtrl {
         User updated = new User(name, email, iban, bic, event.getInviteCode());
 
         User saved = serverUtils.updateUser(updated);
+        onExit();
         mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
@@ -150,7 +202,7 @@ public class ManageUserCtrl {
             return false;
         }
         if (!validateEmail(emailField.getText())) {
-            HomePageCtrl.displayErrorPopup("Invalid email", errorPopup);
+            HomePageCtrl.displayErrorPopup("Invalid email format", errorPopup);
             return false;
         }
         if (mode == ManageUserMode.CREATE && event.getParticipants()
@@ -206,5 +258,61 @@ public class ManageUserCtrl {
         }
 
         node.setStyle(currentStyle + newAttribute);
+    }
+
+    /**
+     * Unsubscribe from sockets and any other clean-up code.
+     */
+    public void onExit() {
+        socket.unregisterFromMessages("/topic/eventsUpdated");
+    }
+
+
+    public void setMode(ManageUserMode mode) {
+        this.mode = mode;
+    }
+
+    public void setTitle(Text title) {
+        this.title = title;
+    }
+
+    public void setNameField(TextField nameField) {
+        this.nameField = nameField;
+    }
+
+    public void setEmailField(TextField emailField) {
+        this.emailField = emailField;
+    }
+
+    public void setIbanField(TextField ibanField) {
+        this.ibanField = ibanField;
+    }
+
+    public void setBicField(TextField bicField) {
+        this.bicField = bicField;
+    }
+
+    public void setErrorPopup(Pane errorPopUp) {
+        this.errorPopup = errorPopUp;
+    }
+
+    public TextField getBicField() {
+        return bicField;
+    }
+
+    public TextField getEmailField() {
+        return emailField;
+    }
+
+    public TextField getIbanField() {
+        return ibanField;
+    }
+
+    public TextField getNameField() {
+        return nameField;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 }

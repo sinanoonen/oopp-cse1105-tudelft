@@ -1,20 +1,30 @@
 package client.scenes;
 
 import client.utils.ClientUtils;
+import client.utils.ConfigReader;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
+import commons.EmailConfig;
+import commons.EmailRequest;
 import commons.Event;
+import commons.WebSocketMessage;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
@@ -30,6 +40,7 @@ public class HomePageCtrl implements Initializable {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+    private final WebSocketServerUtils socket;
 
     private List<Event> events;
 
@@ -41,6 +52,10 @@ public class HomePageCtrl implements Initializable {
     private Circle addButton;
     @FXML
     private Pane addEventOverlay;
+    @FXML
+    private Button newEventButton;
+    @FXML
+    private Button joinButton;
     @FXML
     private Pane screenDarkener;
     @FXML
@@ -60,10 +75,18 @@ public class HomePageCtrl implements Initializable {
     @FXML
     private Text serverText;
 
+    /**
+     * Constructor for the HomePage controller.
+     *
+     * @param serverUtils serverUtils
+     * @param mainCtrl    mainCtrl
+     * @param socket      socket
+     */
     @Inject
-    public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.socket = socket;
     }
 
     @Override
@@ -73,6 +96,42 @@ public class HomePageCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        UIUtils.addTooltip(addButton, "CTRL + N: Add event");
+        UIUtils.addTooltip(newEventButton, "CTRL + N: Create new event");
+        UIUtils.addTooltip(joinButton, "Enter: Join event");
+
+        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+            Platform.runLater(() -> {
+                events = serverUtils.getEvents();
+                reloadEventsList();
+            });
+        });
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                if (settingsOverlay.isVisible() || addEventOverlay.isVisible()) {
+                    hidePopUps();
+                } else {
+                    showSettingsOverlay();
+                }
+                return;
+            }
+            if (!addEventOverlay.isVisible()
+                    && keyEvent.isControlDown()
+                    && keyEvent.getCode().equals(KeyCode.N)) {
+                showEventOverlay();
+                return;
+            }
+            if (addEventOverlay.isVisible()) {
+                if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.N)) {
+                    createEvent();
+                }
+                if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                    joinEvent();
+                }
+            }
+        });
     }
 
     /**
@@ -266,6 +325,46 @@ public class HomePageCtrl implements Initializable {
         }
 
         node.setStyle(currentStyle + newAttribute);
+    }
+
+    /**
+     * This methods handles the sending of a test mail.
+     */
+    public void onTestEmailClicked() {
+        showInfo("Loading", "The request has been sent. It might take a while before you receive confirmation.");
+
+        EmailConfig emailConfig = ConfigReader.getEmailConfig();
+        if (!emailConfig.isComplete()) {
+            showAlert("Email Configuration", "Please set up your email configuration before sending a test mail");
+            return;
+        }
+
+        EmailRequest emailRequest = new EmailRequest(emailConfig, emailConfig.getUsername(),
+            "Test Mail", "This is a test mail.");
+
+        boolean isSuccess = serverUtils.sendMail(emailRequest);
+
+        if (isSuccess) {
+            showInfo("Success", "Email sent successfully!");
+        } else {
+            showAlert("Error", "Failed to send email. Please check your email credentials.");
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     public void stop() {

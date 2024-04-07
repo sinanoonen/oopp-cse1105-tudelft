@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Currency;
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
@@ -7,6 +8,7 @@ import commons.transactions.Payment;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -306,8 +308,11 @@ public class EventController {
         expense.setDate(java.time.LocalDate.now());
 
         Event event = repo.findById(uuid).get();
-        event.addTransaction(expense);
         Expense saved = exRepo.save(expense);
+        expense.setId(saved.getId());
+        event.addTransaction(saved);
+        repo.save(event);
+
         listeners.forEach((k, fn) -> fn.accept(repo.findById(uuid).get()));
         return ResponseEntity.ok(saved);
     }
@@ -365,8 +370,63 @@ public class EventController {
         }
         event.removeTransaction(toRemove.get());
         Event saved = repo.save(event);
+
+        Transaction transaction = toRemove.get();
+        if (transaction instanceof Payment) {
+            payRepo.deleteById(transaction.getId());
+        } else if (transaction instanceof Expense) {
+            exRepo.deleteById(transaction.getId());
+        }
+
         listeners.forEach((k, fn) -> fn.accept(saved));
         return ResponseEntity.ok(saved);
     }
 
+    /**
+     * Updates the expenses in the server.
+     *
+     * @param uuid id of the event
+     * @param id id of the expense
+     * @param update updated expense
+     * @return updated expense
+     */
+    @PutMapping("/{uuid}/transactions/expenses/{id}")
+    public ResponseEntity<Transaction> updateExpense(@PathVariable("uuid") UUID uuid, @PathVariable("id") Long id,
+                                                  @RequestBody Expense update) {
+        if (update == null) {
+            update = new Expense(null, null, 0, null, null, null);
+        }
+        if (id == null || update.getId() != id) {
+            System.out.println("Received bad PUT request");
+            return ResponseEntity.badRequest().build();
+        }
+        var response = getTransactionByIdforEvent(uuid, id);
+        if (response.getStatusCode().isError()) {
+            System.out.println(" Received bad PUT request");
+            return response;
+        }
+        System.out.println("Received valid PUT request");
+        Expense expense = exRepo.findById(id).orElse(null);
+        assert expense != null;
+        //public Expense(String owner, LocalDate date, float amount, String description, List<String> participants
+        String owner = isNullOrEmpty(update.getOwner()) ? expense.getOwner() : update.getOwner();
+        LocalDate date = update.getDate() == null ? expense.getDate() : update.getDate();
+        float amount = update.getAmount() == 0 ? expense.getAmount() : update.getAmount();
+        Currency currency = update.getCurrency() == null ? expense.getCurrency() : update.getCurrency();
+        String description = isNullOrEmpty(update.getDescription())
+                ? expense.getDescription()
+                : update.getDescription();
+        Map<String, Float> debts = (update.getDebts().isEmpty() || update.getDebts() == null)
+                ? expense.getDebts() : update.getDebts();
+
+        expense.setOwner(owner);
+        expense.setDate(date);
+        expense.setAmount(amount);
+        expense.setCurrency(currency);
+        expense.setDescription(description);
+        expense.setDebts(debts);
+
+        Expense savedExpense = exRepo.save(expense);
+        return ResponseEntity.ok(savedExpense);
+    }
 }

@@ -382,6 +382,7 @@ public class EventOverviewCtrl implements Initializable {
         }
         serverUtils.removeUserFromEvent(event.getInviteCode(), user.getEmail());
         Event updated = serverUtils.getEventByUUID(event.getInviteCode());
+        onExit();
         refresh(updated);
         toggleParticipants();
     }
@@ -691,6 +692,7 @@ public class EventOverviewCtrl implements Initializable {
         for (User u : selectedUsers) {
             updated = serverUtils.addUserToEvent(updated, u);
         }
+        onExit();
         refresh(updated);
         toggleParticipants();
     }

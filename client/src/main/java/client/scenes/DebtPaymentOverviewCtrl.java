@@ -6,12 +6,11 @@ import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
 import commons.Event;
+import commons.WebSocketMessage;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
-
-import commons.WebSocketMessage;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -46,6 +45,13 @@ public class DebtPaymentOverviewCtrl implements Initializable {
     @FXML
     private Text instructionText;
 
+    /**
+     * A constructor for the DebtPaymentOverview.
+     *
+     * @param serverUtils the server utils
+     * @param mainCtrl the main controller
+     * @param socket the socket connection
+     */
     @Inject
     public DebtPaymentOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl,
                                    WebSocketServerUtils socket) {

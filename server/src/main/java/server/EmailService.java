@@ -6,6 +6,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.Properties;
+
 @Service
 public class EmailService {
 
@@ -25,6 +27,9 @@ public class EmailService {
         mailSender.setPort(emailConfig.getPort());
         mailSender.setUsername(emailConfig.getUsername());
         mailSender.setPassword(emailConfig.getPassword());
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.smtp.starttls.enable", "true");
 
         return mailSender;
     }

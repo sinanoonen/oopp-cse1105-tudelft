@@ -179,7 +179,7 @@ public class DebtPaymentOverviewCtrl implements Initializable {
             UIUtils.activateHighContrastMode(payOffDebt);
         } else {
             UIUtils.deactivateHighContrastMode(pane);
-            UIUtils.activateHighContrastMode(payOffDebt);
+            UIUtils.deactivateHighContrastMode(payOffDebt);
         }
 
         pane.getChildren().addAll(content, payOffDebt);

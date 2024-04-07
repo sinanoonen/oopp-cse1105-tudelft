@@ -2,7 +2,10 @@ package client.scenes;
 
 import algorithms.ExchangeProvider;
 import client.interfaces.LanguageInterface;
-import client.utils.*;
+import client.utils.ClientUtils;
+import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;

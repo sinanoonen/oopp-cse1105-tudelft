@@ -66,6 +66,11 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
         });
     }
 
+    @FXML
+    public void initialize() {
+        loginButton.setDefaultButton(true);
+    }
+
     @Override
     public void updateLanguage() {
         var lm = UIUtils.getLanguageMap();
@@ -75,10 +80,6 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
         loginButton.setText(lm.get("admin_submit"));
     }
 
-    @FXML
-    public void initialize() {
-        loginButton.setDefaultButton(true);
-    }
 
     public void refresh() {
         updateLanguage();

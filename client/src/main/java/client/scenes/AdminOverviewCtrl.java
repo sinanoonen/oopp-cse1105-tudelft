@@ -1,7 +1,10 @@
 package client.scenes;
 
 import client.interfaces.LanguageInterface;
-import client.utils.*;
+import client.utils.ClientUtils;
+import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
@@ -118,7 +121,16 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        // TODO
+        var lm = UIUtils.getLanguageMap();
+        String sortBy = lm.get("adminpage_sort_by") + " ";
+        title.setText(lm.get("adminpage"));
+        sortByTitleButton.setText(sortBy + lm.get("adminpage_title"));
+        sortByCreationDateButton.setText(sortBy + lm.get("adminpage_creation_date"));
+        sortByLastActivityButton.setText(sortBy + lm.get("adminpage_last_activity"));
+        exportEventButton.setText(lm.get("adminpage_export_event") + " (JSON)");
+        importEventButton.setText(lm.get("adminpage_import_event") + " (JSON)");
+        deleteEventButton.setText(lm.get("adminpage_delete_event"));
+        exitButton.setText(lm.get("adminpage_exit"));
     }
 
     /**

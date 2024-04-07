@@ -1,22 +1,7 @@
 package client.utils;
 
-import client.Main;
-import client.interfaces.LanguageInterface;
-import client.scenes.AddEventCtrl;
-import client.scenes.AddExpenseCtrl;
-import client.scenes.AdminLoginCtrl;
-import client.scenes.AdminOverviewCtrl;
-import client.scenes.DebtOverviewCtrl;
-import client.scenes.DebtPaymentOverviewCtrl;
-import client.scenes.EventOverviewCtrl;
-import client.scenes.HomePageCtrl;
-import client.scenes.ManageUserCtrl;
-import client.scenes.ServerSelectCtrl;
-import client.scenes.SettingsCtrl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Injector;
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

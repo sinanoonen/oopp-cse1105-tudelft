@@ -70,29 +70,28 @@ public class DebtSettlerTest {
         Map<String, Float> expectedDebts = getStringFloatMap();
         assertEquals(expectedDebts, debtSettler.getDebts());
 
-
-        List<String> expectedSettledDebts = new ArrayList<>();
-        expectedSettledDebts.add("""
-                Dave should send 21.0 to Mark
-                
-                You can transfer the money to:
+        Map<String, String> expectedSettledDebts = new HashMap<>();
+        expectedSettledDebts.put("""
+                Dave should send 21.0 ___ to Mark""",
+                """
+                Dave can transfer the money to:
                 IBAN: NL111122221
                 BIC: bic3
                 Mark can send a reminder to the E-mail: dave@gmail.com""");
-        expectedSettledDebts.add("""
-                Dave should send 11.0 to Eva
-                
-                You can transfer the money to:
-                IBAN: NL987654321
-                BIC: bic2
-                Eva can send a reminder to the E-mail: dave@gmail.com""");
-        expectedSettledDebts.add("""
-                Anne should send 37.0 to Eva
-                
-                You can transfer the money to:
+        expectedSettledDebts.put("""
+                Anne should send 37.0 ___ to Eva""",
+                """
+                Anne can transfer the money to:
                 IBAN: NL987654321
                 BIC: bic2
                 Eva can send a reminder to the E-mail: anne@gmail.com""");
+        expectedSettledDebts.put("""
+                Dave should send 11.0 ___ to Eva""",
+                """
+                Dave can transfer the money to:
+                IBAN: NL987654321
+                BIC: bic2
+                Eva can send a reminder to the E-mail: dave@gmail.com""");
         assertEquals(expectedSettledDebts, debtSettler.getSettledDebts());
     }
 

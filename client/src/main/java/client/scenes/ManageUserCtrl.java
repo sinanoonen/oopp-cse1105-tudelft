@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.ClientUtils;
 import client.utils.ManageUserMode;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -8,13 +9,18 @@ import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
 import commons.WebSocketMessage;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -22,7 +28,7 @@ import javafx.scene.text.Text;
 /**
  * A controller for the create-user page, as well as edit-user.
  */
-public class ManageUserCtrl {
+public class ManageUserCtrl implements Initializable {
     private ServerUtils serverUtils;
     private MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
@@ -63,10 +69,35 @@ public class ManageUserCtrl {
         mode = ManageUserMode.CREATE;
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                cancel();
+                return;
+            }
+            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                confirm();
+                return;
+            }
+        });
+    }
+
     /**
      * A refresh method for this scene, sets scene back to initial setting.
      */
     public void refresh(ManageUserMode mode, User user, Event event) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
         this.mode = mode;
         this.event = event;
         if (mode == ManageUserMode.CREATE) {
@@ -171,7 +202,7 @@ public class ManageUserCtrl {
             return false;
         }
         if (!validateEmail(emailField.getText())) {
-            HomePageCtrl.displayErrorPopup("Invalid email", errorPopup);
+            HomePageCtrl.displayErrorPopup("Invalid email format", errorPopup);
             return false;
         }
         if (mode == ManageUserMode.CREATE && event.getParticipants()

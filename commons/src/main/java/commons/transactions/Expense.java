@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,10 +34,10 @@ public class Expense extends Transaction {
     /**
      * Constructor method.
      *
-     * @param owner who paid the expense
-     * @param date when was the expense paid
-     * @param amount how much was paid
-     * @param description short description of what the expense was
+     * @param owner        who paid the expense
+     * @param date         when was the expense paid
+     * @param amount       how much was paid
+     * @param description  short description of what the expense was
      * @param participants list containing initial participants of expense
      */
     public Expense(String owner, LocalDate date, float amount,
@@ -59,12 +60,12 @@ public class Expense extends Transaction {
     /**
      * Constructor with custom multiplier map.
      *
-     * @param owner who paid the expense
-     * @param date when was the expense paid
-     * @param amount how much was paid
-     * @param description short description of what the expense was
+     * @param owner        who paid the expense
+     * @param date         when was the expense paid
+     * @param amount       how much was paid
+     * @param description  short description of what the expense was
      * @param participants list containing initial participants of expense
-     * @param multiplier map containing how should the amount be split
+     * @param multiplier   map containing how should the amount be split
      */
     public Expense(String owner, LocalDate date, float amount,
                    Currency currency, String description, List<String> participants,
@@ -161,7 +162,7 @@ public class Expense extends Transaction {
      * where each user has a multiple expressing
      * what fraction of the expense they should pay.
      *
-     * @param amount amount that should be split among the subgroup.
+     * @param amount            amount that should be split among the subgroup.
      * @param userMultiplierMap a map containing all users that should pay, mapped to a multiplier
      * @return true if successful operation, false otherwise.
      */
@@ -178,6 +179,39 @@ public class Expense extends Transaction {
             int multiplier = entry.getValue();
             debts.put(user, multiplier * oneAmount);
         }
+        //check whether there are no rounding errors and no leftovers
+        List<String> totalDebtKeys = new ArrayList<>(debts.keySet());
+        float totalDebt = 0.00f;
+        for (String key : totalDebtKeys) {
+            if (debts.get(key) > 0) {
+                totalDebt += debts.get(key);
+            }
+        }
+        totalDebt = Math.round(100.0f * totalDebt) / 100.0f;
+        float difference = totalDebt - amount;
+        difference = Math.round(100.0f * difference) / 100.0f;
+        if (difference > 0) {
+            //divide any leftovers among each participant
+            for (int i = 0; i < debts.size(); i++) {
+                debts.put(totalDebtKeys.get(i), debts.get(totalDebtKeys.get(i)) - 0.01f);
+                difference -= 0.01f;
+                if (difference == 0.0f) {
+                    break;
+                }
+            }
+        } else if (difference < 0) {
+            //subtract any excess debt due to rounding errors
+            for (int i = 0; i < debts.size(); i++) {
+                debts.put(totalDebtKeys.get(i), debts.get(totalDebtKeys.get(i)) + 0.01f);
+                difference += 0.01f;
+                if (difference == 0.0f) {
+                    break;
+                }
+            }
+
+        }
+
+
         return true;
     }
 

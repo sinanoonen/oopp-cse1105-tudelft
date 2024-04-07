@@ -19,6 +19,7 @@ package client.utils;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import commons.Event;
+import commons.Quote;
 import commons.User;
 import commons.transactions.Expense;
 import commons.transactions.Tag;
@@ -311,4 +312,48 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .post(Entity.entity(tag, APPLICATION_JSON), Tag.class);
     }
+
+    /**
+     * Get quotes the hard way.
+     *
+     * @throws IOException may occur.
+     * @throws URISyntaxException may occur.
+     */
+    public void getQuotesTheHardWay() throws IOException, URISyntaxException {
+        var url = new URI("http://localhost:8080/api/quotes").toURL();
+        var is = url.openConnection().getInputStream();
+        var br = new BufferedReader(new InputStreamReader(is));
+        String line;
+        while ((line = br.readLine()) != null) {
+            System.out.println(line);
+        }
+    }
+
+    /**
+     * Get all quotes.
+     *
+     * @return all quotes
+     */
+    public List<Quote> getQuotes() {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/quotes") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<Quote>>() {});
+    }
+
+    /**
+     * Add a quote.
+     *
+     * @param quote a quote
+     * @return the quote
+     */
+    public Quote addQuote(Quote quote) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/quotes") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
+    }
+
 }

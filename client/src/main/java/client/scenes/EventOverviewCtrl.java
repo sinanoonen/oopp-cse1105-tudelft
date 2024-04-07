@@ -45,6 +45,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -102,6 +103,14 @@ public class EventOverviewCtrl implements Initializable {
     @FXML
     private Pane expenseDarkener;
     @FXML
+    private Circle addExpense;
+    @FXML
+    private Button addParticipantButton;
+    @FXML
+    private Button newParticipantButton;
+    @FXML
+    private Button confirmButton;
+    @FXML
     private Button editExpense;
     @FXML
     private Button removeExpense;
@@ -145,6 +154,63 @@ public class EventOverviewCtrl implements Initializable {
             resetTransactionsContainer();
         });
 
+        UIUtils.addTooltip(inviteCodeButton, "CTRL + C: Copy invite code");
+        UIUtils.addTooltip(backLink, "ESC: Back");
+        UIUtils.addTooltip(addExpense, "CTRL + N: Add expense");
+        UIUtils.addTooltip(addParticipantButton, "CTRL + N: Add participant");
+        UIUtils.addTooltip(newParticipantButton, "CTRL + N: Create participant");
+        UIUtils.addTooltip(confirmButton, "ENTER: Confirm");
+        UIUtils.addTooltip(filterTextField, "CTRL + F: Filter");
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (!participantsMenu.isVisible()               // NO MENUS OPEN
+                    && !addParticipantsMenu.isVisible()
+                    && !expenseMenu.isVisible()) {
+                if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                    onBackClicked(null);
+                    return;
+                }
+                if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.C)) {
+                    toggleDarkenedButton(null);
+                    toggleDarkenedButton(null);
+                    copyInviteCode(null);
+                    return;
+                }
+                if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.F)) {
+                    filterTextField.requestFocus();
+                    filterTextField.setEditable(true);
+                    return;
+                }
+                if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.N)) {
+                    onNewExpenseClicked();
+                }
+            } else {
+                if (participantsMenu.isVisible()) {
+                    if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                        toggleParticipants();
+                        return;
+                    }
+                    if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.N)) {
+                        swapParticipantsAddParticipants();
+                        return;
+                    }
+                }
+                if (addParticipantsMenu.isVisible()) {
+                    if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                        swapParticipantsAddParticipants();
+                        return;
+                    }
+                    if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.N)) {
+                        onNewParticipantClicked();
+                        return;
+                    }
+                    if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                        onAddParticipantsConfirm();
+                        return;
+                    }
+                }
+            }
+        });
     }
 
 
@@ -226,6 +292,7 @@ public class EventOverviewCtrl implements Initializable {
             if (expenseMenuVisible && !isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
                 // Close the expenseMenu pane
                 toggleExpenseMenu();
+                onExit();
                 mainCtrl.showEventOverview(event);
             }
         });
@@ -418,6 +485,7 @@ public class EventOverviewCtrl implements Initializable {
         }
         serverUtils.removeUserFromEvent(event.getInviteCode(), user.getEmail());
         Event updated = serverUtils.getEventByUUID(event.getInviteCode());
+        onExit();
         refresh(updated);
         toggleParticipants();
     }
@@ -787,6 +855,7 @@ public class EventOverviewCtrl implements Initializable {
             event.removeTransaction(expenseToRemove);
             resetTransactionsContainer();
         }
+        onExit();
         mainCtrl.showEventOverview(event);
     }
 
@@ -797,6 +866,7 @@ public class EventOverviewCtrl implements Initializable {
         Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
         if (selectedNode != null) {
             Expense expenseToUpdate = (Expense) selectedNode.getUserData();
+            onExit();
             mainCtrl.showEditExpense(event, expenseToUpdate);
         }
 
@@ -827,6 +897,7 @@ public class EventOverviewCtrl implements Initializable {
         for (User u : selectedUsers) {
             updated = serverUtils.addUserToEvent(updated, u);
         }
+        onExit();
         refresh(updated);
         toggleParticipants();
     }

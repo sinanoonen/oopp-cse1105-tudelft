@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import client.utils.ServerUtils;
-import client.utils.WebSocketServerUtils;
 import commons.Event;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,8 +33,6 @@ public class AdminOverviewCtrlTest extends ApplicationTest {
 
     @Mock
     private ServerUtils serverUtils;
-    @Mock
-    private WebSocketServerUtils webSocketServerUtils;
     @Mock
     private MainCtrl mainCtrl;
 
@@ -63,7 +60,9 @@ public class AdminOverviewCtrlTest extends ApplicationTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        controller = new AdminOverviewCtrl(serverUtils, mainCtrl, webSocketServerUtils);
+        controller = new AdminOverviewCtrl(serverUtils, mainCtrl, null);
+
+
 
         Platform.runLater(() -> {
             controller.setEventContainer(new ListView<>());

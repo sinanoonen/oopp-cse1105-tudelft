@@ -57,7 +57,7 @@
             </Button>
          </HBox>
       </VBox>
-      <Button layoutX="511.0" layoutY="598.0" onAction="#exit" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="EXIT" textFill="WHITE">
+      <Button fx:id="exitButton" layoutX="511.0" layoutY="598.0" onAction="#exit" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-radius: 5; -fx-border-width: 2;" text="EXIT" textFill="WHITE">
          <font>
             <Font name="SansSerif Bold" size="16.0" />
          </font>

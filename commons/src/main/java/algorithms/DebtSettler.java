@@ -30,6 +30,9 @@ public class DebtSettler {
         debts = new HashMap<>();
         for (User user : event.getParticipants()) {
             debts.put(user.getName(), event.getTotalEURDebt(user));
+            if (Math.abs(debts.get(user.getName())) < 0.01f) {
+                debts.put(user.getName(), 0.00f);
+            }
         }
         //Users will be ordered by the absolute value of their debt
         //Positive debt means someone owes another participant money

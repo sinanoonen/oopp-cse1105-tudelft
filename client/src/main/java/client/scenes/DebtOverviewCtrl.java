@@ -144,9 +144,13 @@ public class DebtOverviewCtrl implements Initializable {
                 .map(this::debtCellFactory)
                 .toList();
         participantsDebtContainer.getItems().addAll(participantsDebt);
+        participantsDebtContainer.getItems().remove(null);
     }
 
     private Node debtCellFactory(String user) {
+        if (debtSettler.getDebts().get(user) == 0) {
+            return null;
+        }
         Pane base = new Pane();
         base.setPrefWidth(participantsDebtContainer.getPrefWidth() - 20);
         base.setPrefHeight(100);

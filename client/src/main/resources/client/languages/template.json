@@ -12,6 +12,7 @@
   "homepage_admin_login": "",
   "homepage_server_select": "",
   "homepage_close": "",
+  "homepage_code": "",
   "homepage_join": "",
 
   "settings_currency": "",
@@ -32,6 +33,7 @@
   "adminpage_import_event": "",
   "adminpage_delete_event": "",
   "adminpage_exit": "",
+  "adminpage_delete_none_selected": "",
   "adminpage_confirm_delete_message": "",
 
   "new_event": "",

@@ -18,6 +18,7 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import commons.EmailRequest;
 import commons.Event;
 import commons.Quote;
 import commons.User;
@@ -281,6 +282,22 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .post(Entity.entity(password, APPLICATION_JSON));
         return response.getStatus() == 200;
+    }
+
+    /**
+     * Sends the email request to the server.
+     *
+     * @param emailRequest the data
+     * @return true iff the mail was successfully sent
+     */
+    public boolean sendMail(EmailRequest emailRequest) {
+        Response response = ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/email/send")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(emailRequest, APPLICATION_JSON));
+
+        return response.getStatus() == Response.Status.OK.getStatusCode();
     }
 
     /**

@@ -82,22 +82,6 @@ public class ServerUtils {
     }
 
     /**
-     * Get quotes the hard way.
-     *
-     * @throws IOException may occur.
-     * @throws URISyntaxException may occur.
-     */
-    public void getQuotesTheHardWay() throws IOException, URISyntaxException {
-        var url = new URI("http://localhost:8080/api/quotes").toURL();
-        var is = url.openConnection().getInputStream();
-        var br = new BufferedReader(new InputStreamReader(is));
-        String line;
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
-        }
-    }
-
-    /**
      * Get all events.
      *
      * @return List of all events on DB

@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -82,12 +83,14 @@ public class ServerSelectCtrl implements Initializable {
         String prevIp = ServerUtils.getIp();
         String prevPort = ServerUtils.getPort();
         ServerUtils.setServer(ipField.getText(), portField.getText());
+        WebSocketServerUtils.setSession(ipField.getText(), portField.getText());
         try {
             mainCtrl.showHomePage();
         } catch (Exception e) {
             mainCtrl.showServerSelect();
             HomePageCtrl.displayErrorPopup("Could not connect to server.", errorPopup);
             ServerUtils.setServer(prevIp, prevPort);
+            WebSocketServerUtils.setSession(prevIp, prevPort);
         }
     }
 

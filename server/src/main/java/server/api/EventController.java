@@ -339,6 +339,13 @@ public class EventController {
         event.removeTransaction(toRemove.get());
         repo.save(event);
 
+        Transaction transaction = toRemove.get();
+        if (transaction instanceof Payment) {
+            payRepo.deleteById(transaction.getId());
+        } else if (transaction instanceof Expense) {
+            exRepo.deleteById(transaction.getId());
+        }
+
         return ResponseEntity.ok(event);
     }
 

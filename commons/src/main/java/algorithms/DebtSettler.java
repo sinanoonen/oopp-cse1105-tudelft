@@ -122,7 +122,7 @@ public class DebtSettler {
         }
         assert userSender != null;
         assert userReceiver != null;
-        String info = "You can transfer the money to:\nIBAN: " + userReceiver.getIban()
+        String info = sender + " can transfer the money to:\nIBAN: " + userReceiver.getIban()
                 + "\nBIC: " + userReceiver.getBic()
                 + "\n" + userReceiver.getName() + " can send a reminder to the E-mail: " + userSender.getEmail();
         result.add(title);

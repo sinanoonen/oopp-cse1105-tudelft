@@ -6,12 +6,18 @@ import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import commons.Event;
+
+import java.beans.EventHandler;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import commons.transactions.Payment;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
@@ -111,7 +117,7 @@ public class DebtPaymentOverviewCtrl implements Initializable {
     private Node debtPaymentCellFactory(String settlement) {
         TitledPane base = new TitledPane();
         base.setPrefWidth(participantsPaymentContainer.getPrefWidth() - 20);
-        base.setPrefHeight(20);
+        base.setPrefHeight(30);
         base.setStyle("-fx-background-color: #444444;"
                 + " -fx-border-width: 3;"
                 + " -fx-border-color: black;"
@@ -121,7 +127,8 @@ public class DebtPaymentOverviewCtrl implements Initializable {
 
         base.setExpanded(false);
         String titleText = settlement.replace("___", ClientUtils.getCurrency().toString());
-        double amount = Double.parseDouble(settlement.split(" ")[3]);
+        String[] settlementArray = settlement.split(" ");
+        double amount = Double.parseDouble(settlementArray[3]);
         double convertedValue = ExchangeProvider.convertCurrency(amount,
                 "EUR",
                 ClientUtils.getCurrency().toString());
@@ -131,17 +138,62 @@ public class DebtPaymentOverviewCtrl implements Initializable {
         base.setText(titleText);
         base.setFont(Font.font("SansSerif", 15));
 
+        Pane pane = new Pane();
+        pane.setPrefWidth(base.getPrefWidth());
+        pane.setPrefHeight(120);
+        pane.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: black;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
+
         Text content = new Text(debtSettler.getSettledDebts().get(settlement));
-        final double nameLeftPadding = 0.7f * base.getPrefWidth();
+        final double nameTopPadding = 0.2f * pane.getPrefHeight();
+        final double nameLeftPadding = 0.02f * pane.getPrefWidth();
+        content.setLayoutY(pane.getLayoutY() + nameTopPadding);
         content.setLayoutX(base.getLayoutX() + nameLeftPadding);
         content.setFont(Font.font("SansSerif", 15));
+        content.setFill(Paint.valueOf("#FFFFFF"));
 
-        base.setContent(content);
+        Button payOffDebt = new Button();
+        payOffDebt.requestFocus();
+        double finalConvertedValue = convertedValue;
+        payOffDebt.onActionProperty().set(actionEvent -> {
+            event.addTransaction(new Payment(settlementArray[0], LocalDate.now(), (float) finalConvertedValue,
+                    ClientUtils.getCurrency(), settlementArray[settlementArray.length - 1]));
+            mainCtrl.showDebtOverview(event);
+        });
+        final double buttonTopPadding = 0.01f * pane.getPrefHeight();
+        final double buttonLeftPadding = 0.62f * pane.getPrefWidth();
+        payOffDebt.setLayoutY(buttonTopPadding);
+        payOffDebt.setLayoutX(buttonLeftPadding);
+        payOffDebt.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: #c30052;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
+        payOffDebt.setText("Debt has been paid");
+        payOffDebt.setFont(Font.font("SansSerif", 15));
+        payOffDebt.setTextFill(Paint.valueOf("#FFFFFF"));
+
+        pane.getChildren().addAll(content, payOffDebt);
+
+        base.setContent(pane);
+        base.setOnMouseClicked(mouseEvent -> {
+            if (base.isExpanded()) {
+                base.setPrefHeight(120);
+            } else {
+                base.setPrefHeight(30);
+            }
+        });
 
 
 
         return base;
     }
+
 
     /**
      * Changes the background color of an FXML node.

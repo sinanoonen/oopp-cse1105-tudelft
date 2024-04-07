@@ -16,7 +16,7 @@ import java.util.PriorityQueue;
  */
 public class DebtSettler {
     private final Map<String, Float> debts;
-    private final List<String> settledDebts;
+    private final Map<String, String> settledDebts;
     private final Event event;
 
     /**
@@ -46,7 +46,7 @@ public class DebtSettler {
                 negativeDebts.offer(entry);
             }
         }
-        settledDebts = new ArrayList<>();
+        settledDebts = new HashMap<>();
         //The algorithm will match the users, and it settles the debts between all users
         while (!positiveDebts.isEmpty() && !negativeDebts.isEmpty()) {
             Map.Entry<String, Float> senderEntry = positiveDebts.poll();
@@ -59,7 +59,8 @@ public class DebtSettler {
 
             float transferAmount = Math.min(senderDebt, -receiverDebt);
 
-            settledDebts.add(settleToString(transferAmount, sender, receiver));
+            List<String> item = settleToString(transferAmount, sender, receiver);
+            settledDebts.put(item.get(0), item.get(1));
 
             senderDebt -= transferAmount;
             receiverDebt += transferAmount;
@@ -94,7 +95,7 @@ public class DebtSettler {
         return debts;
     }
 
-    public List<String> getSettledDebts() {
+    public Map<String, String> getSettledDebts() {
         return settledDebts;
     }
 
@@ -106,8 +107,9 @@ public class DebtSettler {
      * @param receiver of the money
      * @return a string representation of the debt payment
      */
-    public String settleToString(float transferAmount, String sender, String receiver) {
-        String result = sender + " should send " + transferAmount + " to " + receiver;
+    public List<String> settleToString(float transferAmount, String sender, String receiver) {
+        List<String> result = new ArrayList<>();
+        String title = sender + " should send " + transferAmount + " ___ to " + receiver;
         User userSender = null;
         User userReceiver = null;
         for (User user : event.getParticipants()) {
@@ -120,9 +122,11 @@ public class DebtSettler {
         }
         assert userSender != null;
         assert userReceiver != null;
-        result += "\n\nYou can transfer the money to:\nIBAN: " + userReceiver.getIban()
+        String info = "You can transfer the money to:\nIBAN: " + userReceiver.getIban()
                 + "\nBIC: " + userReceiver.getBic()
                 + "\n" + userReceiver.getName() + " can send a reminder to the E-mail: " + userSender.getEmail();
+        result.add(title);
+        result.add(info);
         return result;
     }
 }

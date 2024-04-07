@@ -1,6 +1,7 @@
 package client.scenes;
 
 import algorithms.DebtSettler;
+import algorithms.ExchangeProvider;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -13,8 +14,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -98,6 +101,7 @@ public class DebtPaymentOverviewCtrl implements Initializable {
         participantsPaymentContainer.getItems().removeAll(participantsPaymentContainer.getItems());
         List<Node> participantsDebtPayment = debtSettler
                 .getSettledDebts()
+                .keySet()
                 .stream()
                 .map(this::debtPaymentCellFactory)
                 .toList();
@@ -105,9 +109,9 @@ public class DebtPaymentOverviewCtrl implements Initializable {
     }
 
     private Node debtPaymentCellFactory(String settlement) {
-        Pane base = new Pane();
+        TitledPane base = new TitledPane();
         base.setPrefWidth(participantsPaymentContainer.getPrefWidth() - 20);
-        base.setPrefHeight(120);
+        base.setPrefHeight(20);
         base.setStyle("-fx-background-color: #444444;"
                 + " -fx-border-width: 3;"
                 + " -fx-border-color: black;"
@@ -115,16 +119,26 @@ public class DebtPaymentOverviewCtrl implements Initializable {
                 + " -fx-border-radius: 5;"
         );
 
-        Text username = new Text(settlement);
-        final double nameTopPadding = 0.20f * base.getPrefHeight();
-        final double nameLeftPadding = 0.07f * base.getPrefWidth();
-        username.setLayoutX(base.getLayoutX() + nameLeftPadding);
-        username.setLayoutY(base.getLayoutY() + nameTopPadding);
-        username.setFont(Font.font("SansSerif", 15));
-        username.setFill(Paint.valueOf("#FFFFFF"));
-        username.setMouseTransparent(true);
+        base.setExpanded(false);
+        String titleText = settlement.replace("___", ClientUtils.getCurrency().toString());
+        double amount = Double.parseDouble(settlement.split(" ")[3]);
+        double convertedValue = ExchangeProvider.convertCurrency(amount,
+                "EUR",
+                ClientUtils.getCurrency().toString());
+        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+        titleText = titleText.replace(String.valueOf(amount), String.valueOf(convertedValue));
 
-        base.getChildren().addAll(username);
+        base.setText(titleText);
+        base.setFont(Font.font("SansSerif", 15));
+
+        Text content = new Text(debtSettler.getSettledDebts().get(settlement));
+        final double nameLeftPadding = 0.7f * base.getPrefWidth();
+        content.setLayoutX(base.getLayoutX() + nameLeftPadding);
+        content.setFont(Font.font("SansSerif", 15));
+
+        base.setContent(content);
+
+
 
         return base;
     }

@@ -19,7 +19,7 @@
             <Font name="SansSerif Regular" size="18.0" />
          </font>
       </Text>
-      <TextField fx:id="inputField" editable="false" layoutX="184.0" layoutY="180.0" onKeyPressed="#inputFieldTypeHandler" onMouseClicked="#inputFieldClickHandler" prefHeight="42.0" prefWidth="284.0" style="-fx-background-color: #2b2b2b; -fx-background-radius: 10; -fx-text-fill: #FFFFFF;">
+      <TextField fx:id="inputField" editable="false" layoutX="184.0" layoutY="180.0" onMouseClicked="#inputFieldClickHandler" prefHeight="42.0" prefWidth="284.0" style="-fx-background-color: #2b2b2b; -fx-background-radius: 10; -fx-text-fill: #FFFFFF;">
          <font>
             <Font name="SansSerif Regular" size="20.0" />
          </font></TextField>

@@ -56,6 +56,16 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                saveEvent();
+                return;
+            }
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                cancel(null);
+            }
+        });
     }
 
     @Override
@@ -94,18 +104,6 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
             return;
         }
         inputField.setEditable(true);
-    }
-
-    /**
-     * Handles checking if any specific keys are pressed while editing the textField.
-     *
-     * @param keyEvent keyEvent
-     */
-    public void inputFieldTypeHandler(KeyEvent keyEvent) {
-        if (!keyEvent.getCode().equals(KeyCode.ENTER) || inputField.getText().isEmpty()) {
-            return;
-        }
-        inputField.setEditable(false);
     }
 
     public void cancel(ActionEvent actionEvent) {

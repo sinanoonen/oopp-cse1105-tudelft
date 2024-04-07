@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -26,7 +27,11 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
     @FXML
     private AnchorPane root;
     @FXML
+    private TextField title;
+    @FXML
     private PasswordField passwordField;
+    @FXML
+    private Button cancelButton;
     @FXML
     private Button loginButton;
 
@@ -63,7 +68,11 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        // TODO
+        var lm = UIUtils.getLanguageMap();
+        title.setText(lm.get("adminlogin"));
+        passwordField.setPromptText(lm.get("adminlogin_enter_password"));
+        cancelButton.setText(lm.get("general_cancel"));
+        loginButton.setText(lm.get("admin_submit"));
     }
 
     @FXML

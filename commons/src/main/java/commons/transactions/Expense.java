@@ -5,9 +5,11 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -172,7 +174,10 @@ public class Expense extends Transaction {
             splits = splits + entry.getValue();
         }
         float oneAmount = splits == 0 ? amount : amount / splits;
-        oneAmount = Float.parseFloat(new DecimalFormat("#.##").format(oneAmount));
+        //oneAmount = Float.parseFloat(new DecimalFormat("#.##").format(oneAmount));
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance(Locale.US);
+        DecimalFormat decimalFormat = new DecimalFormat("#.##", symbols);
+        oneAmount = Float.parseFloat(decimalFormat.format(oneAmount));
         for (Map.Entry<String, Integer> entry : userMultiplierMap.entrySet()) {
             String user = entry.getKey();
             int multiplier = entry.getValue();

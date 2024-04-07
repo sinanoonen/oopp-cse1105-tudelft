@@ -1,8 +1,5 @@
 package commons.transactions;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
 import commons.Currency;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -12,11 +9,15 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * A test for the Expense class.
  */
 class ExpenseTest {
     Expense expense;
+    Expense expenseNoParticipants;
+    Expense expenseNoParticipantsWithMultiplier;
     LocalDate baseDate;
 
     @BeforeEach
@@ -25,6 +26,25 @@ class ExpenseTest {
         baseDate = LocalDate.of(2015, 3, 2);
         expense = new Expense("Yannick", baseDate, 90f, Currency.EUR,
                 "Meeting Lunch", participants);
+
+        expenseNoParticipants = new Expense("Yannick", baseDate, 90f, Currency.EUR,
+                "Meeting Lunch", null);
+
+        expenseNoParticipantsWithMultiplier = new Expense("Yannick", baseDate, 90f, Currency.EUR,
+                "Meeting Lunch", null, new HashMap<>());
+    }
+
+    @Test
+    void testDefaultConstructor() {
+        Expense expense = new Expense();
+        assertEquals("Expense{Transaction{owner = 'null', date = "
+                        + "'null', amount = 0.0}, description='null', debts={}}",
+                expense.toString());
+        assertNull(expense.getOwner());
+        assertNull(expense.getDate());
+        assertEquals(0.0f, expense.getAmount());
+        assertEquals(0, expense.getDebts().size());
+        assertNull(expense.getDescription());
     }
 
     @Test
@@ -42,6 +62,7 @@ class ExpenseTest {
         debts.put("Sinan", 30f);
         debts.put("Yannick", -90.0f);
         assertEquals(debts, expense.getDebts());
+        assertEquals(0, expenseNoParticipants.getDebts().size());
     }
 
     @Test

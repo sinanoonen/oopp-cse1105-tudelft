@@ -3,10 +3,7 @@ package client.scenes;
 import algorithms.DebtSettler;
 import algorithms.ExchangeProvider;
 import client.interfaces.LanguageInterface;
-import client.utils.ClientUtils;
-import client.utils.ServerUtils;
-import client.utils.UIUtils;
-import client.utils.WebSocketServerUtils;
+import client.utils.*;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.WebSocketMessage;
@@ -74,6 +71,11 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+    }
+
+    @Override
+    public void changeLanguage(Language language) {
+        // TODO
     }
 
     /**

@@ -54,6 +54,11 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
     }
 
     @Override
+    public void changeLanguage(Language language) {
+        // TODO
+    }
+
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         currencyChoiceBox.getItems().addAll(Arrays.asList(Currency.values()));
         languageChoiceBox.getItems().addAll(Arrays.asList(Language.values()));

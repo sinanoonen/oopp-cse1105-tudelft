@@ -1,10 +1,7 @@
 package client.scenes;
 
 import client.interfaces.LanguageInterface;
-import client.utils.ManageExpenseMode;
-import client.utils.ServerUtils;
-import client.utils.UIUtils;
-import client.utils.WebSocketServerUtils;
+import client.utils.*;
 import commons.Currency;
 import commons.Event;
 import commons.User;
@@ -109,6 +106,10 @@ public class AddExpenseCtrl implements LanguageInterface {
         this.socket = socket;
     }
 
+    @Override
+    public void changeLanguage(Language language) {
+        // TODO
+    }
 
     /**
      * Refreshes the scene.

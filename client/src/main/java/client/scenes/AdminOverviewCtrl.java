@@ -1,10 +1,7 @@
 package client.scenes;
 
 import client.interfaces.LanguageInterface;
-import client.utils.ClientUtils;
-import client.utils.ServerUtils;
-import client.utils.UIUtils;
-import client.utils.WebSocketServerUtils;
+import client.utils.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
@@ -104,6 +101,11 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
             Platform.runLater(this::loadEvents);
         });
+    }
+
+    @Override
+    public void changeLanguage(Language language) {
+        // TODO
     }
 
     /**

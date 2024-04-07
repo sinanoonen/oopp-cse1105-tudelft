@@ -2,10 +2,7 @@ package client.scenes;
 
 import algorithms.ExchangeProvider;
 import client.interfaces.LanguageInterface;
-import client.utils.ClientUtils;
-import client.utils.ServerUtils;
-import client.utils.UIUtils;
-import client.utils.WebSocketServerUtils;
+import client.utils.*;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
@@ -148,7 +145,10 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
 
     }
 
-
+    @Override
+    public void changeLanguage(Language language) {
+        // TODO
+    }
 
     /**
      * Method to refresh the scene.

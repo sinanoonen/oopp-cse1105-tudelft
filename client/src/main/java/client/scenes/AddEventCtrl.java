@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
+import client.utils.Language;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import com.google.inject.Inject;
@@ -37,6 +38,20 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
     public AddEventCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
+    }
+
+    @Override
+    public void changeLanguage(Language language) {
+        // TODO
     }
 
     /**
@@ -102,14 +117,5 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
 
     private void displayInputError(String message) {
         HomePageCtrl.displayErrorPopup(message, errorPopup);
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
-        } else {
-            UIUtils.deactivateHighContrastMode(root);
-        }
     }
 }

@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.interfaces.LanguageInterface;
+import client.utils.Language;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
@@ -30,6 +31,11 @@ public class AdminLoginCtrl implements LanguageInterface {
     public AdminLoginCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+    }
+
+    @Override
+    public void changeLanguage(Language language) {
+        // TODO
     }
 
     @FXML

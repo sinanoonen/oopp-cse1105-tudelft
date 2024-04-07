@@ -1,10 +1,7 @@
 package client.scenes;
 
 import client.interfaces.LanguageInterface;
-import client.utils.ManageUserMode;
-import client.utils.ServerUtils;
-import client.utils.UIUtils;
-import client.utils.WebSocketServerUtils;
+import client.utils.*;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
@@ -62,6 +59,11 @@ public class ManageUserCtrl implements LanguageInterface {
         this.mainCtrl = mainCtrl;
         this.socket = socket;
         mode = ManageUserMode.CREATE;
+    }
+
+    @Override
+    public void changeLanguage(Language language) {
+        // TODO
     }
 
     /**

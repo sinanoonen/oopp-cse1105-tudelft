@@ -19,9 +19,9 @@ package client.utils;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import commons.Event;
-import commons.Quote;
 import commons.User;
 import commons.transactions.Expense;
+import commons.transactions.Tag;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -257,33 +257,6 @@ public class ServerUtils {
     }
 
     /**
-     * Get all quotes.
-     *
-     * @return all quotes
-     */
-    public List<Quote> getQuotes() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Quote>>() {});
-    }
-
-    /**
-     * Add a quote.
-     *
-     * @param quote a quote
-     * @return the quote
-     */
-    public Quote addQuote(Quote quote) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
-    }
-
-    /**
      * Method to update an event.
      *
      * @param event updated event
@@ -323,5 +296,19 @@ public class ServerUtils {
             .accept(APPLICATION_JSON)
             .post(Entity.entity(password, APPLICATION_JSON));
         return response.getStatus() == 200;
+    }
+
+    /**
+     * This adds a new tag.
+     *
+     * @param tag the tag to be added
+     * @return the added tag
+     */
+    public Tag addNewTag(Tag tag) {
+        return ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("/api/tags")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(tag, APPLICATION_JSON), Tag.class);
     }
 }

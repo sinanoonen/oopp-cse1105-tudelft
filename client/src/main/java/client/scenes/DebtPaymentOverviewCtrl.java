@@ -3,7 +3,6 @@ package client.scenes;
 import algorithms.DebtSettler;
 import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
-import client.utils.Language;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import commons.Event;
@@ -58,7 +57,7 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
     }
 
     @Override
-    public void changeLanguage(Language language) {
+    public void updateLanguage() {
         // TODO
     }
 

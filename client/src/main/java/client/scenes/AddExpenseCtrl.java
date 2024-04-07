@@ -55,13 +55,25 @@ public class AddExpenseCtrl implements LanguageInterface {
     @FXML
     private Label title;
     @FXML
+    private Label sponsor;
+    @FXML
     private ChoiceBox<String> whoPaid;
     @FXML
-    private TextField description;
+    private Label description;
+    @FXML
+    private TextField descriptionField;
+    @FXML
+    private Label quantity;
     @FXML
     private TextField amount;
     @FXML
+    private Label date;
+    @FXML
+    private DatePicker datePicker;
+    @FXML
     private ChoiceBox<String> currencyChoiceBox;
+    @FXML
+    private Label splitMethod;
     @FXML
     private CheckBox equallyEverybody;
     @FXML
@@ -71,12 +83,12 @@ public class AddExpenseCtrl implements LanguageInterface {
     @FXML
     private List<CheckBox> additionalCheckboxes = new ArrayList<>();
     @FXML
+    private Label expenseType;
+    @FXML
     private ChoiceBox<Tag> expenseTags;
     @FXML
     private ListView<Tag> selectedTags;
 
-    @FXML
-    private DatePicker datePicker;
     @FXML
     private Button cancelButton;
     @FXML
@@ -100,15 +112,26 @@ public class AddExpenseCtrl implements LanguageInterface {
      */
     @Inject
     public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket) {
-        System.out.println("Constructing add expense ctrl");
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.socket = socket;
     }
 
     @Override
-    public void changeLanguage(Language language) {
-        // TODO
+    public void updateLanguage() {
+        var languageMap = UIUtils.getLanguageMap();
+//        title.setText(languageMap.get("addexpense"));
+//        sponsor.setText(languageMap.get("addexpense_sponsor"));
+//        description.setText(languageMap.get("addexpense_description"));
+//        quantity.setText(languageMap.get("addexpense_quantity"));
+//        date.setText(languageMap.get("addexpense_date"));
+//        splitMethod.setText(languageMap.get("addexpense_split_method"));
+//        equallyEverybody.setText(languageMap.get("addexpense_equally"));
+//        onlySomePeople.setText(languageMap.get("addexpense_partially"));
+//        expenseType.setText(languageMap.get("addexpense_expense_type"));
+//        addTag.setText(languageMap.get("addexpense_add_tag"));
+//        addButton.setText(languageMap.get("general_confirm"));
+//        cancelButton.setText(languageMap.get("general_cancel"));
     }
 
     /**
@@ -200,7 +223,7 @@ public class AddExpenseCtrl implements LanguageInterface {
 
             title.setText("Edit Expense");
             whoPaid.setValue(expense.getOwner());
-            description.setText(expense.getDescription());
+            descriptionField.setText(expense.getDescription());
             amount.setText(Float.toString(expense.getAmount()));
             datePicker.setValue(expense.getDate());
             selectedTags.getItems().addAll(expense.getTags());
@@ -414,7 +437,7 @@ public class AddExpenseCtrl implements LanguageInterface {
 
     private void clearFields() {
         whoPaid.setValue(null);
-        description.clear();
+        descriptionField.clear();
         amount.clear();
         datePicker.setValue(null);
         equallyEverybody.setSelected(false);
@@ -450,7 +473,7 @@ public class AddExpenseCtrl implements LanguageInterface {
      */
     public void create() {
         String owner = whoPaid.getValue();
-        String expenseDescription = description.getText();
+        String expenseDescription = descriptionField.getText();
         float expenseAmount = Float.parseFloat(amount.getText());
         LocalDate expenseDate = datePicker.getValue();
         List<String> debtors = new ArrayList<>();
@@ -495,7 +518,7 @@ public class AddExpenseCtrl implements LanguageInterface {
      */
     public void update(Expense expense) {
         String owner = whoPaid.getValue();
-        String expenseDescription = description.getText();
+        String expenseDescription = descriptionField.getText();
         float expenseAmount = Float.parseFloat(amount.getText());
         LocalDate expenseDate = datePicker.getValue();
         List<String> debtors = new ArrayList<>();

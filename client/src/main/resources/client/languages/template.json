@@ -55,6 +55,7 @@
   "manageuser_iban": "",
   "manageuser_bic": "",
 
+  "addexpense": "",
   "addexpense_sponsor": "",
   "addexpense_description": "",
   "addexpense_quantity": "",

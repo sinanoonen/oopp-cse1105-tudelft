@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
-import client.utils.Language;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import com.google.inject.Inject;
@@ -12,12 +11,14 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 /**
  * A controller for the AddEvent scene.
@@ -29,6 +30,14 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
 
     @FXML
     private AnchorPane root;
+    @FXML
+    private Text title;
+    @FXML
+    private Text prompt;
+    @FXML
+    private Button cancelButton;
+    @FXML
+    private Button createButton;
     @FXML
     private TextField inputField;
     @FXML
@@ -50,8 +59,12 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
     }
 
     @Override
-    public void changeLanguage(Language language) {
-        // TODO
+    public void updateLanguage() {
+        var languageMap = UIUtils.getLanguageMap();
+        title.setText(languageMap.get("new_event"));
+        prompt.setText(languageMap.get("new_event_event_name") + ":");
+        cancelButton.setText(languageMap.get("general_cancel"));
+        createButton.setText(languageMap.get("general_create"));
     }
 
     /**

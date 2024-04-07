@@ -55,6 +55,7 @@
   "manageuser_iban": "IBAN",
   "manageuser_bic": "BIC",
 
+  "addexpense": "ADD EXPENSE",
   "addexpense_sponsor": "Sponsor",
   "addexpense_description": "Description",
   "addexpense_quantity": "Quantity",

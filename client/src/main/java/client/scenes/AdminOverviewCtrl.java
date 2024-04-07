@@ -104,7 +104,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
     }
 
     @Override
-    public void changeLanguage(Language language) {
+    public void updateLanguage() {
         // TODO
     }
 

@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
-import client.utils.Language;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import com.google.inject.Inject;
@@ -35,7 +34,7 @@ public class ServerSelectCtrl implements LanguageInterface {
     }
 
     @Override
-    public void changeLanguage(Language language) {
+    public void updateLanguage() {
         // TODO
     }
 

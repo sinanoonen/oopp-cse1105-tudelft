@@ -62,7 +62,7 @@ public class ManageUserCtrl implements LanguageInterface {
     }
 
     @Override
-    public void changeLanguage(Language language) {
+    public void updateLanguage() {
         // TODO
     }
 

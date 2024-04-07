@@ -116,6 +116,9 @@ public class MainCtrl {
         this.adminOverviewCtrl = adminOverview.getKey();
         this.adminOverview = new Scene(adminOverview.getValue());
 
+        this.addExpenseCtrl = addExpense.getKey();
+        this.addExpense = new Scene(addExpense.getValue());
+
         this.manageUserCtrl = manageUser.getKey();
         this.manageUser = new Scene(manageUser.getValue());
 
@@ -125,16 +128,13 @@ public class MainCtrl {
         this.serverSelectCtrl = serverSelect.getKey();
         this.serverSelect = new Scene(serverSelect.getValue());
 
+        showHomePage();
+        primaryStage.show();
+
         //Set default language and currency
         ClientUtils.setCurrency(ConfigReader.getCurrency());
         ClientUtils.setLanguage(ConfigReader.getLanguage());
         ServerUtils.setServer(ConfigReader.getIP(), ConfigReader.getPort());
-
-        this.addExpenseCtrl = addExpense.getKey();
-        this.addExpense = new Scene(addExpense.getValue());
-        showHomePage();
-        primaryStage.show();
-
         ExchangeProvider.getExchangeRates();
     }
 

@@ -247,7 +247,7 @@ public class UIUtils {
      * @param language language to load into map
      */
     public static void loadLanguageMap(Language language) {
-        String path = "src/main/resources/languages/" + language.toString().toLowerCase() + ".json";
+        String path = "src/main/resources/client/languages/" + language.toString().toLowerCase() + ".json";
         ObjectMapper mapper = new ObjectMapper();
         try {
             languageMap = mapper.readValue(new File(path), Map.class);
@@ -262,10 +262,8 @@ public class UIUtils {
 
     /**
      * Updates the language across the entire client.
-     *
-     * @param language language to be changed to
      */
-    public static void updateClientLanguage(Language language) {
+    public static void updateClientLanguage() {
         Injector injector = Main.injector();
         List<LanguageInterface> controllers = Arrays.asList(
                 injector.getInstance(AddEventCtrl.class),
@@ -280,6 +278,6 @@ public class UIUtils {
                 injector.getInstance(ServerSelectCtrl.class),
                 injector.getInstance(SettingsCtrl.class)
         );
-        controllers.forEach(c -> c.changeLanguage(language));
+        controllers.forEach(LanguageInterface::updateLanguage);
     }
 }

@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.Language;
 import client.utils.ServerUtils;
@@ -21,7 +22,7 @@ import javax.inject.Inject;
 /**
  * Controller for the settings scene.
  */
-public class SettingsCtrl implements Initializable {
+public class SettingsCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;

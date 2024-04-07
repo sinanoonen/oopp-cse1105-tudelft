@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -13,7 +14,7 @@ import javafx.scene.layout.Pane;
 /**
  * Controller for ServerSelect scene.
  */
-public class ServerSelectCtrl {
+public class ServerSelectCtrl implements LanguageInterface {
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
 

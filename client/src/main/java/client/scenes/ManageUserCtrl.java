@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.interfaces.LanguageInterface;
 import client.utils.ManageUserMode;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -22,7 +23,7 @@ import javafx.scene.text.Text;
 /**
  * A controller for the create-user page, as well as edit-user.
  */
-public class ManageUserCtrl {
+public class ManageUserCtrl implements LanguageInterface {
     private ServerUtils serverUtils;
     private MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;

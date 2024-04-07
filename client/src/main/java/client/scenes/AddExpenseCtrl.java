@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.interfaces.LanguageInterface;
 import client.utils.ManageExpenseMode;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -47,7 +48,7 @@ import javax.inject.Inject;
 /**
  * Controller for adding an expense to an event.
  */
-public class AddExpenseCtrl {
+public class AddExpenseCtrl implements LanguageInterface {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;

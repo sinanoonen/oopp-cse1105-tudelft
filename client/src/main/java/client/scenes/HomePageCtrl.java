@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -29,7 +30,7 @@ import javafx.util.Duration;
 /**
  * A controller for the home page scene.
  */
-public class HomePageCtrl implements Initializable {
+public class HomePageCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;

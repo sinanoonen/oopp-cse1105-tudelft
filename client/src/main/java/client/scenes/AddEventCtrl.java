@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -20,7 +21,7 @@ import javafx.scene.layout.Pane;
 /**
  * A controller for the AddEvent scene.
  */
-public class AddEventCtrl implements Initializable {
+public class AddEventCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;

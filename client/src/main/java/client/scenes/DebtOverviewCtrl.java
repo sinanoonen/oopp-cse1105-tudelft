@@ -2,6 +2,7 @@ package client.scenes;
 
 import algorithms.DebtSettler;
 import algorithms.ExchangeProvider;
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -30,7 +31,7 @@ import javafx.scene.text.Text;
 /**
  * Controller for the DebtOverview scene.
  */
-public class DebtOverviewCtrl implements Initializable {
+public class DebtOverviewCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;

@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.interfaces.LanguageInterface;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
@@ -10,7 +11,7 @@ import javafx.scene.control.PasswordField;
 /**
  * This is a controller for the admin login page.
  */
-public class AdminLoginCtrl {
+public class AdminLoginCtrl implements LanguageInterface {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
 

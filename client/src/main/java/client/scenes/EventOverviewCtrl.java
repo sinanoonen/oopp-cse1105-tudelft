@@ -1,6 +1,7 @@
 package client.scenes;
 
 import algorithms.ExchangeProvider;
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -59,7 +60,7 @@ import javafx.util.Duration;
  * - CELL FACTORIES
  * - GENERAL METHODS
  */
-public class EventOverviewCtrl implements Initializable {
+public class EventOverviewCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;

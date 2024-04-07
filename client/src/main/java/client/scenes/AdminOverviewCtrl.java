@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -40,7 +41,7 @@ import javafx.stage.FileChooser;
 /**
  * The controller for the admin overview.
  */
-public class AdminOverviewCtrl implements Initializable {
+public class AdminOverviewCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;

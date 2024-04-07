@@ -1,6 +1,7 @@
 package client.scenes;
 
 import algorithms.DebtSettler;
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -24,7 +25,7 @@ import javax.inject.Inject;
 /**
  * Controller for the DebtPaymentOverview scene. 
  */
-public class DebtPaymentOverviewCtrl implements Initializable {
+public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;

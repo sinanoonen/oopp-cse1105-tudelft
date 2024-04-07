@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import commons.Currency;
 import commons.Event;
 import commons.EventManager;
 import commons.User;
@@ -38,10 +39,10 @@ class EventManagerTest {
         testEvent2.addParticipant(new User("name2", "email2", "iban2", "bic2", UUID.randomUUID()));
 
         testExpense = new Expense("emilio", LocalDate.of(2024, 1, 1),
-                100, "description", List.of("emilio", "mario"));
+                100, Currency.EUR, "description", List.of("emilio", "mario"));
 
         testPayment = new Payment(LocalDate.of(2024, 1, 1),
-                100, "emilio", "mario");
+                100, Currency.EUR, "emilio", "mario");
 
         eventManagerFull = new EventManager(events);
     }

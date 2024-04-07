@@ -1,6 +1,7 @@
 package client.scenes;
 
 import algorithms.DebtSettler;
+import algorithms.ExchangeProvider;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -175,15 +176,29 @@ public class DebtOverviewCtrl implements Initializable {
         username.setFill(Paint.valueOf("#FFFFFF"));
         username.setMouseTransparent(true);
 
-        Text debt = new Text(String.valueOf(-1 * (debtSettler.getDebts().get(user))));
-        final double debtLeftPadding = 0.75f * base.getPrefWidth();
+        double convertedValue = -1 * (debtSettler.getDebts().get(user));
+        convertedValue = ExchangeProvider.convertCurrency(convertedValue,
+                "EUR",
+                ClientUtils.getCurrency().toString());
+        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+        Text debt = new Text(String.valueOf(convertedValue));
+        final double debtLeftPadding = 0.7f * base.getPrefWidth();
         debt.setLayoutX(base.getLayoutX() + debtLeftPadding);
         debt.setLayoutY(base.getLayoutY() + nameTopPadding);
         debt.setFont(Font.font("SansSerif", 15));
         debt.setFill(Paint.valueOf("#FFFFFF"));
         debt.setMouseTransparent(true);
 
-        base.getChildren().addAll(username, debt);
+        Text currency = new Text(ClientUtils.getCurrency().toString());
+        final double currencyLeftPadding = debtLeftPadding + debt.getText().length() * 8;
+        currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
+        final double topPadding = base.getPrefHeight() / 2 + 5;
+        currency.setLayoutY(base.getLayoutY() + topPadding);
+        currency.setFont(Font.font("SansSerif", 15));
+        currency.setFill(Paint.valueOf("#FFFFFF"));
+        currency.setMouseTransparent(true);
+
+        base.getChildren().addAll(username, debt, currency);
 
         return base;
     }

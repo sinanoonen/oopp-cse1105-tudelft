@@ -122,4 +122,12 @@ public class AddEventCtrl implements Initializable {
             }
         });
     }
+
+    public void setInputField(TextField inputField) {
+        this.inputField = inputField;
+    }
+
+    public void setErrorPopup(Pane errorPopUp) {
+        this.errorPopup = errorPopUp;
+    }
 }

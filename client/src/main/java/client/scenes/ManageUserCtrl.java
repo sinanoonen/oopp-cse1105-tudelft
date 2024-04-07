@@ -93,6 +93,11 @@ public class ManageUserCtrl implements Initializable {
      * A refresh method for this scene, sets scene back to initial setting.
      */
     public void refresh(ManageUserMode mode, User user, Event event) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
         this.mode = mode;
         this.event = event;
         if (mode == ManageUserMode.CREATE) {

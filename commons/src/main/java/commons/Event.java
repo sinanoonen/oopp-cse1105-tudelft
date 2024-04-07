@@ -1,13 +1,12 @@
 package commons;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
@@ -25,18 +24,19 @@ import java.util.UUID;
  * The Event class.
  */
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Event {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    //@GeneratedValue(strategy = GenerationType.UUID)
     private UUID inviteCode;
     private String title;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private Set<User> participants;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Expense> expenses;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Payment> payments;
-    @OneToMany (cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany (cascade = CascadeType.ALL)
     private Set<Tag> availableTags;
 
     private LocalDateTime creationDate;
@@ -108,6 +108,25 @@ public class Event {
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
         setLastActivity(LocalDateTime.now());
+    }
+
+    /**
+     * This sets the list of transactions.
+     *
+     * @param transactions the list of transactions to be set
+     */
+    public void setTransactions(List<Transaction> transactions) {
+        List<Expense> expenses = new ArrayList<>();
+        List<Payment> payments = new ArrayList<>();
+        for (Transaction transaction : transactions) {
+            if (transaction instanceof Expense) {
+                expenses.add((Expense) transaction);
+            } else {
+                payments.add((Payment) transaction);
+            }
+        }
+        setPayments(payments);
+        setExpenses(expenses);
     }
 
     /**

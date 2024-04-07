@@ -1,14 +1,26 @@
 package client.utils;
 
+import client.Main;
+import client.interfaces.LanguageInterface;
+import client.scenes.AddEventCtrl;
+import client.scenes.AddExpenseCtrl;
+import client.scenes.AdminLoginCtrl;
+import client.scenes.AdminOverviewCtrl;
+import client.scenes.DebtOverviewCtrl;
+import client.scenes.DebtPaymentOverviewCtrl;
+import client.scenes.EventOverviewCtrl;
+import client.scenes.HomePageCtrl;
+import client.scenes.ManageUserCtrl;
+import client.scenes.ServerSelectCtrl;
+import client.scenes.SettingsCtrl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Injector;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import client.Main;
-import client.interfaces.LanguageInterface;
-import client.scenes.*;
-import com.google.inject.Injector;
+import java.util.Map;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -28,6 +40,8 @@ public class UIUtils {
     private static final HashMap<Node, String> colorMap = new HashMap<>();
 
     private static final List<Node> activePages = new LinkedList<>();
+
+    private static Map<String, String> languageMap = new HashMap<>();
 
     /**
      * Changes the color of a node.
@@ -224,6 +238,26 @@ public class UIUtils {
         alert.setHeaderText(null);
         alert.setContentText("The event '" + eventTitle + "' has been deleted.");
         alert.showAndWait();
+    }
+
+    /**
+     * Loads the language json key-value pairs into the languageMap.
+     * This can be accessed through the getLanguageMap() method.
+     *
+     * @param language language to load into map
+     */
+    public static void loadLanguageMap(Language language) {
+        String path = "src/main/resources/languages/" + language.toString().toLowerCase() + ".json";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            languageMap = mapper.readValue(new File(path), Map.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Map<String, String> getLanguageMap() {
+        return languageMap;
     }
 
     /**

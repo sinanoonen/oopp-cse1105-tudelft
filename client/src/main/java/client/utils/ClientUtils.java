@@ -20,7 +20,12 @@ public class ClientUtils {
     }
 
     public static void setLanguage(Language language) {
+        if (language.equals(ClientUtils.language)) {
+            return; // Avoid re-reading and reloading language map
+        }
         ClientUtils.language = language;
+        UIUtils.loadLanguageMap(language);
+        UIUtils.updateClientLanguage(language);
     }
 
     public static Language getLanguage() {

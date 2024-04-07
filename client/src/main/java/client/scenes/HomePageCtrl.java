@@ -1,10 +1,9 @@
 package client.scenes;
 
-import client.utils.ClientUtils;
-import client.utils.ServerUtils;
-import client.utils.UIUtils;
-import client.utils.WebSocketServerUtils;
+import client.utils.*;
 import com.google.inject.Inject;
+import commons.EmailConfig;
+import commons.EmailRequest;
 import commons.Event;
 import commons.WebSocketMessage;
 import java.net.URL;
@@ -16,6 +15,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -283,5 +283,32 @@ public class HomePageCtrl implements Initializable {
         }
 
         node.setStyle(currentStyle + newAttribute);
+    }
+
+    public void onTestEmailClicked() {
+        EmailConfig emailConfig = ConfigReader.getEmailConfig();
+        if(!emailConfig.isComplete()) {
+            showAlert("Email Configuration", "Please set up your email configuration before sending a test mail");
+            return;
+        }
+
+        EmailRequest emailRequest = new EmailRequest(emailConfig, emailConfig.getUsername(),
+            "Test Mail", "This is a test mail.");
+
+        boolean isSuccess = serverUtils.sendMail(emailRequest);
+
+        if (isSuccess) {
+            showAlert("Success", "Email sent successfully!");
+        } else {
+            showAlert("Error", "Failed to send email. Please check your email credentials.");
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

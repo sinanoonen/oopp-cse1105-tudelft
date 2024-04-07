@@ -1,6 +1,8 @@
 package client.utils;
 
 import commons.Currency;
+import commons.EmailConfig;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,5 +78,33 @@ public class ConfigReader {
             case "CNY" -> Currency.CNY;
             default -> Currency.EUR;
         };
+    }
+
+    public static String getEmailHost() {
+        String host = PROPERTIES.getProperty("email.host");
+        return (host != null && !host.isEmpty()) ? host : null;
+    }
+
+    public static int getEmailPort() {
+        String portStr = PROPERTIES.getProperty("email.port");
+        try {
+            return (portStr != null && !portStr.isEmpty()) ? Integer.parseInt(portStr) : -1;
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    public static String getEmailUsername() {
+        String username = PROPERTIES.getProperty("email.username");
+        return (username != null && !username.isEmpty()) ? username : null;
+    }
+
+    public static String getEmailPassword() {
+        String password = PROPERTIES.getProperty("email.password");
+        return (password != null && !password.isEmpty()) ? password : null;
+    }
+
+    public static EmailConfig getEmailConfig() {
+        return new EmailConfig(getEmailHost(), getEmailPort(), getEmailUsername(), getEmailPassword());
     }
 }

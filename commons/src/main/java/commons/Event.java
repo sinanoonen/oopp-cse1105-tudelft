@@ -1,5 +1,6 @@
 package commons;
 
+import algorithms.ExchangeProvider;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import commons.transactions.Expense;
 import commons.transactions.Payment;
@@ -165,17 +166,29 @@ public class Event {
     }
 
     /**
-     * Gets the total amount debt for a user in the event.
+     * Gets the total amount debt in EUR for a user in the event.
      *
      * @param user user whose debt to total.
      * @return total debt
      */
-    public float getTotalDebt(User user) {
+    public float getTotalEURDebt(User user) {
         float expenseDebt = (float) getExpensesByParticipant(user.getName()).stream()
-                .mapToDouble(expense -> expense.getDebts().get(user.getName()))
+                .mapToDouble(expense -> ExchangeProvider
+                        .convertCurrency(
+                                expense.getDebts().get(user.getName()),
+                                expense.getCurrency().toString(),
+                                "EUR"
+                        )
+                )
                 .sum();
         float paymentDebt = (float) getPaymentsByParticipant(user.getName()).stream()
-                .mapToDouble(payment -> payment.getDebt().get(user.getName()))
+                .mapToDouble(payment -> ExchangeProvider
+                        .convertCurrency(
+                                payment.getDebt().get(user.getName()),
+                                payment.getCurrency().toString(),
+                                "EUR"
+                        )
+                )
                 .sum();
         return expenseDebt + paymentDebt;
     }

@@ -279,8 +279,10 @@ public class EventController {
         expense.setDate(java.time.LocalDate.now());
 
         Event event = repo.findById(uuid).get();
-        event.addTransaction(expense);
         Expense saved = exRepo.save(expense);
+        expense.setId(saved.getId());
+        event.addTransaction(saved);
+        repo.save(event);
         return ResponseEntity.ok(saved);
     }
 
@@ -375,7 +377,7 @@ public class EventController {
         assert expense != null;
         //public Expense(String owner, LocalDate date, float amount, String description, List<String> participants
         String owner = isNullOrEmpty(update.getOwner()) ? expense.getOwner() : update.getOwner();
-        LocalDate date = isNullOrEmpty(update.getOwner()) ? expense.getDate() : update.getDate();
+        LocalDate date = update.getDate() == null ? expense.getDate() : update.getDate();
         float amount = update.getAmount() == 0 ? expense.getAmount() : update.getAmount();
         String description = isNullOrEmpty(update.getDescription())
                 ? expense.getDescription()

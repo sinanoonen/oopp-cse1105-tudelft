@@ -111,4 +111,12 @@ public class AddEventCtrl implements Initializable {
             UIUtils.deactivateHighContrastMode(root);
         }
     }
+
+    public void setInputField(TextField inputField) {
+        this.inputField = inputField;
+    }
+
+    public void setErrorPopup(Pane errorPopUp) {
+        this.errorPopup = errorPopUp;
+    }
 }

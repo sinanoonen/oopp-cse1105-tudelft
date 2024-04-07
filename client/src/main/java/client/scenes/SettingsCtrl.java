@@ -127,6 +127,8 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        updateLanguage();
     }
 
 

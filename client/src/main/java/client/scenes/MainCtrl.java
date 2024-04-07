@@ -272,6 +272,7 @@ public class MainCtrl {
     public void showAdminLogin() {
         primaryStage.setTitle("Admin Login");
         primaryStage.setScene(adminLogin);
+        adminLoginCtrl.refresh();
     }
 
     /**

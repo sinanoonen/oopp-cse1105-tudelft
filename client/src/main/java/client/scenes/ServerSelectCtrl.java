@@ -75,6 +75,8 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        updateLanguage();
     }
 
     /**

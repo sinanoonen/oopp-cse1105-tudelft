@@ -30,7 +30,6 @@ public class ClientUtils {
         }
         ClientUtils.language = language;
         UIUtils.loadLanguageMap(language);
-        UIUtils.updateClientLanguage();
     }
 
     public static Language getLanguage() {

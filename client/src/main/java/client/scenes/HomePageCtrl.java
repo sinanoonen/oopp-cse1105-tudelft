@@ -158,6 +158,8 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        updateLanguage();
     }
 
     public void showSettings() {

@@ -79,6 +79,8 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
             UIUtils.deactivateHighContrastMode(root);
             instructionText.setFill(javafx.scene.paint.Color.web("#8e8e8e"));
         }
+
+        updateLanguage();
     }
 
 

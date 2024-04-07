@@ -141,6 +141,8 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
                 }
             });
         });
+
+        updateLanguage();
     }
 
     public void cancel() {

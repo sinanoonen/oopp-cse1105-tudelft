@@ -289,6 +289,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 }
             });
         });
+
         root.setOnMouseClicked(e -> {
             if (expenseMenuVisible && !isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
                 // Close the expenseMenu pane
@@ -296,6 +297,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 mainCtrl.showEventOverview(event);
             }
         });
+
+        updateLanguage();
     }
 
     // ---------------- VISUAL EFFECTS HANDLERS ---------------- //

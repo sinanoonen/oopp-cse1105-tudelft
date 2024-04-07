@@ -274,25 +274,4 @@ public class UIUtils {
     public static Map<String, String> getLanguageMap() {
         return languageMap;
     }
-
-    /**
-     * Updates the language across the entire client.
-     */
-    public static void updateClientLanguage() {
-        Injector injector = Main.injector();
-        List<LanguageInterface> controllers = Arrays.asList(
-                injector.getInstance(AddEventCtrl.class),
-                injector.getInstance(AddExpenseCtrl.class),
-                injector.getInstance(AdminLoginCtrl.class),
-                injector.getInstance(AdminOverviewCtrl.class),
-                injector.getInstance(DebtOverviewCtrl.class),
-                injector.getInstance(DebtPaymentOverviewCtrl.class),
-                injector.getInstance(EventOverviewCtrl.class),
-                injector.getInstance(HomePageCtrl.class),
-                injector.getInstance(ManageUserCtrl.class),
-                injector.getInstance(ServerSelectCtrl.class),
-                injector.getInstance(SettingsCtrl.class)
-        );
-        controllers.forEach(LanguageInterface::updateLanguage);
-    }
 }

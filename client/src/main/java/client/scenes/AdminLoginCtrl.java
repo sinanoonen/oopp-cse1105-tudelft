@@ -71,6 +71,10 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
         loginButton.setDefaultButton(true);
     }
 
+    public void refresh() {
+        updateLanguage();
+    }
+
     /**
      * This is triggered when the login button is clicked.
      */

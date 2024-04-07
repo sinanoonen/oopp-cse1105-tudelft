@@ -85,7 +85,7 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
     @FXML
     private DatePicker datePicker;
     @FXML
-    private ChoiceBox<String> currencyChoiceBox;
+    private ChoiceBox<Currency> currencyChoiceBox;
     @FXML
     private Label splitMethod;
     @FXML
@@ -141,6 +141,7 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
             UIUtils.deactivateHighContrastMode(root);
         }
     }
+
     @Override
     public void updateLanguage() {
         var languageMap = UIUtils.getLanguageMap();
@@ -264,6 +265,8 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
                 checkBox.setSelected(false);
             }
         });
+
+        updateLanguage();
     }
 
     /**
@@ -329,6 +332,8 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
                 checkBox.setSelected(false);
             }
         });
+
+        updateLanguage();
     }
 
     /**

@@ -136,6 +136,8 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
         loadEvents();
         setupEventListView();
         setupEventSelection();
+
+        updateLanguage();
     }
 
     /**

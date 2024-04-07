@@ -119,6 +119,8 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
                 }
             });
         });
+
+        updateLanguage();
     }
 
     @FXML

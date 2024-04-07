@@ -80,6 +80,8 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        updateLanguage();
     }
 
     /**

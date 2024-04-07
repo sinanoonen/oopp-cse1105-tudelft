@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * This is used to test the EmailRequest class.
+ */
 public class EmailRequestTest {
 
     @Test

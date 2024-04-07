@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import server.EmailService;
 
+/**
+ * This is a controller for email processing.
+ */
 @RestController
 @RequestMapping("/api/email")
 public class EmailController {
@@ -20,6 +23,12 @@ public class EmailController {
         this.emailService = emailService;
     }
 
+    /**
+     * This sends the details of the mail from client to server.
+     *
+     * @param emailRequest the email request
+     * @return the response
+     */
     @PostMapping("/send")
     public ResponseEntity<?> sendEmail(@RequestBody EmailRequest emailRequest) {
         try {

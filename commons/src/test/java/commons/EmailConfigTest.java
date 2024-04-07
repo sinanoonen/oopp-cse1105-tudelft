@@ -7,6 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * This is used to test the EmailConfig class.
+ */
 public class EmailConfigTest {
 
     @Test

@@ -1,6 +1,10 @@
 package client.scenes;
 
-import client.utils.*;
+import client.utils.ClientUtils;
+import client.utils.ConfigReader;
+import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.EmailConfig;
 import commons.EmailRequest;
@@ -285,11 +289,14 @@ public class HomePageCtrl implements Initializable {
         node.setStyle(currentStyle + newAttribute);
     }
 
+    /**
+     * This methods handles the sending of a test mail.
+     */
     public void onTestEmailClicked() {
         showInfo("Loading", "The request has been sent. It might take a while before you receive confirmation.");
 
         EmailConfig emailConfig = ConfigReader.getEmailConfig();
-        if(!emailConfig.isComplete()) {
+        if (!emailConfig.isComplete()) {
             showAlert("Email Configuration", "Please set up your email configuration before sending a test mail");
             return;
         }

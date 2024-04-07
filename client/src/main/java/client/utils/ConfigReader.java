@@ -2,7 +2,6 @@ package client.utils;
 
 import commons.Currency;
 import commons.EmailConfig;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,6 +84,11 @@ public class ConfigReader {
         return (host != null && !host.isEmpty()) ? host : null;
     }
 
+    /**
+     * This is used to get email port from the config file.
+     *
+     * @return the email port
+     */
     public static int getEmailPort() {
         String portStr = PROPERTIES.getProperty("email.port");
         try {

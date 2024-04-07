@@ -326,6 +326,12 @@ public class ServerUtils {
         return response.getStatus() == 200;
     }
 
+    /**
+     * Sends the email request to the server.
+     *
+     * @param emailRequest the data
+     * @return true iff the mail was successfully sent
+     */
     public boolean sendMail(EmailRequest emailRequest) {
         Response response = ClientBuilder.newClient(new ClientConfig())
             .target(SERVER).path("api/email/send")

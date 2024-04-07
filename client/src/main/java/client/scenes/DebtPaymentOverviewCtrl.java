@@ -174,6 +174,14 @@ public class DebtPaymentOverviewCtrl implements Initializable {
         payOffDebt.setFont(Font.font("SansSerif", 15));
         payOffDebt.setTextFill(Paint.valueOf("#FFFFFF"));
 
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(pane);
+            UIUtils.activateHighContrastMode(payOffDebt);
+        } else {
+            UIUtils.deactivateHighContrastMode(pane);
+            UIUtils.activateHighContrastMode(payOffDebt);
+        }
+
         pane.getChildren().addAll(content, payOffDebt);
 
         base.setContent(pane);

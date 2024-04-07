@@ -8,8 +8,8 @@ import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
-import commons.transactions.Expense;
 import commons.WebSocketMessage;
+import commons.transactions.Expense;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -146,7 +146,7 @@ public class DebtOverviewCtrl implements Initializable {
                 .map(this::debtCellFactory)
                 .toList();
         participantsDebtContainer.getItems().addAll(participantsDebt);
-        participantsDebtContainer.getItems().remove(null);
+        participantsDebtContainer.getItems().removeAll((Node) null);
     }
 
     private Node totalSpentNode() {

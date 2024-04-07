@@ -19,6 +19,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
@@ -74,6 +76,17 @@ public class ManageUserCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                cancel();
+                return;
+            }
+            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                confirm();
+                return;
+            }
+        });
     }
 
     /**
@@ -189,7 +202,7 @@ public class ManageUserCtrl implements Initializable {
             return false;
         }
         if (!validateEmail(emailField.getText())) {
-            HomePageCtrl.displayErrorPopup("Invalid email", errorPopup);
+            HomePageCtrl.displayErrorPopup("Invalid email format", errorPopup);
             return false;
         }
         if (mode == ManageUserMode.CREATE && event.getParticipants()

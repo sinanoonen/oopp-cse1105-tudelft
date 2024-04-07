@@ -4,16 +4,21 @@ import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import com.google.inject.Inject;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 /**
  * Controller for ServerSelect scene.
  */
-public class ServerSelectCtrl {
+public class ServerSelectCtrl implements Initializable {
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
 
@@ -30,6 +35,26 @@ public class ServerSelectCtrl {
     public ServerSelectCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode().equals(KeyCode.ENTER)) {
+                onConnectClicked();
+                return;
+            }
+            if (event.getCode().equals(KeyCode.ESCAPE)) {
+                onCancelClicked();
+                return;
+            }
+        });
     }
 
     /**

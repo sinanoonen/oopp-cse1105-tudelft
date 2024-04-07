@@ -749,7 +749,8 @@ public class EventOverviewCtrl implements Initializable {
                 .filter(t -> t instanceof Expense)
                 .map(t -> (Expense) t)
                 .filter(t -> t.getDescription()
-                        .contains(filterTextField.getText()))
+                        .contains(filterTextField.getText()) || t.getDebts()
+                        .containsKey(filterTextField.getText()))
                 .map(e -> (Transaction) e)
                 .toList();
 

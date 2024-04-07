@@ -136,6 +136,11 @@ public class AddExpenseCtrl implements Initializable {
      * @param event event the expense belongs to
      */
     public void refresh(ManageExpenseMode mode, Event event, Expense expense) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
         this.event = event;
         this.tags = event.getTags();
         this.mode = mode;

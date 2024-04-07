@@ -14,8 +14,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
@@ -43,6 +46,10 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
     private Circle addButton;
     @FXML
     private Pane addEventOverlay;
+    @FXML
+    private Button newEventButton;
+    @FXML
+    private Button joinButton;
     @FXML
     private Pane screenDarkener;
     @FXML
@@ -84,11 +91,40 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
             UIUtils.deactivateHighContrastMode(root);
         }
 
+        UIUtils.addTooltip(addButton, "CTRL + N: Add event");
+        UIUtils.addTooltip(newEventButton, "CTRL + N: Create new event");
+        UIUtils.addTooltip(joinButton, "Enter: Join event");
+
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
             Platform.runLater(() -> {
                 events = serverUtils.getEvents();
                 reloadEventsList();
             });
+        });
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                if (settingsOverlay.isVisible() || addEventOverlay.isVisible()) {
+                    hidePopUps();
+                } else {
+                    showSettingsOverlay();
+                }
+                return;
+            }
+            if (!addEventOverlay.isVisible()
+                    && keyEvent.isControlDown()
+                    && keyEvent.getCode().equals(KeyCode.N)) {
+                showEventOverlay();
+                return;
+            }
+            if (addEventOverlay.isVisible()) {
+                if (keyEvent.isControlDown() && keyEvent.getCode().equals(KeyCode.N)) {
+                    createEvent();
+                }
+                if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                    joinEvent();
+                }
+            }
         });
     }
 

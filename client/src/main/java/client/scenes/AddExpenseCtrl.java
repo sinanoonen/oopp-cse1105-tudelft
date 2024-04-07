@@ -1,7 +1,13 @@
 package client.scenes;
 
+import static client.scenes.HomePageCtrl.fadeInOutPopup;
+
 import client.interfaces.LanguageInterface;
-import client.utils.*;
+import client.utils.ClientUtils;
+import client.utils.ManageExpenseMode;
+import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import commons.Currency;
 import commons.Event;
 import commons.User;
@@ -10,16 +16,19 @@ import commons.transactions.Expense;
 import commons.transactions.Payment;
 import commons.transactions.Tag;
 import jakarta.ws.rs.WebApplicationException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -32,11 +41,14 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -45,13 +57,15 @@ import javax.inject.Inject;
 /**
  * Controller for adding an expense to an event.
  */
-public class AddExpenseCtrl implements LanguageInterface {
+public class AddExpenseCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
 
 
+    @FXML
+    private AnchorPane root;
     @FXML
     private Label title;
     @FXML
@@ -95,10 +109,12 @@ public class AddExpenseCtrl implements LanguageInterface {
     private Button addButton;
     @FXML
     private Button addTag;
+    @FXML
+    private Pane errorPopup;
 
     private Event event;
     private List<String> participants = new ArrayList<>();
-    private final List<String> currencies = List.of("EUR", "USD");
+    private final List<Currency> currencies = List.of(Currency.values());
     private Set<Tag> tags;
     private ManageExpenseMode mode;
     private Expense expenseToUpdate = null;
@@ -118,20 +134,28 @@ public class AddExpenseCtrl implements LanguageInterface {
     }
 
     @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
+    }
+    @Override
     public void updateLanguage() {
         var languageMap = UIUtils.getLanguageMap();
-//        title.setText(languageMap.get("addexpense"));
-//        sponsor.setText(languageMap.get("addexpense_sponsor"));
-//        description.setText(languageMap.get("addexpense_description"));
-//        quantity.setText(languageMap.get("addexpense_quantity"));
-//        date.setText(languageMap.get("addexpense_date"));
-//        splitMethod.setText(languageMap.get("addexpense_split_method"));
-//        equallyEverybody.setText(languageMap.get("addexpense_equally"));
-//        onlySomePeople.setText(languageMap.get("addexpense_partially"));
-//        expenseType.setText(languageMap.get("addexpense_expense_type"));
-//        addTag.setText(languageMap.get("addexpense_add_tag"));
-//        addButton.setText(languageMap.get("general_confirm"));
-//        cancelButton.setText(languageMap.get("general_cancel"));
+        title.setText(languageMap.get("addexpense"));
+        sponsor.setText(languageMap.get("addexpense_sponsor"));
+        description.setText(languageMap.get("addexpense_description"));
+        quantity.setText(languageMap.get("addexpense_quantity"));
+        date.setText(languageMap.get("addexpense_date"));
+        splitMethod.setText(languageMap.get("addexpense_split_method"));
+        equallyEverybody.setText(languageMap.get("addexpense_equally"));
+        onlySomePeople.setText(languageMap.get("addexpense_partially"));
+        expenseType.setText(languageMap.get("addexpense_expense_type"));
+        addTag.setText(languageMap.get("addexpense_add_tag"));
+        addButton.setText(languageMap.get("general_confirm"));
+        cancelButton.setText(languageMap.get("general_cancel"));
     }
 
     /**
@@ -226,26 +250,20 @@ public class AddExpenseCtrl implements LanguageInterface {
             descriptionField.setText(expense.getDescription());
             amount.setText(Float.toString(expense.getAmount()));
             datePicker.setValue(expense.getDate());
+            currencyChoiceBox.setValue(expense.getCurrency());
             selectedTags.getItems().addAll(expense.getTags());
             setupListViewCellFactory();
-        }
-        onlySomePeople.setOnAction(e -> {
-            if (onlySomePeople.isSelected()) {
-                equallyEverybody.setSelected(false);
-            }
-        });
-        onlySomePeople.setOnAction(c -> {
-            if (onlySomePeople.isSelected()) {
-                handleOnlySomePeople();
-            }
-        });
 
+        }
         equallyEverybody.setOnAction(e -> {
             if (equallyEverybody.isSelected()) {
                 onlySomePeople.setSelected(false);
+                equallyEverybody.setSelected(true);
+            }
+            for (CheckBox checkBox : additionalCheckboxes) {
+                checkBox.setSelected(false);
             }
         });
-        System.out.println("Refreshing add expense scene");
     }
 
     /**
@@ -281,6 +299,7 @@ public class AddExpenseCtrl implements LanguageInterface {
                     .toList();
             whoPaid.getItems().addAll(participants);
             currencyChoiceBox.getItems().addAll(currencies);
+            currencyChoiceBox.setValue(payment.getCurrency());
             expenseTags.getItems().addAll(tags);
             expenseTags.setConverter(new StringConverter<Tag>() {
                 @Override
@@ -302,15 +321,12 @@ public class AddExpenseCtrl implements LanguageInterface {
             selectedTags.getItems().addAll(payment.getTags());
             setupListViewCellFactory();
         }
-        onlySomePeople.setOnAction(e -> {
-            if (onlySomePeople.isSelected()) {
-                equallyEverybody.setSelected(false);
-            }
-        });
-
         equallyEverybody.setOnAction(e -> {
             if (equallyEverybody.isSelected()) {
                 onlySomePeople.setSelected(false);
+            }
+            for (CheckBox checkBox : additionalCheckboxes) {
+                checkBox.setSelected(false);
             }
         });
     }
@@ -319,6 +335,10 @@ public class AddExpenseCtrl implements LanguageInterface {
      * Shows the participants when clicked only some people button.
      */
     public void handleOnlySomePeople() {
+        if (onlySomePeople.isSelected()) {
+            equallyEverybody.setSelected(false);
+        }
+
         if (onlySomePeople.isSelected()) {
             additionalCheckboxesContainer.getChildren().clear();
 
@@ -430,9 +450,7 @@ public class AddExpenseCtrl implements LanguageInterface {
             alert.showAndWait();
 
         }
-        clearFields();
         onExit();
-        mainCtrl.showEventOverview(event);
     }
 
     private void clearFields() {
@@ -468,10 +486,12 @@ public class AddExpenseCtrl implements LanguageInterface {
     }
 
     /**
-<<<<<<< client/src/main/java/client/scenes/AddExpenseCtrl.java
      * Creates new expense.
      */
     public void create() {
+        if (!validateInputs()) {
+            return;
+        }
         String owner = whoPaid.getValue();
         String expenseDescription = descriptionField.getText();
         float expenseAmount = Float.parseFloat(amount.getText());
@@ -492,7 +512,7 @@ public class AddExpenseCtrl implements LanguageInterface {
         Expense expense = new Expense(owner,
                 expenseDate,
                 expenseAmount,
-                Currency.valueOf(currencyChoiceBox.getValue()),
+                currencyChoiceBox.getValue(),
                 expenseDescription,
                 debtors
         );
@@ -506,8 +526,10 @@ public class AddExpenseCtrl implements LanguageInterface {
             expense.addTag(tag);
         }
 
+        expense = server.addExpense(event.getInviteCode(), expense);
         event.addTransaction(expense);
-        server.addExpense(event.getInviteCode(), expense);
+        clearFields();
+        mainCtrl.showEventOverview(event);
 
     }
 
@@ -516,12 +538,18 @@ public class AddExpenseCtrl implements LanguageInterface {
      *
      * @param expense expense to be updated.
      */
+    @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
     public void update(Expense expense) {
+        if (!validateInputs()) {
+            return;
+        }
+
         String owner = whoPaid.getValue();
         String expenseDescription = descriptionField.getText();
         float expenseAmount = Float.parseFloat(amount.getText());
         LocalDate expenseDate = datePicker.getValue();
         List<String> debtors = new ArrayList<>();
+        Currency currency = currencyChoiceBox.getValue();
         if (equallyEverybody.isSelected()) {
             debtors = this.participants;
         } else {
@@ -544,14 +572,84 @@ public class AddExpenseCtrl implements LanguageInterface {
         expense.setAmount(expenseAmount);
         expense.setDate(expenseDate);
         expense.setSplitEqually(splitEqually);
+        expense.setCurrency(currency);
         Map<String, Float> debts = new HashMap<>();
         for (String debtor : debtors) {
             debts.put(debtor, 0f);
         }
         expense.setDebts(debts);
+        if (splitEqually) {
+            expense.splitEqually(expenseAmount);
+        } else {
+            Map<String, Integer> usersMultiplierMap = new HashMap<>();
+            debtors.forEach(p -> {
+                usersMultiplierMap.put(p, 1);
+            });
+            expense.splitAmong(expenseAmount, usersMultiplierMap);
+        }
         // Clear existing tags and add the updated tags
         expense.setTags(selectedTagsSet.stream().toList());
-        server.updateExpense(event.getInviteCode(), expense);
+        expense = server.updateExpense(event.getInviteCode(), expense);
+        clearFields();
+        mainCtrl.showEventOverview(event);
+    }
+
+    private boolean validateInputs() {
+        // OWNER CHECKING
+        if (isNullOrEmpty(whoPaid.getValue())) {
+            AddExpenseCtrl.displayErrorPopup("Name cannot be empty", errorPopup);
+            return false;
+        }
+        // DESCRIPTION CHECKING
+        if (isNullOrEmpty(description.getText())) {
+            AddExpenseCtrl.displayErrorPopup("Description cannot be empty", errorPopup);
+            return false;
+        }
+        if (!isValidAmount(amount.getText())) {
+            AddExpenseCtrl.displayErrorPopup("Amount cannot be more than 6 digits", errorPopup);
+            return false;
+        }
+        // DATE CHECKING
+        if (isNullOrEmpty(String.valueOf(datePicker.getValue()))) {
+            AddExpenseCtrl.displayErrorPopup("Date cannot be empty", errorPopup);
+            return false;
+        }
+        //CURRENCY CHECK
+        if (currencyChoiceBox.getValue() == null) {
+            AddExpenseCtrl.displayErrorPopup("Currency cannot be empty", errorPopup);
+            return false;
+        }
+        // SPLIT CHECKING
+        if (!equallyEverybody.isSelected() && !onlySomePeople.isSelected()) {
+            AddExpenseCtrl.displayErrorPopup("You have to choose a split option", errorPopup);
+            return false;
+        }
+
+        return true;
+    }
+
+    static void displayErrorPopup(String message, Pane errorPopup) {
+        if (errorPopup.getOpacity() != 0) {
+            return; // avoids spamming the error popup
+        }
+        errorPopup.toFront();
+        Text error = (Text) errorPopup.getChildren().getFirst();
+        error.setText(message);
+
+        fadeInOutPopup(errorPopup);
+    }
+
+    private boolean isValidAmount(String amountText) {
+        if (amountText == null || amountText.isEmpty()) {
+            return false;
+        }
+        amountText = amountText.trim();
+        // Check if the amount is a valid number and has at most 6 digits
+        return amountText.matches("\\d{1,6}\\.?\\d{0,2}");
+    }
+
+    private boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
     }
 
     public void setExpenseToUpdate(Expense expenseToUpdate) {

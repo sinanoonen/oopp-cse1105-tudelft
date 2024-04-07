@@ -32,6 +32,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 
@@ -54,6 +56,8 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
     private Button sortByCreationDateButton;
     @FXML
     private Button sortByLastActivityButton;
+    @FXML
+    private Button exitButton;
     @FXML
     private ListView<Event> eventContainer;
     @FXML
@@ -100,6 +104,15 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
 
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
             Platform.runLater(this::loadEvents);
+        });
+
+        UIUtils.addTooltip(exitButton, "ESC: Exit");
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                exit();
+                return;
+            }
         });
     }
 

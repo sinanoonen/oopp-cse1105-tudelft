@@ -18,6 +18,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -71,6 +73,14 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        UIUtils.addTooltip(backLink, "ESC: Back");
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                onBackClicked(null);
+            }
+        });
     }
 
     @Override

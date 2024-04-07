@@ -26,6 +26,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Tooltip;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
@@ -36,6 +38,7 @@ public class UIUtils {
     private static final int CONTRAST_THRESHOLD = 75;
     private static final double CONTRAST_MODIFIER = 0.86;
     private static final double BRIGHTNESS_MODIFIER = 23;
+    private static final double TOOLTIP_FONT_SIZE = 12;
 
     private static final HashMap<Node, String> colorMap = new HashMap<>();
 
@@ -238,6 +241,18 @@ public class UIUtils {
         alert.setHeaderText(null);
         alert.setContentText("The event '" + eventTitle + "' has been deleted.");
         alert.showAndWait();
+    }
+
+    /**
+     * Adds a tooltip to a node.
+     *
+     * @param node node to add tooltip to
+     * @param text text to display in tooltip
+     */
+    public static void addTooltip(Node node, String text) {
+        Tooltip tooltip = new Tooltip(text);
+        tooltip.setFont(new Font("SansSerif", TOOLTIP_FONT_SIZE));
+        Tooltip.install(node, tooltip);
     }
 
     /**

@@ -26,10 +26,10 @@ public class WebSocketServerUtils {
     private Map<String, StompSession.Subscription> subscriptions = new HashMap<>();
 
     /**
-     * This should be used for changing the server.
+     * This sets a new session.
      *
-     * @param ip the ip of the server
-     * @param port the port of the server
+     * @param ip the ip
+     * @param port the port
      */
     public static void setSession(String ip, String port) {
         WebSocketServerUtils.ip = ip;

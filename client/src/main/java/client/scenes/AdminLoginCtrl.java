@@ -1,11 +1,14 @@
 package client.scenes;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * This is a controller for the admin login page.
@@ -13,6 +16,9 @@ import javafx.scene.control.PasswordField;
 public class AdminLoginCtrl {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+
+    @FXML
+    private AnchorPane root;
 
     @FXML
     private PasswordField passwordField;
@@ -34,6 +40,17 @@ public class AdminLoginCtrl {
     @FXML
     public void initialize() {
         loginButton.setDefaultButton(true);
+    }
+
+    /**
+     * This refreshes the admin login page.
+     */
+    public void refresh() {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
     }
 
     /**

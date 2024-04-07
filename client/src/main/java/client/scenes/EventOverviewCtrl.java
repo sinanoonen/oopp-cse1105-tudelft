@@ -654,7 +654,7 @@ public class EventOverviewCtrl implements Initializable {
         currency.setFill(Paint.valueOf("#FFFFFF"));
         currency.setMouseTransparent(true);
 
-        base.getChildren().addAll(sender, recipient, amount);
+        base.getChildren().addAll(sender, recipient, amount, currency);
         base.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() > 1) {
                 toggleExpenseMenu();

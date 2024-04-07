@@ -1,13 +1,16 @@
 package client.scenes;
 
 import algorithms.DebtSettler;
+import algorithms.ExchangeProvider;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
 import commons.Event;
 import commons.WebSocketMessage;
+import commons.transactions.Payment;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -15,8 +18,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -123,6 +128,7 @@ public class DebtPaymentOverviewCtrl implements Initializable {
         participantsPaymentContainer.getItems().removeAll(participantsPaymentContainer.getItems());
         List<Node> participantsDebtPayment = debtSettler
                 .getSettledDebts()
+                .keySet()
                 .stream()
                 .map(this::debtPaymentCellFactory)
                 .toList();
@@ -130,9 +136,9 @@ public class DebtPaymentOverviewCtrl implements Initializable {
     }
 
     private Node debtPaymentCellFactory(String settlement) {
-        Pane base = new Pane();
+        TitledPane base = new TitledPane();
         base.setPrefWidth(participantsPaymentContainer.getPrefWidth() - 20);
-        base.setPrefHeight(120);
+        base.setPrefHeight(30);
         base.setStyle("-fx-background-color: #444444;"
                 + " -fx-border-width: 3;"
                 + " -fx-border-color: black;"
@@ -140,19 +146,83 @@ public class DebtPaymentOverviewCtrl implements Initializable {
                 + " -fx-border-radius: 5;"
         );
 
-        Text username = new Text(settlement);
-        final double nameTopPadding = 0.20f * base.getPrefHeight();
-        final double nameLeftPadding = 0.07f * base.getPrefWidth();
-        username.setLayoutX(base.getLayoutX() + nameLeftPadding);
-        username.setLayoutY(base.getLayoutY() + nameTopPadding);
-        username.setFont(Font.font("SansSerif", 15));
-        username.setFill(Paint.valueOf("#FFFFFF"));
-        username.setMouseTransparent(true);
+        base.setExpanded(false);
+        String titleText = settlement.replace("___", ClientUtils.getCurrency().toString());
+        String[] settlementArray = settlement.split(" ");
+        double amount = Double.parseDouble(settlementArray[3]);
+        double convertedValue = ExchangeProvider.convertCurrency(amount,
+                "EUR",
+                ClientUtils.getCurrency().toString());
+        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+        titleText = titleText.replace(String.valueOf(amount), String.valueOf(convertedValue));
 
-        base.getChildren().addAll(username);
+        base.setText(titleText);
+        base.setFont(Font.font("SansSerif", 15));
+
+        Pane pane = new Pane();
+        pane.setPrefWidth(base.getPrefWidth());
+        pane.setPrefHeight(120);
+        pane.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: black;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
+
+        Text content = new Text(debtSettler.getSettledDebts().get(settlement));
+        final double nameTopPadding = 0.2f * pane.getPrefHeight();
+        final double nameLeftPadding = 0.02f * pane.getPrefWidth();
+        content.setLayoutY(pane.getLayoutY() + nameTopPadding);
+        content.setLayoutX(base.getLayoutX() + nameLeftPadding);
+        content.setFont(Font.font("SansSerif", 15));
+        content.setFill(Paint.valueOf("#FFFFFF"));
+
+        Button payOffDebt = new Button();
+        payOffDebt.requestFocus();
+        double finalConvertedValue = convertedValue;
+        payOffDebt.onActionProperty().set(actionEvent -> {
+            event.addTransaction(new Payment(settlementArray[0], LocalDate.now(), (float) finalConvertedValue,
+                    ClientUtils.getCurrency(), settlementArray[settlementArray.length - 1]));
+            mainCtrl.showDebtOverview(event);
+        });
+        final double buttonTopPadding = 0.01f * pane.getPrefHeight();
+        final double buttonLeftPadding = 0.62f * pane.getPrefWidth();
+        payOffDebt.setLayoutY(buttonTopPadding);
+        payOffDebt.setLayoutX(buttonLeftPadding);
+        payOffDebt.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: #c30052;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
+        payOffDebt.setText("Debt has been paid");
+        payOffDebt.setFont(Font.font("SansSerif", 15));
+        payOffDebt.setTextFill(Paint.valueOf("#FFFFFF"));
+
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(pane);
+            UIUtils.activateHighContrastMode(payOffDebt);
+        } else {
+            UIUtils.deactivateHighContrastMode(pane);
+            UIUtils.deactivateHighContrastMode(payOffDebt);
+        }
+
+        pane.getChildren().addAll(content, payOffDebt);
+
+        base.setContent(pane);
+        base.setOnMouseClicked(mouseEvent -> {
+            if (base.isExpanded()) {
+                base.setPrefHeight(120);
+            } else {
+                base.setPrefHeight(30);
+            }
+        });
+
+
 
         return base;
     }
+
 
     /**
      * Changes the background color of an FXML node.

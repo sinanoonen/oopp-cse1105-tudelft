@@ -9,6 +9,7 @@ import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.WebSocketMessage;
+import commons.transactions.Expense;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -148,6 +149,7 @@ public class DebtOverviewCtrl implements Initializable {
 
     private void resetParticipantsDebtContainer() {
         participantsDebtContainer.getItems().removeAll(participantsDebtContainer.getItems());
+        participantsDebtContainer.getItems().add(totalSpentNode());
         List<Node> participantsDebt = debtSettler
                 .getDebts()
                 .keySet()
@@ -155,9 +157,65 @@ public class DebtOverviewCtrl implements Initializable {
                 .map(this::debtCellFactory)
                 .toList();
         participantsDebtContainer.getItems().addAll(participantsDebt);
+        participantsDebtContainer.getItems().removeAll((Node) null);
+    }
+
+    private Node totalSpentNode() {
+        Pane base = new Pane();
+        base.setPrefWidth(participantsDebtContainer.getPrefWidth() - 20);
+        base.setPrefHeight(100);
+        base.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: black;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
+
+        Text text = new Text("Total sum of expenses");
+        final double nameTopPadding = base.getPrefHeight() / 2 + 5;
+        final double nameLeftPadding = 0.12f * base.getPrefWidth();
+        text.setLayoutX(base.getLayoutX() + nameLeftPadding);
+        text.setLayoutY(base.getLayoutY() + nameTopPadding);
+        text.setFont(Font.font("SansSerif", 15));
+        text.setFill(Paint.valueOf("#FFFFFF"));
+        text.setMouseTransparent(true);
+
+        double sumOfExpenses = 0.00;
+        for (Expense expense : event.getExpenses()) {
+            sumOfExpenses += expense.getAmount();
+        }
+        ExchangeProvider.convertCurrency(sumOfExpenses,
+                "EUR",
+                ClientUtils.getCurrency().toString());
+        sumOfExpenses = Math.round(sumOfExpenses * 100.0) / 100.0;
+
+
+        Text sumText = new Text(String.valueOf(sumOfExpenses));
+        final double debtLeftPadding = 0.7f * base.getPrefWidth();
+        sumText.setLayoutX(base.getLayoutX() + debtLeftPadding);
+        sumText.setLayoutY(base.getLayoutY() + nameTopPadding);
+        sumText.setFont(Font.font("SansSerif", 15));
+        sumText.setFill(Paint.valueOf("#FFFFFF"));
+        sumText.setMouseTransparent(true);
+
+        Text currency = new Text(ClientUtils.getCurrency().toString());
+        final double currencyLeftPadding = debtLeftPadding + sumText.getText().length() * 8;
+        currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
+        final double topPadding = base.getPrefHeight() / 2 + 5;
+        currency.setLayoutY(base.getLayoutY() + topPadding);
+        currency.setFont(Font.font("SansSerif", 15));
+        currency.setFill(Paint.valueOf("#FFFFFF"));
+        currency.setMouseTransparent(true);
+
+        base.getChildren().addAll(text, sumText, currency);
+
+        return base;
     }
 
     private Node debtCellFactory(String user) {
+        if (debtSettler.getDebts().get(user) == 0) {
+            return null;
+        }
         Pane base = new Pane();
         base.setPrefWidth(participantsDebtContainer.getPrefWidth() - 20);
         base.setPrefHeight(100);

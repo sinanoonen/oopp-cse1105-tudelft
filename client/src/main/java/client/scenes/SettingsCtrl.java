@@ -2,7 +2,7 @@ package client.scenes;
 
 import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
-import client.utils.Language;
+import client.enums.Language;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import commons.Currency;

@@ -4,7 +4,7 @@ import static client.scenes.HomePageCtrl.fadeInOutPopup;
 
 import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
-import client.utils.ManageExpenseMode;
+import client.enums.ManageExpenseMode;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;

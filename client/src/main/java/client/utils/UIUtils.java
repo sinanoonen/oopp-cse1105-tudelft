@@ -1,5 +1,6 @@
 package client.utils;
 
+import client.enums.Language;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.util.HashMap;

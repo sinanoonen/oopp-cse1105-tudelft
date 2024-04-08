@@ -77,7 +77,7 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
         title.setText(lm.get("adminlogin"));
         passwordField.setPromptText(lm.get("adminlogin_enter_password"));
         cancelButton.setText(lm.get("general_cancel"));
-        loginButton.setText(lm.get("admin_submit"));
+        loginButton.setText(lm.get("adminlogin_submit"));
     }
 
     /**

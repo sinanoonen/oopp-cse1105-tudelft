@@ -59,7 +59,7 @@
             <Font name="SansSerif Bold" size="21.0" />
          </font>
       </Button>
-      <Button layoutX="160.0" layoutY="422.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 3;" text="CANCEL" textFill="#bbbbbb">
+      <Button fx:id="cancelButton" layoutX="160.0" layoutY="422.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 3;" text="CANCEL" textFill="#bbbbbb">
          <font>
             <Font name="SansSerif Bold" size="21.0" />
          </font>

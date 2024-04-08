@@ -157,7 +157,7 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         adminText.setText(lm.get("homepage_admin_login"));
         serverSelectText.setText(lm.get("homepage_server_select"));
         mailText.setText(lm.get("homepage_test_mail"));
-        closeText.setText(lm.get("homepage_close"));
+        closeText.setText(lm.get("general_close"));
         serverText.setText(lm.get("homepage_current_server") + ": " + ServerUtils.getServer());
 
         inviteCodeText.setText(lm.get("homepage_code"));

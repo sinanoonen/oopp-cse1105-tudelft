@@ -80,11 +80,6 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
         loginButton.setText(lm.get("admin_submit"));
     }
 
-
-    public void refresh() {
-        updateLanguage();
-    }
-
     /**
      * This refreshes the admin login page.
      */
@@ -94,6 +89,7 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+        updateLanguage();
     }
 
     /**

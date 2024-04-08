@@ -138,8 +138,6 @@ public class MainCtrl {
         ServerUtils.setServer(ConfigReader.getIP(), ConfigReader.getPort());
         WebSocketServerUtils.setSession(ConfigReader.getIP(), ConfigReader.getPort());
 
-        this.addExpenseCtrl = addExpense.getKey();
-        this.addExpense = new Scene(addExpense.getValue());
         showHomePage();
         primaryStage.show();
 

@@ -131,4 +131,12 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
     private void displayInputError(String message) {
         HomePageCtrl.displayErrorPopup(message, errorPopup);
     }
+
+    public void setInputField(TextField inputField) {
+        this.inputField = inputField;
+    }
+
+    public void setErrorPopup(Pane errorPopup) {
+        this.errorPopup = errorPopup;
+    }
 }

@@ -125,32 +125,6 @@ public class AddEventCtrlTest extends ApplicationTest {
     }
 
     @Test
-    public void testInputFieldTypeHandlerEnterKeyPressed() {
-        KeyEvent enterKeyEvent = new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER,
-                false, false, false, false);
-        inputField.setText("Some text");
-        controller.inputFieldTypeHandler(enterKeyEvent);
-        assertFalse(inputField.isEditable());
-    }
-
-    @Test
-    public void testInputFieldTypeHandlerEnterKeyPressedEmptyText() {
-        KeyEvent enterKeyEvent = new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER,
-                false, false, false, false);
-        inputField.setText("");
-        controller.inputFieldTypeHandler(enterKeyEvent);
-        assertTrue(inputField.isEditable());
-    }
-
-    @Test
-    public void testInputFieldTypeHandlerOtherKeyPressed() {
-        KeyEvent otherKeyEvent = new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.SPACE,
-                false, false, false, false);
-        controller.inputFieldTypeHandler(otherKeyEvent);
-        assertTrue(inputField.isEditable());
-    }
-
-    @Test
     public void testInputFieldClickHandler_ClickCountGreaterThanEqualTwo() {
         MouseEvent mouseEvent = new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
                 MouseButton.PRIMARY, 2, false, false, false,

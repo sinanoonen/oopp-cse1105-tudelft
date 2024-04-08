@@ -212,35 +212,36 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
     }
 
     private boolean validateInputs() {
+        var lm = UIUtils.getLanguageMap();
         // NAME CHECKING
         if (isNullOrEmpty(nameField.getText())) {
-            HomePageCtrl.displayErrorPopup("Name cannot be empty", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_name"), errorPopup);
             return false;
         }
         // EMAIL CHECKING
         if (isNullOrEmpty(emailField.getText())) {
-            HomePageCtrl.displayErrorPopup("Email cannot be empty", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_email"), errorPopup);
             return false;
         }
         if (!validateEmail(emailField.getText())) {
-            HomePageCtrl.displayErrorPopup("Invalid email format", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_invalid_email_format"), errorPopup);
             return false;
         }
         if (mode == ManageUserMode.CREATE && event.getParticipants()
                 .stream()
                 .anyMatch(user -> user.getEmail().equals(emailField.getText()))
         ) {
-            HomePageCtrl.displayErrorPopup("Email already registered", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_invalid_email_existing"), errorPopup);
             return false;
         }
         // IBAN CHECKING
         if (isNullOrEmpty(ibanField.getText())) {
-            HomePageCtrl.displayErrorPopup("Iban cannot be empty", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_iban"), errorPopup);
             return false;
         }
         // BIC CHECKING
         if (isNullOrEmpty(bicField.getText())) {
-            HomePageCtrl.displayErrorPopup("Bic cannot be empty", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_bic"), errorPopup);
             return false;
         }
 

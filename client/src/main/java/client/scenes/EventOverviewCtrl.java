@@ -506,7 +506,10 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         );
 
         if (event.getTotalEURDebt(user) != 0) {
-            HomePageCtrl.displayErrorPopup("User has debts; cannot be deleted", errorPopup);
+            HomePageCtrl.displayErrorPopup(
+                    UIUtils.getLanguageMap().get("eventoverview_error_existing_debts"),
+                    errorPopup
+            );
             return;
         }
         serverUtils.removeUserFromEvent(event.getInviteCode(), user.getEmail());

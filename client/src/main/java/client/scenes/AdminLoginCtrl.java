@@ -102,7 +102,7 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
         if (result) {
             mainCtrl.showAdminOverview();
         } else {
-            showError("Invalid password.");
+            showError(UIUtils.getLanguageMap().get("adminlogin_error_invalid_password"));
         }
     }
 

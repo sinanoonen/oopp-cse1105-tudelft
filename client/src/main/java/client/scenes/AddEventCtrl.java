@@ -71,8 +71,8 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
     @Override
     public void updateLanguage() {
         var languageMap = UIUtils.getLanguageMap();
-        title.setText(languageMap.get("new_event"));
-        prompt.setText(languageMap.get("new_event_event_name") + ":");
+        title.setText(languageMap.get("addevent"));
+        prompt.setText(languageMap.get("addevent_event_name") + ":");
         cancelButton.setText(languageMap.get("general_cancel"));
         createButton.setText(languageMap.get("general_create"));
     }
@@ -115,11 +115,11 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
      */
     public void saveEvent() {
         if (inputField.getText().isEmpty()) {
-            displayInputError("Title cannot be empty!");
+            displayInputError(UIUtils.getLanguageMap().get("addevent_error_empty_title"));
             return;
         }
         if (inputField.getText().length() > 20) {
-            displayInputError("Title exceeds max length (20)");
+            displayInputError(UIUtils.getLanguageMap().get("addevent_error_max_length") + " (20)");
             return;
         }
 

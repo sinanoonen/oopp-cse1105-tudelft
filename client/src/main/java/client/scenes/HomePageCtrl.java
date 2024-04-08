@@ -254,14 +254,14 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         try {
             uuid = UUID.fromString(input);
         } catch (Exception e) {
-            displayInputError("Invalid invite code");
+            displayInputError(UIUtils.getLanguageMap().get("homepage_invalid_code"));
             return;
         }
         try {
             Event event = serverUtils.getEventByUUID(uuid);
             mainCtrl.showEventOverview(event);
         } catch (Exception e) {
-            displayInputError("Cannot find event");
+            displayInputError(UIUtils.getLanguageMap().get("homepage_event_not_found"));
         }
     }
 
@@ -358,26 +358,27 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
     }
 
     /**
-     * This methods handles the sending of a test mail.
+     * This method handles the sending of a test mail.
      */
     public void onTestEmailClicked() {
-        showInfo("Loading", "The request has been sent. It might take a while before you receive confirmation.");
+        var lm = UIUtils.getLanguageMap();
+        showInfo(lm.get("homepage_info_loading"), lm.get("homepage_info_email_sent"));
 
         EmailConfig emailConfig = ConfigReader.getEmailConfig();
         if (!emailConfig.isComplete()) {
-            showAlert("Email Configuration", "Please set up your email configuration before sending a test mail");
+            showAlert(lm.get("homepage_info_email_config"), lm.get("homepage_info_email_setup"));
             return;
         }
 
         EmailRequest emailRequest = new EmailRequest(emailConfig, emailConfig.getUsername(),
-            "Test Mail", "This is a test mail.");
+            lm.get("homepage_info_test_subject"), lm.get("homepage_info_test_message"));
 
         boolean isSuccess = serverUtils.sendMail(emailRequest);
 
         if (isSuccess) {
-            showInfo("Success", "Email sent successfully!");
+            showInfo("Success", lm.get("homepage_info_email_success"));
         } else {
-            showAlert("Error", "Failed to send email. Please check your email credentials.");
+            showAlert("Error", lm.get("homepage_error_email_failed"));
         }
     }
 

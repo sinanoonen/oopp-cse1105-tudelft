@@ -605,33 +605,35 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
     }
 
     private boolean validateInputs() {
+        var lm = UIUtils.getLanguageMap();
+
         // OWNER CHECKING
         if (isNullOrEmpty(whoPaid.getValue())) {
-            AddExpenseCtrl.displayErrorPopup("Name cannot be empty", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_empty_name"), errorPopup);
             return false;
         }
         // DESCRIPTION CHECKING
         if (isNullOrEmpty(description.getText())) {
-            AddExpenseCtrl.displayErrorPopup("Description cannot be empty", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_empty_description"), errorPopup);
             return false;
         }
         if (!isValidAmount(amount.getText())) {
-            AddExpenseCtrl.displayErrorPopup("Amount cannot be more than 6 digits", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_max_length"), errorPopup);
             return false;
         }
         // DATE CHECKING
         if (isNullOrEmpty(String.valueOf(datePicker.getValue()))) {
-            AddExpenseCtrl.displayErrorPopup("Date cannot be empty", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_empty_date"), errorPopup);
             return false;
         }
         //CURRENCY CHECK
         if (currencyChoiceBox.getValue() == null) {
-            AddExpenseCtrl.displayErrorPopup("Currency cannot be empty", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_empty_currency"), errorPopup);
             return false;
         }
         // SPLIT CHECKING
         if (!equallyEverybody.isSelected() && !onlySomePeople.isSelected()) {
-            AddExpenseCtrl.displayErrorPopup("You have to choose a split option", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_no_method"), errorPopup);
             return false;
         }
 

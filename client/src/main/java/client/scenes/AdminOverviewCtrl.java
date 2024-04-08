@@ -203,7 +203,9 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
         task.setOnFailed(event -> {
             Throwable cause = task.getException();
             cause.printStackTrace();
-            showAlert("Error", "Failed to load events: " + cause.getMessage());
+            showAlert("Error", UIUtils.getLanguageMap()
+                    .get("adminpage_error_failed_load_event")
+                    + ": " + cause.getMessage());
         });
         new Thread(task).start();
     }
@@ -377,7 +379,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
     @FXML
     private void handleExportEvent() {
         if (selectedEvent == null) {
-            showAlert("Error", "No event selected for export.");
+            showAlert("Error", UIUtils.getLanguageMap().get("adminpage_error_none_selected_export"));
             return;
         }
         FileChooser fileChooser = new FileChooser();
@@ -392,7 +394,9 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
                 mapper.writeValue(file, selectedEvent);
             } catch (IOException e) {
                 e.printStackTrace();
-                showAlert("Error", "Failed to export event: " + e.getMessage());
+                showAlert("Error", UIUtils.getLanguageMap()
+                        .get("adminpage_error_failed_export_event")
+                        + ": " + e.getMessage());
             }
         }
     }
@@ -440,7 +444,9 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
                 loadEvents();
             } catch (IOException e) {
                 e.printStackTrace();
-                showAlert("Error", "Failed to import event: " + e.getMessage());
+                showAlert("Error", UIUtils.getLanguageMap()
+                        .get("adminpage_error_failed_import_event")
+                        + ": " + e.getMessage());
             }
         }
     }

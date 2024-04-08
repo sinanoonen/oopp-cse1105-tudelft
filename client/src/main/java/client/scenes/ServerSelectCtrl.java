@@ -107,7 +107,10 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
             mainCtrl.showHomePage();
         } catch (Exception e) {
             mainCtrl.showServerSelect();
-            HomePageCtrl.displayErrorPopup("Could not connect to server.", errorPopup);
+            HomePageCtrl.displayErrorPopup(
+                    UIUtils.getLanguageMap().get("serverselect_error_failed_connection"),
+                    errorPopup
+            );
             ServerUtils.setServer(prevIp, prevPort);
             WebSocketServerUtils.setSession(prevIp, prevPort);
         }
@@ -119,19 +122,23 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
     }
 
     private boolean validateFields() {
+        var lm = UIUtils.getLanguageMap();
         boolean emptyFields = ipField.getText().isEmpty() || portField.getText().isEmpty();
         if (emptyFields) {
-            HomePageCtrl.displayErrorPopup("Please fill in all fields.", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("serverselect_error_empty_fields"), errorPopup);
             return false;
         }
         boolean validIP = validIP(ipField.getText());
         if (!validIP) {
-            HomePageCtrl.displayErrorPopup("Invalid IP.", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("serverselect_error_invalid_ip"), errorPopup);
             return false;
         }
         boolean validPort = validPort(portField.getText());
         if (!validPort) {
-            HomePageCtrl.displayErrorPopup("Invalid port (0 <= port <= 65535).", errorPopup);
+            HomePageCtrl.displayErrorPopup(
+                    lm.get("serverselect_error_invalid_port") + " (0 <= port <= 65535).",
+                    errorPopup
+            );
             return false;
         }
         return true;

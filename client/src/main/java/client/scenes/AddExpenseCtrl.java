@@ -506,6 +506,7 @@ public class AddExpenseCtrl implements Initializable {
         expense = server.addExpense(event.getInviteCode(), expense);
         event.addTransaction(expense);
         clearFields();
+        onExit();
         mainCtrl.showEventOverview(event);
 
     }
@@ -568,6 +569,7 @@ public class AddExpenseCtrl implements Initializable {
         expense.setTags(selectedTagsSet.stream().toList());
         expense = server.updateExpense(event.getInviteCode(), expense);
         clearFields();
+        onExit();
         mainCtrl.showEventOverview(event);
     }
 

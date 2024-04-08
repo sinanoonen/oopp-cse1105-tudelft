@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,7 +57,7 @@ public class EventController {
         this.repo = repo;
         this.exRepo = exRepo;
         this.payRepo = payRepo;
-        this.listeners = new HashMap<>();
+        this.listeners = new ConcurrentHashMap<>();
     }
 
     /**
@@ -305,7 +306,7 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
 
-        expense.setDate(java.time.LocalDate.now());
+        //expense.setDate(java.time.LocalDate.now());
 
         Event event = repo.findById(uuid).get();
         Expense saved = exRepo.save(expense);

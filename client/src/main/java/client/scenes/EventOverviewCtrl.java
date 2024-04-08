@@ -153,6 +153,7 @@ public class EventOverviewCtrl implements Initializable {
             }
             boolean hadParticipantsOpen = participantsMenu.isVisible();
             boolean hadAddParticipantsOpen = addParticipantsMenu.isVisible();
+            onExit();
             refresh(e);
             if (hadParticipantsOpen) {
                 toggleParticipants();
@@ -354,6 +355,7 @@ public class EventOverviewCtrl implements Initializable {
         }
         event.setTitle(title.getText());
         Event updated = serverUtils.updateEvent(event);
+        onExit();
         refresh(updated);
     }
 

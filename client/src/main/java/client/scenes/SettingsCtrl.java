@@ -41,6 +41,16 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
     private Hyperlink backLink;
     @FXML
     private CheckBox highContrastCheckBox;
+    @FXML
+    private Text currencyText;
+    @FXML
+    private Text languageText;
+    @FXML
+    private Text highContrastText;
+    @FXML
+    private Text generalText;
+    @FXML
+    private Text accessibilityText;
 
     /**
      * Initialize the settings controller.
@@ -57,7 +67,14 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        // TODO
+        var lm = UIUtils.getLanguageMap();
+        backLink.setText(lm.get("general_back"));
+        settingsTitle.setText(lm.get("homepage_settings").toUpperCase());
+        currencyText.setText(lm.get("settings_currency"));
+        languageText.setText(lm.get("settings_language"));
+        highContrastText.setText(lm.get("settings_high_contrast"));
+        generalText.setText(lm.get("settings_general"));
+        accessibilityText.setText(lm.get("settings_accessibility"));
     }
 
     @Override

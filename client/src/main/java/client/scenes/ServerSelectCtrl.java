@@ -11,11 +11,13 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 /**
  * Controller for ServerSelect scene.
@@ -27,11 +29,17 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
     @FXML
     private AnchorPane root;
     @FXML
+    private Text title;
+    @FXML
     private TextField ipField;
     @FXML
     private TextField portField;
     @FXML
     private Pane errorPopup;
+    @FXML
+    private Button cancelButton;
+    @FXML
+    private Button connectButton;
 
     @Inject
     public ServerSelectCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
@@ -61,7 +69,10 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        // TODO
+        var lm = UIUtils.getLanguageMap();
+        title.setText(lm.get("homepage_server_select").toUpperCase());
+        cancelButton.setText(lm.get("general_cancel"));
+        connectButton.setText(lm.get("serverselect_connect"));
     }
 
     /**

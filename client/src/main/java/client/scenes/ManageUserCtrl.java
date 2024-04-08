@@ -43,17 +43,27 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
     @FXML
     private Text title;
     @FXML
+    private Text nameText;
+    @FXML
     private TextField nameField;
+    @FXML
+    private Text emailText;
     @FXML
     private TextField emailField;
     @FXML
+    private Text ibanText;
+    @FXML
     private TextField ibanField;
+    @FXML
+    private Text bicText;
     @FXML
     private TextField bicField;
     @FXML
     private Pane errorPopup;
     @FXML
     private Button confirmButton;
+    @FXML
+    private Button cancelButton;
 
     /**
      * Constructor for the ManageUser controller.
@@ -92,7 +102,16 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        // TODO
+        var lm = UIUtils.getLanguageMap();
+        title.setText(lm.get(mode == ManageUserMode.CREATE
+                ? "manageuser_create_new_user"
+                : "manageuser_edit_user"));
+        nameText.setText(lm.get("manageuser_name"));
+        emailText.setText(lm.get("manageuser_email"));
+        ibanText.setText(lm.get("manageuser_iban"));
+        bicText.setText(lm.get("manageuser_bic"));
+        confirmButton.setText(lm.get(mode == ManageUserMode.CREATE ? "general_create" : "general_confirm"));
+        cancelButton.setText(lm.get("general_cancel"));
     }
 
     /**
@@ -107,7 +126,6 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
         this.mode = mode;
         this.event = event;
         if (mode == ManageUserMode.CREATE) {
-            title.setText("CREATE NEW USER");
             nameField.setText("");
             emailField.setText("");
             ibanField.setText("");
@@ -116,10 +134,7 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
             emailField.setEditable(true);
             changeStyleAttribute(emailField, "-fx-background-color", "white");
             changeStyleAttribute(emailField, "-fx-text-fill", "black");
-
-            confirmButton.setText("CREATE");
         } else {
-            title.setText("EDIT USER");
             nameField.setText(user.getName());
             emailField.setText(user.getEmail());
             ibanField.setText(user.getIban());
@@ -128,8 +143,6 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
             emailField.setEditable(false);
             changeStyleAttribute(emailField, "-fx-background-color", "#2b2b2b");
             changeStyleAttribute(emailField, "-fx-text-fill", "#8e8e8e");
-
-            confirmButton.setText("SAVE");
         }
 
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {

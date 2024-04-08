@@ -74,6 +74,20 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
     @FXML
     private Pane adminClickArea;
     @FXML
+    private Text inviteCodeText;
+    @FXML
+    private Text eventsText;
+    @FXML
+    private Text settingsText;
+    @FXML
+    private Text adminText;
+    @FXML
+    private Text serverSelectText;
+    @FXML
+    private Text mailText;
+    @FXML
+    private Text closeText;
+    @FXML
     private Text serverText;
 
     /**
@@ -137,7 +151,18 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        // TODO
+        var lm = UIUtils.getLanguageMap();
+        eventsText.setText(lm.get("homepage_events"));
+        settingsText.setText(lm.get("homepage_settings"));
+        adminText.setText(lm.get("homepage_admin_login"));
+        serverSelectText.setText(lm.get("homepage_server_select"));
+        mailText.setText(lm.get("homepage_test_mail"));
+        closeText.setText(lm.get("homepage_close"));
+        serverText.setText(lm.get("homepage_current_server") + ": " + ServerUtils.getServer());
+
+        inviteCodeText.setText(lm.get("homepage_code"));
+        joinButton.setText(lm.get("homepage_join"));
+        newEventButton.setText(lm.get("general_new"));
     }
 
     /**
@@ -156,7 +181,6 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         screenDarkener.setPrefHeight(root.getPrefHeight());
 
         codeInput.setText("");
-        serverText.setText("Current server: " + ServerUtils.getServer());
 
         reloadEventsList();
 

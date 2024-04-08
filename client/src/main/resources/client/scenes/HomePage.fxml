@@ -13,7 +13,7 @@
 
 <AnchorPane fx:id="root" prefHeight="623.0" prefWidth="601.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HomePageCtrl">
    <children>
-      <Text fill="#8e8e8e" layoutX="52.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EVENTS">
+      <Text fx:id="eventsText" fill="#8e8e8e" layoutX="52.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EVENTS">
          <font>
             <Font name="SansSerif Bold" size="27.0" />
          </font>
@@ -76,27 +76,27 @@
             <Line endX="98.0" layoutX="97.0" layoutY="65.0" startX="-96.0" stroke="#979797" />
             <Line endX="98.0" layoutX="97.0" layoutY="95.0" startX="-96.0" stroke="#979797" />
             <Line endX="98.0" layoutX="97.0" layoutY="125.0" startX="-96.0" stroke="#979797" />
-            <Text fill="WHITE" layoutX="13.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" wrappingWidth="169.37109375">
+            <Text fx:id="settingsText" fill="WHITE" layoutX="13.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Settings" wrappingWidth="169.37109375">
                <font>
                   <Font size="14.0" />
                </font>
             </Text>
-            <Text fill="WHITE" layoutX="13.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Admin Login" wrappingWidth="169.37109375">
+            <Text fx:id="adminText" fill="WHITE" layoutX="13.0" layoutY="54.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Admin Login" wrappingWidth="169.37109375">
                <font>
                   <Font name="SansSerif Regular" size="14.0" />
                </font>
             </Text>
-            <Text fill="WHITE" layoutX="13.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server Select" wrappingWidth="169.37109375">
+            <Text fx:id="serverSelectText" fill="WHITE" layoutX="13.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Server Select" wrappingWidth="169.37109375">
                <font>
                   <Font name="SansSerif Regular" size="14.0" />
                </font>
             </Text>
-            <Text fill="WHITE" layoutX="13.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Close" wrappingWidth="169.37109375">
+            <Text fx:id="closeText" fill="WHITE" layoutX="13.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Close" wrappingWidth="169.37109375">
                <font>
                   <Font name="SansSerif Regular" size="14.0" />
                </font>
             </Text>
-            <Text fill="WHITE" layoutX="13.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Test Mail" wrappingWidth="169.37109375">
+            <Text fx:id="mailText" fill="WHITE" layoutX="13.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Test Mail" wrappingWidth="169.37109375">
                <font>
                   <Font name="SansSerif Regular" size="14.0" />
                </font>

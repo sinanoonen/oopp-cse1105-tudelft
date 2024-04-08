@@ -1,8 +1,8 @@
 package client.scenes;
 
+import client.enums.ManageUserMode;
 import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
-import client.enums.ManageUserMode;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;

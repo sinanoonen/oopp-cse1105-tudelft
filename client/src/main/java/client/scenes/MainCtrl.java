@@ -18,10 +18,10 @@ package client.scenes;
 
 import algorithms.DebtSettler;
 import algorithms.ExchangeProvider;
-import client.utils.ClientUtils;
-import client.utils.ConfigReader;
 import client.enums.ManageExpenseMode;
 import client.enums.ManageUserMode;
+import client.utils.ClientUtils;
+import client.utils.ConfigReader;
 import client.utils.ServerUtils;
 import client.utils.WebSocketServerUtils;
 import commons.Event;

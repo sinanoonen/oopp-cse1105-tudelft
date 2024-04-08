@@ -2,9 +2,9 @@ package client.scenes;
 
 import static client.scenes.HomePageCtrl.fadeInOutPopup;
 
+import client.enums.ManageExpenseMode;
 import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
-import client.enums.ManageExpenseMode;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;

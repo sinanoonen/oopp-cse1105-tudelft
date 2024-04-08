@@ -4,14 +4,15 @@
   "general_ok": "OK",
   "general_confirm": "CONFIRM",
   "general_create": "CREATE",
-  "general_back": "BACK",
+  "general_back": "back",
+  "general_close": "Close",
 
   "homepage_events": "EVENTS",
   "homepage_current_server": "current server",
   "homepage_settings": "Settings",
   "homepage_admin_login": "Admin Login",
   "homepage_server_select": "Server Select",
-  "homepage_close": "Close",
+  "homepage_test_mail": "Test Mail",
   "homepage_code": "CODE",
   "homepage_join": "JOIN",
 

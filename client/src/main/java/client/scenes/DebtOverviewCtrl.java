@@ -89,7 +89,10 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        // TODO
+        var lm = UIUtils.getLanguageMap();
+        balanceText.setText(lm.get("debtoverview_participant_balance"));
+        debtSettleButton.setText(lm.get("debtoverview_settle"));
+        backLink.setText(lm.get("general_back"));
     }
 
     /**

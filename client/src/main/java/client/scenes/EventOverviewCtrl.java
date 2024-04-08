@@ -78,6 +78,10 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     @FXML
     private Button inviteCodeButton;
     @FXML
+    private Button participantsButton;
+    @FXML
+    private Button debtsButton;
+    @FXML
     private Pane buttonDarkener;
     @FXML
     private StackPane clipboardPopup;
@@ -107,6 +111,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     private Circle addExpense;
     @FXML
     private Button addParticipantButton;
+    @FXML
+    private Button closeButton;
     @FXML
     private Button newParticipantButton;
     @FXML
@@ -216,7 +222,20 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        // TODO
+        var lm = UIUtils.getLanguageMap();
+        backLink.setText(lm.get("general_back"));
+        inviteCodeButton.setText(lm.get("eventoverview_invite_code"));
+        participantsButton.setText(lm.get("eventoverview_participants"));
+        debtsButton.setText(lm.get("eventoverview_debts"));
+        filterTextField.setPromptText(lm.get("eventoverview_filter"));
+        Text popupText = (Text) clipboardPopup.getChildren().getFirst();
+        popupText.setText(lm.get("eventoverview_copied_to_clipboard"));
+        addParticipantButton.setText(lm.get("eventoverview_add_participant"));
+        closeButton.setText(lm.get("general_close"));
+        confirmButton.setText(lm.get("general_confirm"));
+        newParticipantButton.setText(lm.get("general_new"));
+        editExpense.setText(lm.get("eventoverview_edit_expense"));
+        removeExpense.setText(lm.get("eventoverview_delete_expense"));
     }
 
     /**

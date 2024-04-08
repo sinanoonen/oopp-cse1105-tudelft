@@ -10,13 +10,17 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.inject.Inject;
 import commons.Event;
 import commons.WebSocketMessage;
+import commons.transactions.Tag;
+import commons.transactions.Transaction;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -99,6 +103,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         if (ClientUtils.isHighContrast()) {
             UIUtils.activateHighContrastMode(root);
         } else {
@@ -148,6 +153,12 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
         loadEvents();
         setupEventListView();
         setupEventSelection();
+
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
 
         updateLanguage();
     }
@@ -231,30 +242,56 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
         dialog.setTitle("Event Details");
 
         DialogPane dialogPane = dialog.getDialogPane();
-        dialogPane.setStyle("-fx-background-color: #333333; -fx-text-fill: #FFFFFF;");
+        if (ClientUtils.isHighContrast()) {
+            dialogPane.setStyle("-fx-background-color: #000; -fx-text-fill: #FFFFFF;");
+            TextArea textArea = new TextArea(formatEventDetails(event));
+            textArea.setEditable(false);
+            textArea.setWrapText(true);
+            textArea.setStyle("-fx-control-inner-background: #000; "
+                + "-fx-text-fill: #FFFFFF; "
+                + "-fx-font-size: 12pt; "
+                + "-fx-background-color: #000; "
+                + "-fx-border-color: #c30052; ");
 
-        TextArea textArea = new TextArea(formatEventDetails(event));
-        textArea.setEditable(false);
-        textArea.setWrapText(true);
-        textArea.setStyle("-fx-control-inner-background: #333333; "
-            + "-fx-text-fill: #FFFFFF; "
-            + "-fx-font-size: 12pt; "
-            + "-fx-background-color: #333333; "
-            + "-fx-border-color: #c30052; ");
+            ScrollPane scrollPane = new ScrollPane(textArea);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setStyle("-fx-background-color: #000;");
 
-        ScrollPane scrollPane = new ScrollPane(textArea);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setStyle("-fx-background-color: #333333;");
+            dialogPane.setContent(scrollPane);
 
-        dialogPane.setContent(scrollPane);
+            ButtonType closeButton = new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE);
+            dialogPane.getButtonTypes().add(closeButton);
 
-        ButtonType closeButton = new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE);
-        dialogPane.getButtonTypes().add(closeButton);
+            Button closeButtonControl = (Button) dialogPane.lookupButton(closeButton);
+            closeButtonControl.setStyle("-fx-background-color: #000; "
+                + "-fx-text-fill: #FFFFFF; -fx-border-color: #c30052; "
+                + "-fx-border-radius: 5; -fx-border-width: 2;");
+        } else {
+            dialogPane.setStyle("-fx-background-color: #333333; -fx-text-fill: #FFFFFF;");
 
-        Button closeButtonControl = (Button) dialogPane.lookupButton(closeButton);
-        closeButtonControl.setStyle("-fx-background-color: #3f3f3f; "
-            + "-fx-text-fill: #FFFFFF; -fx-border-color: #c30052; "
-            + "-fx-border-radius: 5; -fx-border-width: 2;");
+            TextArea textArea = new TextArea(formatEventDetails(event));
+            textArea.setEditable(false);
+            textArea.setWrapText(true);
+            textArea.setStyle("-fx-control-inner-background: #333333; "
+                + "-fx-text-fill: #FFFFFF; "
+                + "-fx-font-size: 12pt; "
+                + "-fx-background-color: #333333; "
+                + "-fx-border-color: #c30052; ");
+
+            ScrollPane scrollPane = new ScrollPane(textArea);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setStyle("-fx-background-color: #333333;");
+
+            dialogPane.setContent(scrollPane);
+
+            ButtonType closeButton = new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE);
+            dialogPane.getButtonTypes().add(closeButton);
+
+            Button closeButtonControl = (Button) dialogPane.lookupButton(closeButton);
+            closeButtonControl.setStyle("-fx-background-color: #3f3f3f; "
+                + "-fx-text-fill: #FFFFFF; -fx-border-color: #c30052; "
+                + "-fx-border-radius: 5; -fx-border-width: 2;");
+        }
 
         dialog.showAndWait();
     }
@@ -370,8 +407,36 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             try {
-                Event event = mapper.readValue(file, Event.class);
-                server.addNewEvent(event);
+                Event importedEvent  = mapper.readValue(file, Event.class);
+
+                ObservableList<Event> events = eventContainer.getItems();
+                for (Event event : events) {
+                    if (event.getInviteCode().toString().equals(importedEvent.getInviteCode().toString())) {
+                        showAlert("Warning", "An event with this invite code already exists in the list.");
+                        return;
+                    }
+                }
+
+                Set<Tag> tags = importedEvent.getTags();
+                Set<Tag> newTags = new HashSet<>();
+                List<Transaction> transactions = importedEvent.transactions();
+                for (Tag tag : tags) {
+                    Tag tag1 = server.addNewTag(tag);
+                    for (Transaction transaction : transactions) {
+                        List<Tag> tags1 = transaction.getTags();
+                        if (tags1 != null && tags1.contains(tag)) {
+                            tags1.set(tags1.indexOf(tag), tag1);
+                        }
+                        transaction.setTags(tags1);
+                    }
+
+                    newTags.add(tag1);
+                }
+                importedEvent.setTransactions(transactions);
+                importedEvent.setAvailableTags(newTags);
+
+                server.addNewEvent(importedEvent);
+
                 loadEvents();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -18,10 +18,12 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import commons.EmailRequest;
 import commons.Event;
 import commons.Quote;
 import commons.User;
 import commons.transactions.Expense;
+import commons.transactions.Tag;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -78,22 +80,6 @@ public class ServerUtils {
     public static void setPort(String port) {
         ServerUtils.port = port;
         ServerUtils.setServer(ip, port);
-    }
-
-    /**
-     * Get quotes the hard way.
-     *
-     * @throws IOException may occur.
-     * @throws URISyntaxException may occur.
-     */
-    public void getQuotesTheHardWay() throws IOException, URISyntaxException {
-        var url = new URI("http://localhost:8080/api/quotes").toURL();
-        var is = url.openConnection().getInputStream();
-        var br = new BufferedReader(new InputStreamReader(is));
-        String line;
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
-        }
     }
 
     /**
@@ -257,33 +243,6 @@ public class ServerUtils {
     }
 
     /**
-     * Get all quotes.
-     *
-     * @return all quotes
-     */
-    public List<Quote> getQuotes() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Quote>>() {});
-    }
-
-    /**
-     * Add a quote.
-     *
-     * @param quote a quote
-     * @return the quote
-     */
-    public Quote addQuote(Quote quote) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
-    }
-
-    /**
      * Method to update an event.
      *
      * @param event updated event
@@ -324,4 +283,78 @@ public class ServerUtils {
             .post(Entity.entity(password, APPLICATION_JSON));
         return response.getStatus() == 200;
     }
+
+    /**
+     * Sends the email request to the server.
+     *
+     * @param emailRequest the data
+     * @return true iff the mail was successfully sent
+     */
+    public boolean sendMail(EmailRequest emailRequest) {
+        Response response = ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("api/email/send")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(emailRequest, APPLICATION_JSON));
+
+        return response.getStatus() == Response.Status.OK.getStatusCode();
+    }
+
+    /**
+     * This adds a new tag.
+     *
+     * @param tag the tag to be added
+     * @return the added tag
+     */
+    public Tag addNewTag(Tag tag) {
+        return ClientBuilder.newClient(new ClientConfig())
+            .target(SERVER).path("/api/tags")
+            .request(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .post(Entity.entity(tag, APPLICATION_JSON), Tag.class);
+    }
+
+    /**
+     * Get quotes the hard way.
+     *
+     * @throws IOException may occur.
+     * @throws URISyntaxException may occur.
+     */
+    public void getQuotesTheHardWay() throws IOException, URISyntaxException {
+        var url = new URI("http://localhost:8080/api/quotes").toURL();
+        var is = url.openConnection().getInputStream();
+        var br = new BufferedReader(new InputStreamReader(is));
+        String line;
+        while ((line = br.readLine()) != null) {
+            System.out.println(line);
+        }
+    }
+
+    /**
+     * Get all quotes.
+     *
+     * @return all quotes
+     */
+    public List<Quote> getQuotes() {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/quotes") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<Quote>>() {});
+    }
+
+    /**
+     * Add a quote.
+     *
+     * @param quote a quote
+     * @return the quote
+     */
+    public Quote addQuote(Quote quote) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/quotes") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
+    }
+
 }

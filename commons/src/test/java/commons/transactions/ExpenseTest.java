@@ -2,6 +2,7 @@ package commons.transactions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import commons.Currency;
 import java.time.LocalDate;
@@ -17,6 +18,8 @@ import org.junit.jupiter.api.Test;
  */
 class ExpenseTest {
     Expense expense;
+    Expense expenseNoParticipants;
+    Expense expenseNoParticipantsWithMultiplier;
     LocalDate baseDate;
 
     @BeforeEach
@@ -25,6 +28,25 @@ class ExpenseTest {
         baseDate = LocalDate.of(2015, 3, 2);
         expense = new Expense("Yannick", baseDate, 90f, Currency.EUR,
                 "Meeting Lunch", participants);
+
+        expenseNoParticipants = new Expense("Yannick", baseDate, 90f, Currency.EUR,
+                "Meeting Lunch", null);
+
+        expenseNoParticipantsWithMultiplier = new Expense("Yannick", baseDate, 90f, Currency.EUR,
+                "Meeting Lunch", null, new HashMap<>());
+    }
+
+    @Test
+    void testDefaultConstructor() {
+        Expense expense = new Expense();
+        assertEquals("Expense{Transaction{owner = 'null', date = "
+                        + "'null', amount = 0.0}, description='null', debts={}}",
+                expense.toString());
+        assertNull(expense.getOwner());
+        assertNull(expense.getDate());
+        assertEquals(0.0f, expense.getAmount());
+        assertEquals(0, expense.getDebts().size());
+        assertNull(expense.getDescription());
     }
 
     @Test
@@ -42,6 +64,7 @@ class ExpenseTest {
         debts.put("Sinan", 30f);
         debts.put("Yannick", -90.0f);
         assertEquals(debts, expense.getDebts());
+        assertEquals(0, expenseNoParticipants.getDebts().size());
     }
 
     @Test
@@ -139,8 +162,10 @@ class ExpenseTest {
         userMultiplierMap.put("Filip", 1);
         userMultiplierMap.put("Sinan", 1);
 
+        expense.debts.put("Yannick", 0.0f);
         expense.splitAmong(40f, userMultiplierMap);
         expense.debts.put("Yannick", -40.0f);
+
         Map<String, Float> debts = new HashMap<>();
         debts.put("Ivo", 20f);
         debts.put("Filip", 10f);
@@ -158,12 +183,13 @@ class ExpenseTest {
         userMultiplierMap.put("Filip", 1);
         userMultiplierMap.put("Sinan", 3);
 
+        expense.debts.put("Yannick", 0.0f);
         expense.splitAmong(40f, userMultiplierMap);
         expense.debts.put("Yannick", -40.0f);
         Map<String, Float> debts = new HashMap<>();
-        debts.put("Ivo", 13.34f);
+        debts.put("Ivo", 13.33f);
         debts.put("Filip", 6.67f);
-        debts.put("Sinan", 20.01f);
+        debts.put("Sinan", 20.00f);
         debts.put("Yannick", -40.0f);
         assertEquals(debts, expense.getDebts());
         assertEquals(40f, expense.getAmount());
@@ -198,9 +224,9 @@ class ExpenseTest {
         expense = new Expense("Yannick", baseDate, 40f, Currency.EUR,
                 "Meeting Lunch", participants, userMultiplierMap);
         Map<String, Float> debts = new HashMap<>();
-        debts.put("Ivo", 13.34f);
+        debts.put("Ivo", 13.33f);
         debts.put("Filip", 6.67f);
-        debts.put("Sinan", 20.01f);
+        debts.put("Sinan", 20.00f);
         debts.put("Yannick", -40.0f);
         assertEquals(debts, expense.getDebts());
     }

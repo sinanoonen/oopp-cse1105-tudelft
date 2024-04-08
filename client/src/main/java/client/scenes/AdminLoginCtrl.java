@@ -86,6 +86,17 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
     }
 
     /**
+     * This refreshes the admin login page.
+     */
+    public void refresh() {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
+    }
+
+    /**
      * This is triggered when the login button is clicked.
      */
     @FXML

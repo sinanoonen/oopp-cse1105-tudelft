@@ -23,6 +23,7 @@ import client.utils.ConfigReader;
 import client.utils.ManageExpenseMode;
 import client.utils.ManageUserMode;
 import client.utils.ServerUtils;
+import client.utils.WebSocketServerUtils;
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
@@ -135,6 +136,13 @@ public class MainCtrl {
         ClientUtils.setCurrency(ConfigReader.getCurrency());
         ClientUtils.setLanguage(ConfigReader.getLanguage());
         ServerUtils.setServer(ConfigReader.getIP(), ConfigReader.getPort());
+        WebSocketServerUtils.setSession(ConfigReader.getIP(), ConfigReader.getPort());
+
+        this.addExpenseCtrl = addExpense.getKey();
+        this.addExpense = new Scene(addExpense.getValue());
+        showHomePage();
+        primaryStage.show();
+
         ExchangeProvider.getExchangeRates();
     }
 

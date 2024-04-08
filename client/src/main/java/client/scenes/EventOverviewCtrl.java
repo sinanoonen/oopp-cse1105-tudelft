@@ -297,6 +297,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             if (expenseMenuVisible && !isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
                 // Close the expenseMenu pane
                 toggleExpenseMenu();
+                onExit();
                 mainCtrl.showEventOverview(event);
             }
         });
@@ -491,6 +492,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         }
         serverUtils.removeUserFromEvent(event.getInviteCode(), user.getEmail());
         Event updated = serverUtils.getEventByUUID(event.getInviteCode());
+        onExit();
         refresh(updated);
         toggleParticipants();
     }
@@ -659,7 +661,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         currency.setFill(Paint.valueOf("#FFFFFF"));
         currency.setMouseTransparent(true);
 
-        base.getChildren().addAll(sender, recipient, amount);
+        base.getChildren().addAll(sender, recipient, amount, currency);
         base.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() > 1) {
                 toggleExpenseMenu();
@@ -754,7 +756,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 .filter(t -> t instanceof Expense)
                 .map(t -> (Expense) t)
                 .filter(t -> t.getDescription()
-                        .contains(filterTextField.getText()))
+                        .contains(filterTextField.getText()) || t.getDebts()
+                        .containsKey(filterTextField.getText()))
                 .map(e -> (Transaction) e)
                 .toList();
 
@@ -860,6 +863,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             event.removeTransaction(expenseToRemove);
             resetTransactionsContainer();
         }
+        onExit();
         mainCtrl.showEventOverview(event);
     }
 
@@ -870,6 +874,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
         if (selectedNode != null) {
             Expense expenseToUpdate = (Expense) selectedNode.getUserData();
+            onExit();
             mainCtrl.showEditExpense(event, expenseToUpdate);
         }
 
@@ -900,6 +905,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         for (User u : selectedUsers) {
             updated = serverUtils.addUserToEvent(updated, u);
         }
+        onExit();
         refresh(updated);
         toggleParticipants();
     }

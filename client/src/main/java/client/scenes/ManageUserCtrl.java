@@ -274,4 +274,53 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
     public void onExit() {
         socket.unregisterFromMessages("/topic/eventsUpdated");
     }
+
+
+    public void setMode(ManageUserMode mode) {
+        this.mode = mode;
+    }
+
+    public void setTitle(Text title) {
+        this.title = title;
+    }
+
+    public void setNameField(TextField nameField) {
+        this.nameField = nameField;
+    }
+
+    public void setEmailField(TextField emailField) {
+        this.emailField = emailField;
+    }
+
+    public void setIbanField(TextField ibanField) {
+        this.ibanField = ibanField;
+    }
+
+    public void setBicField(TextField bicField) {
+        this.bicField = bicField;
+    }
+
+    public void setErrorPopup(Pane errorPopUp) {
+        this.errorPopup = errorPopUp;
+    }
+
+    public TextField getBicField() {
+        return bicField;
+    }
+
+    public TextField getEmailField() {
+        return emailField;
+    }
+
+    public TextField getIbanField() {
+        return ibanField;
+    }
+
+    public TextField getNameField() {
+        return nameField;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 }

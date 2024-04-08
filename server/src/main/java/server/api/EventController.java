@@ -1,5 +1,6 @@
 package server.api;
 
+import commons.Currency;
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
@@ -339,6 +340,13 @@ public class EventController {
         event.removeTransaction(toRemove.get());
         repo.save(event);
 
+        Transaction transaction = toRemove.get();
+        if (transaction instanceof Payment) {
+            payRepo.deleteById(transaction.getId());
+        } else if (transaction instanceof Expense) {
+            exRepo.deleteById(transaction.getId());
+        }
+
         return ResponseEntity.ok(event);
     }
 
@@ -372,6 +380,7 @@ public class EventController {
         String owner = isNullOrEmpty(update.getOwner()) ? expense.getOwner() : update.getOwner();
         LocalDate date = update.getDate() == null ? expense.getDate() : update.getDate();
         float amount = update.getAmount() == 0 ? expense.getAmount() : update.getAmount();
+        Currency currency = update.getCurrency() == null ? expense.getCurrency() : update.getCurrency();
         String description = isNullOrEmpty(update.getDescription())
                 ? expense.getDescription()
                 : update.getDescription();
@@ -381,6 +390,7 @@ public class EventController {
         expense.setOwner(owner);
         expense.setDate(date);
         expense.setAmount(amount);
+        expense.setCurrency(currency);
         expense.setDescription(description);
         expense.setDebts(debts);
 

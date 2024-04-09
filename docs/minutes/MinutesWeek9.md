@@ -28,6 +28,7 @@
     - Add two checkboxes above filter textfield
         - 0, 1, or 2 can be selected
 - Create new tags button
+    - When adding new strings, add keys and translations to all language maps (or inform Filip)
 - Keyboard shortcuts missing:
     - AddExpense: ENTER
 

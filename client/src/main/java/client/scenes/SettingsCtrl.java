@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
@@ -50,6 +51,8 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
     private Text currencyText;
     @FXML
     private Text languageText;
+    @FXML
+    private Button addLanguageButton;
     @FXML
     private Text highContrastText;
     @FXML
@@ -121,6 +124,8 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
                 return;
             }
         });
+
+        UIUtils.addTooltip(addLanguageButton, "Download language template");
     }
 
     /**

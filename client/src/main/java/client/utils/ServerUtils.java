@@ -122,7 +122,7 @@ public class ServerUtils {
      *
      * @param callback function to perform on end of poll
      */
-    public void longPollEvents(Consumer<Event> callback) {
+    public void longPollEvents(Consumer<String> callback) {
         EXEC.submit(() -> { // use new thread so that application is not stuck waiting for response
             while (!Thread.interrupted()) {
                 var res = ClientBuilder.newClient(new ClientConfig()
@@ -137,12 +137,12 @@ public class ServerUtils {
                 if (status == HttpStatus.NO_CONTENT.value()) {
                     continue;
                 }
-                Event updated = res.readEntity(Event.class);
+                String updatedEventInviteCode = res.readEntity(String.class);
 
                 //Execute the UI Update on the
                 // thread that is responsible for the JavaFX application
                 Platform.runLater(() -> {
-                    callback.accept(updated);
+                    callback.accept(updatedEventInviteCode);
                 });
             }
         });

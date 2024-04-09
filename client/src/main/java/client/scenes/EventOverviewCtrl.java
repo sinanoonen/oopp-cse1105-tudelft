@@ -147,14 +147,14 @@ public class EventOverviewCtrl implements Initializable {
         serverUtils.longPollEvents(e -> {
             // If we have not yet opened the overview ever or if we are not looking at the event
             if (event == null
-                    || !e.getInviteCode().equals(event.getInviteCode())
-                    || !mainCtrl.getPrimaryStage().getTitle().equals(event.getTitle())) {
+                    || !e.equals(event.getInviteCode().toString())) {
+                    //|| !mainCtrl.getPrimaryStage().getTitle().equals(event.getTitle())) {
                 return;
             }
             boolean hadParticipantsOpen = participantsMenu.isVisible();
             boolean hadAddParticipantsOpen = addParticipantsMenu.isVisible();
             onExit();
-            refresh(e);
+            refresh(serverUtils.getEventByUUID(UUID.fromString(e)));
             if (hadParticipantsOpen) {
                 toggleParticipants();
                 return;

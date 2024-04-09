@@ -68,7 +68,7 @@
   "homepage_code": "CODE",
   "homepage_current_server": "huidige server",
   "homepage_error_event_not_found": "Kan evenement niet vinden",
-  "homepage_error_invalid_code": "",
+  "homepage_error_invalid_code": "Ongeldige uitnodigingscode",
   "homepage_error_mail_failed": "Het verzenden van e-mail is mislukt. Controleer uw e-mailgegevens.",
   "homepage_events": "EVENEMENTEN",
   "homepage_info_email_config": "Email Configuratie",

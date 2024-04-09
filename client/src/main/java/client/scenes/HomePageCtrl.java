@@ -163,6 +163,8 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         inviteCodeText.setText(lm.get("homepage_code"));
         joinButton.setText(lm.get("homepage_join"));
         newEventButton.setText(lm.get("general_new"));
+        Text errorMessage = (Text) errorPopup.getChildren().getFirst();
+        // errorMessage.setText(lm.get());
     }
 
     /**
@@ -254,14 +256,14 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         try {
             uuid = UUID.fromString(input);
         } catch (Exception e) {
-            displayInputError(UIUtils.getLanguageMap().get("homepage_invalid_code"));
+            displayInputError(UIUtils.getLanguageMap().get("homepage_error_invalid_code"));
             return;
         }
         try {
             Event event = serverUtils.getEventByUUID(uuid);
             mainCtrl.showEventOverview(event);
         } catch (Exception e) {
-            displayInputError(UIUtils.getLanguageMap().get("homepage_event_not_found"));
+            displayInputError(UIUtils.getLanguageMap().get("homepage_error_event_not_found"));
         }
     }
 

@@ -8,7 +8,6 @@ import client.utils.UIUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commons.Currency;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -24,7 +23,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-
 import javax.inject.Inject;
 
 
@@ -155,6 +153,9 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
         updateLanguage();
     }
 
+    /**
+     * Downloads the language template json.
+     */
     public void downloadLanguageTemplate() {
         final String PATH = "src/main/resources/client/languages/template.json";
         File template = new File(PATH);

@@ -5,7 +5,12 @@ import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commons.Currency;
+
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -18,6 +23,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+
 import javax.inject.Inject;
 
 
@@ -148,5 +155,22 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
         updateLanguage();
     }
 
+    public void downloadLanguageTemplate() {
+        final String PATH = "src/main/resources/client/languages/template.json";
+        File template = new File(PATH);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialFileName("template.json");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        File file = fileChooser.showSaveDialog(root.getScene().getWindow());
 
+        if (file != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            try {
+                mapper.writeValue(file, template);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

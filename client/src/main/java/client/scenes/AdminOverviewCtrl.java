@@ -453,6 +453,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
 
     @FXML
     private void handleDeleteEvent() {
+        var lm = UIUtils.getLanguageMap();
         if (selectedEvent != null) {
             Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationDialog.setTitle("Confirm Deletion");
@@ -467,7 +468,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
                 selectedEvent = null;
             }
         } else {
-            showAlert("Error", "No event selected for delete.");
+            showAlert("Error", lm.get("adminpage_error_none_selected_delete"));
         }
     }
 

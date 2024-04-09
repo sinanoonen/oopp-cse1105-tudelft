@@ -4,7 +4,7 @@ Date:           April 9th, 2024\
 Time:           2:45 PM\
 Location:       Cubicle 13, DW PC1\
 Chair:          Ivo Harsani\
-Note taker:     tbd
+Note taker:     Filip Keerberg
 
 ## Agenda Items (6 min)
 - Opening by Chair (1 min)

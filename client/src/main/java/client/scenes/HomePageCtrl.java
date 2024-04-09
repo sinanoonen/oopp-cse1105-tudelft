@@ -13,7 +13,9 @@ import commons.EmailRequest;
 import commons.Event;
 import commons.WebSocketMessage;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import javafx.animation.FadeTransition;
@@ -23,6 +25,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -47,6 +51,7 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
     private final WebSocketServerUtils socket;
 
     private List<Event> events;
+    private Map<Language, Image> flags;
 
     @FXML
     private AnchorPane root;
@@ -93,7 +98,7 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
     @FXML
     private Text serverText;
     @FXML
-    private ImageView flagImage;
+    private ComboBox<Language> languageDropdown;
 
     /**
      * Constructor for the HomePage controller.
@@ -152,6 +157,36 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
                 }
             }
         });
+
+        flags = new HashMap<>();
+        for (Language language : Language.values()) {
+            Image img = new Image(
+                    "client/img/flag_" + language.name().toLowerCase() + ".png",
+                    35, 20, false, true);
+            flags.put(language, img);
+        }
+
+        class ImageCell extends ListCell<Language> {
+            @Override
+            protected void updateItem(Language item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(null);
+                    setGraphic(new ImageView(flags.get(item)));
+                }
+            }
+        }
+
+        languageDropdown.setCellFactory(lv -> new ImageCell());
+        languageDropdown.setButtonCell(new ImageCell());
+        languageDropdown.setOnAction(event -> {
+            ClientUtils.setLanguage(languageDropdown.getValue());
+            updateLanguage();
+        });
+        languageDropdown.getItems().addAll(flags.keySet());
     }
 
     @Override
@@ -197,14 +232,7 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
             UIUtils.deactivateHighContrastMode(root);
         }
 
-        Language language = ClientUtils.getLanguage();
-        language = language == null ? Language.ENGLISH : language;
-        String flagPath = "client/img/flag_" + language.name().toLowerCase() + ".png";
-        System.out.println(flagPath);
-        Image flag = new Image(flagPath);
-        flagImage.setImage(flag);
-        flagImage.setCache(true);
-
+        languageDropdown.setValue(ClientUtils.getLanguage());
         updateLanguage();
     }
 

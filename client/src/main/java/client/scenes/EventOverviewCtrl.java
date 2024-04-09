@@ -1,6 +1,7 @@
 package client.scenes;
 
 import algorithms.ExchangeProvider;
+import client.enums.Language;
 import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
@@ -16,12 +17,7 @@ import commons.transactions.Tag;
 import commons.transactions.Transaction;
 import java.awt.Color;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
@@ -30,12 +26,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -68,6 +61,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     private final WebSocketServerUtils socket;
 
     private Event event;
+    private Map<Language, Image> flags;
 
     @FXML
     private AnchorPane root;
@@ -126,6 +120,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     @FXML
     private ChoiceBox<String> tagFilterChoiceBox;
     private boolean expenseMenuVisible = false;
+    @FXML
+    private ComboBox<Language> languageDropdown;
 
     /**
      * Constructor for the EventOverview controller.
@@ -218,6 +214,36 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 }
             }
         });
+
+        flags = new HashMap<>();
+        for (Language language : Language.values()) {
+            Image img = new Image(
+                    "client/img/flag_" + language.name().toLowerCase() + ".png",
+                    35, 20, false, true);
+            flags.put(language, img);
+        }
+
+        class ImageCell extends ListCell<Language> {
+            @Override
+            protected void updateItem(Language item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(null);
+                    setGraphic(new ImageView(flags.get(item)));
+                }
+            }
+        }
+
+        languageDropdown.setCellFactory(lv -> new ImageCell());
+        languageDropdown.setButtonCell(new ImageCell());
+        languageDropdown.setOnAction(event -> {
+            ClientUtils.setLanguage(languageDropdown.getValue());
+            updateLanguage();
+        });
+        languageDropdown.getItems().addAll(flags.keySet());
     }
 
     @Override
@@ -321,6 +347,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             }
         });
 
+        languageDropdown.setValue(ClientUtils.getLanguage());
         updateLanguage();
     }
 

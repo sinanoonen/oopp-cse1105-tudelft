@@ -181,8 +181,10 @@ public class DebtPaymentOverviewCtrl implements Initializable {
         payOffDebt.requestFocus();
         double finalConvertedValue = convertedValue;
         payOffDebt.onActionProperty().set(actionEvent -> {
-            event.addTransaction(new Payment(settlementArray[0], LocalDate.now(), (float) finalConvertedValue,
-                    ClientUtils.getCurrency(), settlementArray[settlementArray.length - 1]));
+            Payment payment = new Payment(settlementArray[0], LocalDate.now(), (float) finalConvertedValue,
+                    ClientUtils.getCurrency(), settlementArray[settlementArray.length - 1]);
+            payment = serverUtils.addPayment(event.getInviteCode(), payment);
+            event.addTransaction(payment);
             mainCtrl.showDebtOverview(event);
         });
         final double buttonTopPadding = 0.01f * pane.getPrefHeight();

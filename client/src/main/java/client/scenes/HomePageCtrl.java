@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.enums.Language;
 import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ConfigReader;
@@ -24,6 +25,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -89,6 +92,8 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
     private Text closeText;
     @FXML
     private Text serverText;
+    @FXML
+    private ImageView flagImage;
 
     /**
      * Constructor for the HomePage controller.
@@ -191,6 +196,14 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        Language language = ClientUtils.getLanguage();
+        language = language == null ? Language.ENGLISH : language;
+        String flagPath = "client/img/flag_" + language.name().toLowerCase() + ".png";
+        System.out.println(flagPath);
+        Image flag = new Image(flagPath);
+        flagImage.setImage(flag);
+        flagImage.setCache(true);
 
         updateLanguage();
     }

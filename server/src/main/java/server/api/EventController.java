@@ -137,6 +137,7 @@ public class EventController {
         }
 
         Event saved = repo.save(event);
+        listeners.forEach((k, fn) -> fn.accept(event.getInviteCode().toString()));
         return ResponseEntity.ok(saved);
     }
 
@@ -184,6 +185,7 @@ public class EventController {
 
         event.get().addTag(tag);
         Event saved = repo.save(event.get());
+        listeners.forEach((k, fn) -> fn.accept(saved.getInviteCode().toString()));
         return ResponseEntity.ok(saved);
     }
 
@@ -196,7 +198,7 @@ public class EventController {
      */
     @PostMapping("/{uuid}/users")
     public ResponseEntity<Event> addUser(@PathVariable("uuid") UUID uuid, @RequestBody User user) {
-        // TODO should this be a put or a post?
+
         if (!repo.existsById(uuid)) {
             return ResponseEntity.badRequest().build();
         }
@@ -424,14 +426,14 @@ public class EventController {
                 : update.getDescription();
         Map<String, Float> debts = (update.getDebts().isEmpty() || update.getDebts() == null)
                 ? expense.getDebts() : update.getDebts();
-
+        expense.setSplitEqually(update.isSplitEqually());
         expense.setOwner(owner);
         expense.setDate(date);
         expense.setAmount(amount);
         expense.setCurrency(currency);
         expense.setDescription(description);
         expense.setDebts(debts);
-
+        expense.setTags(update.getTags() == null ? expense.getTags() : update.getTags());
         Expense savedExpense = exRepo.save(expense);
         listeners.forEach((k, fn) -> fn.accept(uuid.toString()));
         return ResponseEntity.ok(savedExpense);

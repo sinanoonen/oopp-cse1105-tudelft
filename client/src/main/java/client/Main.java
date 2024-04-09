@@ -30,7 +30,9 @@ import client.scenes.MainCtrl;
 import client.scenes.ManageUserCtrl;
 import client.scenes.ServerSelectCtrl;
 import client.scenes.SettingsCtrl;
+import client.utils.ClientUtils;
 import client.utils.ConfigReader;
+import client.utils.ServerUtils;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -79,5 +81,12 @@ public class Main extends Application {
                 manageUser,
                 adminLogin,
                 serverSelect);
+
+        primaryStage.setOnCloseRequest(e -> {
+            ConfigReader.writeLanguage(ClientUtils.getLanguage());
+            ConfigReader.writeCurrency(ClientUtils.getCurrency());
+            ConfigReader.writeIP(ServerUtils.getIp());
+            ConfigReader.writePort(ServerUtils.getPort());
+        });
     }
 }

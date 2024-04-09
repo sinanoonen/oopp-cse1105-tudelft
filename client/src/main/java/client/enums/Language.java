@@ -1,4 +1,4 @@
-package client.utils;
+package client.enums;
 
 /**
  * Enum for the currency.
@@ -10,7 +10,7 @@ public enum Language {
 
     public final String code;
 
-    private Language(String code) {
+    Language(String code) {
         this.code = code;
     }
 }

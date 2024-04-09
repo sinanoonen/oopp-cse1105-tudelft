@@ -50,7 +50,7 @@ public class ConfigReader {
         return switch (PROPERTIES.getProperty("language")) {
             case "EN" -> Language.ENGLISH;
             case "NL" -> Language.DUTCH;
-            case "IT" -> Language.ITALIAN;
+            case "TR" -> Language.TURKISH;
             default -> Language.ENGLISH;
         };
     }

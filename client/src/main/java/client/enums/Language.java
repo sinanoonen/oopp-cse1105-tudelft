@@ -6,5 +6,5 @@ package client.enums;
 public enum Language {
     ENGLISH,
     DUTCH,
-    ITALIAN
+    TURKISH
 }

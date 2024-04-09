@@ -148,7 +148,6 @@ public class EventOverviewCtrl implements Initializable {
             // If we have not yet opened the overview ever or if we are not looking at the event
             if (event == null
                     || !e.equals(event.getInviteCode().toString())) {
-                    //|| !mainCtrl.getPrimaryStage().getTitle().equals(event.getTitle())) {
                 return;
             }
             boolean hadParticipantsOpen = participantsMenu.isVisible();

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
+import server.ListenerService;
 import server.database.EventRepository;
 import server.database.ExpenseRepository;
 import server.database.PaymentRepository;
@@ -41,7 +42,7 @@ public class EventController {
     private final ExpenseRepository exRepo;
     private final PaymentRepository payRepo;
 
-    private final Map<Object, Consumer<String>> listeners = new ConcurrentHashMap<>();
+    private final ListenerService listenerService;
 
     /**
      * Constructor for the event controller.
@@ -52,11 +53,12 @@ public class EventController {
      */
     public EventController(EventRepository repo,
                            ExpenseRepository exRepo,
-                           PaymentRepository payRepo) {
+                           PaymentRepository payRepo,
+                           ListenerService listenerService) {
         this.repo = repo;
         this.exRepo = exRepo;
         this.payRepo = payRepo;
-        //this.listeners = new ConcurrentHashMap<>();
+        this.listenerService = listenerService;
     }
 
     /**
@@ -95,11 +97,11 @@ public class EventController {
         DeferredResult<ResponseEntity<String>> res = new DeferredResult<>(timeoutTime, noContent);
 
         Object key = new Object(); // Generate unique listener key
-        listeners.put(key, e -> {
+        listenerService.addListener(key, e -> {
             res.setResult(ResponseEntity.ok(e));
         });
         res.onCompletion(() -> {
-            listeners.remove(key);
+            listenerService.removeListener(key);
         }); // Remove listener on completion (timeout/return)
 
         return res;
@@ -118,8 +120,7 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
         Event saved = repo.save(updatedEvent);
-        listeners.forEach((k, fn) ->
-            fn.accept(saved.getInviteCode().toString())); // Inform listeners that an event was updated
+        listenerService.notifyListeners(saved.getInviteCode().toString()); // Inform listeners that an event was updated
         return ResponseEntity.ok(saved);
     }
 
@@ -136,7 +137,7 @@ public class EventController {
         }
 
         Event saved = repo.save(event);
-        listeners.forEach((k, fn) -> fn.accept(event.getInviteCode().toString()));
+        listenerService.notifyListeners(event.getInviteCode().toString());
         return ResponseEntity.ok(saved);
     }
 
@@ -184,7 +185,7 @@ public class EventController {
 
         event.get().addTag(tag);
         Event saved = repo.save(event.get());
-        listeners.forEach((k, fn) -> fn.accept(saved.getInviteCode().toString()));
+        listenerService.notifyListeners(saved.getInviteCode().toString());
         return ResponseEntity.ok(saved);
     }
 
@@ -206,7 +207,7 @@ public class EventController {
         event.addParticipant(user);
         try {
             Event saved = repo.save(event);
-            listeners.forEach((k, fn) -> fn.accept(saved.getInviteCode().toString()));
+            listenerService.notifyListeners(saved.getInviteCode().toString());
             return ResponseEntity.ok(saved);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -239,7 +240,7 @@ public class EventController {
         }
         event.removeParticipant(toRemove.get());
         Event saved = repo.save(event);
-        listeners.forEach((k, fn) -> fn.accept(saved.getInviteCode().toString()));
+        listenerService.notifyListeners(saved.getInviteCode().toString());
         return ResponseEntity.ok(saved);
     }
 
@@ -320,7 +321,7 @@ public class EventController {
         event.addTransaction(saved);
         Event newEvent = repo.save(event);
 
-        listeners.forEach((k, fn) -> fn.accept(newEvent.getInviteCode().toString()));
+        listenerService.notifyListeners(newEvent.getInviteCode().toString());
         return ResponseEntity.ok(saved);
     }
 
@@ -348,7 +349,7 @@ public class EventController {
         Event event = repo.findById(uuid).get();
         event.addTransaction(payment);
         Payment saved = payRepo.save(payment);
-        listeners.forEach((k, fn) -> fn.accept(event.getInviteCode().toString()));
+        listenerService.notifyListeners(event.getInviteCode().toString());
         return ResponseEntity.ok(saved);
     }
 
@@ -385,7 +386,7 @@ public class EventController {
             exRepo.deleteById(transaction.getId());
         }
 
-        listeners.forEach((k, fn) -> fn.accept(saved.getInviteCode().toString()));
+        listenerService.notifyListeners(saved.getInviteCode().toString());
         return ResponseEntity.ok(saved);
     }
 
@@ -434,7 +435,7 @@ public class EventController {
         expense.setDebts(debts);
         expense.setTags(update.getTags() == null ? expense.getTags() : update.getTags());
         Expense savedExpense = exRepo.save(expense);
-        listeners.forEach((k, fn) -> fn.accept(uuid.toString()));
+        listenerService.notifyListeners(uuid.toString());
         return ResponseEntity.ok(savedExpense);
     }
 }

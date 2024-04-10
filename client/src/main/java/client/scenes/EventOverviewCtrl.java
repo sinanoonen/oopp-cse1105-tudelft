@@ -280,6 +280,7 @@ public class EventOverviewCtrl implements Initializable {
         changeBackgroundColor(backLink, "transparent");
 
         resetTransactionsContainer();
+        resetNewParticipantsContainer();
         resetParticipantsContainer();
 
         if (ClientUtils.isHighContrast()) {

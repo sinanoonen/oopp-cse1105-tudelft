@@ -144,6 +144,10 @@ public class MainCtrl {
         ExchangeProvider.getExchangeRates();
     }
 
+    public Stage getPrimaryStage() {
+        return this.primaryStage;
+    }
+
     /**
      * Displays the home page.
      */

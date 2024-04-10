@@ -160,7 +160,7 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
 
     public void cancel() {
         onExit();
-        mainCtrl.showEventOverview(event);
+        mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
     /**
@@ -189,7 +189,7 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
         User user = new User(name, email, iban, bic, event.getInviteCode());
         onExit();
         User saved = serverUtils.createUser(user);
-        mainCtrl.showEventOverview(event);
+        mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
     /**

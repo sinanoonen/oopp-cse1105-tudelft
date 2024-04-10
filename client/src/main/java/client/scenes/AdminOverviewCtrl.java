@@ -114,6 +114,10 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
             Platform.runLater(this::loadEvents);
         });
 
+        server.longPollEvents(e -> {
+            Platform.runLater(this::loadEvents);
+        });
+
         UIUtils.addTooltip(exitButton, "ESC: Exit");
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {

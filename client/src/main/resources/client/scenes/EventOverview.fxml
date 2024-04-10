@@ -34,7 +34,7 @@
             <Font name="SansSerif Bold" size="19.0" />
          </font>
       </Button>
-      <Pane id="button_darkener" fx:id="buttonDarkener" layoutX="423.0" layoutY="65.0" mouseTransparent="true" opacity="0.29" prefHeight="40.0" prefWidth="136.0" style="-fx-background-color: black; -fx-background-radius: 5;" visible="false" />
+      <Pane id="button_darkener" fx:id="buttonDarkener" layoutX="423.0" layoutY="45.0" mouseTransparent="true" opacity="0.29" prefHeight="40.0" prefWidth="136.0" style="-fx-background-color: black; -fx-background-radius: 5;" visible="false" />
       <StackPane id="clipboard_popup" fx:id="clipboardPopup" layoutX="52.0" layoutY="555.0" mouseTransparent="true" opacity="0.0" prefHeight="62.0" prefWidth="503.0" style="-fx-background-color: #222222; -fx-background-radius: 10;">
          <children>
             <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Copied invite code to clipboard" textAlignment="CENTER" wrappingWidth="502.91796875">

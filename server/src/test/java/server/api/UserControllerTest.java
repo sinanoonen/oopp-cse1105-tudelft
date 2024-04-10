@@ -12,21 +12,25 @@ import static org.mockito.Mockito.when;
 import commons.User;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import server.ListenerService;
 import server.database.UserRepository;
 
 
 class UserControllerTest {
     private UserRepository mockRepo;
     private UserController userController;
+    private ListenerService listenerService;
 
     @BeforeEach
     void setUp() {
         mockRepo = mock(UserRepository.class);
-        userController = new UserController(mockRepo);
+        listenerService = mock(ListenerService.class);
+        userController = new UserController(mockRepo, listenerService);
     }
 
     @Test
@@ -106,7 +110,7 @@ class UserControllerTest {
 
     @Test
     void testAddUser() {
-        User user = new User("John Doe", "john@example.com", "1234", "5678", null);
+        User user = new User("John Doe", "john@example.com", "1234", "5678", UUID.randomUUID());
 
         when(mockRepo.save(user)).thenReturn(user);
 
@@ -189,8 +193,9 @@ class UserControllerTest {
     @Test
     void testEditUser_ValidRequest_SuccessfulUpdate() {
         String email = "john@example.com";
-        User existingUser = new User("John Doe", email, "1234", "5678", null);
-        User updatedUser = new User("Jane Smith", email, "4321", "8765", null);
+        UUID uuid = UUID.randomUUID();
+        User existingUser = new User("John Doe", email, "1234", "5678", uuid);
+        User updatedUser = new User("Jane Smith", email, "4321", "8765", uuid);
 
         when(mockRepo.getUserByEmail(email)).thenReturn(List.of(existingUser));
         when(mockRepo.updateUser(anyString(), anyString(), anyString(), anyString())).thenReturn(1);

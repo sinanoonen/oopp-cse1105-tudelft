@@ -76,6 +76,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
 
     private Event event;
     private Map<Language, Image> flags;
+    private Thread pollingThread;
 
     @FXML
     private AnchorPane root;
@@ -159,6 +160,25 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        serverUtils.longPollEvents(e -> {
+            // If we have not yet opened the overview ever or if we are not looking at the event
+            if (event == null
+                    || !e.equals(event.getInviteCode().toString())) {
+                return;
+            }
+            boolean hadParticipantsOpen = participantsMenu.isVisible();
+            boolean hadAddParticipantsOpen = addParticipantsMenu.isVisible();
+            onExit();
+            refresh(serverUtils.getEventByUUID(UUID.fromString(e)));
+            if (hadParticipantsOpen) {
+                toggleParticipants();
+                return;
+            }
+            if (hadAddParticipantsOpen) {
+                toggleAddParticipants();
+            }
+        });
 
         tagFilterChoiceBox.setOnAction((event) -> {
             int selectedIndex = tagFilterChoiceBox.getSelectionModel().getSelectedIndex();
@@ -284,6 +304,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     public void refresh(Event event) {
 
         this.event = event;
+        mainCtrl.getPrimaryStage().setTitle(event.getTitle());
 
         inviteCodeButton.requestFocus();
 
@@ -322,6 +343,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         changeBackgroundColor(backLink, "transparent");
 
         resetTransactionsContainer();
+        resetNewParticipantsContainer();
         resetParticipantsContainer();
 
         if (ClientUtils.isHighContrast()) {
@@ -400,6 +422,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         }
         event.setTitle(title.getText());
         Event updated = serverUtils.updateEvent(event);
+        onExit();
         refresh(updated);
     }
 

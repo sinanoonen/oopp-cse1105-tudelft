@@ -86,7 +86,9 @@ public class Main extends Application {
                 adminLogin,
                 serverSelect);
 
+
         primaryStage.setOnCloseRequest(e -> {
+            homePage.getKey().stop();
             ConfigReader.writeLanguage(ClientUtils.getLanguage());
             ConfigReader.writeCurrency(ClientUtils.getCurrency());
             ConfigReader.writeIP(ServerUtils.getIp());

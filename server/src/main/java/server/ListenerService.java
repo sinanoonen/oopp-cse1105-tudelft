@@ -1,12 +1,13 @@
 package server;
 
-import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import org.springframework.stereotype.Service;
 
-
-
+/**
+ * This is a service used to centralise long-polling.
+ */
 @Service
 public class ListenerService {
 

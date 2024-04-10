@@ -14,8 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -120,7 +118,8 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
         Event saved = repo.save(updatedEvent);
-        listenerService.notifyListeners(saved.getInviteCode().toString()); // Inform listeners that an event was updated
+        listenerService.notifyListeners(
+            saved.getInviteCode().toString()); // Inform listeners that an event was updated
         return ResponseEntity.ok(saved);
     }
 

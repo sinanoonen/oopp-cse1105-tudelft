@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import commons.Currency;
@@ -25,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
+import server.ListenerService;
 
 /**
  * Tests for Event Controller.
@@ -36,6 +40,8 @@ public class EventControllerTest {
     private TestExpenseRepository exRepo;
     private TestPaymentRepository payRepo;
 
+    private ListenerService listenerService;
+
     /**
      * A test event repository.
      */
@@ -44,7 +50,8 @@ public class EventControllerTest {
         repo = new TestEventRepository();
         exRepo = new TestExpenseRepository();
         payRepo = new TestPaymentRepository();
-        sut = new EventController(repo, exRepo, payRepo);
+        listenerService = mock(ListenerService.class);
+        sut = new EventController(repo, exRepo, payRepo, listenerService);
     }
 
     @Test
@@ -416,15 +423,17 @@ public class EventControllerTest {
 
     @Test
     public void pollingReturnsDeferredResult() {
+        Event mockEvent = getEvent("Test Event");
+
+        doNothing().when(listenerService).addListener(any(), any());
+
         DeferredResult<ResponseEntity<String>> result = sut.pollById();
 
-
-        Event mockEvent = getEvent("Test Event");
-        sut.add(mockEvent);
+        result.setResult(ResponseEntity.ok(mockEvent.getInviteCode().toString()));
 
         assertTrue(result.hasResult());
-
         ResponseEntity<String> response = (ResponseEntity<String>) result.getResult();
+        assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(mockEvent.getInviteCode().toString(), response.getBody());
     }

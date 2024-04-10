@@ -148,8 +148,13 @@ public class TestExpenseRepository implements ExpenseRepository {
 
     @Override
     public Optional<Expense> findById(Long id) {
-        // TODO Auto-generated method stub
-        return null;
+        call("findById");
+        for (Expense expense : expenses) {
+            if (expense.getId() == id) {
+                return Optional.of(expense);
+            }
+        }
+        return Optional.empty();
     }
 
     @Override

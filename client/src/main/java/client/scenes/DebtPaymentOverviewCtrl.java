@@ -183,6 +183,7 @@ public class DebtPaymentOverviewCtrl implements Initializable {
         payOffDebt.onActionProperty().set(actionEvent -> {
             event.addTransaction(new Payment(settlementArray[0], LocalDate.now(), (float) finalConvertedValue,
                     ClientUtils.getCurrency(), settlementArray[settlementArray.length - 1]));
+            onExit();
             mainCtrl.showDebtOverview(event);
         });
         final double buttonTopPadding = 0.01f * pane.getPrefHeight();

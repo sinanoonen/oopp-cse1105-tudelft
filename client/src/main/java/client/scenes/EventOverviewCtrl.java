@@ -67,6 +67,7 @@ public class EventOverviewCtrl implements Initializable {
     private final WebSocketServerUtils socket;
 
     private Event event;
+    private Thread pollingThread;
 
     @FXML
     private AnchorPane root;
@@ -142,6 +143,25 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        serverUtils.longPollEvents(e -> {
+            // If we have not yet opened the overview ever or if we are not looking at the event
+            if (event == null
+                    || !e.equals(event.getInviteCode().toString())) {
+                return;
+            }
+            boolean hadParticipantsOpen = participantsMenu.isVisible();
+            boolean hadAddParticipantsOpen = addParticipantsMenu.isVisible();
+            onExit();
+            refresh(serverUtils.getEventByUUID(UUID.fromString(e)));
+            if (hadParticipantsOpen) {
+                toggleParticipants();
+                return;
+            }
+            if (hadAddParticipantsOpen) {
+                toggleAddParticipants();
+            }
+        });
 
         tagFilterChoiceBox.setOnAction((event) -> {
             int selectedIndex = tagFilterChoiceBox.getSelectionModel().getSelectedIndex();
@@ -221,6 +241,7 @@ public class EventOverviewCtrl implements Initializable {
     public void refresh(Event event) {
 
         this.event = event;
+        mainCtrl.getPrimaryStage().setTitle(event.getTitle());
 
         inviteCodeButton.requestFocus();
 
@@ -259,6 +280,7 @@ public class EventOverviewCtrl implements Initializable {
         changeBackgroundColor(backLink, "transparent");
 
         resetTransactionsContainer();
+        resetNewParticipantsContainer();
         resetParticipantsContainer();
 
         if (ClientUtils.isHighContrast()) {
@@ -333,6 +355,7 @@ public class EventOverviewCtrl implements Initializable {
         }
         event.setTitle(title.getText());
         Event updated = serverUtils.updateEvent(event);
+        onExit();
         refresh(updated);
     }
 

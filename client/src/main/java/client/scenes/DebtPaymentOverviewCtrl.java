@@ -2,6 +2,7 @@ package client.scenes;
 
 import algorithms.DebtSettler;
 import algorithms.ExchangeProvider;
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -33,7 +34,7 @@ import javax.inject.Inject;
 /**
  * Controller for the DebtPaymentOverview scene. 
  */
-public class DebtPaymentOverviewCtrl implements Initializable {
+public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
@@ -74,6 +75,13 @@ public class DebtPaymentOverviewCtrl implements Initializable {
         }
     }
 
+    @Override
+    public void updateLanguage() {
+        var lm = UIUtils.getLanguageMap();
+        backLink.setText(lm.get("general_back"));
+        instructionText.setText(lm.get("debtsoverview_payment_instructions"));
+    }
+
     /**
      * Method to refresh the scene. This is needed for some reason.
      */
@@ -102,6 +110,8 @@ public class DebtPaymentOverviewCtrl implements Initializable {
                 }
             });
         });
+
+        updateLanguage();
     }
 
 

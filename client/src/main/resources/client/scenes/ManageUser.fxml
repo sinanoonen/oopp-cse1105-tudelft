@@ -14,7 +14,7 @@
             <Font name="SansSerif Bold" size="24.0" />
          </font>
       </Text>
-      <Text fill="#aaaaaa" layoutX="85.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NAME">
+      <Text fx:id="nameText" fill="#aaaaaa" layoutX="85.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NAME">
          <font>
             <Font name="SansSerif Regular" size="21.0" />
          </font>
@@ -24,7 +24,7 @@
             <Font name="SansSerif Regular" size="15.0" />
          </font>
       </TextField>
-      <Text fill="#aaaaaa" layoutX="85.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EMAIL">
+      <Text fx:id="emailText" fill="#aaaaaa" layoutX="85.0" layoutY="250.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EMAIL">
          <font>
             <Font name="SansSerif Regular" size="21.0" />
          </font>
@@ -34,7 +34,7 @@
             <Font name="SansSerif Regular" size="15.0" />
          </font>
       </TextField>
-      <Text fill="#aaaaaa" layoutX="85.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IBAN">
+      <Text fx:id="ibanText" fill="#aaaaaa" layoutX="85.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="IBAN">
          <font>
             <Font name="SansSerif Regular" size="21.0" />
          </font>
@@ -44,7 +44,7 @@
             <Font name="SansSerif Regular" size="15.0" />
          </font>
       </TextField>
-      <Text fill="#aaaaaa" layoutX="85.0" layoutY="350.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BIC">
+      <Text fx:id="bicText" fill="#aaaaaa" layoutX="85.0" layoutY="350.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BIC">
          <font>
             <Font name="SansSerif Regular" size="21.0" />
          </font>
@@ -59,7 +59,7 @@
             <Font name="SansSerif Bold" size="21.0" />
          </font>
       </Button>
-      <Button layoutX="160.0" layoutY="422.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 3;" text="CANCEL" textFill="#bbbbbb">
+      <Button fx:id="cancelButton" layoutX="160.0" layoutY="422.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30052; -fx-border-width: 2; -fx-border-radius: 3;" text="CANCEL" textFill="#bbbbbb">
          <font>
             <Font name="SansSerif Bold" size="21.0" />
          </font>

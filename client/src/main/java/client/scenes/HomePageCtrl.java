@@ -1,5 +1,7 @@
 package client.scenes;
 
+import client.enums.Language;
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ConfigReader;
 import client.utils.ServerUtils;
@@ -11,7 +13,9 @@ import commons.EmailRequest;
 import commons.Event;
 import commons.WebSocketMessage;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import javafx.animation.FadeTransition;
@@ -21,8 +25,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -36,13 +44,14 @@ import javafx.util.Duration;
 /**
  * A controller for the home page scene.
  */
-public class HomePageCtrl implements Initializable {
+public class HomePageCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
 
     private List<Event> events;
+    private Map<Language, Image> flags;
 
     @FXML
     private AnchorPane root;
@@ -73,7 +82,23 @@ public class HomePageCtrl implements Initializable {
     @FXML
     private Pane adminClickArea;
     @FXML
+    private Text inviteCodeText;
+    @FXML
+    private Text eventsText;
+    @FXML
+    private Text settingsText;
+    @FXML
+    private Text adminText;
+    @FXML
+    private Text serverSelectText;
+    @FXML
+    private Text mailText;
+    @FXML
+    private Text closeText;
+    @FXML
     private Text serverText;
+    @FXML
+    private ComboBox<Language> languageDropdown;
 
     /**
      * Constructor for the HomePage controller.
@@ -132,6 +157,54 @@ public class HomePageCtrl implements Initializable {
                 }
             }
         });
+
+        flags = new HashMap<>();
+        for (Language language : Language.values()) {
+            Image img = new Image(
+                    "client/img/flag_" + language.name().toLowerCase() + ".png",
+                    35, 20, false, true);
+            flags.put(language, img);
+        }
+
+        class ImageCell extends ListCell<Language> {
+            @Override
+            protected void updateItem(Language item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(null);
+                    setGraphic(new ImageView(flags.get(item)));
+                }
+            }
+        }
+
+        languageDropdown.setCellFactory(lv -> new ImageCell());
+        languageDropdown.setButtonCell(new ImageCell());
+        languageDropdown.setOnAction(event -> {
+            ClientUtils.setLanguage(languageDropdown.getValue());
+            updateLanguage();
+        });
+        languageDropdown.getItems().addAll(flags.keySet());
+    }
+
+    @Override
+    public void updateLanguage() {
+        var lm = UIUtils.getLanguageMap();
+        eventsText.setText(lm.get("homepage_events"));
+        settingsText.setText(lm.get("homepage_settings"));
+        adminText.setText(lm.get("homepage_admin_login"));
+        serverSelectText.setText(lm.get("homepage_server_select"));
+        mailText.setText(lm.get("homepage_test_mail"));
+        closeText.setText(lm.get("general_close"));
+        serverText.setText(lm.get("homepage_current_server") + ": " + ServerUtils.getServer());
+
+        inviteCodeText.setText(lm.get("homepage_code"));
+        joinButton.setText(lm.get("homepage_join"));
+        newEventButton.setText(lm.get("general_new"));
+        Text errorMessage = (Text) errorPopup.getChildren().getFirst();
+        // errorMessage.setText(lm.get());
     }
 
     /**
@@ -150,7 +223,6 @@ public class HomePageCtrl implements Initializable {
         screenDarkener.setPrefHeight(root.getPrefHeight());
 
         codeInput.setText("");
-        serverText.setText("Current server: " + ServerUtils.getServer());
 
         reloadEventsList();
 
@@ -161,6 +233,9 @@ public class HomePageCtrl implements Initializable {
         }
 
         serverUtils.longPollEvents(e -> refresh()); // register for polling; on update, refresh
+
+        languageDropdown.setValue(ClientUtils.getLanguage());
+        updateLanguage();
     }
 
     public void showSettings() {
@@ -224,14 +299,14 @@ public class HomePageCtrl implements Initializable {
         try {
             uuid = UUID.fromString(input);
         } catch (Exception e) {
-            displayInputError("Invalid invite code");
+            displayInputError(UIUtils.getLanguageMap().get("homepage_error_invalid_code"));
             return;
         }
         try {
             Event event = serverUtils.getEventByUUID(uuid);
             mainCtrl.showEventOverview(event);
         } catch (Exception e) {
-            displayInputError("Cannot find event");
+            displayInputError(UIUtils.getLanguageMap().get("homepage_error_event_not_found"));
         }
     }
 
@@ -328,26 +403,27 @@ public class HomePageCtrl implements Initializable {
     }
 
     /**
-     * This methods handles the sending of a test mail.
+     * This method handles the sending of a test mail.
      */
     public void onTestEmailClicked() {
-        showInfo("Loading", "The request has been sent. It might take a while before you receive confirmation.");
+        var lm = UIUtils.getLanguageMap();
+        showInfo(lm.get("homepage_info_loading"), lm.get("homepage_info_email_sent"));
 
         EmailConfig emailConfig = ConfigReader.getEmailConfig();
         if (!emailConfig.isComplete()) {
-            showAlert("Email Configuration", "Please set up your email configuration before sending a test mail");
+            showAlert(lm.get("homepage_info_email_config"), lm.get("homepage_info_email_setup"));
             return;
         }
 
         EmailRequest emailRequest = new EmailRequest(emailConfig, emailConfig.getUsername(),
-            "Test Mail", "This is a test mail.");
+            lm.get("homepage_info_test_subject"), lm.get("homepage_info_test_message"));
 
         boolean isSuccess = serverUtils.sendMail(emailRequest);
 
         if (isSuccess) {
-            showInfo("Success", "Email sent successfully!");
+            showInfo("Success", lm.get("homepage_info_email_success"));
         } else {
-            showAlert("Error", "Failed to send email. Please check your email credentials.");
+            showAlert("Error", lm.get("homepage_error_email_failed"));
         }
     }
 

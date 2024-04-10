@@ -2,8 +2,9 @@ package client.scenes;
 
 import static client.scenes.HomePageCtrl.fadeInOutPopup;
 
+import client.enums.ManageExpenseMode;
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
-import client.utils.ManageExpenseMode;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
@@ -56,7 +57,7 @@ import javax.inject.Inject;
 /**
  * Controller for adding an expense to an event.
  */
-public class AddExpenseCtrl implements Initializable {
+public class AddExpenseCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -68,13 +69,25 @@ public class AddExpenseCtrl implements Initializable {
     @FXML
     private Label title;
     @FXML
+    private Label sponsor;
+    @FXML
     private ChoiceBox<String> whoPaid;
     @FXML
-    private TextField description;
+    private Label description;
+    @FXML
+    private TextField descriptionField;
+    @FXML
+    private Label quantity;
     @FXML
     private TextField amount;
     @FXML
+    private Label date;
+    @FXML
+    private DatePicker datePicker;
+    @FXML
     private ChoiceBox<Currency> currencyChoiceBox;
+    @FXML
+    private Label splitMethod;
     @FXML
     private CheckBox equallyEverybody;
     @FXML
@@ -84,12 +97,12 @@ public class AddExpenseCtrl implements Initializable {
     @FXML
     private List<CheckBox> additionalCheckboxes = new ArrayList<>();
     @FXML
+    private Label expenseType;
+    @FXML
     private ChoiceBox<Tag> expenseTags;
     @FXML
     private ListView<Tag> selectedTags;
 
-    @FXML
-    private DatePicker datePicker;
     @FXML
     private Button cancelButton;
     @FXML
@@ -115,7 +128,6 @@ public class AddExpenseCtrl implements Initializable {
      */
     @Inject
     public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket) {
-        System.out.println("Constructing add expense ctrl");
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.socket = socket;
@@ -128,6 +140,23 @@ public class AddExpenseCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+    }
+
+    @Override
+    public void updateLanguage() {
+        var languageMap = UIUtils.getLanguageMap();
+        title.setText(languageMap.get("addexpense"));
+        sponsor.setText(languageMap.get("addexpense_sponsor"));
+        description.setText(languageMap.get("addexpense_description"));
+        quantity.setText(languageMap.get("addexpense_quantity"));
+        date.setText(languageMap.get("addexpense_date"));
+        splitMethod.setText(languageMap.get("addexpense_split_method"));
+        equallyEverybody.setText(languageMap.get("addexpense_equally"));
+        onlySomePeople.setText(languageMap.get("addexpense_partially"));
+        expenseType.setText(languageMap.get("addexpense_expense_type"));
+        addTag.setText(languageMap.get("addexpense_add_tag"));
+        addButton.setText(languageMap.get("general_confirm"));
+        cancelButton.setText(languageMap.get("general_cancel"));
     }
 
     /**
@@ -224,7 +253,7 @@ public class AddExpenseCtrl implements Initializable {
 
             title.setText("Edit Expense");
             whoPaid.setValue(expense.getOwner());
-            description.setText(expense.getDescription());
+            descriptionField.setText(expense.getDescription());
             amount.setText(Float.toString(expense.getAmount()));
             datePicker.setValue(expense.getDate());
             currencyChoiceBox.setValue(expense.getCurrency());
@@ -241,6 +270,8 @@ public class AddExpenseCtrl implements Initializable {
                 checkBox.setSelected(false);
             }
         });
+
+        updateLanguage();
     }
 
     /**
@@ -306,6 +337,8 @@ public class AddExpenseCtrl implements Initializable {
                 checkBox.setSelected(false);
             }
         });
+
+        updateLanguage();
     }
 
     /**
@@ -432,7 +465,7 @@ public class AddExpenseCtrl implements Initializable {
 
     private void clearFields() {
         whoPaid.setValue(null);
-        description.clear();
+        descriptionField.clear();
         amount.clear();
         datePicker.setValue(null);
         equallyEverybody.setSelected(false);
@@ -470,7 +503,7 @@ public class AddExpenseCtrl implements Initializable {
             return;
         }
         String owner = whoPaid.getValue();
-        String expenseDescription = description.getText();
+        String expenseDescription = descriptionField.getText();
         float expenseAmount = Float.parseFloat(amount.getText());
         LocalDate expenseDate = datePicker.getValue();
         List<String> debtors = new ArrayList<>();
@@ -523,7 +556,7 @@ public class AddExpenseCtrl implements Initializable {
         }
 
         String owner = whoPaid.getValue();
-        String expenseDescription = description.getText();
+        String expenseDescription = descriptionField.getText();
         float expenseAmount = Float.parseFloat(amount.getText());
         LocalDate expenseDate = datePicker.getValue();
         List<String> debtors = new ArrayList<>();
@@ -574,33 +607,35 @@ public class AddExpenseCtrl implements Initializable {
     }
 
     private boolean validateInputs() {
+        var lm = UIUtils.getLanguageMap();
+
         // OWNER CHECKING
         if (isNullOrEmpty(whoPaid.getValue())) {
-            AddExpenseCtrl.displayErrorPopup("Name cannot be empty", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_empty_name"), errorPopup);
             return false;
         }
         // DESCRIPTION CHECKING
         if (isNullOrEmpty(description.getText())) {
-            AddExpenseCtrl.displayErrorPopup("Description cannot be empty", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_empty_description"), errorPopup);
             return false;
         }
         if (!isValidAmount(amount.getText())) {
-            AddExpenseCtrl.displayErrorPopup("Amount cannot be more than 6 digits", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_max_length"), errorPopup);
             return false;
         }
         // DATE CHECKING
         if (isNullOrEmpty(String.valueOf(datePicker.getValue()))) {
-            AddExpenseCtrl.displayErrorPopup("Date cannot be empty", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_empty_date"), errorPopup);
             return false;
         }
         //CURRENCY CHECK
         if (currencyChoiceBox.getValue() == null) {
-            AddExpenseCtrl.displayErrorPopup("Currency cannot be empty", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_empty_currency"), errorPopup);
             return false;
         }
         // SPLIT CHECKING
         if (!equallyEverybody.isSelected() && !onlySomePeople.isSelected()) {
-            AddExpenseCtrl.displayErrorPopup("You have to choose a split option", errorPopup);
+            AddExpenseCtrl.displayErrorPopup(lm.get("addexpense_error_no_method"), errorPopup);
             return false;
         }
 

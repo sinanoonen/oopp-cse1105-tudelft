@@ -1,4 +1,4 @@
-package client.utils;
+package client.enums;
 
 /**
  * Enum for the currency.

@@ -59,7 +59,7 @@
   "eventoverview_debts": "Borçlar",
   "eventoverview_delete_expense": "Harcamayı kaldır",
   "eventoverview_edit_expense": "Harcamayı düzenle",
-  "eventoverview_error_existing_debts": "Kullanıcı borcu var, silinemez",
+  "eventoverview_error_existing_debts": "Kullanıcı bir masrafa katılır; silinemez",
   "eventoverview_filter": "Filtrele",
   "eventoverview_invite_code": "Davet Kodu",
   "eventoverview_participants": "Katılımcılar",

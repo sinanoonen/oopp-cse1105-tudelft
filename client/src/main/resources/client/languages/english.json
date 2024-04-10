@@ -59,7 +59,7 @@
   "eventoverview_debts": "Debts",
   "eventoverview_delete_expense": "Delete Expense",
   "eventoverview_edit_expense": "Edit Expense",
-  "eventoverview_error_existing_debts": "User has debts; cannot be deleted",
+  "eventoverview_error_existing_debts": "User participates in expenses; cannot be deleted",
   "eventoverview_filter": "Filter",
   "eventoverview_invite_code": "Invite Code",
   "eventoverview_participants": "Participants",

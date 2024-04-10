@@ -59,7 +59,7 @@
   "eventoverview_debts": "Schulden",
   "eventoverview_delete_expense": "Uitgave Verwijderen",
   "eventoverview_edit_expense": "Uitgave Aanpassen",
-  "eventoverview_error_existing_debts": "Deelnemer heeft schulden; kan niet verwijderd worden",
+  "eventoverview_error_existing_debts": "Deelnemer neemt deel aan een uitgave; kan niet verwijderd worden",
   "eventoverview_filter": "Filter",
   "eventoverview_invite_code": "Uitnodigingscode",
   "eventoverview_participants": "Deelnemers",

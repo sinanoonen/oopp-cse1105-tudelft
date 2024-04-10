@@ -87,6 +87,10 @@ public class EventOverviewCtrl implements Initializable {
     @FXML
     private Pane participantsDarkener;
     @FXML
+    private Pane expenseDetails;
+    @FXML
+    private Pane expenseDetailsDarkener;
+    @FXML
     private Pane addParticipantsMenu;
     @FXML
     private ListView<Node> newParticipantsList;
@@ -119,6 +123,7 @@ public class EventOverviewCtrl implements Initializable {
     @FXML
     private ChoiceBox<String> tagFilterChoiceBox;
     private boolean expenseMenuVisible = false;
+    private boolean expenseDetailsVisible = false;
 
     /**
      * Constructor for the EventOverview controller.
@@ -245,6 +250,11 @@ public class EventOverviewCtrl implements Initializable {
         expenseDarkener.setPrefWidth(root.getWidth());
         expenseDarkener.setLayoutY(root.getLayoutY());
         expenseDarkener.setPrefHeight(root.getHeight());
+        expenseDetailsDarkener.setLayoutX(root.getLayoutX());
+        expenseDetailsDarkener.setPrefWidth(root.getWidth());
+        expenseDetailsDarkener.setLayoutY(root.getLayoutY());
+        expenseDetailsDarkener.setPrefHeight(root.getHeight());
+
 
         if (participantsMenu.isVisible()) {
             toggleParticipants();
@@ -254,6 +264,9 @@ public class EventOverviewCtrl implements Initializable {
         }
         if (expenseMenu.isVisible()) {
             toggleExpenseMenu();
+        }
+        if (expenseDetails.isVisible()) {
+            toggleExpenseDetails();
         }
 
         changeBackgroundColor(backLink, "transparent");
@@ -294,6 +307,9 @@ public class EventOverviewCtrl implements Initializable {
                 toggleExpenseMenu();
                 onExit();
                 mainCtrl.showEventOverview(event);
+            }
+            if (expenseDetailsVisible && !isClickInsideNode(expenseDetails, e.getSceneX(), e.getSceneY())) {
+                toggleExpenseDetails();
             }
         });
     }
@@ -415,6 +431,10 @@ public class EventOverviewCtrl implements Initializable {
         expenseMenuVisible = visible;
     }
 
+    public void toggleExpenseDetailsVisibility(boolean visible) {
+        expenseDetailsVisible = visible;
+    }
+
     /**
      * Swaps between the participants menu and the add participants menu.
      */
@@ -440,6 +460,18 @@ public class EventOverviewCtrl implements Initializable {
         if (addParticipantsMenu.isVisible()) {
             resetNewParticipantsContainer();
         }
+    }
+    public void toggleExpenseDetails() {
+        expenseDetailsDarkener.toFront();
+        expenseDetailsDarkener.setVisible(!expenseDetailsDarkener.isVisible());
+        expenseDetailsDarkener.setMouseTransparent(!expenseDetailsDarkener.isVisible());
+        expenseDetails.toFront();
+        expenseDetails.setVisible(!expenseDetails.isVisible());
+        expenseDetails.setMouseTransparent(!expenseDetails.isMouseTransparent());
+        expenseDetails.getChildren().forEach(child -> {
+            child.setVisible(expenseDetails.isVisible());
+            child.setMouseTransparent(expenseDetails.isMouseTransparent());
+        });
     }
 
     /**

@@ -124,6 +124,19 @@ public class EventOverviewCtrl implements Initializable {
     private ChoiceBox<String> tagFilterChoiceBox;
     private boolean expenseMenuVisible = false;
     private boolean expenseDetailsVisible = false;
+    @FXML
+    private Text expenseDescription;
+    @FXML
+    private Text expenseDate;
+    @FXML
+    private Text expenseOwner;
+    @FXML
+    private Text expenseAmount;
+    @FXML
+    private Text expenseTags;
+    @FXML
+    private Text involvedParticipants;
+
 
     /**
      * Constructor for the EventOverview controller.
@@ -425,6 +438,7 @@ public class EventOverviewCtrl implements Initializable {
             child.setMouseTransparent(expenseMenu.isMouseTransparent());
         });
         toggleExpenseMenuVisibility(expenseMenu.isVisible());
+
     }
 
     public void toggleExpenseMenuVisibility(boolean visible) {
@@ -472,6 +486,48 @@ public class EventOverviewCtrl implements Initializable {
             child.setVisible(expenseDetails.isVisible());
             child.setMouseTransparent(expenseDetails.isMouseTransparent());
         });
+        Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
+        String participants = "";
+        String tags = "";
+        if (selectedNode != null) {
+            Expense expense = (Expense) selectedNode.getUserData();
+            expenseDescription.setText(expense.getDescription());
+            expenseDescription.setFont(Font.font("SansSerif", 12));
+            expenseDescription.setFill(Paint.valueOf("#FFFFFF"));
+
+            expenseDate.setText(expense.getDate().toString());
+            expenseDate.setFont(Font.font("SansSerif", 12));
+            expenseDate.setFill(Paint.valueOf("#FFFFFF"));
+
+            expenseOwner.setText(expense.getOwner());
+            expenseOwner.setFont(Font.font("SansSerif", 12));
+            expenseOwner.setFill(Paint.valueOf("#FFFFFF"));
+
+            expenseAmount.setText(String.valueOf(expense.getAmount()));
+            expenseAmount.setFont(Font.font("SansSerif", 12));
+            expenseAmount.setFill(Paint.valueOf("#FFFFFF"));
+            for (String p : expense.getDebts().keySet()) {
+                participants += p;
+                participants += ", ";
+            }
+            if (participants.length() > 2) {
+                participants = participants.substring(0, participants.length() - 2);
+            }
+            involvedParticipants.setText(participants);
+            involvedParticipants.setFont(Font.font("SansSerif", 12));
+            involvedParticipants.setFill(Paint.valueOf("#FFFFFF"));
+
+            for (Tag t : expense.getTags()) {
+                tags += t.toString();
+                tags += ", ";
+            }
+            if (tags.length() > 2) {
+                tags = tags.substring(0, tags.length() - 2);
+            }
+            expenseTags.setText(tags);
+            expenseTags.setFont(Font.font("SansSerif", 12));
+            expenseTags.setFill(Paint.valueOf("#FFFFFF"));
+        }
     }
 
     /**

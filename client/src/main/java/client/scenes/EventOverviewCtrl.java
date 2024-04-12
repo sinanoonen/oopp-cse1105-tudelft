@@ -490,6 +490,10 @@ public class EventOverviewCtrl implements Initializable {
             resetNewParticipantsContainer();
         }
     }
+
+    /**
+     * Toggles expense details.
+     */
     public void toggleExpenseDetails() {
         expenseDetailsDarkener.toFront();
         expenseDetailsDarkener.setVisible(!expenseDetailsDarkener.isVisible());

@@ -1,4 +1,4 @@
-package client.utils;
+package client.enums;
 
 /**
  * Enum to decide which way to display ManageUser page.

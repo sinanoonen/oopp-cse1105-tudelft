@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
+import server.ListenerService;
 import server.database.EventRepository;
 import server.database.ExpenseRepository;
 import server.database.PaymentRepository;
@@ -38,6 +40,8 @@ public class EventController {
     private final ExpenseRepository exRepo;
     private final PaymentRepository payRepo;
 
+    private final ListenerService listenerService;
+
     /**
      * Constructor for the event controller.
      *
@@ -47,10 +51,12 @@ public class EventController {
      */
     public EventController(EventRepository repo,
                            ExpenseRepository exRepo,
-                           PaymentRepository payRepo) {
+                           PaymentRepository payRepo,
+                           ListenerService listenerService) {
         this.repo = repo;
         this.exRepo = exRepo;
         this.payRepo = payRepo;
+        this.listenerService = listenerService;
     }
 
     /**
@@ -78,6 +84,28 @@ public class EventController {
     }
 
     /**
+     * Get an event by its UUID.
+     *
+     * @return the event
+     */
+    @GetMapping("/poll")
+    public DeferredResult<ResponseEntity<String>> pollById() {
+        final long timeoutTime = 5000; // 5000 ms == 5s
+        ResponseEntity<String> noContent = ResponseEntity.noContent().build(); // Default return (on timeout)
+        DeferredResult<ResponseEntity<String>> res = new DeferredResult<>(timeoutTime, noContent);
+
+        Object key = new Object(); // Generate unique listener key
+        listenerService.addListener(key, e -> {
+            res.setResult(ResponseEntity.ok(e));
+        });
+        res.onCompletion(() -> {
+            listenerService.removeListener(key);
+        }); // Remove listener on completion (timeout/return)
+
+        return res;
+    }
+
+    /**
      * Edit an event by its UUID.
      *
      * @param uuid the UUID of the event
@@ -90,6 +118,8 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
         Event saved = repo.save(updatedEvent);
+        listenerService.notifyListeners(
+            saved.getInviteCode().toString()); // Inform listeners that an event was updated
         return ResponseEntity.ok(saved);
     }
 
@@ -106,6 +136,7 @@ public class EventController {
         }
 
         Event saved = repo.save(event);
+        listenerService.notifyListeners(event.getInviteCode().toString());
         return ResponseEntity.ok(saved);
     }
 
@@ -153,6 +184,7 @@ public class EventController {
 
         event.get().addTag(tag);
         Event saved = repo.save(event.get());
+        listenerService.notifyListeners(saved.getInviteCode().toString());
         return ResponseEntity.ok(saved);
     }
 
@@ -165,7 +197,7 @@ public class EventController {
      */
     @PostMapping("/{uuid}/users")
     public ResponseEntity<Event> addUser(@PathVariable("uuid") UUID uuid, @RequestBody User user) {
-        // TODO should this be a put or a post?
+
         if (!repo.existsById(uuid)) {
             return ResponseEntity.badRequest().build();
         }
@@ -173,11 +205,12 @@ public class EventController {
         Event event = repo.findById(uuid).get();
         event.addParticipant(user);
         try {
-            repo.save(event);
+            Event saved = repo.save(event);
+            listenerService.notifyListeners(saved.getInviteCode().toString());
+            return ResponseEntity.ok(saved);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(event);
     }
 
     /**
@@ -205,8 +238,9 @@ public class EventController {
             return ResponseEntity.notFound().build();
         }
         event.removeParticipant(toRemove.get());
-        repo.save(event);
-        return ResponseEntity.ok(event);
+        Event saved = repo.save(event);
+        listenerService.notifyListeners(saved.getInviteCode().toString());
+        return ResponseEntity.ok(saved);
     }
 
     /**
@@ -220,9 +254,10 @@ public class EventController {
     }
 
     /**
-     * Get all the expenses belong to an event.
+     * Get all transactions belong to an event.
      *
-     * @return list of all expenses
+     * @param uuid id of the event
+     * @return list of transactions
      */
     @GetMapping("{uuid}/transactions")
     public ResponseEntity<List<Transaction>> getAllTransactionsForEvent(@PathVariable("uuid") UUID uuid) {
@@ -277,13 +312,15 @@ public class EventController {
             return ResponseEntity.badRequest().build();
         }
 
-        expense.setDate(java.time.LocalDate.now());
+        //expense.setDate(java.time.LocalDate.now());
 
         Event event = repo.findById(uuid).get();
         Expense saved = exRepo.save(expense);
         expense.setId(saved.getId());
         event.addTransaction(saved);
-        repo.save(event);
+        Event newEvent = repo.save(event);
+
+        listenerService.notifyListeners(newEvent.getInviteCode().toString());
         return ResponseEntity.ok(saved);
     }
 
@@ -311,6 +348,7 @@ public class EventController {
         Event event = repo.findById(uuid).get();
         event.addTransaction(payment);
         Payment saved = payRepo.save(payment);
+        listenerService.notifyListeners(event.getInviteCode().toString());
         return ResponseEntity.ok(saved);
     }
 
@@ -338,7 +376,7 @@ public class EventController {
             return ResponseEntity.notFound().build();
         }
         event.removeTransaction(toRemove.get());
-        repo.save(event);
+        Event saved = repo.save(event);
 
         Transaction transaction = toRemove.get();
         if (transaction instanceof Payment) {
@@ -347,7 +385,8 @@ public class EventController {
             exRepo.deleteById(transaction.getId());
         }
 
-        return ResponseEntity.ok(event);
+        listenerService.notifyListeners(saved.getInviteCode().toString());
+        return ResponseEntity.ok(saved);
     }
 
     /**
@@ -386,15 +425,16 @@ public class EventController {
                 : update.getDescription();
         Map<String, Float> debts = (update.getDebts().isEmpty() || update.getDebts() == null)
                 ? expense.getDebts() : update.getDebts();
-
+        expense.setSplitEqually(update.isSplitEqually());
         expense.setOwner(owner);
         expense.setDate(date);
         expense.setAmount(amount);
         expense.setCurrency(currency);
         expense.setDescription(description);
         expense.setDebts(debts);
-
+        expense.setTags(update.getTags() == null ? expense.getTags() : update.getTags());
         Expense savedExpense = exRepo.save(expense);
+        listenerService.notifyListeners(uuid.toString());
         return ResponseEntity.ok(savedExpense);
     }
 }

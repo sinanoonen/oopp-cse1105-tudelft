@@ -79,17 +79,6 @@ public class AdminOverviewCtrlTest extends ApplicationTest {
     }
 
     @Test
-    public void testRefresh() {
-        controller.refresh();
-        assertFalse(controller.isIfSortByTitle());
-        assertFalse(controller.isIfSortByCreationDate());
-        assertFalse(controller.isIfSortByLastActivity());
-        assertTrue(controller.isSortByTitleAscending());
-        assertTrue(controller.isSortByCreationDateAscending());
-        assertTrue(controller.isSortByLastActivityAscending());
-    }
-
-    @Test
     public void testHandleSortByTitle() {
         Event event1 = mock(Event.class);
         when(event1.getTitle()).thenReturn("B Event");

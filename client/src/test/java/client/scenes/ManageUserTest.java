@@ -1,6 +1,6 @@
 package client.scenes;
 
-import client.utils.ManageUserMode;
+import client.enums.ManageUserMode;
 import client.utils.ServerUtils;
 import commons.Event;
 import commons.User;

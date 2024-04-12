@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -11,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -18,14 +20,18 @@ import javafx.scene.layout.AnchorPane;
 /**
  * This is a controller for the admin login page.
  */
-public class AdminLoginCtrl implements Initializable {
+public class AdminLoginCtrl implements Initializable, LanguageInterface {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
 
     @FXML
     private AnchorPane root;
     @FXML
+    private TextField title;
+    @FXML
     private PasswordField passwordField;
+    @FXML
+    private Button cancelButton;
     @FXML
     private Button loginButton;
 
@@ -65,6 +71,15 @@ public class AdminLoginCtrl implements Initializable {
         loginButton.setDefaultButton(true);
     }
 
+    @Override
+    public void updateLanguage() {
+        var lm = UIUtils.getLanguageMap();
+        title.setText(lm.get("adminlogin"));
+        passwordField.setPromptText(lm.get("adminlogin_enter_password"));
+        cancelButton.setText(lm.get("general_cancel"));
+        loginButton.setText(lm.get("adminlogin_submit"));
+    }
+
     /**
      * This refreshes the admin login page.
      */
@@ -74,6 +89,7 @@ public class AdminLoginCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+        updateLanguage();
     }
 
     /**
@@ -86,7 +102,7 @@ public class AdminLoginCtrl implements Initializable {
         if (result) {
             mainCtrl.showAdminOverview();
         } else {
-            showError("Invalid password.");
+            showError(UIUtils.getLanguageMap().get("adminlogin_error_invalid_password"));
         }
     }
 

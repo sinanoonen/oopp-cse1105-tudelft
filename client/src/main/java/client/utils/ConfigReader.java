@@ -1,5 +1,6 @@
 package client.utils;
 
+import client.enums.Language;
 import commons.Currency;
 import commons.EmailConfig;
 import java.io.FileNotFoundException;

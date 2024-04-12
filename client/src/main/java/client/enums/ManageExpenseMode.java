@@ -1,4 +1,4 @@
-package client.utils;
+package client.enums;
 
 /**
  * Enum to choose between addExpense or editExpense scene.

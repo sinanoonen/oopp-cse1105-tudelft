@@ -21,32 +21,32 @@
             <Font name="SansSerif Regular" size="27.0" />
          </font>
       </Label>
-      <Label layoutX="10.399999618530273" layoutY="60.0" prefHeight="26.0" prefWidth="76.0" style="-fx-text-fill: #FFFFFF;" text="Who paid?" textFill="WHITE">
+      <Label fx:id="sponsor" layoutX="10.399999618530273" layoutY="60.0" prefHeight="26.0" prefWidth="76.0" style="-fx-text-fill: #FFFFFF;" text="Who paid?" textFill="WHITE">
          <font>
             <Font name="SansSerif Bold" size="12.0" />
          </font>
       </Label>
       <ChoiceBox fx:id="whoPaid" layoutX="86.4000015258789" layoutY="60.0" prefWidth="150.0" />
-      <Label layoutX="10.399999618530273" layoutY="98.4000015258789" prefHeight="26.0" prefWidth="80.0" style="-fx-text-fill: #FFFFFF;" text="Description">
+      <Label fx:id="description" layoutX="10.399999618530273" layoutY="98.4000015258789" prefHeight="26.0" prefWidth="80.0" style="-fx-text-fill: #FFFFFF;" text="Description">
          <font>
             <Font name="SansSerif Bold" size="12.0" />
          </font>
       </Label>
-      <TextField fx:id="description" layoutX="90.4000015258789" layoutY="98.4000015258789" prefHeight="26.0" prefWidth="138.0" />
-      <Label layoutX="10.399999618530273" layoutY="134.39999389648438" prefHeight="26.0" prefWidth="78.0" style="-fx-text-fill: #FFFFFF;" text="How much?">
+      <TextField fx:id="descriptionField" layoutX="90.4000015258789" layoutY="98.4000015258789" prefHeight="26.0" prefWidth="138.0" />
+      <Label fx:id="quantity" layoutX="10.399999618530273" layoutY="134.39999389648438" prefHeight="26.0" prefWidth="78.0" style="-fx-text-fill: #FFFFFF;" text="How much?">
          <font>
             <Font name="SansSerif Bold" size="12.0" />
          </font>
       </Label>
       <TextField fx:id="amount" layoutX="88.80000305175781" layoutY="134.39999389648438" prefHeight="26.0" prefWidth="169.0" />
       <ChoiceBox fx:id="currencyChoiceBox" layoutX="258.3999938964844" layoutY="134.39999389648438" prefWidth="150.0" />
-      <Label layoutX="10.399999618530273" layoutY="172.79998779296875" prefHeight="26.0" prefWidth="60.0" style="-fx-text-fill: #FFFFFF;" text="Date:">
+      <Label fx:id="date" layoutX="10.399999618530273" layoutY="172.79998779296875" prefHeight="26.0" prefWidth="60.0" style="-fx-text-fill: #FFFFFF;" text="Date:">
          <font>
             <Font name="SansSerif Bold" size="12.0" />
          </font>
       </Label>
       <DatePicker fx:id="datePicker" layoutX="70.4000015258789" layoutY="172.79998779296875" />
-      <Label layoutX="4.0" layoutY="210.0" prefHeight="31.0" prefWidth="91.0" style="-fx-text-fill: #FFFFFF;" text="How to split?" textFill="#fffafa">
+      <Label fx:id="splitMethod" layoutX="4.0" layoutY="210.0" prefHeight="31.0" prefWidth="91.0" style="-fx-text-fill: #FFFFFF;" text="How to split?" textFill="#fffafa">
          <font>
             <Font name="SansSerif Bold" size="12.0" />
          </font>
@@ -59,7 +59,7 @@
             <Font name="SansSerif Regular" size="12.0" />
          </font></CheckBox>
       <VBox fx:id="additionalCheckboxesContainer" layoutX="480.0" layoutY="217.0" prefHeight="117.0" prefWidth="96.0" style="-fx-background-color: #808080;" />
-      <Label layoutX="4.0" layoutY="266.0" prefHeight="18.0" prefWidth="103.0" style="-fx-text-fill: #FFFFFF;" text="Expense Type">
+      <Label fx:id="expenseType" layoutX="4.0" layoutY="266.0" prefHeight="18.0" prefWidth="103.0" style="-fx-text-fill: #FFFFFF;" text="Expense Type">
          <font>
             <Font name="SansSerif Bold" size="12.0" />
          </font>

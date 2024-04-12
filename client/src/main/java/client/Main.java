@@ -53,6 +53,10 @@ public class Main extends Application {
         launch();
     }
 
+    public static Injector injector() {
+        return INJECTOR;
+    }
+
     @Override
     public void start(Stage primaryStage) throws IOException {
         var homePage = FXML.load(HomePageCtrl.class, "client", "scenes", "HomePage.fxml");
@@ -82,7 +86,9 @@ public class Main extends Application {
                 adminLogin,
                 serverSelect);
 
+
         primaryStage.setOnCloseRequest(e -> {
+            homePage.getKey().stop();
             ConfigReader.writeLanguage(ClientUtils.getLanguage());
             ConfigReader.writeCurrency(ClientUtils.getCurrency());
             ConfigReader.writeIP(ServerUtils.getIp());

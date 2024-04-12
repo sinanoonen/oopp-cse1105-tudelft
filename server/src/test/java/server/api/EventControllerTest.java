@@ -2,8 +2,12 @@ package server.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import commons.Currency;
@@ -23,6 +27,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.context.request.async.DeferredResult;
+import server.ListenerService;
 
 /**
  * Tests for Event Controller.
@@ -34,6 +40,8 @@ public class EventControllerTest {
     private TestExpenseRepository exRepo;
     private TestPaymentRepository payRepo;
 
+    private ListenerService listenerService;
+
     /**
      * A test event repository.
      */
@@ -42,7 +50,8 @@ public class EventControllerTest {
         repo = new TestEventRepository();
         exRepo = new TestExpenseRepository();
         payRepo = new TestPaymentRepository();
-        sut = new EventController(repo, exRepo, payRepo);
+        listenerService = mock(ListenerService.class);
+        sut = new EventController(repo, exRepo, payRepo, listenerService);
     }
 
     @Test
@@ -410,6 +419,75 @@ public class EventControllerTest {
         ResponseEntity<Event> response = sut.removeTransactionFromEvent(UUID.randomUUID(), 1L);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void pollingReturnsDeferredResult() {
+        Event mockEvent = getEvent("Test Event");
+
+        doNothing().when(listenerService).addListener(any(), any());
+
+        DeferredResult<ResponseEntity<String>> result = sut.pollById();
+
+        result.setResult(ResponseEntity.ok(mockEvent.getInviteCode().toString()));
+
+        assertTrue(result.hasResult());
+        ResponseEntity<String> response = (ResponseEntity<String>) result.getResult();
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockEvent.getInviteCode().toString(), response.getBody());
+    }
+
+    @Test
+    public void updateExpenseWithValidData() {
+        Event testEvent = getEvent("Test Event");
+        UUID eventUuid = testEvent.getInviteCode();
+        Expense existingExpense = new Expense("TestOwner", LocalDate.now(),
+            50f, Currency.EUR, "Test Description", new ArrayList<>());
+        testEvent.addTransaction(existingExpense);
+        repo.save(testEvent);
+        exRepo.save(existingExpense);
+        Expense updatedExpense = new Expense("UpdatedOwner", LocalDate.now(), 100f,
+            Currency.EUR, "Updated Description", new ArrayList<>());
+        updatedExpense.setId(existingExpense.getId());
+
+        ResponseEntity<Transaction> response = sut.updateExpense(eventUuid,
+            existingExpense.getId(), updatedExpense);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Transaction result = response.getBody();
+        assertNotNull(result);
+        assertEquals("UpdatedOwner", result.getOwner());
+        assertEquals(100f, result.getAmount());
+        assertEquals("Updated Description", ((Expense) result).getDescription());
+    }
+
+    @Test
+    public void updateExpenseWithInvalidId() {
+        Event testEvent = getEvent("Test Event");
+        UUID eventUuid = testEvent.getInviteCode();
+        Expense existingExpense = new Expense("TestOwner", LocalDate.now(), 50f,
+            Currency.EUR, "Test Description", new ArrayList<>());
+        testEvent.addTransaction(existingExpense);
+        repo.save(testEvent);
+
+        Expense updatedExpense = new Expense("UpdatedOwner", LocalDate.now(), 100f,
+            Currency.EUR, "Updated Description", new ArrayList<>());
+        updatedExpense.setId(2L); // Different ID
+
+        ResponseEntity<Transaction> response = sut.updateExpense(eventUuid,
+            existingExpense.getId(), updatedExpense);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void updateExpenseWithNonExistingEvent() {
+        Expense updatedExpense = new Expense("UpdatedOwner", LocalDate.now(), 100f,
+            Currency.EUR, "Updated Description", new ArrayList<>());
+        ResponseEntity<Transaction> response = sut.updateExpense(UUID.randomUUID(),
+            updatedExpense.getId(), updatedExpense);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
 }

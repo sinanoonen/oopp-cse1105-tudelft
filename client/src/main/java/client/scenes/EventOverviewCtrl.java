@@ -463,7 +463,9 @@ public class EventOverviewCtrl implements Initializable {
         }
         Node source = (Node) mouseEvent.getSource();
         Transaction transaction = (Transaction) source.getUserData();
-        toggleExpenseMenu();
+        if (transaction instanceof Expense) {
+            toggleExpenseMenu();
+        }
     }
 
     private void participantClickHandler(ActionEvent actionEvent) {
@@ -655,11 +657,6 @@ public class EventOverviewCtrl implements Initializable {
         currency.setMouseTransparent(true);
 
         base.getChildren().addAll(sender, recipient, amount, currency);
-        base.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getClickCount() > 1) {
-                toggleExpenseMenu();
-            }
-        });
 
         return base;
     }

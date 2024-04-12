@@ -111,7 +111,7 @@
             <Button fx:id="showExpenseDetails" layoutX="27.0" layoutY="26.0" mnemonicParsing="false" onAction="#toggleExpenseDetails" prefHeight="92.0" prefWidth="339.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Expense Details" textFill="WHITE" />
          </children>
       </Pane>
-      <Pane id="overview_darkener" fx:id="expenseDarkener" layoutX="10.0" layoutY="9.0" mouseTransparent="true" onMouseClicked="#swapParticipantsAddParticipants" opacity="0.7" prefHeight="658.0" prefWidth="610.0" style="-fx-background-color: black;" visible="false" />
+      <Pane id="expenseDarkener" fx:id="expenseDarkener" layoutX="10.0" layoutY="9.0" mouseTransparent="true" opacity="0.7" prefHeight="658.0" prefWidth="610.0" style="-fx-background-color: black;" visible="false" />
       <ChoiceBox fx:id="tagFilterChoiceBox" layoutX="260.0" layoutY="187.0" prefHeight="26.0" prefWidth="130.0" />
       <Pane fx:id="expenseDetails" layoutX="145.0" layoutY="154.0" prefHeight="500.0" prefWidth="294.0" style="-fx-background-color: #333333; -fx-background-radius: 12; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10;" visible="false">
          <children>
@@ -152,7 +152,7 @@
             <Text fx:id="expenseTags" layoutX="103.0" layoutY="382.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="129.99999999999977" />
          </children>
       </Pane>
-      <Pane id="overview_darkener" fx:id="expenseDetailsDarkener" layoutX="10.0" layoutY="9.0" mouseTransparent="true" onMouseClicked="#swapParticipantsAddParticipants" opacity="0.7" prefHeight="658.0" prefWidth="610.0" style="-fx-background-color: black;" visible="false" />
+      <Pane id="expenseDetailsDarkener" fx:id="expenseDetailsDarkener" layoutX="10.0" layoutY="9.0" mouseTransparent="true" opacity="0.7" prefHeight="658.0" prefWidth="610.0" style="-fx-background-color: black;" visible="false" />
       <ComboBox fx:id="languageDropdown" layoutX="52.0" layoutY="129.0" prefHeight="26.0" prefWidth="52.0" />
    </children>
 </AnchorPane>

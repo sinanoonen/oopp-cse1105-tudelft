@@ -589,14 +589,11 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
             debts.put(debtor, 0f);
         }
         expense.setDebts(debts);
-        if (splitEqually) {
-            expense.splitEqually(expenseAmount);
+        expense.splitEqually(expenseAmount);
+        if (debts.get(owner) != null) {
+            debts.put(owner, ((debts.get(owner)) - expenseAmount));
         } else {
-            Map<String, Integer> usersMultiplierMap = new HashMap<>();
-            debtors.forEach(p -> {
-                usersMultiplierMap.put(p, 1);
-            });
-            expense.splitAmong(expenseAmount, usersMultiplierMap);
+            debts.put(owner, -1 * expenseAmount);
         }
         // Clear existing tags and add the updated tags
         expense.setTags(selectedTagsSet.stream().toList());

@@ -55,6 +55,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
@@ -101,6 +102,10 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     @FXML
     private Pane participantsDarkener;
     @FXML
+    private Pane expenseDetails;
+    @FXML
+    private Pane expenseDetailsDarkener;
+    @FXML
     private Pane addParticipantsMenu;
     @FXML
     private ListView<Node> newParticipantsList;
@@ -135,6 +140,31 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     @FXML
     private ChoiceBox<String> tagFilterChoiceBox;
     private boolean expenseMenuVisible = false;
+    private boolean expenseDetailsVisible = false;
+    @FXML
+    private Text titleDescription;
+    @FXML
+    private Text expenseDescription;
+    @FXML
+    private Text titleDate;
+    @FXML
+    private Text expenseDate;
+    @FXML
+    private Text titleOwner;
+    @FXML
+    private Text expenseOwner;
+    @FXML
+    private Text titleAmount;
+    @FXML
+    private Text expenseAmount;
+    @FXML
+    private Text titleTags;
+    @FXML
+    private Text expenseTags;
+    @FXML
+    private Text titleParticipants;
+    @FXML
+    private Text involvedParticipants;
     @FXML
     private ComboBox<Language> languageDropdown;
 
@@ -329,6 +359,11 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         expenseDarkener.setPrefWidth(root.getWidth());
         expenseDarkener.setLayoutY(root.getLayoutY());
         expenseDarkener.setPrefHeight(root.getHeight());
+        expenseDetailsDarkener.setLayoutX(root.getLayoutX());
+        expenseDetailsDarkener.setPrefWidth(root.getWidth());
+        expenseDetailsDarkener.setLayoutY(root.getLayoutY());
+        expenseDetailsDarkener.setPrefHeight(root.getHeight());
+
 
         if (participantsMenu.isVisible()) {
             toggleParticipants();
@@ -338,6 +373,9 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         }
         if (expenseMenu.isVisible()) {
             toggleExpenseMenu();
+        }
+        if (expenseDetails.isVisible()) {
+            toggleExpenseDetails();
         }
 
         changeBackgroundColor(backLink, "transparent");
@@ -380,6 +418,9 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 toggleExpenseMenu();
                 onExit();
                 mainCtrl.showEventOverview(event);
+            }
+            if (expenseDetailsVisible && !isClickInsideNode(expenseDetails, e.getSceneX(), e.getSceneY())) {
+                toggleExpenseDetails();
             }
         });
 
@@ -499,10 +540,15 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             child.setMouseTransparent(expenseMenu.isMouseTransparent());
         });
         toggleExpenseMenuVisibility(expenseMenu.isVisible());
+
     }
 
     public void toggleExpenseMenuVisibility(boolean visible) {
         expenseMenuVisible = visible;
+    }
+
+    public void toggleExpenseDetailsVisibility(boolean visible) {
+        expenseDetailsVisible = visible;
     }
 
     /**
@@ -529,6 +575,83 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         });
         if (addParticipantsMenu.isVisible()) {
             resetNewParticipantsContainer();
+        }
+    }
+
+    /**
+     * Toggles expense details.
+     */
+    public void toggleExpenseDetails() {
+        expenseDetailsDarkener.toFront();
+        expenseDetailsDarkener.setVisible(!expenseDetailsDarkener.isVisible());
+        expenseDetailsDarkener.setMouseTransparent(!expenseDetailsDarkener.isVisible());
+        expenseDetails.toFront();
+        expenseDetails.setVisible(!expenseDetails.isVisible());
+        expenseDetails.setMouseTransparent(!expenseDetails.isMouseTransparent());
+        expenseDetails.getChildren().forEach(child -> {
+            child.setVisible(expenseDetails.isVisible());
+            child.setMouseTransparent(expenseDetails.isMouseTransparent());
+        });
+        Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
+        String participants = "";
+        String tags = "";
+        if (selectedNode != null) {
+            Expense expense = (Expense) selectedNode.getUserData();
+            expenseDescription.setText(expense.getDescription());
+            expenseDescription.setFont(Font.font("SansSerif", 12));
+            expenseDescription.setFill(Paint.valueOf("#FFFFFF"));
+            expenseDescription.setLayoutX(titleDescription.getLayoutX() + 100);
+            expenseDescription.setLayoutY(titleDescription.getLayoutY());
+            titleDescription.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+
+
+            expenseDate.setText(expense.getDate().toString());
+            expenseDate.setFont(Font.font("SansSerif", 12));
+            expenseDate.setFill(Paint.valueOf("#FFFFFF"));
+            expenseDate.setLayoutX(titleDate.getLayoutX() + 100);
+            expenseDate.setLayoutY(titleDate.getLayoutY());
+            titleDate.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+
+            expenseOwner.setText(expense.getOwner());
+            expenseOwner.setFont(Font.font("SansSerif", 12));
+            expenseOwner.setFill(Paint.valueOf("#FFFFFF"));
+            expenseOwner.setLayoutX(titleOwner.getLayoutX() + 100);
+            expenseOwner.setLayoutY(titleOwner.getLayoutY());
+            titleOwner.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+
+            expenseAmount.setText(String.valueOf(expense.getAmount()));
+            expenseAmount.setFont(Font.font("SansSerif", 12));
+            expenseAmount.setFill(Paint.valueOf("#FFFFFF"));
+            expenseAmount.setLayoutX(titleAmount.getLayoutX() + 100);
+            expenseAmount.setLayoutY(titleAmount.getLayoutY());
+            titleAmount.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+            for (String p : expense.getDebts().keySet()) {
+                participants += p;
+                participants += ", ";
+            }
+            if (participants.length() > 2) {
+                participants = participants.substring(0, participants.length() - 2);
+            }
+            involvedParticipants.setText(participants);
+            involvedParticipants.setFont(Font.font("SansSerif", 12));
+            involvedParticipants.setFill(Paint.valueOf("#FFFFFF"));
+            involvedParticipants.setLayoutX(titleParticipants.getLayoutX() + 100);
+            involvedParticipants.setLayoutY(titleParticipants.getLayoutY());
+            titleParticipants.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+
+            for (Tag t : expense.getTags()) {
+                tags += t.getName();
+                tags += ", ";
+            }
+            if (tags.length() > 2) {
+                tags = tags.substring(0, tags.length() - 2);
+            }
+            expenseTags.setText(tags);
+            expenseTags.setFont(Font.font("SansSerif", 12));
+            expenseTags.setFill(Paint.valueOf("#FFFFFF"));
+            expenseTags.setLayoutX(titleTags.getLayoutX() + 100);
+            expenseTags.setLayoutY(titleTags.getLayoutY());
+            titleTags.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
         }
     }
 

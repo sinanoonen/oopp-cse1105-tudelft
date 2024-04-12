@@ -47,6 +47,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
@@ -125,17 +126,31 @@ public class EventOverviewCtrl implements Initializable {
     private boolean expenseMenuVisible = false;
     private boolean expenseDetailsVisible = false;
     @FXML
+    private Text titleDescription;
+    @FXML
     private Text expenseDescription;
+    @FXML
+    private Text titleDate;
     @FXML
     private Text expenseDate;
     @FXML
+    private Text titleOwner;
+    @FXML
     private Text expenseOwner;
+    @FXML
+    private Text titleAmount;
     @FXML
     private Text expenseAmount;
     @FXML
+    private Text titleTags;
+    @FXML
     private Text expenseTags;
     @FXML
+    private Text titleParticipants;
+    @FXML
     private Text involvedParticipants;
+
+
 
 
     /**
@@ -494,18 +509,31 @@ public class EventOverviewCtrl implements Initializable {
             expenseDescription.setText(expense.getDescription());
             expenseDescription.setFont(Font.font("SansSerif", 12));
             expenseDescription.setFill(Paint.valueOf("#FFFFFF"));
+            expenseDescription.setLayoutX(titleDescription.getLayoutX() + 100);
+            expenseDescription.setLayoutY(titleDescription.getLayoutY());
+            titleDescription.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+
 
             expenseDate.setText(expense.getDate().toString());
             expenseDate.setFont(Font.font("SansSerif", 12));
             expenseDate.setFill(Paint.valueOf("#FFFFFF"));
+            expenseDate.setLayoutX(titleDate.getLayoutX() + 100);
+            expenseDate.setLayoutY(titleDate.getLayoutY());
+            titleDate.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
 
             expenseOwner.setText(expense.getOwner());
             expenseOwner.setFont(Font.font("SansSerif", 12));
             expenseOwner.setFill(Paint.valueOf("#FFFFFF"));
+            expenseOwner.setLayoutX(titleOwner.getLayoutX() + 100);
+            expenseOwner.setLayoutY(titleOwner.getLayoutY());
+            titleOwner.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
 
             expenseAmount.setText(String.valueOf(expense.getAmount()));
             expenseAmount.setFont(Font.font("SansSerif", 12));
             expenseAmount.setFill(Paint.valueOf("#FFFFFF"));
+            expenseAmount.setLayoutX(titleAmount.getLayoutX() + 100);
+            expenseAmount.setLayoutY(titleAmount.getLayoutY());
+            titleAmount.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
             for (String p : expense.getDebts().keySet()) {
                 participants += p;
                 participants += ", ";
@@ -516,9 +544,12 @@ public class EventOverviewCtrl implements Initializable {
             involvedParticipants.setText(participants);
             involvedParticipants.setFont(Font.font("SansSerif", 12));
             involvedParticipants.setFill(Paint.valueOf("#FFFFFF"));
+            involvedParticipants.setLayoutX(titleParticipants.getLayoutX() + 100);
+            involvedParticipants.setLayoutY(titleParticipants.getLayoutY());
+            titleParticipants.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
 
             for (Tag t : expense.getTags()) {
-                tags += t.toString();
+                tags += t.getName();
                 tags += ", ";
             }
             if (tags.length() > 2) {
@@ -527,6 +558,9 @@ public class EventOverviewCtrl implements Initializable {
             expenseTags.setText(tags);
             expenseTags.setFont(Font.font("SansSerif", 12));
             expenseTags.setFill(Paint.valueOf("#FFFFFF"));
+            expenseTags.setLayoutX(titleTags.getLayoutX() + 100);
+            expenseTags.setLayoutY(titleTags.getLayoutY());
+            titleTags.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
         }
     }
 

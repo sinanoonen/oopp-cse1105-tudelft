@@ -114,17 +114,35 @@
       <ChoiceBox fx:id="tagFilterChoiceBox" layoutX="260.0" layoutY="187.0" prefHeight="26.0" prefWidth="130.0" />
       <Pane fx:id="expenseDetails" layoutX="145.0" layoutY="154.0" prefHeight="500.0" prefWidth="294.0" style="-fx-background-color: #333333; -fx-background-radius: 12; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10;" visible="false">
          <children>
-            <Text fill="WHITE" layoutX="33.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Details" textAlignment="CENTER" visible="false" wrappingWidth="218.39999999999998">
+            <Text fx:id="titleDetails" fill="WHITE" layoutX="25.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Details" textAlignment="CENTER" visible="false" wrappingWidth="218.39999999999998">
                <font>
-                  <Font size="18.0" />
+                  <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <Text fill="WHITE" layoutX="22.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Description:" visible="false" wrappingWidth="63.19999999999993" />
-            <Text fill="WHITE" layoutX="25.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Date:" visible="false" wrappingWidth="63.19999999999993" />
-            <Text fill="WHITE" layoutX="25.0" layoutY="196.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Owner:" visible="false" wrappingWidth="63.19999999999993" />
-            <Text fill="WHITE" layoutX="25.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Amount:" visible="false" wrappingWidth="63.19999999999993" />
-            <Text fill="WHITE" layoutX="25.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Involved Participants:" visible="false" wrappingWidth="69.59996337890618" />
-            <Text fill="WHITE" layoutX="25.0" layoutY="374.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Tags:" visible="false" wrappingWidth="63.19999999999993" />
+            <Text fx:id="titleDescription" fill="WHITE" layoutX="25.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Description:" visible="false" wrappingWidth="95.99992675781243">
+               <font>
+                  <Font size="15.0" />
+               </font></Text>
+            <Text fx:id="titleDate" fill="WHITE" layoutX="25.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Date:" visible="false" wrappingWidth="75.99998779296868">
+               <font>
+                  <Font size="15.0" />
+               </font></Text>
+            <Text fx:id="titleOwner" fill="WHITE" layoutX="25.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Owner:" visible="false" wrappingWidth="63.19999999999993">
+               <font>
+                  <Font size="15.0" />
+               </font></Text>
+            <Text fx:id="titleAmount" fill="WHITE" layoutX="25.0" layoutY="240.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Amount:" visible="false" wrappingWidth="63.19999999999993">
+               <font>
+                  <Font size="15.0" />
+               </font></Text>
+            <Text fx:id="titleParticipants" fill="WHITE" layoutX="25.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Involved Participants:" visible="false" wrappingWidth="95.99992675781243">
+               <font>
+                  <Font size="15.0" />
+               </font></Text>
+            <Text fx:id="titleTags" fill="WHITE" layoutX="25.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Tags:" visible="false" wrappingWidth="63.19999999999993">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font></Text>
             <Text fx:id="expenseDescription" layoutX="113.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="129.99999999999977" />
             <Text fx:id="expenseDate" layoutX="113.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="129.99999999999977" />
             <Text fx:id="expenseOwner" layoutX="113.0" layoutY="204.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="129.99999999999977" />

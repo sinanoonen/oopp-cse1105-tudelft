@@ -1,10 +1,13 @@
 package client.utils;
 
+import client.enums.Language;
 import commons.Currency;
 import commons.EmailConfig;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 
 /**
@@ -12,6 +15,7 @@ import java.util.Properties;
  */
 public class ConfigReader {
     private static final String CONFIG_FILE = "config.properties";
+    private static final String CONFIG_PATH = "src/main/resources/" + CONFIG_FILE;
     private static final Properties PROPERTIES = new Properties();
     private static final String DEFAULT_IP = "localhost";
     private static final String DEFAULT_PORT = "8080";
@@ -49,7 +53,7 @@ public class ConfigReader {
         return switch (PROPERTIES.getProperty("language")) {
             case "EN" -> Language.ENGLISH;
             case "NL" -> Language.DUTCH;
-            case "IT" -> Language.ITALIAN;
+            case "TR" -> Language.TURKISH;
             default -> Language.ENGLISH;
         };
     }
@@ -110,5 +114,54 @@ public class ConfigReader {
 
     public static EmailConfig getEmailConfig() {
         return new EmailConfig(getEmailHost(), getEmailPort(), getEmailUsername(), getEmailPassword());
+    }
+
+    /**
+     * Writes the language to the config file.
+     */
+    public static void writeLanguage(Language language) {
+        PROPERTIES.setProperty("language", language.code);
+        try (OutputStream os = new FileOutputStream(CONFIG_PATH)) {
+            PROPERTIES.store(os, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Writes the currency to the config file.
+     */
+    public static void writeCurrency(Currency currency) {
+        PROPERTIES.setProperty("currency", currency.toString());
+        try (OutputStream os = new FileOutputStream(CONFIG_PATH)) {
+            PROPERTIES.store(os, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Write the IP address to the properties file.
+     */
+    public static void writeIP(String ip) {
+        PROPERTIES.setProperty("ip", ip);
+        try (OutputStream os = new FileOutputStream(CONFIG_PATH)) {
+            PROPERTIES.store(os, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Writes the port to the properties file.
+     *
+     */
+    public static void writePort(String port) {
+        PROPERTIES.setProperty("port", port);
+        try (OutputStream os = new FileOutputStream(CONFIG_PATH)) {
+            PROPERTIES.store(os, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

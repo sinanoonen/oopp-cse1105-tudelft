@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import server.ListenerService;
 import server.database.UserRepository;
 
 /**
@@ -21,9 +22,11 @@ import server.database.UserRepository;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserRepository repo;
+    private final ListenerService listenerService;
 
-    public UserController(UserRepository repo) {
+    public UserController(UserRepository repo, ListenerService listenerService) {
         this.repo = repo;
+        this.listenerService = listenerService;
     }
 
     /**
@@ -83,6 +86,7 @@ public class UserController {
         String iban = isNullOrEmpty(update.getIban()) ? user.getIban() : update.getIban();
         String bic = isNullOrEmpty(update.getBic()) ? user.getBic() : update.getBic();
         UUID eventID = update.getEventID() == null ? user.getEventID() : update.getEventID();
+        listenerService.notifyListeners(update.getEventID().toString());
         return repo.updateUser(name, iban, bic, email) == 1
                 ? ResponseEntity.ok(new User(name, email, iban, bic, eventID))
                 : ResponseEntity.badRequest().build();
@@ -108,6 +112,7 @@ public class UserController {
         System.out.println("/users: Received valid POST request:");
         System.out.println(user);
         User saved = repo.save(user);
+        listenerService.notifyListeners(user.getEventID().toString());
         return ResponseEntity.ok(saved);
     }
 

@@ -9,9 +9,11 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.ManyToMany;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -44,7 +46,11 @@ public abstract class Transaction {
     public Transaction(String owner, LocalDate date, float amount, Currency currency) {
         this.owner = owner;
         this.date = date;
-        this.amount = Float.parseFloat(new DecimalFormat("#.##").format(amount));
+
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        DecimalFormat format = new DecimalFormat("#.##", symbols);
+        this.amount = Float.parseFloat(format.format(amount));
+
         this.tags = new ArrayList<>();
         this.currency = currency;
     }

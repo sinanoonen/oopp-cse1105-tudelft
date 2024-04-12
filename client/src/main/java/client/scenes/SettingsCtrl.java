@@ -1,15 +1,21 @@
 package client.scenes;
 
+import client.enums.Language;
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
-import client.utils.Language;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import commons.Currency;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
@@ -17,13 +23,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javax.inject.Inject;
 
 
 /**
  * Controller for the settings scene.
  */
-public class SettingsCtrl implements Initializable {
+public class SettingsCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
@@ -40,6 +47,18 @@ public class SettingsCtrl implements Initializable {
     private Hyperlink backLink;
     @FXML
     private CheckBox highContrastCheckBox;
+    @FXML
+    private Text currencyText;
+    @FXML
+    private Text languageText;
+    @FXML
+    private Button addLanguageButton;
+    @FXML
+    private Text highContrastText;
+    @FXML
+    private Text generalText;
+    @FXML
+    private Text accessibilityText;
 
     /**
      * Initialize the settings controller.
@@ -52,6 +71,18 @@ public class SettingsCtrl implements Initializable {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
 
+    }
+
+    @Override
+    public void updateLanguage() {
+        var lm = UIUtils.getLanguageMap();
+        backLink.setText(lm.get("general_back"));
+        settingsTitle.setText(lm.get("homepage_settings").toUpperCase());
+        currencyText.setText(lm.get("settings_currency"));
+        languageText.setText(lm.get("settings_language"));
+        highContrastText.setText(lm.get("settings_high_contrast"));
+        generalText.setText(lm.get("settings_general"));
+        accessibilityText.setText(lm.get("settings_accessibility"));
     }
 
     @Override
@@ -93,6 +124,8 @@ public class SettingsCtrl implements Initializable {
                 return;
             }
         });
+
+        UIUtils.addTooltip(addLanguageButton, "Download language template");
     }
 
     /**
@@ -121,7 +154,29 @@ public class SettingsCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        updateLanguage();
     }
 
+    /**
+     * Downloads the language template json.
+     */
+    public void downloadLanguageTemplate() {
+        final String PATH = "src/main/resources/client/languages/template.json";
+        File template = new File(PATH);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialFileName("template.json");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        File file = fileChooser.showSaveDialog(root.getScene().getWindow());
 
+        if (file != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            try {
+                mapper.writeValue(file, template);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

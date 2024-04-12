@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -10,23 +11,33 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 /**
  * A controller for the AddEvent scene.
  */
-public class AddEventCtrl implements Initializable {
+public class AddEventCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
 
     @FXML
     private AnchorPane root;
+    @FXML
+    private Text title;
+    @FXML
+    private Text prompt;
+    @FXML
+    private Button cancelButton;
+    @FXML
+    private Button createButton;
     @FXML
     private TextField inputField;
     @FXML
@@ -38,7 +49,33 @@ public class AddEventCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        if (ClientUtils.isHighContrast()) {
+            UIUtils.activateHighContrastMode(root);
+        } else {
+            UIUtils.deactivateHighContrastMode(root);
+        }
 
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                saveEvent();
+                return;
+            }
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                cancel(null);
+            }
+        });
+    }
+
+    @Override
+    public void updateLanguage() {
+        var languageMap = UIUtils.getLanguageMap();
+        title.setText(languageMap.get("addevent"));
+        prompt.setText(languageMap.get("addevent_event_name") + ":");
+        cancelButton.setText(languageMap.get("general_cancel"));
+        createButton.setText(languageMap.get("general_create"));
+    }
 
     /**
      * Refresh method for this scene.
@@ -53,6 +90,8 @@ public class AddEventCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        updateLanguage();
     }
 
     /**
@@ -67,18 +106,6 @@ public class AddEventCtrl implements Initializable {
         inputField.setEditable(true);
     }
 
-    /**
-     * Handles checking if any specific keys are pressed while editing the textField.
-     *
-     * @param keyEvent keyEvent
-     */
-    public void inputFieldTypeHandler(KeyEvent keyEvent) {
-        if (!keyEvent.getCode().equals(KeyCode.ENTER) || inputField.getText().isEmpty()) {
-            return;
-        }
-        inputField.setEditable(false);
-    }
-
     public void cancel(ActionEvent actionEvent) {
         mainCtrl.showHomePage();
     }
@@ -88,11 +115,11 @@ public class AddEventCtrl implements Initializable {
      */
     public void saveEvent() {
         if (inputField.getText().isEmpty()) {
-            displayInputError("Title cannot be empty!");
+            displayInputError(UIUtils.getLanguageMap().get("addevent_error_empty_title"));
             return;
         }
         if (inputField.getText().length() > 20) {
-            displayInputError("Title exceeds max length (20)");
+            displayInputError(UIUtils.getLanguageMap().get("addevent_error_max_length") + " (20)");
             return;
         }
 
@@ -105,29 +132,11 @@ public class AddEventCtrl implements Initializable {
         HomePageCtrl.displayErrorPopup(message, errorPopup);
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
-        } else {
-            UIUtils.deactivateHighContrastMode(root);
-        }
-
-        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
-            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
-                cancel(null);
-            }
-            if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                saveEvent();
-            }
-        });
-    }
-
     public void setInputField(TextField inputField) {
         this.inputField = inputField;
     }
 
-    public void setErrorPopup(Pane errorPopUp) {
-        this.errorPopup = errorPopUp;
+    public void setErrorPopup(Pane errorPopup) {
+        this.errorPopup = errorPopup;
     }
 }

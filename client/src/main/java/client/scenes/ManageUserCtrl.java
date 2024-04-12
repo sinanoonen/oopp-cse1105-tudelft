@@ -1,7 +1,8 @@
 package client.scenes;
 
+import client.enums.ManageUserMode;
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
-import client.utils.ManageUserMode;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
@@ -28,7 +29,7 @@ import javafx.scene.text.Text;
 /**
  * A controller for the create-user page, as well as edit-user.
  */
-public class ManageUserCtrl implements Initializable {
+public class ManageUserCtrl implements Initializable, LanguageInterface {
     private ServerUtils serverUtils;
     private MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
@@ -42,17 +43,27 @@ public class ManageUserCtrl implements Initializable {
     @FXML
     private Text title;
     @FXML
+    private Text nameText;
+    @FXML
     private TextField nameField;
+    @FXML
+    private Text emailText;
     @FXML
     private TextField emailField;
     @FXML
+    private Text ibanText;
+    @FXML
     private TextField ibanField;
+    @FXML
+    private Text bicText;
     @FXML
     private TextField bicField;
     @FXML
     private Pane errorPopup;
     @FXML
     private Button confirmButton;
+    @FXML
+    private Button cancelButton;
 
     /**
      * Constructor for the ManageUser controller.
@@ -89,6 +100,20 @@ public class ManageUserCtrl implements Initializable {
         });
     }
 
+    @Override
+    public void updateLanguage() {
+        var lm = UIUtils.getLanguageMap();
+        title.setText(lm.get(mode == ManageUserMode.CREATE
+                ? "manageuser_create_new_user"
+                : "manageuser_edit_user"));
+        nameText.setText(lm.get("manageuser_name"));
+        emailText.setText(lm.get("manageuser_email"));
+        ibanText.setText(lm.get("manageuser_iban"));
+        bicText.setText(lm.get("manageuser_bic"));
+        confirmButton.setText(lm.get(mode == ManageUserMode.CREATE ? "general_create" : "general_confirm"));
+        cancelButton.setText(lm.get("general_cancel"));
+    }
+
     /**
      * A refresh method for this scene, sets scene back to initial setting.
      */
@@ -101,7 +126,6 @@ public class ManageUserCtrl implements Initializable {
         this.mode = mode;
         this.event = event;
         if (mode == ManageUserMode.CREATE) {
-            title.setText("CREATE NEW USER");
             nameField.setText("");
             emailField.setText("");
             ibanField.setText("");
@@ -110,10 +134,7 @@ public class ManageUserCtrl implements Initializable {
             emailField.setEditable(true);
             changeStyleAttribute(emailField, "-fx-background-color", "white");
             changeStyleAttribute(emailField, "-fx-text-fill", "black");
-
-            confirmButton.setText("CREATE");
         } else {
-            title.setText("EDIT USER");
             nameField.setText(user.getName());
             emailField.setText(user.getEmail());
             ibanField.setText(user.getIban());
@@ -122,8 +143,6 @@ public class ManageUserCtrl implements Initializable {
             emailField.setEditable(false);
             changeStyleAttribute(emailField, "-fx-background-color", "#2b2b2b");
             changeStyleAttribute(emailField, "-fx-text-fill", "#8e8e8e");
-
-            confirmButton.setText("SAVE");
         }
 
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
@@ -135,11 +154,13 @@ public class ManageUserCtrl implements Initializable {
                 }
             });
         });
+
+        updateLanguage();
     }
 
     public void cancel() {
         onExit();
-        mainCtrl.showEventOverview(event);
+        mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
     /**
@@ -168,7 +189,7 @@ public class ManageUserCtrl implements Initializable {
         User user = new User(name, email, iban, bic, event.getInviteCode());
         onExit();
         User saved = serverUtils.createUser(user);
-        mainCtrl.showEventOverview(event);
+        mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
     /**
@@ -191,35 +212,36 @@ public class ManageUserCtrl implements Initializable {
     }
 
     private boolean validateInputs() {
+        var lm = UIUtils.getLanguageMap();
         // NAME CHECKING
         if (isNullOrEmpty(nameField.getText())) {
-            HomePageCtrl.displayErrorPopup("Name cannot be empty", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_name"), errorPopup);
             return false;
         }
         // EMAIL CHECKING
         if (isNullOrEmpty(emailField.getText())) {
-            HomePageCtrl.displayErrorPopup("Email cannot be empty", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_email"), errorPopup);
             return false;
         }
         if (!validateEmail(emailField.getText())) {
-            HomePageCtrl.displayErrorPopup("Invalid email format", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_invalid_email_format"), errorPopup);
             return false;
         }
         if (mode == ManageUserMode.CREATE && event.getParticipants()
                 .stream()
                 .anyMatch(user -> user.getEmail().equals(emailField.getText()))
         ) {
-            HomePageCtrl.displayErrorPopup("Email already registered", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_invalid_email_existing"), errorPopup);
             return false;
         }
         // IBAN CHECKING
         if (isNullOrEmpty(ibanField.getText())) {
-            HomePageCtrl.displayErrorPopup("Iban cannot be empty", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_iban"), errorPopup);
             return false;
         }
         // BIC CHECKING
         if (isNullOrEmpty(bicField.getText())) {
-            HomePageCtrl.displayErrorPopup("Bic cannot be empty", errorPopup);
+            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_bic"), errorPopup);
             return false;
         }
 

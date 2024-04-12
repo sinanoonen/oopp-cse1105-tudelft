@@ -36,8 +36,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+import javafx.application.Platform;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.springframework.http.HttpStatus;
 
 /**
  * Utilities for the server.
@@ -47,6 +52,7 @@ public class ServerUtils {
     private static String ip = "localhost";
     private static String port = "8080";
     private static String SERVER = "http://localhost:8080/";
+    private static final ExecutorService EXEC = Executors.newFixedThreadPool(10);
 
     /**
      * Sets the server.
@@ -110,6 +116,37 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {});
+    }
+
+    /**
+     * Uses long-polling to continuously check if events are updated or deleted.
+     *
+     * @param callback function to perform on end of poll
+     */
+    public void longPollEvents(Consumer<String> callback) {
+        EXEC.submit(() -> { // use new thread so that application is not stuck waiting for response
+            while (!Thread.interrupted()) {
+                var res = ClientBuilder.newClient(new ClientConfig()
+                                .property(ClientProperties.CONNECT_TIMEOUT, 10000)
+                                .property(ClientProperties.READ_TIMEOUT, 10000))
+                        .target(SERVER).path("api/events/poll")
+                        .request(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .get(Response.class);
+
+                var status = res.getStatus();
+                if (status == HttpStatus.NO_CONTENT.value()) {
+                    continue;
+                }
+                String updatedEventInviteCode = res.readEntity(String.class);
+
+                //Execute the UI Update on the
+                // thread that is responsible for the JavaFX application
+                Platform.runLater(() -> {
+                    callback.accept(updatedEventInviteCode);
+                });
+            }
+        });
     }
 
     /**
@@ -373,4 +410,8 @@ public class ServerUtils {
                 .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
     }
 
+
+    public void stop() {
+        EXEC.shutdownNow();
+    }
 }

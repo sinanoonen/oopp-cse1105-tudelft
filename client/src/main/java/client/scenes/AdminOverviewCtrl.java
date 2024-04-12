@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -46,7 +47,7 @@ import javafx.stage.FileChooser;
 /**
  * The controller for the admin overview.
  */
-public class AdminOverviewCtrl implements Initializable {
+public class AdminOverviewCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -113,6 +114,10 @@ public class AdminOverviewCtrl implements Initializable {
             Platform.runLater(this::loadEvents);
         });
 
+        server.longPollEvents(e -> {
+            Platform.runLater(this::loadEvents);
+        });
+
         UIUtils.addTooltip(exitButton, "ESC: Exit");
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
@@ -121,6 +126,20 @@ public class AdminOverviewCtrl implements Initializable {
                 return;
             }
         });
+    }
+
+    @Override
+    public void updateLanguage() {
+        var lm = UIUtils.getLanguageMap();
+        String sortBy = lm.get("adminpage_sort_by") + " ";
+        title.setText(lm.get("adminpage"));
+        sortByTitleButton.setText(sortBy + lm.get("adminpage_title"));
+        sortByCreationDateButton.setText(sortBy + lm.get("adminpage_creation_date"));
+        sortByLastActivityButton.setText(sortBy + lm.get("adminpage_last_activity"));
+        exportEventButton.setText(lm.get("adminpage_export_event") + " (JSON)");
+        importEventButton.setText(lm.get("adminpage_import_event") + " (JSON)");
+        deleteEventButton.setText(lm.get("adminpage_delete_event"));
+        exitButton.setText(lm.get("adminpage_exit"));
     }
 
     /**
@@ -144,6 +163,8 @@ public class AdminOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        updateLanguage();
     }
 
     /**
@@ -186,7 +207,9 @@ public class AdminOverviewCtrl implements Initializable {
         task.setOnFailed(event -> {
             Throwable cause = task.getException();
             cause.printStackTrace();
-            showAlert("Error", "Failed to load events: " + cause.getMessage());
+            showAlert("Error", UIUtils.getLanguageMap()
+                    .get("adminpage_error_failed_load_event")
+                    + ": " + cause.getMessage());
         });
         new Thread(task).start();
     }
@@ -360,7 +383,7 @@ public class AdminOverviewCtrl implements Initializable {
     @FXML
     private void handleExportEvent() {
         if (selectedEvent == null) {
-            showAlert("Error", "No event selected for export.");
+            showAlert("Error", UIUtils.getLanguageMap().get("adminpage_error_none_selected_export"));
             return;
         }
         FileChooser fileChooser = new FileChooser();
@@ -375,7 +398,9 @@ public class AdminOverviewCtrl implements Initializable {
                 mapper.writeValue(file, selectedEvent);
             } catch (IOException e) {
                 e.printStackTrace();
-                showAlert("Error", "Failed to export event: " + e.getMessage());
+                showAlert("Error", UIUtils.getLanguageMap()
+                        .get("adminpage_error_failed_export_event")
+                        + ": " + e.getMessage());
             }
         }
     }
@@ -423,13 +448,16 @@ public class AdminOverviewCtrl implements Initializable {
                 loadEvents();
             } catch (IOException e) {
                 e.printStackTrace();
-                showAlert("Error", "Failed to import event: " + e.getMessage());
+                showAlert("Error", UIUtils.getLanguageMap()
+                        .get("adminpage_error_failed_import_event")
+                        + ": " + e.getMessage());
             }
         }
     }
 
     @FXML
     private void handleDeleteEvent() {
+        var lm = UIUtils.getLanguageMap();
         if (selectedEvent != null) {
             Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationDialog.setTitle("Confirm Deletion");
@@ -444,7 +472,7 @@ public class AdminOverviewCtrl implements Initializable {
                 selectedEvent = null;
             }
         } else {
-            showAlert("Error", "No event selected for delete.");
+            showAlert("Error", lm.get("adminpage_error_none_selected_delete"));
         }
     }
 

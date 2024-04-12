@@ -1,6 +1,8 @@
 package client.scenes;
 
 import algorithms.ExchangeProvider;
+import client.enums.Language;
+import client.interfaces.LanguageInterface;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
@@ -16,8 +18,10 @@ import commons.transactions.Transaction;
 import java.awt.Color;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.UUID;
@@ -32,9 +36,13 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -60,13 +68,15 @@ import javafx.util.Duration;
  * - CELL FACTORIES
  * - GENERAL METHODS
  */
-public class EventOverviewCtrl implements Initializable {
+public class EventOverviewCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
 
     private Event event;
+    private Map<Language, Image> flags;
+    private Thread pollingThread;
 
     @FXML
     private AnchorPane root;
@@ -76,6 +86,10 @@ public class EventOverviewCtrl implements Initializable {
     private Pane titleBox;
     @FXML
     private Button inviteCodeButton;
+    @FXML
+    private Button participantsButton;
+    @FXML
+    private Button debtsButton;
     @FXML
     private Pane buttonDarkener;
     @FXML
@@ -107,6 +121,8 @@ public class EventOverviewCtrl implements Initializable {
     @FXML
     private Button addParticipantButton;
     @FXML
+    private Button closeButton;
+    @FXML
     private Button newParticipantButton;
     @FXML
     private Button confirmButton;
@@ -119,6 +135,8 @@ public class EventOverviewCtrl implements Initializable {
     @FXML
     private ChoiceBox<String> tagFilterChoiceBox;
     private boolean expenseMenuVisible = false;
+    @FXML
+    private ComboBox<Language> languageDropdown;
 
     /**
      * Constructor for the EventOverview controller.
@@ -142,6 +160,25 @@ public class EventOverviewCtrl implements Initializable {
         } else {
             UIUtils.deactivateHighContrastMode(root);
         }
+
+        serverUtils.longPollEvents(e -> {
+            // If we have not yet opened the overview ever or if we are not looking at the event
+            if (event == null
+                    || !e.equals(event.getInviteCode().toString())) {
+                return;
+            }
+            boolean hadParticipantsOpen = participantsMenu.isVisible();
+            boolean hadAddParticipantsOpen = addParticipantsMenu.isVisible();
+            onExit();
+            refresh(serverUtils.getEventByUUID(UUID.fromString(e)));
+            if (hadParticipantsOpen) {
+                toggleParticipants();
+                return;
+            }
+            if (hadAddParticipantsOpen) {
+                toggleAddParticipants();
+            }
+        });
 
         tagFilterChoiceBox.setOnAction((event) -> {
             int selectedIndex = tagFilterChoiceBox.getSelectionModel().getSelectedIndex();
@@ -211,9 +248,55 @@ public class EventOverviewCtrl implements Initializable {
                 }
             }
         });
+
+        flags = new HashMap<>();
+        for (Language language : Language.values()) {
+            Image img = new Image(
+                    "client/img/flag_" + language.name().toLowerCase() + ".png",
+                    35, 20, false, true);
+            flags.put(language, img);
+        }
+
+        class ImageCell extends ListCell<Language> {
+            @Override
+            protected void updateItem(Language item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(null);
+                    setGraphic(new ImageView(flags.get(item)));
+                }
+            }
+        }
+
+        languageDropdown.setCellFactory(lv -> new ImageCell());
+        languageDropdown.setButtonCell(new ImageCell());
+        languageDropdown.setOnAction(event -> {
+            ClientUtils.setLanguage(languageDropdown.getValue());
+            updateLanguage();
+        });
+        languageDropdown.getItems().addAll(flags.keySet());
     }
 
-
+    @Override
+    public void updateLanguage() {
+        var lm = UIUtils.getLanguageMap();
+        backLink.setText(lm.get("general_back"));
+        inviteCodeButton.setText(lm.get("eventoverview_invite_code"));
+        participantsButton.setText(lm.get("eventoverview_participants"));
+        debtsButton.setText(lm.get("eventoverview_debts"));
+        filterTextField.setPromptText(lm.get("eventoverview_filter"));
+        Text popupText = (Text) clipboardPopup.getChildren().getFirst();
+        popupText.setText(lm.get("eventoverview_copied_to_clipboard"));
+        addParticipantButton.setText(lm.get("eventoverview_add_participant"));
+        closeButton.setText(lm.get("general_close"));
+        confirmButton.setText(lm.get("general_confirm"));
+        newParticipantButton.setText(lm.get("general_new"));
+        editExpense.setText(lm.get("eventoverview_edit_expense"));
+        removeExpense.setText(lm.get("eventoverview_delete_expense"));
+    }
 
     /**
      * Method to refresh the scene.
@@ -221,6 +304,7 @@ public class EventOverviewCtrl implements Initializable {
     public void refresh(Event event) {
 
         this.event = event;
+        mainCtrl.getPrimaryStage().setTitle(event.getTitle());
 
         inviteCodeButton.requestFocus();
 
@@ -259,6 +343,7 @@ public class EventOverviewCtrl implements Initializable {
         changeBackgroundColor(backLink, "transparent");
 
         resetTransactionsContainer();
+        resetNewParticipantsContainer();
         resetParticipantsContainer();
 
         if (ClientUtils.isHighContrast()) {
@@ -288,6 +373,7 @@ public class EventOverviewCtrl implements Initializable {
                 }
             });
         });
+
         root.setOnMouseClicked(e -> {
             if (expenseMenuVisible && !isClickInsideNode(expenseMenu, e.getSceneX(), e.getSceneY())) {
                 // Close the expenseMenu pane
@@ -296,6 +382,9 @@ public class EventOverviewCtrl implements Initializable {
                 mainCtrl.showEventOverview(event);
             }
         });
+
+        languageDropdown.setValue(ClientUtils.getLanguage());
+        updateLanguage();
     }
 
     // ---------------- VISUAL EFFECTS HANDLERS ---------------- //
@@ -333,6 +422,7 @@ public class EventOverviewCtrl implements Initializable {
         }
         event.setTitle(title.getText());
         Event updated = serverUtils.updateEvent(event);
+        onExit();
         refresh(updated);
     }
 
@@ -482,7 +572,10 @@ public class EventOverviewCtrl implements Initializable {
         );
 
         if (event.getTotalEURDebt(user) != 0) {
-            HomePageCtrl.displayErrorPopup("User has debts; cannot be deleted", errorPopup);
+            HomePageCtrl.displayErrorPopup(
+                    UIUtils.getLanguageMap().get("eventoverview_error_existing_debts"),
+                    errorPopup
+            );
             return;
         }
         serverUtils.removeUserFromEvent(event.getInviteCode(), user.getEmail());

@@ -203,7 +203,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             if (!participantsMenu.isVisible()               // NO MENUS OPEN
                     && !addParticipantsMenu.isVisible()
                     && !expenseMenu.isVisible()) {
-                if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                if (keyEvent.getCode().equals(KeyCode.ESCAPE) && !title.isEditable()) {
                     onBackClicked(null);
                     return;
                 }
@@ -414,6 +414,9 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 && !keyEvent.getCode().equals(KeyCode.ESCAPE)
                 || title.getText().isEmpty()) {
             return;
+        }
+        if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+            title.undo();
         }
         titleBox.setVisible(false);
         title.setEditable(false);

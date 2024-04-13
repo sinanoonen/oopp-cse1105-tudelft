@@ -240,7 +240,12 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             int selectedIndex = filterbyParticipantChoiceBox.getSelectionModel().getSelectedIndex();
             Object selectedItem = filterbyParticipantChoiceBox.getSelectionModel().getSelectedItem();
 
-            if (filterbyParticipantChoiceBox.getValue() != null && filterbyParticipantChoiceBox.getValue().equals("No filter.")) {
+            if (filterbyParticipantChoiceBox
+                    .getValue() != null
+                    && filterbyParticipantChoiceBox
+                    .getValue()
+                    .equals("No filter.")
+            ) {
                 filterbyParticipantChoiceBox.setValue(null);
             }
 

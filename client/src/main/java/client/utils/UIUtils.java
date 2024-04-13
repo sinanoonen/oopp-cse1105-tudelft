@@ -15,7 +15,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Tooltip;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.jvnet.hk2.annotations.Service;
+import org.springframework.stereotype.Service;
 
 /**
  * A utility class for UI operations.
@@ -251,11 +251,13 @@ public class UIUtils {
      *
      * @param language language to load into map
      */
+    @SuppressWarnings("unchecked")
     public void loadLanguageMap(Language language) {
         String path = "src/main/resources/client/languages/" + language.toString().toLowerCase() + ".json";
         ObjectMapper mapper = new ObjectMapper();
         try {
-            languageMap = mapper.readValue(new File(path), Map.class);
+            File file = new File(path);
+            languageMap = mapper.readValue(file, Map.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

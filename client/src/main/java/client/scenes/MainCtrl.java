@@ -21,6 +21,7 @@ import algorithms.ExchangeProvider;
 import client.enums.ManageExpenseMode;
 import client.enums.ManageUserMode;
 import client.utils.*;
+import com.google.inject.Inject;
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
@@ -68,15 +69,10 @@ public class MainCtrl {
 
     private Scene serverSelect;
     private ServerSelectCtrl serverSelectCtrl;
-
-    private final UIUtils uiUtils;
-    private final ClientUtils clientUtils;
-
-    public MainCtrl(UIUtils uiUtils, ClientUtils clientUtils) {
-        this.uiUtils = uiUtils;
-        this.clientUtils = clientUtils;
-    }
-
+    @Inject
+    private UIUtils uiUtils;
+    @Inject
+    private ClientUtils clientUtils;
     /**
      * Initialize the main controller.
      *

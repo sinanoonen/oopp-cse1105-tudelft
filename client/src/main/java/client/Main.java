@@ -48,10 +48,6 @@ public class Main extends Application {
 
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
-    @Inject
-    private ClientUtils clientUtils;
-    @Inject
-    private UIUtils uiUtils;
 
 
     public static void main(String[] args) throws URISyntaxException, IOException {
@@ -95,8 +91,8 @@ public class Main extends Application {
 
         primaryStage.setOnCloseRequest(e -> {
             homePage.getKey().stop();
-            ConfigReader.writeLanguage(clientUtils.getLanguage());
-            ConfigReader.writeCurrency(clientUtils.getCurrency());
+            ConfigReader.writeLanguage(ConfigReader.getLanguage());
+            ConfigReader.writeCurrency(ConfigReader.getCurrency());
             ConfigReader.writeIP(ServerUtils.getIp());
             ConfigReader.writePort(ServerUtils.getPort());
         });

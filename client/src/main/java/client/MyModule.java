@@ -17,9 +17,7 @@
 package client;
 
 import client.scenes.AddExpenseCtrl;
-import client.scenes.AddQuoteCtrl;
 import client.scenes.MainCtrl;
-import client.scenes.QuoteOverviewCtrl;
 import client.utils.ClientUtils;
 import client.utils.ConfigReader;
 import client.utils.UIUtils;
@@ -36,8 +34,6 @@ public class MyModule implements Module {
     @Override
     public void configure(Binder binder) {
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(AddQuoteCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(QuoteOverviewCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AddExpenseCtrl.class).in(Scopes.SINGLETON);
 
         binder.bind(ConfigReader.class).in(Scopes.SINGLETON);

@@ -36,7 +36,6 @@ public class TagController {
      */
     @GetMapping(path = {"", "/"})
     public List<Tag> getAllTags() {
-        System.out.println("/tags: Received valid GET request");
         return repo.findAll();
     }
 
@@ -50,10 +49,8 @@ public class TagController {
     public ResponseEntity<Tag> getTagByName(@PathVariable long id) {
         List<Tag> tags = repo.findById(id);
         if (tags == null || tags.isEmpty()) {
-            System.out.println("/tags: Received a bad GET request");
             return ResponseEntity.badRequest().build();
         }
-        System.out.println("/tags: Received a valid GET request");
         return ResponseEntity.ok(tags.getFirst());
     }
 
@@ -67,15 +64,12 @@ public class TagController {
     @PutMapping("/{id}")
     public ResponseEntity<Tag> updateTag(@PathVariable long id, @RequestBody Tag update) {
         if (update == null) {
-            System.out.println("/tags: Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }
         if (repo.findById(id) == null || repo.findById(id).isEmpty()) {
-            System.out.println("/tags: Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }
         var existingTags = repo.findById(id);
-        System.out.println("/tags: Received valid PUT request");
         for (Tag tag : existingTags) {
             String tagName = update.getName();
             int tagColor = update.getColor();
@@ -96,11 +90,8 @@ public class TagController {
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Tag> addTag(@RequestBody Tag tag) {
         if (tag == null) {
-            System.out.println("/tags: Received bad POST request");
             return ResponseEntity.badRequest().build();
         }
-        System.out.println("/tags: Received valid POST request");
-        System.out.println(tag);
         repo.save(tag);
         return ResponseEntity.ok(tag);
     }
@@ -115,10 +106,8 @@ public class TagController {
     public ResponseEntity<Void> deleteTag(@PathVariable long id) {
         int res = repo.deleteTagByName(id);
         if (res != 1) {
-            System.out.println("/tags: Received a bad DELETE request");
             return ResponseEntity.badRequest().build();
         }
-        System.out.println("/tags: Received a valid DELETE request");
         return ResponseEntity.ok().build();
     }
 

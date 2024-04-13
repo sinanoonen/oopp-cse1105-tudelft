@@ -40,11 +40,21 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
     private Button cancelButton;
     @FXML
     private Button connectButton;
+    private WebSocketServerUtils webSocketServerUtils;
 
+    /**
+     * Constructor for ServerSelectCtrl.
+     *
+     * @param serverUtils   the server utils
+     * @param mainCtrl      the main ctrl
+     * @param webSocketServerUtils  the web socket utils
+     */
     @Inject
-    public ServerSelectCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public ServerSelectCtrl(ServerUtils serverUtils, MainCtrl mainCtrl,
+                            WebSocketServerUtils webSocketServerUtils) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.webSocketServerUtils = webSocketServerUtils;
     }
 
     @Override
@@ -102,7 +112,7 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
         String prevIp = ServerUtils.getIp();
         String prevPort = ServerUtils.getPort();
         ServerUtils.setServer(ipField.getText(), portField.getText());
-        WebSocketServerUtils.setSession(ipField.getText(), portField.getText());
+        webSocketServerUtils.setSession(ipField.getText(), portField.getText());
         try {
             mainCtrl.showHomePage();
         } catch (Exception e) {
@@ -112,7 +122,7 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
                     errorPopup
             );
             ServerUtils.setServer(prevIp, prevPort);
-            WebSocketServerUtils.setSession(prevIp, prevPort);
+            webSocketServerUtils.setSession(prevIp, prevPort);
         }
     }
 
@@ -121,7 +131,7 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
         mainCtrl.showHomePage();
     }
 
-    private boolean validateFields() {
+    boolean validateFields() {
         var lm = UIUtils.getLanguageMap();
         boolean emptyFields = ipField.getText().isEmpty() || portField.getText().isEmpty();
         if (emptyFields) {
@@ -144,14 +154,55 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
         return true;
     }
 
-    private boolean validIP(String ip) {
+    boolean validIP(String ip) {
         String regex = "^(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\\.(?!$)|$)){4}$";
         Pattern pattern = Pattern.compile(regex);
         return ip.equals("localhost") || pattern.matcher(ip).matches();
     }
 
-    private boolean validPort(String port) {
-        int p = Integer.parseInt(port);
+    boolean validPort(String port) {
+        int p;
+        try {
+            p = Integer.parseInt(port);
+        } catch (NumberFormatException e) {
+            return false;
+        }
         return p > 0 && p < 65536;
+    }
+
+    public TextField getIpField() {
+        return ipField;
+    }
+
+    public void setIpField(TextField ipField) {
+        this.ipField = ipField;
+    }
+
+    public TextField getPortField() {
+        return portField;
+    }
+
+    public void setPortField(TextField portField) {
+        this.portField = portField;
+    }
+
+    public Pane getErrorPopup() {
+        return errorPopup;
+    }
+
+    public void setErrorPopup(Pane errorPopup) {
+        this.errorPopup = errorPopup;
+    }
+
+    public void setCancelButton(Button cancelButton) {
+        this.cancelButton = cancelButton;
+    }
+
+    public Button getConnectButton() {
+        return connectButton;
+    }
+
+    public void setConnectButton(Button connectButton) {
+        this.connectButton = connectButton;
     }
 }

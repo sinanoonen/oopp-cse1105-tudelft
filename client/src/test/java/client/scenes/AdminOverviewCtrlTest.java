@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,9 +76,29 @@ public class AdminOverviewCtrlTest extends ApplicationTest {
             controller.setIfSortByCreationDate(false);
             controller.setIfSortByLastActivity(false);
             controller.setIfSortByTitle(false);
+            controller.setTitle(new TextField());
+            controller.setRoot(new AnchorPane());
+            controller.setExitButton(new Button());
+            controller.setSortByTitleButton(new Button());
+            controller.setSortByCreationDateButton(new Button());
+            controller.setSortByLastActivityButton(new Button());
+            controller.setExportEventButton(new Button());
+            controller.setImportEventButton(new Button());
+            controller.setDeleteEventButton(new Button());
         });
 
         WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    @Test
+    public void testRefresh() {
+        controller.refresh();
+        assertFalse(controller.isIfSortByTitle());
+        assertFalse(controller.isIfSortByCreationDate());
+        assertFalse(controller.isIfSortByLastActivity());
+        assertTrue(controller.isSortByTitleAscending());
+        assertTrue(controller.isSortByCreationDateAscending());
+        assertTrue(controller.isSortByLastActivityAscending());
     }
 
     @Test

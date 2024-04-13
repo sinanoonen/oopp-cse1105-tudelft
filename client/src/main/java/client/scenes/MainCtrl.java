@@ -32,6 +32,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import javax.inject.Inject;
 
 /**
  * Controller for the main scene.
@@ -71,6 +72,8 @@ public class MainCtrl {
 
     private Scene serverSelect;
     private ServerSelectCtrl serverSelectCtrl;
+    @Inject
+    private WebSocketServerUtils webSocketServerUtils;
 
     /**
      * Initialize the main controller.
@@ -136,7 +139,7 @@ public class MainCtrl {
         ClientUtils.setCurrency(ConfigReader.getCurrency());
         ClientUtils.setLanguage(ConfigReader.getLanguage());
         ServerUtils.setServer(ConfigReader.getIP(), ConfigReader.getPort());
-        WebSocketServerUtils.setSession(ConfigReader.getIP(), ConfigReader.getPort());
+        webSocketServerUtils.setSession(ConfigReader.getIP(), ConfigReader.getPort());
 
         showHomePage();
         primaryStage.show();

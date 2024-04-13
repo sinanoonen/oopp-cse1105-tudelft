@@ -139,4 +139,16 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
     public void setErrorPopup(Pane errorPopup) {
         this.errorPopup = errorPopup;
     }
+
+    /**
+     * Handles checking if any specific keys are pressed while editing the textField.
+     *
+     * @param keyEvent keyEvent
+     */
+    public void inputFieldTypeHandler(KeyEvent keyEvent) {
+        if (!keyEvent.getCode().equals(KeyCode.ENTER) || inputField.getText().isEmpty()) {
+            return;
+        }
+        inputField.setEditable(false);
+    }
 }

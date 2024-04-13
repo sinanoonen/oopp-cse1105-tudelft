@@ -225,32 +225,38 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             resetTransactionsContainer();
         });
 
-        filterOwnerChoiceBox.setOnAction((event) -> {
-            int selectedIndex = filterOwnerChoiceBox.getSelectionModel().getSelectedIndex();
-            Object selectedItem = filterOwnerChoiceBox.getSelectionModel().getSelectedItem();
+        if (filterOwnerChoiceBox != null) {
+            filterOwnerChoiceBox.setOnAction((event) -> {
+                int selectedIndex = filterOwnerChoiceBox.getSelectionModel().getSelectedIndex();
+                Object selectedItem = filterOwnerChoiceBox.getSelectionModel().getSelectedItem();
 
-            if (filterOwnerChoiceBox.getValue() != null && filterOwnerChoiceBox.getValue().equals("No filter.")) {
-                filterOwnerChoiceBox.setValue(null);
-            }
+                if (filterOwnerChoiceBox.getValue() != null
+                        && filterOwnerChoiceBox.getValue().equals("No filter.")) {
+                    filterOwnerChoiceBox.setValue(null);
+                }
 
-            resetTransactionsContainer();
-        });
+                resetTransactionsContainer();
+            });
 
-        filterbyParticipantChoiceBox.setOnAction((event) -> {
-            int selectedIndex = filterbyParticipantChoiceBox.getSelectionModel().getSelectedIndex();
-            Object selectedItem = filterbyParticipantChoiceBox.getSelectionModel().getSelectedItem();
+        }
+        if (filterbyParticipantChoiceBox != null) {
+            filterbyParticipantChoiceBox.setOnAction((event) -> {
+                int selectedIndex = filterbyParticipantChoiceBox.getSelectionModel().getSelectedIndex();
+                Object selectedItem = filterbyParticipantChoiceBox.getSelectionModel().getSelectedItem();
 
-            if (filterbyParticipantChoiceBox
-                    .getValue() != null
-                    && filterbyParticipantChoiceBox
-                    .getValue()
-                    .equals("No filter.")
-            ) {
-                filterbyParticipantChoiceBox.setValue(null);
-            }
+                if (filterbyParticipantChoiceBox
+                        .getValue() != null
+                        && filterbyParticipantChoiceBox
+                        .getValue()
+                        .equals("No filter.")
+                ) {
+                    filterbyParticipantChoiceBox.setValue(null);
+                }
 
-            resetTransactionsContainer();
-        });
+                resetTransactionsContainer();
+            });
+        }
+
 
         UIUtils.addTooltip(inviteCodeButton, "CTRL + C: Copy invite code");
         UIUtils.addTooltip(backLink, "ESC: Back");
@@ -436,13 +442,19 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         tagFilterChoiceBox.getItems().addAll(tags);
         tagFilterChoiceBox.getItems().addFirst("All");
 
-        filterOwnerChoiceBox.getItems().removeAll(filterOwnerChoiceBox.getItems());
-        filterOwnerChoiceBox.getItems().addAll(participants);
-        filterOwnerChoiceBox.getItems().addFirst("No filter.");
+        if (filterOwnerChoiceBox != null) {
+            filterOwnerChoiceBox.getItems().removeAll(filterOwnerChoiceBox.getItems());
+            filterOwnerChoiceBox.getItems().addAll(participants);
+            filterOwnerChoiceBox.getItems().addFirst("No filter.");
+        }
 
-        filterbyParticipantChoiceBox.getItems().removeAll(filterbyParticipantChoiceBox.getItems());
-        filterbyParticipantChoiceBox.getItems().addAll(participants);
-        filterbyParticipantChoiceBox.getItems().addFirst("No filter.");
+        if (filterbyParticipantChoiceBox != null) {
+            filterbyParticipantChoiceBox.getItems().removeAll(filterbyParticipantChoiceBox.getItems());
+            filterbyParticipantChoiceBox.getItems().addAll(participants);
+            filterbyParticipantChoiceBox.getItems().addFirst("No filter.");
+        }
+
+
 
         resetTransactionsContainer();
 
@@ -1043,7 +1055,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                     .toList();
         }
 
-        if (filterOwnerChoiceBox.getValue() != null) {
+        if (filterOwnerChoiceBox != null && filterOwnerChoiceBox.getValue() != null) {
             filteredTransactions = filteredTransactions.stream()
                     .filter(t -> t.getOwner().equals(filterOwnerChoiceBox.getValue()))
                     .toList();

@@ -20,9 +20,13 @@ import client.scenes.AddExpenseCtrl;
 import client.scenes.AddQuoteCtrl;
 import client.scenes.MainCtrl;
 import client.scenes.QuoteOverviewCtrl;
+import client.utils.ClientUtils;
+import client.utils.ConfigReader;
+import client.utils.UIUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
+import org.glassfish.jersey.client.ClientConfig;
 
 /**
  * MyModule.
@@ -36,5 +40,8 @@ public class MyModule implements Module {
         binder.bind(QuoteOverviewCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AddExpenseCtrl.class).in(Scopes.SINGLETON);
 
+        binder.bind(ConfigReader.class).in(Scopes.SINGLETON);
+        binder.bind(ClientUtils.class).in(Scopes.SINGLETON);
+        binder.bind(UIUtils.class).in(Scopes.SINGLETON);
     }
 }

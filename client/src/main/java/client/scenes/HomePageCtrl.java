@@ -102,6 +102,9 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
     @FXML
     private ComboBox<Language> languageDropdown;
 
+    @Inject
+    private ConfigReader configReader;
+
     /**
      * Constructor for the HomePage controller.
      *
@@ -415,7 +418,7 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         var lm = uiUtils.getLanguageMap();
         showInfo(lm.get("homepage_info_loading"), lm.get("homepage_info_email_sent"));
 
-        EmailConfig emailConfig = ConfigReader.getEmailConfig();
+        EmailConfig emailConfig = configReader.getEmailConfig();
         if (!emailConfig.isComplete()) {
             showAlert(lm.get("homepage_info_email_config"), lm.get("homepage_info_email_setup"));
             return;

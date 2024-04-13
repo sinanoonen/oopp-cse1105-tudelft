@@ -73,6 +73,8 @@ public class MainCtrl {
     private UIUtils uiUtils;
     @Inject
     private ClientUtils clientUtils;
+    @Inject
+    private ConfigReader configReader;
     /**
      * Initialize the main controller.
      *
@@ -134,10 +136,10 @@ public class MainCtrl {
         primaryStage.show();
 
         //Set default language and currency
-        clientUtils.setCurrency(ConfigReader.getCurrency());
-        clientUtils.setLanguage(ConfigReader.getLanguage());
-        ServerUtils.setServer(ConfigReader.getIP(), ConfigReader.getPort());
-        WebSocketServerUtils.setSession(ConfigReader.getIP(), ConfigReader.getPort());
+        clientUtils.setCurrency(configReader.getCurrency());
+        clientUtils.setLanguage(configReader.getLanguage());
+        ServerUtils.setServer(configReader.getIP(), configReader.getPort());
+        WebSocketServerUtils.setSession(configReader.getIP(), configReader.getPort());
 
         showHomePage();
         primaryStage.show();

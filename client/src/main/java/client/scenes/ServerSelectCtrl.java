@@ -113,7 +113,7 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
         String prevPort = ServerUtils.getPort();
         try {
             ServerUtils.setServer(ipField.getText(), portField.getText());
-            WebSocketServerUtils.setSession(ipField.getText(), portField.getText());
+            webSocketServerUtils.setSession(ipField.getText(), portField.getText());
             mainCtrl.showHomePage();
         } catch (Exception e) {
             mainCtrl.showServerSelect();

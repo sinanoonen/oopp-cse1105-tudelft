@@ -23,6 +23,7 @@ import commons.Event;
 import commons.Quote;
 import commons.User;
 import commons.transactions.Expense;
+import commons.transactions.Payment;
 import commons.transactions.Tag;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -146,6 +147,21 @@ public class ServerUtils {
                 });
             }
         });
+    }
+
+    /**
+     * Sends HTTP request to add payment to db.
+     *
+     * @param uuid uuid of event to add expense to
+     * @param payment expense to be added
+     * @return added expense
+     */
+    public Payment addPayment(UUID uuid, Payment payment) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/events/" + uuid.toString() + "/transactions/payments")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(payment, APPLICATION_JSON), Payment.class);
     }
 
     /**

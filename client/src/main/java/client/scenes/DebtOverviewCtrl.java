@@ -193,11 +193,10 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
 
         double sumOfExpenses = 0.00;
         for (Expense expense : event.getExpenses()) {
-            sumOfExpenses += expense.getAmount();
+            double newAmount = ExchangeProvider.convertCurrency(expense.getAmount(),
+                    expense.getCurrency().toString(), ClientUtils.getCurrency().toString());
+            sumOfExpenses += newAmount;
         }
-        ExchangeProvider.convertCurrency(sumOfExpenses,
-                "EUR",
-                ClientUtils.getCurrency().toString());
         sumOfExpenses = Math.round(sumOfExpenses * 100.0) / 100.0;
 
 

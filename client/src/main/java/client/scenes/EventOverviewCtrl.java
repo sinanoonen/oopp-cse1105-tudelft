@@ -55,6 +55,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
@@ -101,6 +102,10 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     @FXML
     private Pane participantsDarkener;
     @FXML
+    private Pane expenseDetails;
+    @FXML
+    private Pane expenseDetailsDarkener;
+    @FXML
     private Pane addParticipantsMenu;
     @FXML
     private ListView<Node> newParticipantsList;
@@ -135,6 +140,31 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     @FXML
     private ChoiceBox<String> tagFilterChoiceBox;
     private boolean expenseMenuVisible = false;
+    private boolean expenseDetailsVisible = false;
+    @FXML
+    private Text titleDescription;
+    @FXML
+    private Text expenseDescription;
+    @FXML
+    private Text titleDate;
+    @FXML
+    private Text expenseDate;
+    @FXML
+    private Text titleOwner;
+    @FXML
+    private Text expenseOwner;
+    @FXML
+    private Text titleAmount;
+    @FXML
+    private Text expenseAmount;
+    @FXML
+    private Text titleTags;
+    @FXML
+    private Text expenseTags;
+    @FXML
+    private Text titleParticipants;
+    @FXML
+    private Text involvedParticipants;
     @FXML
     private ComboBox<Language> languageDropdown;
 
@@ -329,6 +359,11 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         expenseDarkener.setPrefWidth(root.getWidth());
         expenseDarkener.setLayoutY(root.getLayoutY());
         expenseDarkener.setPrefHeight(root.getHeight());
+        expenseDetailsDarkener.setLayoutX(root.getLayoutX());
+        expenseDetailsDarkener.setPrefWidth(root.getWidth());
+        expenseDetailsDarkener.setLayoutY(root.getLayoutY());
+        expenseDetailsDarkener.setPrefHeight(root.getHeight());
+
 
         if (participantsMenu.isVisible()) {
             toggleParticipants();
@@ -338,6 +373,9 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         }
         if (expenseMenu.isVisible()) {
             toggleExpenseMenu();
+        }
+        if (expenseDetails.isVisible()) {
+            toggleExpenseDetails();
         }
 
         changeBackgroundColor(backLink, "transparent");
@@ -380,6 +418,9 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 toggleExpenseMenu();
                 onExit();
                 mainCtrl.showEventOverview(event);
+            }
+            if (expenseDetailsVisible && !isClickInsideNode(expenseDetails, e.getSceneX(), e.getSceneY())) {
+                toggleExpenseDetails();
             }
         });
 
@@ -502,10 +543,15 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             child.setMouseTransparent(expenseMenu.isMouseTransparent());
         });
         toggleExpenseMenuVisibility(expenseMenu.isVisible());
+
     }
 
     public void toggleExpenseMenuVisibility(boolean visible) {
         expenseMenuVisible = visible;
+    }
+
+    public void toggleExpenseDetailsVisibility(boolean visible) {
+        expenseDetailsVisible = visible;
     }
 
     /**
@@ -536,6 +582,83 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     }
 
     /**
+     * Toggles expense details.
+     */
+    public void toggleExpenseDetails() {
+        expenseDetailsDarkener.toFront();
+        expenseDetailsDarkener.setVisible(!expenseDetailsDarkener.isVisible());
+        expenseDetailsDarkener.setMouseTransparent(!expenseDetailsDarkener.isVisible());
+        expenseDetails.toFront();
+        expenseDetails.setVisible(!expenseDetails.isVisible());
+        expenseDetails.setMouseTransparent(!expenseDetails.isMouseTransparent());
+        expenseDetails.getChildren().forEach(child -> {
+            child.setVisible(expenseDetails.isVisible());
+            child.setMouseTransparent(expenseDetails.isMouseTransparent());
+        });
+        Node selectedNode = transactionContainer.getSelectionModel().getSelectedItem();
+        String participants = "";
+        String tags = "";
+        if (selectedNode != null) {
+            Expense expense = (Expense) selectedNode.getUserData();
+            expenseDescription.setText(expense.getDescription());
+            expenseDescription.setFont(Font.font("SansSerif", 12));
+            expenseDescription.setFill(Paint.valueOf("#FFFFFF"));
+            expenseDescription.setLayoutX(titleDescription.getLayoutX() + 100);
+            expenseDescription.setLayoutY(titleDescription.getLayoutY());
+            titleDescription.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+
+
+            expenseDate.setText(expense.getDate().toString());
+            expenseDate.setFont(Font.font("SansSerif", 12));
+            expenseDate.setFill(Paint.valueOf("#FFFFFF"));
+            expenseDate.setLayoutX(titleDate.getLayoutX() + 100);
+            expenseDate.setLayoutY(titleDate.getLayoutY());
+            titleDate.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+
+            expenseOwner.setText(expense.getOwner());
+            expenseOwner.setFont(Font.font("SansSerif", 12));
+            expenseOwner.setFill(Paint.valueOf("#FFFFFF"));
+            expenseOwner.setLayoutX(titleOwner.getLayoutX() + 100);
+            expenseOwner.setLayoutY(titleOwner.getLayoutY());
+            titleOwner.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+
+            expenseAmount.setText(String.valueOf(expense.getAmount()));
+            expenseAmount.setFont(Font.font("SansSerif", 12));
+            expenseAmount.setFill(Paint.valueOf("#FFFFFF"));
+            expenseAmount.setLayoutX(titleAmount.getLayoutX() + 100);
+            expenseAmount.setLayoutY(titleAmount.getLayoutY());
+            titleAmount.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+            for (String p : expense.getDebts().keySet()) {
+                participants += p;
+                participants += ", ";
+            }
+            if (participants.length() > 2) {
+                participants = participants.substring(0, participants.length() - 2);
+            }
+            involvedParticipants.setText(participants);
+            involvedParticipants.setFont(Font.font("SansSerif", 12));
+            involvedParticipants.setFill(Paint.valueOf("#FFFFFF"));
+            involvedParticipants.setLayoutX(titleParticipants.getLayoutX() + 100);
+            involvedParticipants.setLayoutY(titleParticipants.getLayoutY());
+            titleParticipants.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+
+            for (Tag t : expense.getTags()) {
+                tags += t.getName();
+                tags += ", ";
+            }
+            if (tags.length() > 2) {
+                tags = tags.substring(0, tags.length() - 2);
+            }
+            expenseTags.setText(tags);
+            expenseTags.setFont(Font.font("SansSerif", 12));
+            expenseTags.setFill(Paint.valueOf("#FFFFFF"));
+            expenseTags.setLayoutX(titleTags.getLayoutX() + 100);
+            expenseTags.setLayoutY(titleTags.getLayoutY());
+            titleTags.setFont(Font.font("SansSerif", FontWeight.BOLD, 14));
+        }
+    }
+
+    /**
      * Darkens the background of the hyperlink on hover.
      *
      * @param event MouseEvent
@@ -556,7 +679,9 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         }
         Node source = (Node) mouseEvent.getSource();
         Transaction transaction = (Transaction) source.getUserData();
-        toggleExpenseMenu();
+        if (transaction instanceof Expense) {
+            toggleExpenseMenu();
+        }
     }
 
     private void participantClickHandler(ActionEvent actionEvent) {
@@ -600,7 +725,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         return res;
     }
 
-    private Node expenseCellFactory(Expense expense) {
+    Node expenseCellFactory(Expense expense) {
         Pane base = new Pane();
         base.setPrefWidth(transactionContainer.getPrefWidth() - 20);
         base.setPrefHeight(100);
@@ -751,11 +876,6 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         currency.setMouseTransparent(true);
 
         base.getChildren().addAll(sender, recipient, amount, currency);
-        base.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getClickCount() > 1) {
-                toggleExpenseMenu();
-            }
-        });
 
         return base;
     }
@@ -908,6 +1028,10 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
      * @param color color string
      */
     private void changeBackgroundColor(Node node, String color) {
+        if (node == null) {
+            return;
+        }
+
         String currentStyle = node.getStyle();
         String newColor = "-fx-background-color: " + color + ";";
 
@@ -1010,5 +1134,159 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
      */
     public void onExit() {
         socket.unregisterFromMessages("/topic/eventsUpdated");
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setRoot(AnchorPane root) {
+        this.root = root;
+    }
+
+    public TextField getTitle() {
+        return title;
+    }
+
+    public void setTitle(TextField title) {
+        this.title = title;
+    }
+
+    public void setTitleBox(Pane titleBox) {
+        this.titleBox = titleBox;
+    }
+
+    public Button getInviteCodeButton() {
+        return inviteCodeButton;
+    }
+
+    public void setInviteCodeButton(Button inviteCodeButton) {
+        this.inviteCodeButton = inviteCodeButton;
+    }
+
+    public void setParticipantsButton(Button participantsButton) {
+        this.participantsButton = participantsButton;
+    }
+
+    public void setDebtsButton(Button debtsButton) {
+        this.debtsButton = debtsButton;
+    }
+
+    public void setButtonDarkener(Pane buttonDarkener) {
+        this.buttonDarkener = buttonDarkener;
+    }
+
+    public StackPane getClipboardPopup() {
+        return clipboardPopup;
+    }
+
+    public void setClipboardPopup(StackPane clipboardPopup) {
+        this.clipboardPopup = clipboardPopup;
+    }
+
+    public Pane getParticipantsMenu() {
+        return participantsMenu;
+    }
+
+    public void setParticipantsMenu(Pane participantsMenu) {
+        this.participantsMenu = participantsMenu;
+    }
+
+    public ListView<Node> getParticipantsList() {
+        return participantsList;
+    }
+
+    public void setParticipantsList(ListView<Node> participantsList) {
+        this.participantsList = participantsList;
+    }
+
+    public void setParticipantsDarkener(Pane participantsDarkener) {
+        this.participantsDarkener = participantsDarkener;
+    }
+
+    public void setExpenseDetails(Pane expenseDetails) {
+        this.expenseDetails = expenseDetails;
+    }
+
+    public void setExpenseDetailsDarkener(Pane expenseDetailsDarkener) {
+        this.expenseDetailsDarkener = expenseDetailsDarkener;
+    }
+
+    public void setAddParticipantsMenu(Pane addParticipantsMenu) {
+        this.addParticipantsMenu = addParticipantsMenu;
+    }
+
+    public void setNewParticipantsList(ListView<Node> newParticipantsList) {
+        this.newParticipantsList = newParticipantsList;
+    }
+
+    public void setAddParticipantsDarkener(Pane addParticipantsDarkener) {
+        this.addParticipantsDarkener = addParticipantsDarkener;
+    }
+
+    public void setTransactionContainer(
+        ListView<Node> transactionContainer) {
+        this.transactionContainer = transactionContainer;
+    }
+
+    public void setBackLink(Hyperlink backLink) {
+        this.backLink = backLink;
+    }
+
+    public Pane getErrorPopup() {
+        return errorPopup;
+    }
+
+    public void setErrorPopup(Pane errorPopup) {
+        this.errorPopup = errorPopup;
+    }
+
+    public void setExpenseMenu(Pane expenseMenu) {
+        this.expenseMenu = expenseMenu;
+    }
+
+    public void setExpenseDarkener(Pane expenseDarkener) {
+        this.expenseDarkener = expenseDarkener;
+    }
+
+    public void setAddExpense(Circle addExpense) {
+        this.addExpense = addExpense;
+    }
+
+    public void setAddParticipantButton(Button addParticipantButton) {
+        this.addParticipantButton = addParticipantButton;
+    }
+
+    public void setCloseButton(Button closeButton) {
+        this.closeButton = closeButton;
+    }
+
+    public void setNewParticipantButton(Button newParticipantButton) {
+        this.newParticipantButton = newParticipantButton;
+    }
+
+    public void setConfirmButton(Button confirmButton) {
+        this.confirmButton = confirmButton;
+    }
+
+    public void setEditExpense(Button editExpense) {
+        this.editExpense = editExpense;
+    }
+
+    public void setRemoveExpense(Button removeExpense) {
+        this.removeExpense = removeExpense;
+    }
+
+    public void setFilterTextField(TextField filterTextField) {
+        this.filterTextField = filterTextField;
+    }
+
+    public void setTagFilterChoiceBox(ChoiceBox<String> tagFilterChoiceBox) {
+        this.tagFilterChoiceBox = tagFilterChoiceBox;
+    }
+
+
+    public void setLanguageDropdown(ComboBox<Language> languageDropdown) {
+        this.languageDropdown = languageDropdown;
     }
 }

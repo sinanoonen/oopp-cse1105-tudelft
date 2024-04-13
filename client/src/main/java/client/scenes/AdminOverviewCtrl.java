@@ -537,11 +537,40 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
         this.sortByLastActivityAscending = sortByLastActivityAscending;
     }
 
-    public Event getSelectedEvent() {
-        return selectedEvent;
+    public void setTitle(TextField title) {
+        this.title = title;
     }
 
-    public void setSelectedEvent(Event selectedEvent) {
-        this.selectedEvent = selectedEvent;
+    public void setRoot(AnchorPane root) {
+        this.root = root;
     }
+
+    public void setSortByTitleButton(Button sortByTitleButton) {
+        this.sortByTitleButton = sortByTitleButton;
+    }
+
+    public void setSortByCreationDateButton(Button sortByCreationDateButton) {
+        this.sortByCreationDateButton = sortByCreationDateButton;
+    }
+
+    public void setSortByLastActivityButton(Button sortByLastActivityButton) {
+        this.sortByLastActivityButton = sortByLastActivityButton;
+    }
+
+    public void setExitButton(Button exitButton) {
+        this.exitButton = exitButton;
+    }
+
+    public void setExportEventButton(Button exportEventButton) {
+        this.exportEventButton = exportEventButton;
+    }
+
+    public void setImportEventButton(Button importEventButton) {
+        this.importEventButton = importEventButton;
+    }
+
+    public void setDeleteEventButton(Button deleteEventButton) {
+        this.deleteEventButton = deleteEventButton;
+    }
+
 }

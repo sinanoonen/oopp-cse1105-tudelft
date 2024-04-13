@@ -310,7 +310,7 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         }
     }
 
-    private Node eventCellFactory(Event event) {
+    Node eventCellFactory(Event event) {
         Pane base = new Pane();
 
         final double width = eventsList.getPrefWidth() - 20;
@@ -445,5 +445,47 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
 
     public void stop() {
         serverUtils.stop();
+    }
+
+    public TextField getCodeInput() {
+        return codeInput;
+    }
+
+    public void setCodeInput(TextField codeInput) {
+        this.codeInput = codeInput;
+    }
+
+
+    public ListView<Node> getEventsList() {
+        return eventsList;
+    }
+
+    public void setEventsList(ListView<Node> eventsList) {
+        this.eventsList = eventsList;
+    }
+
+    public Pane getErrorPopup() {
+        return errorPopup;
+    }
+
+    public void setErrorPopup(Pane errorPopup) {
+        this.errorPopup = errorPopup;
+    }
+
+    public Pane getSettingsOverlay() {
+        return settingsOverlay;
+    }
+
+    public void setSettingsOverlay(Pane settingsOverlay) {
+        this.settingsOverlay = settingsOverlay;
+    }
+
+
+    public void setScreenDarkener(Pane screenDarkener) {
+        this.screenDarkener = screenDarkener;
+    }
+
+    public void setAddEventOverlay(Pane addEventOverlay) {
+        this.addEventOverlay = addEventOverlay;
     }
 }

@@ -256,8 +256,7 @@ public class UIUtils {
         String path = "src/main/resources/client/languages/" + language.toString().toLowerCase() + ".json";
         ObjectMapper mapper = new ObjectMapper();
         try {
-            File file = new File(path);
-            languageMap = mapper.readValue(file, Map.class);
+            languageMap = mapper.readValue(new File(path), Map.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

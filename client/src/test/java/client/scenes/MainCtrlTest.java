@@ -35,7 +35,7 @@ public class MainCtrlTest {
 
     @BeforeEach
     public void setup() {
-        sut = new MainCtrl(uiUtils, clientUtils);
+        sut = new MainCtrl();
     }
 
     @Test

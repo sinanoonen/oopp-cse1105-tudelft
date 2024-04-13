@@ -23,10 +23,10 @@ import client.scenes.QuoteOverviewCtrl;
 import client.utils.ClientUtils;
 import client.utils.ConfigReader;
 import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
-import org.glassfish.jersey.client.ClientConfig;
 
 /**
  * MyModule.
@@ -43,5 +43,6 @@ public class MyModule implements Module {
         binder.bind(ConfigReader.class).in(Scopes.SINGLETON);
         binder.bind(ClientUtils.class).in(Scopes.SINGLETON);
         binder.bind(UIUtils.class).in(Scopes.SINGLETON);
+        binder.bind(WebSocketServerUtils.class).asEagerSingleton();
     }
 }

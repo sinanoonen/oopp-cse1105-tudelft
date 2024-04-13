@@ -20,8 +20,11 @@ import algorithms.DebtSettler;
 import algorithms.ExchangeProvider;
 import client.enums.ManageExpenseMode;
 import client.enums.ManageUserMode;
-import client.utils.*;
-import com.google.inject.Inject;
+import client.utils.ClientUtils;
+import client.utils.ConfigReader;
+import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import client.utils.WebSocketServerUtils;
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
@@ -30,6 +33,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import javax.inject.Inject;
 
 /**
  * Controller for the main scene.
@@ -75,6 +79,8 @@ public class MainCtrl {
     private ClientUtils clientUtils;
     @Inject
     private ConfigReader configReader;
+    @Inject
+    private WebSocketServerUtils webSocketServerUtils;
     /**
      * Initialize the main controller.
      *
@@ -139,7 +145,7 @@ public class MainCtrl {
         clientUtils.setCurrency(configReader.getCurrency());
         clientUtils.setLanguage(configReader.getLanguage());
         ServerUtils.setServer(configReader.getIP(), configReader.getPort());
-        WebSocketServerUtils.setSession(configReader.getIP(), configReader.getPort());
+        webSocketServerUtils.setSession(configReader.getIP(), configReader.getPort());
 
         showHomePage();
         primaryStage.show();

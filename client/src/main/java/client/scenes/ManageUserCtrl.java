@@ -151,21 +151,25 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
             changeStyleAttribute(emailField, "-fx-text-fill", "#8e8e8e");
         }
 
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
-            Platform.runLater(() -> {
-                UUID uuid = UUID.fromString(message.getContent().substring(15));
-                if (event != null && uuid.equals(event.getInviteCode())) {
-                    uiUtils.showEventDeletedWarning(event.getTitle());
-                    mainCtrl.showHomePage();
-                }
+
+        if (socket != null) {
+            socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+                Platform.runLater(() -> {
+                    UUID uuid = UUID.fromString(message.getContent().substring(15));
+                    if (event != null && uuid.equals(event.getInviteCode())) {
+                        uiUtils.showEventDeletedWarning(event.getTitle());
+                        mainCtrl.showHomePage();
+                    }
+                });
             });
-        });
+        }
+
 
         updateLanguage();
     }
 
     public void cancel() {
-        onExit();
+        //onExit();
         mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
@@ -274,7 +278,7 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
      * @param attribute style attribute to change
      * @param value value of the style attribute
      */
-    private void changeStyleAttribute(Node node, String attribute, String value) {
+    protected void changeStyleAttribute(Node node, String attribute, String value) {
         String currentStyle = node.getStyle();
         String newAttribute = attribute + ": " + value + ";";
 
@@ -292,6 +296,9 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
      * Unsubscribe from sockets and any other clean-up code.
      */
     public void onExit() {
+        if (socket == null) {
+            return;
+        }
         socket.unregisterFromMessages("/topic/eventsUpdated");
     }
 
@@ -343,4 +350,9 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
     public void setEvent(Event event) {
         this.event = event;
     }
+
+    public ManageUserMode getMode() {
+        return mode;
+    }
+
 }

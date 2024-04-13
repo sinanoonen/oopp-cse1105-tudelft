@@ -185,4 +185,60 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
             }
         }
     }
+
+    public void setRoot(AnchorPane root) {
+        this.root = root;
+    }
+
+    public void setSettingsTitle(Text settingsTitle) {
+        this.settingsTitle = settingsTitle;
+    }
+
+    public ChoiceBox<Currency> getCurrencyChoiceBox() {
+        return currencyChoiceBox;
+    }
+
+    public void setCurrencyChoiceBox(ChoiceBox<Currency> currencyChoiceBox) {
+        this.currencyChoiceBox = currencyChoiceBox;
+    }
+
+    public ChoiceBox<Language> getLanguageChoiceBox() {
+        return languageChoiceBox;
+    }
+
+    public void setLanguageChoiceBox(ChoiceBox<Language> languageChoiceBox) {
+        this.languageChoiceBox = languageChoiceBox;
+    }
+
+    public void setBackLink(Hyperlink backLink) {
+        this.backLink = backLink;
+    }
+
+    public CheckBox getHighContrastCheckBox() {
+        return highContrastCheckBox;
+    }
+
+    public void setHighContrastCheckBox(CheckBox highContrastCheckBox) {
+        this.highContrastCheckBox = highContrastCheckBox;
+    }
+
+    public void setCurrencyText(Text currencyText) {
+        this.currencyText = currencyText;
+    }
+
+    public void setLanguageText(Text languageText) {
+        this.languageText = languageText;
+    }
+
+    public void setHighContrastText(Text highContrastText) {
+        this.highContrastText = highContrastText;
+    }
+
+    public void setGeneralText(Text generalText) {
+        this.generalText = generalText;
+    }
+
+    public void setAccessibilityText(Text accessibilityText) {
+        this.accessibilityText = accessibilityText;
+    }
 }

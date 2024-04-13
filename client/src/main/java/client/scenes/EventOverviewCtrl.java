@@ -728,7 +728,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         return res;
     }
 
-    private Node expenseCellFactory(Expense expense) {
+    Node expenseCellFactory(Expense expense) {
         Pane base = new Pane();
         base.setPrefWidth(transactionContainer.getPrefWidth() - 20);
         base.setPrefHeight(100);
@@ -1031,6 +1031,10 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
      * @param color color string
      */
     private void changeBackgroundColor(Node node, String color) {
+        if (node == null) {
+            return;
+        }
+
         String currentStyle = node.getStyle();
         String newColor = "-fx-background-color: " + color + ";";
 
@@ -1133,5 +1137,159 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
      */
     public void onExit() {
         socket.unregisterFromMessages("/topic/eventsUpdated");
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setRoot(AnchorPane root) {
+        this.root = root;
+    }
+
+    public TextField getTitle() {
+        return title;
+    }
+
+    public void setTitle(TextField title) {
+        this.title = title;
+    }
+
+    public void setTitleBox(Pane titleBox) {
+        this.titleBox = titleBox;
+    }
+
+    public Button getInviteCodeButton() {
+        return inviteCodeButton;
+    }
+
+    public void setInviteCodeButton(Button inviteCodeButton) {
+        this.inviteCodeButton = inviteCodeButton;
+    }
+
+    public void setParticipantsButton(Button participantsButton) {
+        this.participantsButton = participantsButton;
+    }
+
+    public void setDebtsButton(Button debtsButton) {
+        this.debtsButton = debtsButton;
+    }
+
+    public void setButtonDarkener(Pane buttonDarkener) {
+        this.buttonDarkener = buttonDarkener;
+    }
+
+    public StackPane getClipboardPopup() {
+        return clipboardPopup;
+    }
+
+    public void setClipboardPopup(StackPane clipboardPopup) {
+        this.clipboardPopup = clipboardPopup;
+    }
+
+    public Pane getParticipantsMenu() {
+        return participantsMenu;
+    }
+
+    public void setParticipantsMenu(Pane participantsMenu) {
+        this.participantsMenu = participantsMenu;
+    }
+
+    public ListView<Node> getParticipantsList() {
+        return participantsList;
+    }
+
+    public void setParticipantsList(ListView<Node> participantsList) {
+        this.participantsList = participantsList;
+    }
+
+    public void setParticipantsDarkener(Pane participantsDarkener) {
+        this.participantsDarkener = participantsDarkener;
+    }
+
+    public void setExpenseDetails(Pane expenseDetails) {
+        this.expenseDetails = expenseDetails;
+    }
+
+    public void setExpenseDetailsDarkener(Pane expenseDetailsDarkener) {
+        this.expenseDetailsDarkener = expenseDetailsDarkener;
+    }
+
+    public void setAddParticipantsMenu(Pane addParticipantsMenu) {
+        this.addParticipantsMenu = addParticipantsMenu;
+    }
+
+    public void setNewParticipantsList(ListView<Node> newParticipantsList) {
+        this.newParticipantsList = newParticipantsList;
+    }
+
+    public void setAddParticipantsDarkener(Pane addParticipantsDarkener) {
+        this.addParticipantsDarkener = addParticipantsDarkener;
+    }
+
+    public void setTransactionContainer(
+        ListView<Node> transactionContainer) {
+        this.transactionContainer = transactionContainer;
+    }
+
+    public void setBackLink(Hyperlink backLink) {
+        this.backLink = backLink;
+    }
+
+    public Pane getErrorPopup() {
+        return errorPopup;
+    }
+
+    public void setErrorPopup(Pane errorPopup) {
+        this.errorPopup = errorPopup;
+    }
+
+    public void setExpenseMenu(Pane expenseMenu) {
+        this.expenseMenu = expenseMenu;
+    }
+
+    public void setExpenseDarkener(Pane expenseDarkener) {
+        this.expenseDarkener = expenseDarkener;
+    }
+
+    public void setAddExpense(Circle addExpense) {
+        this.addExpense = addExpense;
+    }
+
+    public void setAddParticipantButton(Button addParticipantButton) {
+        this.addParticipantButton = addParticipantButton;
+    }
+
+    public void setCloseButton(Button closeButton) {
+        this.closeButton = closeButton;
+    }
+
+    public void setNewParticipantButton(Button newParticipantButton) {
+        this.newParticipantButton = newParticipantButton;
+    }
+
+    public void setConfirmButton(Button confirmButton) {
+        this.confirmButton = confirmButton;
+    }
+
+    public void setEditExpense(Button editExpense) {
+        this.editExpense = editExpense;
+    }
+
+    public void setRemoveExpense(Button removeExpense) {
+        this.removeExpense = removeExpense;
+    }
+
+    public void setFilterTextField(TextField filterTextField) {
+        this.filterTextField = filterTextField;
+    }
+
+    public void setTagFilterChoiceBox(ChoiceBox<String> tagFilterChoiceBox) {
+        this.tagFilterChoiceBox = tagFilterChoiceBox;
+    }
+
+
+    public void setLanguageDropdown(ComboBox<Language> languageDropdown) {
+        this.languageDropdown = languageDropdown;
     }
 }

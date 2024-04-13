@@ -63,6 +63,7 @@ public class HomePageCtrlTest extends ApplicationTest {
     /**
      * This is the setUp for testing.
      */
+    @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);

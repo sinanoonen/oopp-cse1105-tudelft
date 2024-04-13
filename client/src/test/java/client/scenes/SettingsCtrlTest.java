@@ -3,13 +3,17 @@ package client.scenes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import client.enums.Language;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import commons.Currency;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -25,9 +29,6 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * This is used to test the SettingsCtrl class.

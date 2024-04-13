@@ -4,7 +4,7 @@ The goal of this project was to create an app which one can use to manage expens
 This includes features such as having "events" in which to contain and organize expenses and payments
 shared between participants.
 
-<img src="resources/homepage.png" alt="drawing" width="400"/>
+<img src="resources/logo.png" alt="drawing" width="400"/>
 
 ## Server
 The server is hosted on port `8080`.

@@ -3,9 +3,7 @@ package client.scenes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import client.enums.ManageUserMode;
 import client.utils.ClientUtils;
@@ -87,7 +85,7 @@ public class ManageUserTest extends ApplicationTest {
     public void setUpCreate() {
         MockitoAnnotations.initMocks(this);
         controller = new ManageUserCtrl(serverUtils, mainCtrl, null, uiUtils, clientUtils);
-        event = new Event("Event");
+        event = mock(Event.class);
         this.mode = ManageUserMode.CREATE;
 
         title = new Text();

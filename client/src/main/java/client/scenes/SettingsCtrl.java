@@ -59,8 +59,8 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
     private Text generalText;
     @FXML
     private Text accessibilityText;
-    private final UIUtils uiUtils;
-    private final ClientUtils clientUtils;
+    private UIUtils uiUtils;
+    private ClientUtils clientUtils;
 
     /**
      * Initialize the settings controller.
@@ -240,5 +240,13 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
 
     public void setAccessibilityText(Text accessibilityText) {
         this.accessibilityText = accessibilityText;
+    }
+
+    public void setUiUtils(UIUtils uiUtils) {
+        this.uiUtils = uiUtils;
+    }
+
+    public void setClientUtils(ClientUtils clientUtils) {
+        this.clientUtils = clientUtils;
     }
 }

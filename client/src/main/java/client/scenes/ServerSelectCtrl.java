@@ -25,7 +25,7 @@ import javafx.scene.text.Text;
 public class ServerSelectCtrl implements Initializable, LanguageInterface {
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
-    private final UIUtils uiUtils;
+    private  UIUtils uiUtils;
     private final ClientUtils clientUtils;
 
     @FXML
@@ -213,5 +213,13 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
 
     public void setConnectButton(Button connectButton) {
         this.connectButton = connectButton;
+    }
+
+    public UIUtils getUiUtils() {
+        return uiUtils;
+    }
+
+    public void setUiUtils(UIUtils uiUtils) {
+        this.uiUtils = uiUtils;
     }
 }

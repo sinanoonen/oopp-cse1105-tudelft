@@ -102,6 +102,10 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
     @FXML
     private ComboBox<Language> languageDropdown;
 
+    public void setConfigReader(ConfigReader configReader) {
+        this.configReader = configReader;
+    }
+
     @Inject
     private ConfigReader configReader;
 

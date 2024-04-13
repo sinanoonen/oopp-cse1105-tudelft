@@ -3,8 +3,7 @@ package client.scenes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 import client.enums.Language;
 import client.utils.ClientUtils;
@@ -26,6 +25,10 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * This is used to test the SettingsCtrl class.
  */
@@ -38,10 +41,10 @@ public class SettingsCtrlTest extends ApplicationTest {
 
     @InjectMocks
     private SettingsCtrl settingsCtrl;
-    @Mock
     private UIUtils uiUtils;
-    @Mock
+
     private ClientUtils clientUtils;
+    private List<Language> languageList = new ArrayList<>();
 
     /**
      * This is the setup for headless tests.
@@ -63,7 +66,10 @@ public class SettingsCtrlTest extends ApplicationTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+        uiUtils = new UIUtils();
+        clientUtils = new ClientUtils(uiUtils);
         settingsCtrl = new SettingsCtrl(serverUtils, mainCtrl, uiUtils, clientUtils);
+        languageList.addAll(Arrays.asList(Language.values()));
         Platform.runLater(() -> {
             settingsCtrl.setCurrencyChoiceBox(new ChoiceBox<>());
             settingsCtrl.setLanguageChoiceBox(new ChoiceBox<>());

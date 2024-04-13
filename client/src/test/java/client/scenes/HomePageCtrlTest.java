@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import client.utils.ClientUtils;
+import client.utils.ConfigReader;
 import client.utils.ServerUtils;
 import client.utils.UIUtils;
 import commons.EmailRequest;
@@ -72,6 +73,8 @@ public class HomePageCtrlTest extends ApplicationTest {
         TextField codeInput = new TextField();
         Pane errorPopup = new Pane(new Text(""));
         ListView<Node> eventsList = new ListView<>();
+        ConfigReader cg = new ConfigReader();
+        controller.setConfigReader(cg);
 
         controller.setSettingsOverlay(settingsOverlay);
         controller.setScreenDarkener(screenDarkener);

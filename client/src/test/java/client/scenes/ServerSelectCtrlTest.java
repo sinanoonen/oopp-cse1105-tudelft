@@ -108,6 +108,8 @@ public class ServerSelectCtrlTest extends ApplicationTest {
         serverSelectCtrl.getIpField().setText("");
         serverSelectCtrl.getPortField().setText("");
 
+        UIUtils uiUtils1 = new UIUtils();
+        serverSelectCtrl.setUiUtils(uiUtils1);
         assertFalse(serverSelectCtrl.validateFields());
 
         serverSelectCtrl.getIpField().setText("localhost");

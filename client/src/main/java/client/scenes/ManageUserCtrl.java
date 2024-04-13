@@ -73,11 +73,12 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
      * @param serverUtils serverUtils
      * @param mainCtrl    mainCtrl
      * @param socket      socket
-     * @param uiUtils
-     * @param clientUtils
+     * @param uiUtils    uiUtils
+     * @param clientUtils clientUtils
      */
     @Inject
-    public ManageUserCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
+    public ManageUserCtrl(ServerUtils serverUtils, MainCtrl mainCtrl,
+                          WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
         this.socket = socket;

@@ -42,8 +42,8 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
      *
      * @param server      the server utils
      * @param mainCtrl    the main controller
-     * @param uiUtils
-     * @param clientUtils
+     * @param uiUtils     the ui utils service
+     * @param clientUtils the client utility service
      */
     @Inject
     public AdminLoginCtrl(ServerUtils server, MainCtrl mainCtrl, UIUtils uiUtils, ClientUtils clientUtils) {

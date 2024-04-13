@@ -134,6 +134,11 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
         mainCtrl.showHomePage();
     }
 
+    /**
+     * Validates fields.
+     *
+     * @return tru if all the fields are validated
+     */
     public boolean validateFields() {
         var lm = uiUtils.getLanguageMap();
 

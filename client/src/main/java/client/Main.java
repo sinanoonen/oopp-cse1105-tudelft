@@ -33,7 +33,6 @@ import client.scenes.SettingsCtrl;
 import client.utils.ClientUtils;
 import client.utils.ConfigReader;
 import client.utils.ServerUtils;
-import client.utils.UIUtils;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import java.io.IOException;

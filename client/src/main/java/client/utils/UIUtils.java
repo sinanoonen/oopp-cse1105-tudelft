@@ -23,10 +23,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UIUtils {
 
-    private final int CONTRAST_THRESHOLD = 75;
-    private final double CONTRAST_MODIFIER = 0.86;
-    private final double BRIGHTNESS_MODIFIER = 23;
-    private final double TOOLTIP_FONT_SIZE = 12;
+    private final int contrastThreshold = 75;
+    private final double contrastModifier = 0.86;
+    private final double brightnessModifier = 23;
+    private final double tooltipFontSize = 12;
 
     private final HashMap<Node, String> colorMap = new HashMap<>();
 
@@ -133,13 +133,13 @@ public class UIUtils {
     private void increaseColorContrast(int[] rgb) {
         int average = (rgb[0] + rgb[1] + rgb[2]) / 3;
         // if average is above threshold, add contrastModifier to all rgb values
-        if (average > CONTRAST_THRESHOLD) {
+        if (average > contrastThreshold) {
             for (int i = 0; i < 3; i++) {
-                rgb[i] = Math.min(255, (int) ((rgb[i] * (1.0 + CONTRAST_MODIFIER)) + BRIGHTNESS_MODIFIER));
+                rgb[i] = Math.min(255, (int) ((rgb[i] * (1.0 + contrastModifier)) + brightnessModifier));
             }
         } else {
             for (int i = 0; i < 3; i++) {
-                rgb[i] = Math.max(0, (int) ((rgb[i] * (1.0 - CONTRAST_MODIFIER)) + BRIGHTNESS_MODIFIER));
+                rgb[i] = Math.max(0, (int) ((rgb[i] * (1.0 - contrastModifier)) + brightnessModifier));
             }
         }
 
@@ -241,7 +241,7 @@ public class UIUtils {
      */
     public void addTooltip(Node node, String text) {
         Tooltip tooltip = new Tooltip(text);
-        tooltip.setFont(new Font("SansSerif", TOOLTIP_FONT_SIZE));
+        tooltip.setFont(new Font("SansSerif", tooltipFontSize));
         Tooltip.install(node, tooltip);
     }
 

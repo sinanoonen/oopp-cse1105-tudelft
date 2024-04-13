@@ -81,6 +81,7 @@ public class MainCtrl {
     private ConfigReader configReader;
     @Inject
     private WebSocketServerUtils webSocketServerUtils;
+
     /**
      * Initialize the main controller.
      *

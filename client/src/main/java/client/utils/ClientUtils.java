@@ -2,11 +2,9 @@ package client.utils;
 
 import client.enums.Language;
 import commons.Currency;
+import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
-
-import static commons.Currency.EUR;
 
 /**
  * Utility class for the client.

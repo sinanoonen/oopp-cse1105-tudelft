@@ -45,6 +45,14 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
     @FXML
     private Pane errorPopup;
 
+    /**
+     * Creates a controller for addEvent scene.
+     *
+     * @param serverUtils server service
+     * @param mainCtrl main controller
+     * @param uiUtils ui service
+     * @param clientUtils client service
+     */
     @Inject
     public AddEventCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, UIUtils uiUtils, ClientUtils clientUtils) {
         this.serverUtils = serverUtils;

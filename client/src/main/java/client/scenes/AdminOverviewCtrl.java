@@ -92,11 +92,12 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
      * @param server      the server utils
      * @param mainCtrl    the main controller
      * @param socket      the web socket utils
-     * @param uiUtils
-     * @param clientUtils
+     * @param uiUtils     the ui utils
+     * @param clientUtils  the client utils
      */
     @Inject
-    public AdminOverviewCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
+    public AdminOverviewCtrl(ServerUtils server, MainCtrl mainCtrl,
+                             WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.socket = socket;

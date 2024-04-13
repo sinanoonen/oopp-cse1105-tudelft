@@ -58,8 +58,8 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
      *
      * @param serverUtils the server utils
      * @param mainCtrl    the main controller
-     * @param uiUtils
-     * @param clientUtils
+     * @param uiUtils    the uiUtils
+     * @param clientUtils  the ClientUtils
      * @param socket      the socket connection
      */
     @Inject

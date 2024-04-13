@@ -67,8 +67,8 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
      *
      * @param serverUtils ServerUtils
      * @param mainCtrl    MainCtrl
-     * @param uiUtils
-     * @param clientUtils
+     * @param uiUtils    uiUtils
+     * @param clientUtils  clientUtils
      */
     @Inject
     public SettingsCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, UIUtils uiUtils, ClientUtils clientUtils) {

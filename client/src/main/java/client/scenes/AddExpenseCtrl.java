@@ -127,11 +127,12 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
      * @param server      the server
      * @param mainCtrl    the main controller
      * @param socket      the web socket
-     * @param uiUtils
-     * @param clientUtils
+     * @param uiUtils     the ui utility service
+     * @param clientUtils the client utility service
      */
     @Inject
-    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
+    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl,
+                          WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.socket = socket;

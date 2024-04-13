@@ -176,8 +176,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
      * @param serverUtils serverUtils
      * @param mainCtrl    mainCtrl
      * @param socket      socket
-     * @param uiUtils
-     * @param clientUtils
+     * @param uiUtils    uiUtils
+     * @param clientUtils  clientUtils
      */
     @Inject
     public EventOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl,

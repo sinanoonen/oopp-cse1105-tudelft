@@ -83,8 +83,8 @@ public class ServerSelectCtrlTest extends ApplicationTest {
 
     @Test
     public void testValidIP() {
-        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null, null, null
-                , null, null);
+        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null, null, null,
+                null, null);
         assertTrue(serverSelectCtrl.validIP("localhost"));
         assertTrue(serverSelectCtrl.validIP("192.168.0.1"));
         assertFalse(serverSelectCtrl.validIP(""));
@@ -94,8 +94,8 @@ public class ServerSelectCtrlTest extends ApplicationTest {
 
     @Test
     public void testValidPort() {
-        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null
-                , null, null, null, null);
+        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null,
+                null, null, null, null);
         assertTrue(serverSelectCtrl.validPort("80"));
         assertTrue(serverSelectCtrl.validPort("65535"));
         assertFalse(serverSelectCtrl.validPort("-1"));

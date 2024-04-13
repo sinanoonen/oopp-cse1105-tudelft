@@ -84,7 +84,7 @@ public class EventController {
     }
 
     /**
-     * Get an event by its UUID.
+     * Poll events. Has a timeout of 5000ms (5s).
      *
      * @return the event
      */

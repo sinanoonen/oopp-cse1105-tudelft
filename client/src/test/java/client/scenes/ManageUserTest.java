@@ -1,10 +1,18 @@
 package client.scenes;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import client.enums.ManageUserMode;
 import client.utils.ServerUtils;
-import client.utils.WebSocketServerUtils;
 import commons.Event;
 import commons.User;
+import java.util.UUID;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
@@ -12,14 +20,15 @@ import javafx.scene.text.Text;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationTest;
 
-import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+
 
 /**
  * Test for manage user.
@@ -105,9 +114,7 @@ public class ManageUserTest extends ApplicationTest {
         controller.getEmailField().setText("john.doe@example.com");
         controller.getIbanField().setText("123456789");
         controller.getBicField().setText("ABCDEF");
-
         controller.create();
-
         verify(serverUtils).createUser(userCaptor.capture());
         assertEquals("John Doe", userCaptor.getValue().getName());
         assertEquals("john.doe@example.com", userCaptor.getValue().getEmail());
@@ -119,6 +126,14 @@ public class ManageUserTest extends ApplicationTest {
     public void testInvalidEmail() {
         controller.getNameField().setText("John Doe");
         controller.getEmailField().setText("invalid_email");
+        controller.create();
+        verify(serverUtils, never()).createUser(any());
+    }
+
+    @Test
+    public void testNullEmail() {
+        controller.getNameField().setText("John Doe");
+        controller.getEmailField().setText(null);
         controller.create();
         verify(serverUtils, never()).createUser(any());
     }
@@ -140,6 +155,63 @@ public class ManageUserTest extends ApplicationTest {
         controller.getBicField().setText("");
         controller.create();
         verify(serverUtils, never()).createUser(any());
+    }
+
+    @Test
+    public void testSaveWithValidInputs() {
+        controller.getNameField().setText("John Doe");
+        controller.getEmailField().setText("john.doe@example.com");
+        controller.getIbanField().setText("123456789");
+        controller.getBicField().setText("ABCDEF");
+        String inviteCode = UUID.randomUUID().toString();
+        when(event.getInviteCode()).thenReturn(UUID.fromString(inviteCode));
+        User updatedUser = new User("John Doe",
+                "john.doe@example.com",
+                "123456789",
+                "ABCDEF",
+                UUID.fromString(inviteCode));
+        when(serverUtils.updateUser(any(User.class))).thenReturn(updatedUser);
+        controller.save();
+        verify(serverUtils).updateUser(updatedUser);
+        verify(mainCtrl).showEventOverview(any());
+    }
+
+    @Test
+    public void testSaveWithInvalidInputs() {
+        controller.getNameField().setText("");
+        controller.getEmailField().setText("john.doe@example.com");
+        controller.getIbanField().setText("123456789");
+        controller.getBicField().setText("ABCDEF");
+        controller.save();
+        verify(serverUtils, never()).updateUser(any());
+        verify(mainCtrl, never()).showEventOverview(any());
+    }
+
+    @Test
+    public void testCancelInCreateMode() {
+        controller.setMode(ManageUserMode.CREATE);
+        controller.cancel();
+        verify(mainCtrl).showEventOverview(any());
+    }
+
+    @Test
+    public void testCancelInEditMode() {
+        controller.setMode(ManageUserMode.EDIT);
+        controller.cancel();
+        verify(mainCtrl).showEventOverview(any());
+    }
+
+    @Test
+    public void testChangeStyleAttribute() {
+        Node mockNode = new Node() {};
+        String initialStyle = "-fx-font-size: 12px; -fx-background-color: white;";
+        mockNode.setStyle(initialStyle);
+
+        String attribute = "-fx-font-size";
+        String value = "16px";
+        controller.changeStyleAttribute(mockNode, attribute, value);
+        String expectedStyle = " -fx-background-color: white;-fx-font-size: 16px;";
+        assertEquals(expectedStyle, mockNode.getStyle(), "Style attribute should be updated");
     }
 
 }

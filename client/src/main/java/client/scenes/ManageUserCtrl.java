@@ -144,16 +144,18 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
             changeStyleAttribute(emailField, "-fx-background-color", "#2b2b2b");
             changeStyleAttribute(emailField, "-fx-text-fill", "#8e8e8e");
         }
-
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
-            Platform.runLater(() -> {
-                UUID uuid = UUID.fromString(message.getContent().substring(15));
-                if (event != null && uuid.equals(event.getInviteCode())) {
-                    UIUtils.showEventDeletedWarning(event.getTitle());
-                    mainCtrl.showHomePage();
-                }
+        if (socket != null) {
+            socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+                Platform.runLater(() -> {
+                    UUID uuid = UUID.fromString(message.getContent().substring(15));
+                    if (event != null && uuid.equals(event.getInviteCode())) {
+                        UIUtils.showEventDeletedWarning(event.getTitle());
+                        mainCtrl.showHomePage();
+                    }
+                });
             });
-        });
+        }
+
 
         updateLanguage();
     }
@@ -268,7 +270,7 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
      * @param attribute style attribute to change
      * @param value value of the style attribute
      */
-    private void changeStyleAttribute(Node node, String attribute, String value) {
+    protected void changeStyleAttribute(Node node, String attribute, String value) {
         String currentStyle = node.getStyle();
         String newAttribute = attribute + ": " + value + ";";
 
@@ -340,4 +342,9 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
     public void setEvent(Event event) {
         this.event = event;
     }
+
+    public ManageUserMode getMode() {
+        return mode;
+    }
+
 }

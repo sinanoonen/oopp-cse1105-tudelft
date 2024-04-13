@@ -126,7 +126,7 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         UIUtils.addTooltip(newEventButton, "CTRL + N: Create new event");
         UIUtils.addTooltip(joinButton, "Enter: Join event");
 
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+        socket.registerForMessages("/topic/event", WebSocketMessage.class, message -> {
             Platform.runLater(() -> {
                 events = serverUtils.getEvents();
                 reloadEventsList();

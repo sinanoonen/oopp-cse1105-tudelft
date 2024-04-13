@@ -117,7 +117,7 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
             balanceText.setFill(javafx.scene.paint.Color.web("#8e8e8e"));
         }
 
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+        socket.registerForMessages("/topic/event", WebSocketMessage.class, message -> {
             Platform.runLater(() -> {
                 UUID uuid = UUID.fromString(message.getContent().substring(15));
                 if (event != null && uuid.equals(event.getInviteCode())) {
@@ -297,6 +297,6 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
      * Unsubscribe from sockets and any other clean-up code.
      */
     public void onExit() {
-        socket.unregisterFromMessages("/topic/eventsUpdated");
+        socket.unregisterFromMessages("/topic/event");
     }
 }

@@ -33,7 +33,7 @@ class WebSocketEventControllerTest {
 
         controller.deleteEvent(testEvent.getInviteCode().toString());
 
-        assertEquals("/topic/eventsUpdated", messagingTemplate.getLastDestination());
+        assertEquals("/topic/event", messagingTemplate.getLastDestination());
         WebSocketMessage expectedMessage = new WebSocketMessage("Event deleted: " + testEvent.getInviteCode());
         assertEquals(expectedMessage, messagingTemplate.getLastPayload());
     }

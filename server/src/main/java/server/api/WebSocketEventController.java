@@ -32,7 +32,7 @@ public class WebSocketEventController {
      *
      * @param uuidString the uuid string of the event
      */
-    @MessageMapping("/deleteEvent")
+    @MessageMapping("/event")
     public void deleteEvent(@Payload String uuidString) {
         if (uuidString == null) {
             throw new IllegalArgumentException();
@@ -41,7 +41,7 @@ public class WebSocketEventController {
         if (repo.existsById(uuid)) {
             repo.deleteById(uuid);
             WebSocketMessage message = new WebSocketMessage("Event deleted: " + uuid);
-            template.convertAndSend("/topic/eventsUpdated", message);
+            template.convertAndSend("/topic/event", message);
         }
     }
 }

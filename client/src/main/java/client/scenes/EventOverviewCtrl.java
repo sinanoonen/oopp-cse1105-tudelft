@@ -1006,7 +1006,9 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 .map(t -> (Expense) t)
                 .filter(t -> (t.getDescription()
                         .contains(filterTextField.getText()) || t.getDebts()
-                        .containsKey(filterTextField.getText())) && (filterbyParticipantChoiceBox.getValue() == null || t.getDebts().containsKey(filterbyParticipantChoiceBox.getValue())))
+                        .containsKey(filterTextField.getText()))
+                        && (filterbyParticipantChoiceBox.getValue() == null
+                        || t.getDebts().containsKey(filterbyParticipantChoiceBox.getValue())))
                 .map(e -> (Transaction) e)
                 .toList();
 
@@ -1015,9 +1017,12 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         for (Transaction t : event.transactions()) {
             if (t instanceof Payment
                     && (t.getOwner().contains(filterTextField.getText())
-                    && (filterOwnerChoiceBox.getValue() == null
-                        || t.getOwner().equals(filterOwnerChoiceBox.getValue()))
-                    && (filterbyParticipantChoiceBox.getValue() == null
+                    && (filterOwnerChoiceBox
+                        .getValue() == null
+                        || t
+                        .getOwner().equals(filterOwnerChoiceBox.getValue()))
+                    && (filterbyParticipantChoiceBox
+                    .getValue() == null
                         || ((Payment) t).getRecipient().equals(filterbyParticipantChoiceBox.getValue())))) {
                 filteredTransactions.add(t);
             }

@@ -11,18 +11,20 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 /**
  * The Server Utils for Web Socket connection.
  */
+@Service
 public class WebSocketServerUtils {
 
-    private static StompSession session = connect("ws://localhost:8080/websocket");
-    private static String ip = "localhost";
-    private static String port = "8080";
-    private static String SERVER = "ws://localhost:8080/websocket";
+    private StompSession session = connect("ws://localhost:8080/websocket");
+    private String ip = "localhost";
+    private String port = "8080";
+    private String server = "ws://localhost:8080/websocket";
     private Map<String, StompSession.Subscription> subscriptions = new HashMap<>();
 
     /**
@@ -31,14 +33,14 @@ public class WebSocketServerUtils {
      * @param ip the ip
      * @param port the port
      */
-    public static void setSession(String ip, String port) {
-        WebSocketServerUtils.ip = ip;
-        WebSocketServerUtils.port = port;
-        WebSocketServerUtils.SERVER = "ws://" + ip + ":" + port + "/websocket";
-        session = connect(SERVER);
+    public void setSession(String ip, String port) {
+        this.ip = ip;
+        this.port = port;
+        this.server = "ws://" + ip + ":" + port + "/websocket";
+        session = connect(server);
     }
 
-    private static StompSession connect(String url) {
+    private StompSession connect(String url) {
         var client = new StandardWebSocketClient();
         var stomp = new WebSocketStompClient(client);
         stomp.setMessageConverter(new MappingJackson2MessageConverter());
@@ -111,29 +113,5 @@ public class WebSocketServerUtils {
             subscription.unsubscribe();
             subscriptions.remove(subscription);
         }
-    }
-
-    public static String getIp() {
-        return ip;
-    }
-
-    public static void setIp(String ip) {
-        WebSocketServerUtils.ip = ip;
-    }
-
-    public static String getPort() {
-        return port;
-    }
-
-    public static void setPort(String port) {
-        WebSocketServerUtils.port = port;
-    }
-
-    public static String getSERVER() {
-        return SERVER;
-    }
-
-    public static void setSERVER(String server) {
-        WebSocketServerUtils.SERVER = server;
     }
 }

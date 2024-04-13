@@ -40,11 +40,21 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
     private Button cancelButton;
     @FXML
     private Button connectButton;
+    private WebSocketServerUtils webSocketServerUtils;
 
+    /**
+     * Constructor for ServerSelectCtrl.
+     *
+     * @param serverUtils   the server utils
+     * @param mainCtrl      the main ctrl
+     * @param webSocketServerUtils  the web socket utils
+     */
     @Inject
-    public ServerSelectCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public ServerSelectCtrl(ServerUtils serverUtils, MainCtrl mainCtrl,
+                            WebSocketServerUtils webSocketServerUtils) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.webSocketServerUtils = webSocketServerUtils;
     }
 
     @Override
@@ -102,7 +112,7 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
         String prevIp = ServerUtils.getIp();
         String prevPort = ServerUtils.getPort();
         ServerUtils.setServer(ipField.getText(), portField.getText());
-        WebSocketServerUtils.setSession(ipField.getText(), portField.getText());
+        webSocketServerUtils.setSession(ipField.getText(), portField.getText());
         try {
             mainCtrl.showHomePage();
         } catch (Exception e) {
@@ -112,7 +122,7 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
                     errorPopup
             );
             ServerUtils.setServer(prevIp, prevPort);
-            WebSocketServerUtils.setSession(prevIp, prevPort);
+            webSocketServerUtils.setSession(prevIp, prevPort);
         }
     }
 

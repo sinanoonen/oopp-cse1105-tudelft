@@ -45,7 +45,7 @@ public class ServerSelectCtrlTest extends ApplicationTest {
         serverUtils = mock(ServerUtils.class);
         mainCtrl = mock(MainCtrl.class);
 
-        serverSelectCtrl = new ServerSelectCtrl(serverUtils, mainCtrl);
+        serverSelectCtrl = new ServerSelectCtrl(serverUtils, mainCtrl, null);
 
         serverSelectCtrl.setIpField(new TextField());
         serverSelectCtrl.setPortField(new TextField());
@@ -75,7 +75,7 @@ public class ServerSelectCtrlTest extends ApplicationTest {
 
     @Test
     public void testValidIP() {
-        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null, null);
+        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null, null, null);
         assertTrue(serverSelectCtrl.validIP("localhost"));
         assertTrue(serverSelectCtrl.validIP("192.168.0.1"));
         assertFalse(serverSelectCtrl.validIP(""));
@@ -85,7 +85,7 @@ public class ServerSelectCtrlTest extends ApplicationTest {
 
     @Test
     public void testValidPort() {
-        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null, null);
+        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null, null, null);
         assertTrue(serverSelectCtrl.validPort("80"));
         assertTrue(serverSelectCtrl.validPort("65535"));
         assertFalse(serverSelectCtrl.validPort("-1"));

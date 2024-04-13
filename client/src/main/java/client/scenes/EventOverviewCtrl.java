@@ -1015,7 +1015,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         for (Transaction t : event.transactions()) {
             if (t instanceof Payment
                     && (t.getOwner().contains(filterTextField.getText())
-                    && (filterbyParticipantChoiceBox.getValue() == null
+                    && (filterOwnerChoiceBox.getValue() == null
                         || t.getOwner().equals(filterOwnerChoiceBox.getValue()))
                     && (filterbyParticipantChoiceBox.getValue() == null
                         || ((Payment) t).getRecipient().equals(filterbyParticipantChoiceBox.getValue())))) {

@@ -52,6 +52,8 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
 
     @FXML
     private AnchorPane root;
@@ -87,15 +89,19 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
     /**
      * The constructor for the controller.
      *
-     * @param server   the server utils
-     * @param mainCtrl the main controller
-     * @param socket the web socket utils
+     * @param server      the server utils
+     * @param mainCtrl    the main controller
+     * @param socket      the web socket utils
+     * @param uiUtils
+     * @param clientUtils
      */
     @Inject
-    public AdminOverviewCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket) {
+    public AdminOverviewCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.socket = socket;
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
     }
 
     /**
@@ -104,10 +110,10 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
@@ -118,7 +124,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
             Platform.runLater(this::loadEvents);
         });
 
-        UIUtils.addTooltip(exitButton, "ESC: Exit");
+        uiUtils.addTooltip(exitButton, "ESC: Exit");
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
@@ -130,7 +136,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         String sortBy = lm.get("adminpage_sort_by") + " ";
         title.setText(lm.get("adminpage"));
         sortByTitleButton.setText(sortBy + lm.get("adminpage_title"));
@@ -158,10 +164,10 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
         setupEventListView();
         setupEventSelection();
 
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         updateLanguage();
@@ -207,7 +213,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
         task.setOnFailed(event -> {
             Throwable cause = task.getException();
             cause.printStackTrace();
-            showAlert("Error", UIUtils.getLanguageMap()
+            showAlert("Error", uiUtils.getLanguageMap()
                     .get("adminpage_error_failed_load_event")
                     + ": " + cause.getMessage());
         });
@@ -248,7 +254,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
         dialog.setTitle("Event Details");
 
         DialogPane dialogPane = dialog.getDialogPane();
-        if (ClientUtils.isHighContrast()) {
+        if (clientUtils.isHighContrast()) {
             dialogPane.setStyle("-fx-background-color: #000; -fx-text-fill: #FFFFFF;");
             TextArea textArea = new TextArea(formatEventDetails(event));
             textArea.setEditable(false);
@@ -383,7 +389,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
     @FXML
     private void handleExportEvent() {
         if (selectedEvent == null) {
-            showAlert("Error", UIUtils.getLanguageMap().get("adminpage_error_none_selected_export"));
+            showAlert("Error", uiUtils.getLanguageMap().get("adminpage_error_none_selected_export"));
             return;
         }
         FileChooser fileChooser = new FileChooser();
@@ -398,7 +404,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
                 mapper.writeValue(file, selectedEvent);
             } catch (IOException e) {
                 e.printStackTrace();
-                showAlert("Error", UIUtils.getLanguageMap()
+                showAlert("Error", uiUtils.getLanguageMap()
                         .get("adminpage_error_failed_export_event")
                         + ": " + e.getMessage());
             }
@@ -448,7 +454,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
                 loadEvents();
             } catch (IOException e) {
                 e.printStackTrace();
-                showAlert("Error", UIUtils.getLanguageMap()
+                showAlert("Error", uiUtils.getLanguageMap()
                         .get("adminpage_error_failed_import_event")
                         + ": " + e.getMessage());
             }
@@ -457,7 +463,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
 
     @FXML
     private void handleDeleteEvent() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         if (selectedEvent != null) {
             Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationDialog.setTitle("Confirm Deletion");

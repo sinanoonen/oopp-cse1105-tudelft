@@ -62,6 +62,8 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
 
 
     @FXML
@@ -122,29 +124,33 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
     /**
      * The constructor for the controller.
      *
-     * @param server the server
-     * @param mainCtrl the main controller
-     * @param socket the web socket
+     * @param server      the server
+     * @param mainCtrl    the main controller
+     * @param socket      the web socket
+     * @param uiUtils
+     * @param clientUtils
      */
     @Inject
-    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket) {
+    public AddExpenseCtrl(ServerUtils server, MainCtrl mainCtrl, WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.socket = socket;
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
     }
 
     @Override
     public void updateLanguage() {
-        var languageMap = UIUtils.getLanguageMap();
+        var languageMap = uiUtils.getLanguageMap();
         title.setText(languageMap.get("addexpense"));
         sponsor.setText(languageMap.get("addexpense_sponsor"));
         description.setText(languageMap.get("addexpense_description"));
@@ -165,10 +171,10 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
      * @param event event the expense belongs to
      */
     public void refresh(ManageExpenseMode mode, Event event, Expense expense) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
         this.event = event;
         this.tags = event.getTags();
@@ -178,7 +184,7 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
             Platform.runLater(() -> {
                 UUID uuid = UUID.fromString(message.getContent().substring(15));
                 if (event != null && uuid.equals(event.getInviteCode())) {
-                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    uiUtils.showEventDeletedWarning(event.getTitle());
                     mainCtrl.showHomePage();
                 }
             });
@@ -604,7 +610,7 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
     }
 
     private boolean validateInputs() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
 
         // OWNER CHECKING
         if (isNullOrEmpty(whoPaid.getValue())) {

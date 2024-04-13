@@ -59,23 +59,29 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
     private Text generalText;
     @FXML
     private Text accessibilityText;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
 
     /**
      * Initialize the settings controller.
      *
      * @param serverUtils ServerUtils
-     * @param mainCtrl MainCtrl
+     * @param mainCtrl    MainCtrl
+     * @param uiUtils
+     * @param clientUtils
      */
     @Inject
-    public SettingsCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public SettingsCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, UIUtils uiUtils, ClientUtils clientUtils) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.uiUtils = uiUtils;
 
+        this.clientUtils = clientUtils;
     }
 
     @Override
     public void updateLanguage() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         backLink.setText(lm.get("general_back"));
         settingsTitle.setText(lm.get("homepage_settings").toUpperCase());
         currencyText.setText(lm.get("settings_currency"));
@@ -94,28 +100,28 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
         //add listener to the currency choice box
         currencyChoiceBox.getSelectionModel().selectedItemProperty()
                 .addListener((observableValue, oldCurrency, newCurrency) -> {
-                    ClientUtils.setCurrency(newCurrency);
+                    clientUtils.setCurrency(newCurrency);
                     refresh();
                 });
 
         //add listener to the language choice box
         languageChoiceBox.getSelectionModel().selectedItemProperty()
                 .addListener((observableValue, oldLanguage, newLanguage) -> {
-                    ClientUtils.setLanguage(newLanguage);
+                    clientUtils.setLanguage(newLanguage);
                     refresh();
                 });
 
         //add listener to the high contrast checkbox
         highContrastCheckBox.selectedProperty()
                 .addListener((observableValue, oldValue, newValue) -> {
-                    ClientUtils.setHighContrast(newValue);
+                    clientUtils.setHighContrast(newValue);
                     refresh();
                 });
 
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
@@ -125,7 +131,7 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
             }
         });
 
-        UIUtils.addTooltip(addLanguageButton, "Download language template");
+        uiUtils.addTooltip(addLanguageButton, "Download language template");
     }
 
     /**
@@ -144,15 +150,15 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
         backLink.setVisited(false);
         settingsTitle.requestFocus();
 
-        currencyChoiceBox.setValue(ClientUtils.getCurrency());
-        languageChoiceBox.setValue(ClientUtils.getLanguage());
+        currencyChoiceBox.setValue(clientUtils.getCurrency());
+        languageChoiceBox.setValue(clientUtils.getLanguage());
 
-        highContrastCheckBox.setSelected(ClientUtils.isHighContrast());
+        highContrastCheckBox.setSelected(clientUtils.isHighContrast());
 
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         updateLanguage();

@@ -16,7 +16,9 @@
 
 package client.scenes;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import com.google.inject.Inject;
 import commons.Person;
 import commons.Quote;
@@ -33,6 +35,8 @@ import javafx.stage.Modality;
 public class AddQuoteCtrl {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
 
     @FXML
     private TextField firstName;
@@ -46,14 +50,18 @@ public class AddQuoteCtrl {
     /**
      * Constructor.
      *
-     * @param server ServerUtils
-     * @param mainCtrl MainCtrl
+     * @param server      ServerUtils
+     * @param mainCtrl    MainCtrl
+     * @param uiUtils
+     * @param clientUtils
      */
     @Inject
-    public AddQuoteCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public AddQuoteCtrl(ServerUtils server, MainCtrl mainCtrl, UIUtils uiUtils, ClientUtils clientUtils) {
         this.mainCtrl = mainCtrl;
         this.server = server;
 
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
     }
 
     /**

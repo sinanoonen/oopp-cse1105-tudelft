@@ -33,6 +33,8 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
     private ServerUtils serverUtils;
     private MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
 
 
     ManageUserMode mode;
@@ -71,21 +73,25 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
      * @param serverUtils serverUtils
      * @param mainCtrl    mainCtrl
      * @param socket      socket
+     * @param uiUtils
+     * @param clientUtils
      */
     @Inject
-    public ManageUserCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
+    public ManageUserCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
         this.socket = socket;
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
         mode = ManageUserMode.CREATE;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
@@ -102,7 +108,7 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         title.setText(lm.get(mode == ManageUserMode.CREATE
                 ? "manageuser_create_new_user"
                 : "manageuser_edit_user"));
@@ -118,10 +124,10 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
      * A refresh method for this scene, sets scene back to initial setting.
      */
     public void refresh(ManageUserMode mode, User user, Event event) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
         this.mode = mode;
         this.event = event;
@@ -149,7 +155,7 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
             Platform.runLater(() -> {
                 UUID uuid = UUID.fromString(message.getContent().substring(15));
                 if (event != null && uuid.equals(event.getInviteCode())) {
-                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    uiUtils.showEventDeletedWarning(event.getTitle());
                     mainCtrl.showHomePage();
                 }
             });
@@ -212,7 +218,7 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
     }
 
     private boolean validateInputs() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         // NAME CHECKING
         if (isNullOrEmpty(nameField.getText())) {
             HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_name"), errorPopup);

@@ -33,6 +33,8 @@ import client.scenes.SettingsCtrl;
 import client.utils.ClientUtils;
 import client.utils.ConfigReader;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -46,10 +48,15 @@ public class Main extends Application {
 
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
+    @Inject
+    private ClientUtils clientUtils;
+    @Inject
+    private UIUtils uiUtils;
 
 
     public static void main(String[] args) throws URISyntaxException, IOException {
         ConfigReader.initialize();
+
         launch();
     }
 
@@ -86,11 +93,10 @@ public class Main extends Application {
                 adminLogin,
                 serverSelect);
 
-
         primaryStage.setOnCloseRequest(e -> {
             homePage.getKey().stop();
-            ConfigReader.writeLanguage(ClientUtils.getLanguage());
-            ConfigReader.writeCurrency(ClientUtils.getCurrency());
+            ConfigReader.writeLanguage(clientUtils.getLanguage());
+            ConfigReader.writeCurrency(clientUtils.getCurrency());
             ConfigReader.writeIP(ServerUtils.getIp());
             ConfigReader.writePort(ServerUtils.getPort());
         });

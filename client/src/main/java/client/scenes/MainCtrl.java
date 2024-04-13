@@ -20,10 +20,7 @@ import algorithms.DebtSettler;
 import algorithms.ExchangeProvider;
 import client.enums.ManageExpenseMode;
 import client.enums.ManageUserMode;
-import client.utils.ClientUtils;
-import client.utils.ConfigReader;
-import client.utils.ServerUtils;
-import client.utils.WebSocketServerUtils;
+import client.utils.*;
 import commons.Event;
 import commons.User;
 import commons.transactions.Expense;
@@ -71,6 +68,14 @@ public class MainCtrl {
 
     private Scene serverSelect;
     private ServerSelectCtrl serverSelectCtrl;
+
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
+
+    public MainCtrl(UIUtils uiUtils, ClientUtils clientUtils) {
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
+    }
 
     /**
      * Initialize the main controller.
@@ -133,8 +138,8 @@ public class MainCtrl {
         primaryStage.show();
 
         //Set default language and currency
-        ClientUtils.setCurrency(ConfigReader.getCurrency());
-        ClientUtils.setLanguage(ConfigReader.getLanguage());
+        clientUtils.setCurrency(ConfigReader.getCurrency());
+        clientUtils.setLanguage(ConfigReader.getLanguage());
         ServerUtils.setServer(ConfigReader.getIP(), ConfigReader.getPort());
         WebSocketServerUtils.setSession(ConfigReader.getIP(), ConfigReader.getPort());
 

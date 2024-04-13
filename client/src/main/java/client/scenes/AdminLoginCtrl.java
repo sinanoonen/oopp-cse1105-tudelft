@@ -23,6 +23,8 @@ import javafx.scene.layout.AnchorPane;
 public class AdminLoginCtrl implements Initializable, LanguageInterface {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
 
     @FXML
     private AnchorPane root;
@@ -38,21 +40,25 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
     /**
      * The constructor for the controller.
      *
-     * @param server the server utils
-     * @param mainCtrl the main controller
+     * @param server      the server utils
+     * @param mainCtrl    the main controller
+     * @param uiUtils
+     * @param clientUtils
      */
     @Inject
-    public AdminLoginCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public AdminLoginCtrl(ServerUtils server, MainCtrl mainCtrl, UIUtils uiUtils, ClientUtils clientUtils) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
@@ -73,7 +79,7 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         title.setText(lm.get("adminlogin"));
         passwordField.setPromptText(lm.get("adminlogin_enter_password"));
         cancelButton.setText(lm.get("general_cancel"));
@@ -84,10 +90,10 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
      * This refreshes the admin login page.
      */
     public void refresh() {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
         updateLanguage();
     }
@@ -102,7 +108,7 @@ public class AdminLoginCtrl implements Initializable, LanguageInterface {
         if (result) {
             mainCtrl.showAdminOverview();
         } else {
-            showError(UIUtils.getLanguageMap().get("adminlogin_error_invalid_password"));
+            showError(uiUtils.getLanguageMap().get("adminlogin_error_invalid_password"));
         }
     }
 

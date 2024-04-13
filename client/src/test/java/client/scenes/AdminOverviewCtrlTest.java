@@ -8,7 +8,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import commons.Event;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,6 +35,10 @@ public class AdminOverviewCtrlTest extends ApplicationTest {
 
     @Mock
     private ServerUtils serverUtils;
+    @Mock
+    private UIUtils uiUtils;
+    @Mock
+    private ClientUtils clientUtils;
     @Mock
     private MainCtrl mainCtrl;
 
@@ -60,7 +66,7 @@ public class AdminOverviewCtrlTest extends ApplicationTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        controller = new AdminOverviewCtrl(serverUtils, mainCtrl, null);
+        controller = new AdminOverviewCtrl(serverUtils, mainCtrl, null, uiUtils, clientUtils);
 
 
 

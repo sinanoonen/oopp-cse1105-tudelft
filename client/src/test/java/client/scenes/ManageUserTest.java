@@ -1,7 +1,9 @@
 package client.scenes;
 
 import client.enums.ManageUserMode;
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import commons.Event;
 import commons.User;
 import javafx.scene.control.Button;
@@ -23,6 +25,10 @@ import org.testfx.framework.junit5.ApplicationTest;
 public class ManageUserTest extends ApplicationTest {
     @Mock
     private ServerUtils serverUtils;
+    @Mock
+    private UIUtils uiUtils;
+    @Mock
+    private ClientUtils clientUtils;
     @Mock
     private MainCtrl mainCtrl;
     ManageUserMode mode;
@@ -67,7 +73,7 @@ public class ManageUserTest extends ApplicationTest {
     @BeforeEach
     public void setUpCreate() {
         MockitoAnnotations.initMocks(this);
-        controller = new ManageUserCtrl(serverUtils, mainCtrl, null);
+        controller = new ManageUserCtrl(serverUtils, mainCtrl, null, uiUtils, clientUtils);
         event = new Event("Event");
 
         this.mode = ManageUserMode.CREATE;

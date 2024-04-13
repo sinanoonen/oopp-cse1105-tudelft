@@ -2,21 +2,31 @@ package client.utils;
 
 import client.enums.Language;
 import commons.Currency;
+import org.jvnet.hk2.annotations.Service;
+
+import javax.inject.Inject;
 
 /**
  * Utility class for the client.
  */
+@Service
 public class ClientUtils {
 
-    private static Currency currency;
-    private static Language language;
-    private static boolean highContrast;
+    private Currency currency;
+    private Language language;
+    private boolean highContrast;
+    private UIUtils uiUtils;
 
-    public static void setCurrency(Currency currency) {
-        ClientUtils.currency = currency;
+    @Inject
+    public ClientUtils(UIUtils uiUtils) {
+        this.uiUtils = uiUtils;
     }
 
-    public static Currency getCurrency() {
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public Currency getCurrency() {
         return currency;
     }
 
@@ -25,23 +35,23 @@ public class ClientUtils {
      *
      * @param language language to change to
      */
-    public static void setLanguage(Language language) {
-        if (language.equals(ClientUtils.language)) {
+    public void setLanguage(Language language) {
+        if (language.equals(this.language)) {
             return; // Avoid re-reading and reloading language map
         }
-        ClientUtils.language = language;
-        UIUtils.loadLanguageMap(language);
+        this.language = language;
+        uiUtils.loadLanguageMap(language);
     }
 
-    public static Language getLanguage() {
+    public Language getLanguage() {
         return language;
     }
 
-    public static void setHighContrast(boolean highContrast) {
-        ClientUtils.highContrast = highContrast;
+    public void setHighContrast(boolean highContrast) {
+        this.highContrast = highContrast;
     }
 
-    public static boolean isHighContrast() {
+    public boolean isHighContrast() {
         return highContrast;
     }
 }

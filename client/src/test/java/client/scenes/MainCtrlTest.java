@@ -16,8 +16,11 @@
 
 package client.scenes;
 
+import client.utils.ClientUtils;
+import client.utils.UIUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 /**
  * MainCtrlTest.
@@ -25,10 +28,14 @@ import org.junit.jupiter.api.Test;
 public class MainCtrlTest {
 
     private MainCtrl sut;
+    @Mock
+    private UIUtils uiUtils;
+    @Mock
+    private ClientUtils clientUtils;
 
     @BeforeEach
     public void setup() {
-        sut = new MainCtrl();
+        sut = new MainCtrl(uiUtils, clientUtils);
     }
 
     @Test

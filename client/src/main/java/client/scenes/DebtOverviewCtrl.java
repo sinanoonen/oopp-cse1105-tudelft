@@ -39,6 +39,8 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
 
     private Event event;
     private DebtSettler debtSettler;
@@ -62,23 +64,27 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
      * @param serverUtils serverUtils
      * @param mainCtrl    mainCtrl
      * @param socket      socket
+     * @param uiUtils
+     * @param clientUtils
      */
     @Inject
-    public DebtOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
+    public DebtOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
         this.socket = socket;
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
-        UIUtils.addTooltip(backLink, "ESC: Back");
+        uiUtils.addTooltip(backLink, "ESC: Back");
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
@@ -89,7 +95,7 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         balanceText.setText(lm.get("debtsoverview_participant_balance"));
         debtSettleButton.setText(lm.get("debtsoverview_settle"));
         backLink.setText(lm.get("general_back"));
@@ -109,11 +115,11 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
 
         resetParticipantsDebtContainer();
 
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
             balanceText.setFill(javafx.scene.paint.Color.WHITE);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
             balanceText.setFill(javafx.scene.paint.Color.web("#8e8e8e"));
         }
 
@@ -121,7 +127,7 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
             Platform.runLater(() -> {
                 UUID uuid = UUID.fromString(message.getContent().substring(15));
                 if (event != null && uuid.equals(event.getInviteCode())) {
-                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    uiUtils.showEventDeletedWarning(event.getTitle());
                     mainCtrl.showHomePage();
                 }
             });
@@ -194,7 +200,7 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
         double sumOfExpenses = 0.00;
         for (Expense expense : event.getExpenses()) {
             double newAmount = ExchangeProvider.convertCurrency(expense.getAmount(),
-                    expense.getCurrency().toString(), ClientUtils.getCurrency().toString());
+                    expense.getCurrency().toString(), clientUtils.getCurrency().toString());
             sumOfExpenses += newAmount;
         }
         sumOfExpenses = Math.round(sumOfExpenses * 100.0) / 100.0;
@@ -208,7 +214,7 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
         sumText.setFill(Paint.valueOf("#FFFFFF"));
         sumText.setMouseTransparent(true);
 
-        Text currency = new Text(ClientUtils.getCurrency().toString());
+        Text currency = new Text(clientUtils.getCurrency().toString());
         final double currencyLeftPadding = debtLeftPadding + sumText.getText().length() * 8;
         currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
         final double topPadding = base.getPrefHeight() / 2 + 5;
@@ -248,7 +254,7 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
         double convertedValue = -1 * (debtSettler.getDebts().get(user));
         convertedValue = ExchangeProvider.convertCurrency(convertedValue,
                 "EUR",
-                ClientUtils.getCurrency().toString());
+                clientUtils.getCurrency().toString());
         convertedValue = Math.round(convertedValue * 100.0) / 100.0;
         Text debt = new Text(String.valueOf(convertedValue));
         final double debtLeftPadding = 0.7f * base.getPrefWidth();
@@ -258,7 +264,7 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
         debt.setFill(Paint.valueOf("#FFFFFF"));
         debt.setMouseTransparent(true);
 
-        Text currency = new Text(ClientUtils.getCurrency().toString());
+        Text currency = new Text(clientUtils.getCurrency().toString());
         final double currencyLeftPadding = debtLeftPadding + debt.getText().length() * 8;
         currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
         final double topPadding = base.getPrefHeight() / 2 + 5;

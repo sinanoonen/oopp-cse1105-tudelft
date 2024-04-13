@@ -25,6 +25,8 @@ import javafx.scene.text.Text;
 public class ServerSelectCtrl implements Initializable, LanguageInterface {
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
 
     @FXML
     private AnchorPane root;
@@ -42,17 +44,19 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
     private Button connectButton;
 
     @Inject
-    public ServerSelectCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public ServerSelectCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, UIUtils uiUtils, ClientUtils clientUtils) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
@@ -69,7 +73,7 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         title.setText(lm.get("homepage_server_select").toUpperCase());
         cancelButton.setText(lm.get("general_cancel"));
         connectButton.setText(lm.get("serverselect_connect"));
@@ -82,10 +86,10 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
         ipField.setText(ServerUtils.getIp());
         portField.setText(ServerUtils.getPort());
 
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         updateLanguage();
@@ -108,7 +112,7 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
         } catch (Exception e) {
             mainCtrl.showServerSelect();
             HomePageCtrl.displayErrorPopup(
-                    UIUtils.getLanguageMap().get("serverselect_error_failed_connection"),
+                    uiUtils.getLanguageMap().get("serverselect_error_failed_connection"),
                     errorPopup
             );
             ServerUtils.setServer(prevIp, prevPort);
@@ -122,7 +126,7 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
     }
 
     private boolean validateFields() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         boolean emptyFields = ipField.getText().isEmpty() || portField.getText().isEmpty();
         if (emptyFields) {
             HomePageCtrl.displayErrorPopup(lm.get("serverselect_error_empty_fields"), errorPopup);

@@ -136,7 +136,7 @@ public class EventOverviewCtrlTest extends ApplicationTest {
     public void testCleanupOnExit() {
         controller.onExit();
 
-        verify(socket, times(1)).unregisterFromMessages("/topic/eventsUpdated");
+        verify(socket, times(1)).unregisterFromMessages("/topic/event");
     }
 
     @Test

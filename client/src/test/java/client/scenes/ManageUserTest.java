@@ -115,4 +115,31 @@ public class ManageUserTest extends ApplicationTest {
         assertEquals("ABCDEF", userCaptor.getValue().getBic());
     }
 
+    @Test
+    public void testInvalidEmail() {
+        controller.getNameField().setText("John Doe");
+        controller.getEmailField().setText("invalid_email");
+        controller.create();
+        verify(serverUtils, never()).createUser(any());
+    }
+
+    @Test
+    public void testInvalidIban() {
+        controller.getNameField().setText("John Doe");
+        controller.getEmailField().setText("john.doe@example.com");
+        controller.getIbanField().setText("");
+        controller.create();
+        verify(serverUtils, never()).createUser(any());
+    }
+
+    @Test
+    public void testInvalidBic() {
+        controller.getNameField().setText("John Doe");
+        controller.getEmailField().setText("john.doe@example.com");
+        controller.getIbanField().setText("123456789");
+        controller.getBicField().setText("");
+        controller.create();
+        verify(serverUtils, never()).createUser(any());
+    }
+
 }

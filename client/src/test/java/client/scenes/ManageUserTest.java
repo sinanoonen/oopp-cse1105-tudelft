@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.enums.ManageUserMode;
 import client.utils.ServerUtils;
+import client.utils.WebSocketServerUtils;
 import commons.Event;
 import commons.User;
 import javafx.scene.control.Button;
@@ -10,12 +11,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
 import org.testfx.framework.junit5.ApplicationTest;
+
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * Test for manage user.
@@ -68,7 +72,6 @@ public class ManageUserTest extends ApplicationTest {
     public void setUpCreate() {
         MockitoAnnotations.initMocks(this);
         controller = new ManageUserCtrl(serverUtils, mainCtrl, null);
-        event = new Event("Event");
 
         this.mode = ManageUserMode.CREATE;
 
@@ -86,6 +89,30 @@ public class ManageUserTest extends ApplicationTest {
         controller.setBicField(bicField);
         controller.setErrorPopup(errorPopup);
         controller.setEvent(event);
+    }
+
+    @Test
+    public void testUIInitialization() {
+        assertNotNull(controller.getNameField());
+        assertNotNull(controller.getEmailField());
+        assertNotNull(controller.getIbanField());
+        assertNotNull(controller.getBicField());
+    }
+
+    @Test
+    public void testUserCreation() {
+        controller.getNameField().setText("John Doe");
+        controller.getEmailField().setText("john.doe@example.com");
+        controller.getIbanField().setText("123456789");
+        controller.getBicField().setText("ABCDEF");
+
+        controller.create();
+
+        verify(serverUtils).createUser(userCaptor.capture());
+        assertEquals("John Doe", userCaptor.getValue().getName());
+        assertEquals("john.doe@example.com", userCaptor.getValue().getEmail());
+        assertEquals("123456789", userCaptor.getValue().getIban());
+        assertEquals("ABCDEF", userCaptor.getValue().getBic());
     }
 
 }

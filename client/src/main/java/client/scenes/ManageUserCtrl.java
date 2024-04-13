@@ -159,7 +159,7 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
     }
 
     public void cancel() {
-        onExit();
+        //onExit();
         mainCtrl.showEventOverview(serverUtils.getEventByUUID(event.getInviteCode()));
     }
 
@@ -286,6 +286,9 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
      * Unsubscribe from sockets and any other clean-up code.
      */
     public void onExit() {
+        if (socket == null) {
+            return;
+        }
         socket.unregisterFromMessages("/topic/eventsUpdated");
     }
 

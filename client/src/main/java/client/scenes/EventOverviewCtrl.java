@@ -139,6 +139,10 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     private TextField filterTextField;
     @FXML
     private ChoiceBox<String> tagFilterChoiceBox;
+    @FXML
+    private ChoiceBox<String> filterOwnerChoiceBox;
+    @FXML
+    private ChoiceBox<String> filterbyParticipantChoiceBox;
     private boolean expenseMenuVisible = false;
     private boolean expenseDetailsVisible = false;
     @FXML
@@ -216,6 +220,28 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
 
             if (tagFilterChoiceBox.getValue() != null && tagFilterChoiceBox.getValue().equals("All")) {
                 tagFilterChoiceBox.setValue(null);
+            }
+
+            resetTransactionsContainer();
+        });
+
+        filterOwnerChoiceBox.setOnAction((event) -> {
+            int selectedIndex = filterOwnerChoiceBox.getSelectionModel().getSelectedIndex();
+            Object selectedItem = filterOwnerChoiceBox.getSelectionModel().getSelectedItem();
+
+            if (filterOwnerChoiceBox.getValue() != null && filterOwnerChoiceBox.getValue().equals("No filter.")) {
+                filterOwnerChoiceBox.setValue(null);
+            }
+
+            resetTransactionsContainer();
+        });
+
+        filterbyParticipantChoiceBox.setOnAction((event) -> {
+            int selectedIndex = filterbyParticipantChoiceBox.getSelectionModel().getSelectedIndex();
+            Object selectedItem = filterbyParticipantChoiceBox.getSelectionModel().getSelectedItem();
+
+            if (filterbyParticipantChoiceBox.getValue() != null && filterbyParticipantChoiceBox.getValue().equals("No filter.")) {
+                filterbyParticipantChoiceBox.setValue(null);
             }
 
             resetTransactionsContainer();
@@ -391,13 +417,27 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         }
 
         Set<String> tags = new HashSet<>();
+        Set<String> participants = new HashSet<>();
         for (Transaction t : event.transactions()) {
             tags.addAll(t.getTags().stream().map(Tag::getName).toList());
+            participants.add(t.getOwner());
+            if (t instanceof Expense) {
+                participants.addAll(((Expense) t).getDebts().keySet());
+            }
         }
+
 
         tagFilterChoiceBox.getItems().removeAll(tagFilterChoiceBox.getItems());
         tagFilterChoiceBox.getItems().addAll(tags);
         tagFilterChoiceBox.getItems().addFirst("All");
+
+        filterOwnerChoiceBox.getItems().removeAll(filterOwnerChoiceBox.getItems());
+        filterOwnerChoiceBox.getItems().addAll(participants);
+        filterOwnerChoiceBox.getItems().addFirst("No filter.");
+
+        filterbyParticipantChoiceBox.getItems().removeAll(filterbyParticipantChoiceBox.getItems());
+        filterbyParticipantChoiceBox.getItems().addAll(participants);
+        filterbyParticipantChoiceBox.getItems().addFirst("No filter.");
 
         resetTransactionsContainer();
 
@@ -964,18 +1004,25 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 .stream()
                 .filter(t -> t instanceof Expense)
                 .map(t -> (Expense) t)
-                .filter(t -> t.getDescription()
+                .filter(t -> (t.getDescription()
                         .contains(filterTextField.getText()) || t.getDebts()
-                        .containsKey(filterTextField.getText()))
+                        .containsKey(filterTextField.getText())) && (filterbyParticipantChoiceBox.getValue() == null || t.getDebts().containsKey(filterbyParticipantChoiceBox.getValue())))
                 .map(e -> (Transaction) e)
                 .toList();
 
+
         List<Transaction> filteredTransactions = new ArrayList<>(filteredExpenses);
         for (Transaction t : event.transactions()) {
-            if (t instanceof Payment) {
+            if (t instanceof Payment
+                    && (t.getOwner().contains(filterTextField.getText())
+                    && (filterbyParticipantChoiceBox.getValue() == null
+                        || t.getOwner().equals(filterOwnerChoiceBox.getValue()))
+                    && (filterbyParticipantChoiceBox.getValue() == null
+                        || ((Payment) t).getRecipient().equals(filterbyParticipantChoiceBox.getValue())))) {
                 filteredTransactions.add(t);
             }
         }
+
 
 
         if (tagFilterChoiceBox.getValue() != null) {
@@ -983,6 +1030,12 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                     .filter(t -> t.getTags().stream()
                             .map(Tag::getName).toList()
                             .contains(tagFilterChoiceBox.getValue()))
+                    .toList();
+        }
+
+        if (filterOwnerChoiceBox.getValue() != null) {
+            filteredTransactions = filteredTransactions.stream()
+                    .filter(t -> t.getOwner().equals(filterOwnerChoiceBox.getValue()))
                     .toList();
         }
 

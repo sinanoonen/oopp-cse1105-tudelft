@@ -25,6 +25,9 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
+/**
+ * This is used to test the SettingsCtrl class.
+ */
 public class SettingsCtrlTest extends ApplicationTest {
 
     @Mock
@@ -35,6 +38,11 @@ public class SettingsCtrlTest extends ApplicationTest {
     @InjectMocks
     private SettingsCtrl settingsCtrl;
 
+    /**
+     * This is the setup for headless tests.
+     *
+     * @throws Exception the exception that is thrown
+     */
     @BeforeAll
     public static void setupSpec() throws Exception {
         System.setProperty("testfx.robot", "glass");
@@ -44,6 +52,9 @@ public class SettingsCtrlTest extends ApplicationTest {
         System.setProperty("java.awt.headless", "true");
     }
 
+    /**
+     * This is the setUp for testing.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);

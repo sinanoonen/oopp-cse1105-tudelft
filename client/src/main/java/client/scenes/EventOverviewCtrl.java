@@ -465,7 +465,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         resetTransactionsContainer();
 
 
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+        socket.registerForMessages("/topic/event", WebSocketMessage.class, message -> {
             Platform.runLater(() -> {
                 UUID uuid = UUID.fromString(message.getContent().substring(15));
                 if (event != null && uuid.equals(event.getInviteCode())) {
@@ -1214,7 +1214,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
      * Unsubscribe from sockets and any other clean-up code.
      */
     public void onExit() {
-        socket.unregisterFromMessages("/topic/eventsUpdated");
+        socket.unregisterFromMessages("/topic/event");
     }
 
     public Event getEvent() {

@@ -41,7 +41,7 @@ public class WebSocketEventController {
         if (repo.existsById(uuid)) {
             repo.deleteById(uuid);
             WebSocketMessage message = new WebSocketMessage("Event deleted: " + uuid);
-            template.convertAndSend("/topic/eventsUpdated", message);
+            template.convertAndSend("/topic/event", message);
         }
     }
 }

@@ -8,7 +8,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import algorithms.DebtSettler;
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
 import commons.Event;
 import javafx.application.Platform;
@@ -19,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.apache.catalina.Server;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +42,10 @@ public class DebtOverviewCtrlTest extends ApplicationTest {
     private MainCtrl mainCtrl;
     @Mock
     private WebSocketServerUtils socket;
+    @Mock
+    private UIUtils uiUtils;
+    @Mock
+    private ClientUtils clientUtils;
 
     @InjectMocks
     private DebtOverviewCtrl controller;
@@ -66,7 +73,7 @@ public class DebtOverviewCtrlTest extends ApplicationTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        controller = new DebtOverviewCtrl(serverUtils, mainCtrl, socket);
+        controller = new DebtOverviewCtrl(serverUtils, mainCtrl, socket, uiUtils, clientUtils);
         when(mainCtrl.getPrimaryStage()).thenReturn(mockStage);
         controller.setRoot(new AnchorPane());
         controller.setDebtSettleButton(new Button());

@@ -213,8 +213,15 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
 
         String name = nameField.getText();
         String email = emailField.getText();
-        String iban = ibanField.getText();
-        String bic = bicField.getText();
+        String iban = "  ";
+        if (!isNullOrEmpty(ibanField.getText())) {
+            iban = ibanField.getText();
+        }
+        String bic = "  ";
+        if (!isNullOrEmpty(bicField.getText())) {
+            bic = bicField.getText();
+        }
+
         User updated = new User(name, email, iban, bic, event.getInviteCode());
 
         User saved = serverUtils.updateUser(updated);
@@ -246,15 +253,15 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
             return false;
         }
         // IBAN CHECKING
-        if (isNullOrEmpty(ibanField.getText())) {
-            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_iban"), errorPopup);
-            return false;
-        }
+        // if (isNullOrEmpty(ibanField.getText())) {
+        //    HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_iban"), errorPopup);
+        //    return false;
+        //}
         // BIC CHECKING
-        if (isNullOrEmpty(bicField.getText())) {
-            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_bic"), errorPopup);
-            return false;
-        }
+        // if (isNullOrEmpty(bicField.getText())) {
+        //    HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_bic"), errorPopup);
+        //    return false;
+        //}
 
         return true;
     }

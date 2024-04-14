@@ -1394,8 +1394,43 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         this.tagFilterChoiceBox = tagFilterChoiceBox;
     }
 
-
     public void setLanguageDropdown(ComboBox<Language> languageDropdown) {
         this.languageDropdown = languageDropdown;
+    }
+
+    public void setExpenseIncludes(Text expenseIncludes) {
+        this.expenseIncludes = expenseIncludes;
+    }
+
+    public void setExpenseDetailsButton(Button expenseDetailsButton) {
+        this.expenseDetailsButton = expenseDetailsButton;
+    }
+
+    public void setExpenseDetailsText(Text expenseDetailsText) {
+        this.expenseDetailsText = expenseDetailsText;
+    }
+
+    public void setTitleDescription(Text titleDescription) {
+        this.titleDescription = titleDescription;
+    }
+
+    public void setTitleDate(Text titleDate) {
+        this.titleDate = titleDate;
+    }
+
+    public void setTitleOwner(Text titleOwner) {
+        this.titleOwner = titleOwner;
+    }
+
+    public void setTitleAmount(Text titleAmount) {
+        this.titleAmount = titleAmount;
+    }
+
+    public void setTitleTags(Text titleTags) {
+        this.titleTags = titleTags;
+    }
+
+    public void setTitleParticipants(Text titleParticipants) {
+        this.titleParticipants = titleParticipants;
     }
 }

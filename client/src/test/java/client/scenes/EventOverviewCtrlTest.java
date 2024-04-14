@@ -113,6 +113,15 @@ public class EventOverviewCtrlTest extends ApplicationTest {
         controller.setEditExpense(new Button());
         controller.setRemoveExpense(new Button());
         controller.setErrorPopup(new Pane());
+        controller.setExpenseIncludes(new Text());
+        controller.setExpenseDetailsButton(new Button());
+        controller.setExpenseDetailsText(new Text());
+        controller.setTitleDescription(new Text());
+        controller.setTitleDate(new Text());
+        controller.setTitleOwner(new Text());
+        controller.setTitleAmount(new Text());
+        controller.setTitleParticipants(new Text());
+        controller.setTitleTags(new Text());
     }
 
     @Test

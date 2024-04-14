@@ -18,7 +18,7 @@ import java.net.http.HttpResponse;
 public class ExchangeProvider {
 
     private static final String API_URL = "https://openexchangerates.org/api/latest.json";
-    private static final String API_KEY = "4503cd84a4754c90b993b4952cbd3b37";
+    private static final String API_KEY = "3f3b6e000c0a42ef9392140db175c8a6";
 
     public static String getApiUrl() {
         return API_URL;

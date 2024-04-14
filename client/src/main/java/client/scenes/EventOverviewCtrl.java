@@ -325,6 +325,15 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                         return;
                     }
                 }
+                if (expenseMenu.isVisible()) {
+                    if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                        toggleExpenseMenu();
+                        if (expenseDetails.isVisible()) {
+                            toggleExpenseDetails();
+                        }
+                        return;
+                    }
+                }
             }
         });
 

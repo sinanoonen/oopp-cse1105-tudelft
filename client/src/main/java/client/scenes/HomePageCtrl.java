@@ -136,7 +136,11 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
             uiUtils.deactivateHighContrastMode(root);
         }
 
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+        uiUtils.addTooltip(addButton, "CTRL + N: Add event");
+        uiUtils.addTooltip(newEventButton, "CTRL + N: Create new event");
+        uiUtils.addTooltip(joinButton, "Enter: Join event");
+
+        socket.registerForMessages("/topic/event", WebSocketMessage.class, message -> {
             Platform.runLater(() -> {
                 events = serverUtils.getEvents();
                 reloadEventsList();

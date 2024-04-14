@@ -50,9 +50,16 @@
   "adminpage_title": "Title",
   "adminpage_sort_by": "Sort By",
 
+  "debtsoverview_has_been_settled": "Debt has been paid",
+  "debtsoverview_message_can_send_reminder": "can send a reminder",
+  "debtsoverview_message_can_transfer_money": "can transfer the money",
+  "debtsoverview_message_the_email": "the Email",
+  "debtsoverview_message_should_send": "should send",
+  "debtsoverview_message_to": "to",
   "debtsoverview_participant_balance": "PARTICIPANT BALANCE",
   "debtsoverview_payment_instructions": "PAYMENT INSTRUCTIONS",
   "debtsoverview_settle": "Settle Debts",
+  "debtsoverview_total_sum": "Total sum of expenses",
 
   "eventoverview_add_participant": "Add Participant",
   "eventoverview_all": "All",

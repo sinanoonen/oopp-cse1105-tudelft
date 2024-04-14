@@ -189,7 +189,7 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
                 + " -fx-border-radius: 5;"
         );
 
-        Text text = new Text("Total sum of expenses");
+        Text text = new Text(uiUtils.getLanguageMap().get("debtsoverview_total_sum"));
         final double nameTopPadding = base.getPrefHeight() / 2 + 5;
         final double nameLeftPadding = 0.12f * base.getPrefWidth();
         text.setLayoutX(base.getLayoutX() + nameLeftPadding);

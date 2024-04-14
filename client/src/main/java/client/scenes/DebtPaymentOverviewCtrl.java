@@ -222,7 +222,7 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
                 + " -fx-background-radius: 5;"
                 + " -fx-border-radius: 5;"
         );
-        payOffDebt.setText("Debt has been paid");
+        payOffDebt.setText(uiUtils.getLanguageMap().get("debtsoverview_has_been_settled"));
         payOffDebt.setFont(Font.font("SansSerif", 15));
         payOffDebt.setTextFill(Paint.valueOf("#FFFFFF"));
 
@@ -245,7 +245,22 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
             }
         });
 
+        // Translations
+        var lm = uiUtils.getLanguageMap();
+        String baseText = base.getText();
+        String contentText = content.getText();
 
+        baseText = baseText.replace("should send", lm.get("debtsoverview_message_should_send"));
+        baseText = baseText.replaceAll("to", lm.get("debtsoverview_message_to"));
+        contentText = contentText.replaceAll("to", lm.get("debtsoverview_message_to"));
+        contentText = contentText.replace("can transfer the money",
+                lm.get("debtsoverview_message_can_transfer_money"));
+        contentText = contentText.replace("can send a reminder",
+                lm.get("debtsoverview_message_can_send_reminder"));
+        contentText = contentText.replace("the Email", lm.get("debtsoverview_message_the_email"));
+
+        base.setText(baseText);
+        content.setText(contentText);
 
         return base;
     }

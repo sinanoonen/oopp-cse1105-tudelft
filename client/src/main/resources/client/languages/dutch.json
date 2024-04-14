@@ -50,9 +50,16 @@
   "adminpage_sort_by": "Titel",
   "adminpage_title": "Sorteer op",
 
+  "debtsoverview_has_been_settled": "",
+  "debtsoverview_message_can_send_reminder": "",
+  "debtsoverview_message_can_transfer_money": "",
+  "debtsoverview_message_the_email": "",
+  "debtsoverview_message_should_send": "",
+  "debtsoverview_message_to": "",
   "debtsoverview_participant_balance": "DEELNEMERSBALANS",
   "debtsoverview_payment_instructions": "BETALINGSINSTRUCTIES",
   "debtsoverview_settle": "Schulden Betalen",
+  "debtsoverview_total_sum": "",
 
   "eventoverview_add_participant": "Voeg deelnemer toe",
   "eventoverview_all": "",

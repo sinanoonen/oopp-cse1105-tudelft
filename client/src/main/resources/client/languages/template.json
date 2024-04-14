@@ -50,9 +50,16 @@
   "adminpage_sort_by": "",
   "adminpage_title": "",
 
+  "debtsoverview_has_been_settled": "",
+  "debtsoverview_message_can_send_reminder": "",
+  "debtsoverview_message_can_transfer_money": "",
+  "debtsoverview_message_the_email": "",
+  "debtsoverview_message_should_send": "",
+  "debtsoverview_message_to": "",
   "debtsoverview_participant_balance": "",
   "debtsoverview_payment_instructions": "",
   "debtsoverview_settle": "",
+  "debtsoverview_total_sum": "",
 
   "eventoverview_add_participant": "",
   "eventoverview_all": "",

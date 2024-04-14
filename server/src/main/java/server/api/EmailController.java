@@ -29,7 +29,7 @@ public class EmailController {
      * @param emailRequest the email request
      * @return the response
      */
-    @PostMapping("/send")
+    @PostMapping(path = { "", "/" })
     public ResponseEntity<?> sendEmail(@RequestBody EmailRequest emailRequest) {
         try {
             emailService.sendEmail(

@@ -339,7 +339,7 @@ public class ServerUtils {
      */
     public boolean sendMail(EmailRequest emailRequest) {
         Response response = ClientBuilder.newClient(new ClientConfig())
-            .target(SERVER).path("api/email/send")
+            .target(SERVER).path("api/email")
             .request(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .post(Entity.entity(emailRequest, APPLICATION_JSON));

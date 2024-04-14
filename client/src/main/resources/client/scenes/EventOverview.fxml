@@ -16,7 +16,7 @@
 
 <AnchorPane id="participants_button" fx:id="root" prefHeight="647.0" prefWidth="600.0" style="-fx-background-color: #333333;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.EventOverviewCtrl">
    <children>
-      <Pane id="title_box" fx:id="titleBox" layoutX="24.0" layoutY="65.0" prefHeight="62.0" prefWidth="316.0" style="-fx-background-radius: 10; -fx-background-color: #2b2b2b;" visible="false">
+      <Pane id="title_box" fx:id="titleBox" layoutX="24.0" layoutY="65.0" prefHeight="40.0" prefWidth="316.0" style="-fx-background-radius: 10; -fx-background-color: #2b2b2b;" visible="false">
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor>
@@ -108,14 +108,14 @@
          <children>
             <Button fx:id="editExpense" layoutX="25.0" layoutY="135.0" mnemonicParsing="false" onAction="#editExpense" prefHeight="92.0" prefWidth="339.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Edit Expense" textFill="WHITE" />
             <Button fx:id="removeExpense" layoutX="26.0" layoutY="255.0" mnemonicParsing="false" onAction="#removeExpense" prefHeight="92.0" prefWidth="339.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Remove Expense" textFill="WHITE" />
-            <Button fx:id="showExpenseDetails" layoutX="27.0" layoutY="26.0" mnemonicParsing="false" onAction="#toggleExpenseDetails" prefHeight="92.0" prefWidth="339.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Expense Details" textFill="WHITE" />
+            <Button fx:id="expenseDetailsButton" layoutX="27.0" layoutY="26.0" mnemonicParsing="false" onAction="#toggleExpenseDetails" prefHeight="92.0" prefWidth="339.0" style="-fx-background-color: #3f3f3f; -fx-border-color: #c30025; -fx-border-radius: 3;" text="Expense Details" textFill="WHITE" />
          </children>
       </Pane>
       <Pane id="expenseDarkener" fx:id="expenseDarkener" layoutX="10.0" layoutY="9.0" mouseTransparent="true" opacity="0.7" prefHeight="658.0" prefWidth="610.0" style="-fx-background-color: black;" visible="false" />
       <ChoiceBox fx:id="tagFilterChoiceBox" layoutX="254.0" layoutY="187.0" prefHeight="26.0" prefWidth="136.0" />
       <Pane fx:id="expenseDetails" layoutX="145.0" layoutY="154.0" prefHeight="500.0" prefWidth="294.0" style="-fx-background-color: #333333; -fx-background-radius: 12; -fx-border-color: #c30052; -fx-border-width: 3; -fx-border-radius: 10;" visible="false">
          <children>
-            <Text fx:id="titleDetails" fill="WHITE" layoutX="25.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Details" textAlignment="CENTER" visible="false" wrappingWidth="218.39999999999998">
+            <Text fx:id="expenseDetailsText" fill="WHITE" layoutX="25.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense Details" textAlignment="CENTER" visible="false" wrappingWidth="218.39999999999998">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -156,7 +156,7 @@
       <ComboBox fx:id="languageDropdown" layoutX="34.0" layoutY="121.0" prefHeight="26.0" prefWidth="52.0" />
       <Text fill="WHITE" layoutX="35.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Owner:" />
       <ChoiceBox fx:id="filterOwnerChoiceBox" layoutX="86.0" layoutY="155.0" prefHeight="26.0" prefWidth="76.0" />
-      <Text fill="WHITE" layoutX="182.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense includes:" />
+      <Text fx:id="expenseIncludes" fill="WHITE" layoutX="182.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Expense includes:" />
       <ChoiceBox fx:id="filterbyParticipantChoiceBox" layoutX="294.0" layoutY="155.0" prefHeight="26.0" prefWidth="76.0" />
    </children>
 </AnchorPane>

@@ -217,8 +217,10 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         inviteCodeText.setText(lm.get("homepage_code"));
         joinButton.setText(lm.get("homepage_join"));
         newEventButton.setText(lm.get("general_new"));
-        Text errorMessage = (Text) errorPopup.getChildren().getFirst();
-        // errorMessage.setText(lm.get());
+
+        uiUtils.addTooltip(addButton, "CTRL + N: " + lm.get("homepage_tooltip_add_event"));
+        uiUtils.addTooltip(newEventButton, "CTRL + N: " + lm.get("homepage_tooltip_create_event"));
+        uiUtils.addTooltip(joinButton, "ENTER: " + lm.get("homepage_tooltip_join_event"));
     }
 
     /**

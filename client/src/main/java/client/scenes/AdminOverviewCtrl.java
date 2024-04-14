@@ -125,8 +125,6 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
             Platform.runLater(this::loadEvents);
         });
 
-        uiUtils.addTooltip(exitButton, "ESC: Exit");
-
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
                 exit();
@@ -147,6 +145,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
         importEventButton.setText(lm.get("adminpage_import_event") + " (JSON)");
         deleteEventButton.setText(lm.get("adminpage_delete_event"));
         exitButton.setText(lm.get("adminpage_exit"));
+        uiUtils.addTooltip(exitButton, "ESC: " + lm.get("adminpage_exit"));
     }
 
     /**

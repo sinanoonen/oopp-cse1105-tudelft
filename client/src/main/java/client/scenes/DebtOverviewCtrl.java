@@ -85,8 +85,6 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
             uiUtils.deactivateHighContrastMode(root);
         }
 
-        uiUtils.addTooltip(backLink, "ESC: Back");
-
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
                 onBackClicked(null);
@@ -100,6 +98,8 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
         balanceText.setText(lm.get("debtsoverview_participant_balance"));
         debtSettleButton.setText(lm.get("debtsoverview_settle"));
         backLink.setText(lm.get("general_back"));
+
+        uiUtils.addTooltip(backLink, "ESC: " + lm.get("general_back"));
     }
 
     /**
@@ -189,7 +189,7 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
                 + " -fx-border-radius: 5;"
         );
 
-        Text text = new Text("Total sum of expenses");
+        Text text = new Text(uiUtils.getLanguageMap().get("debtsoverview_total_sum"));
         final double nameTopPadding = base.getPrefHeight() / 2 + 5;
         final double nameLeftPadding = 0.12f * base.getPrefWidth();
         text.setLayoutX(base.getLayoutX() + nameLeftPadding);

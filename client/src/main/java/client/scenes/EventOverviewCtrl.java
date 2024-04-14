@@ -138,6 +138,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     @FXML
     private Button removeExpense;
     @FXML
+    private Button expenseDetailsButton;
+    @FXML
     private TextField filterTextField;
     @FXML
     private ChoiceBox<String> tagFilterChoiceBox;
@@ -147,6 +149,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     private ChoiceBox<String> filterbyParticipantChoiceBox;
     private boolean expenseMenuVisible = false;
     private boolean expenseDetailsVisible = false;
+    @FXML
+    private Text expenseDetailsText;
     @FXML
     private Text titleDescription;
     @FXML
@@ -171,6 +175,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     private Text titleParticipants;
     @FXML
     private Text involvedParticipants;
+    @FXML
+    private Text expenseIncludes;
     @FXML
     private ComboBox<Language> languageDropdown;
 
@@ -263,15 +269,6 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             });
         }
 
-
-        uiUtils.addTooltip(inviteCodeButton, "CTRL + C: Copy invite code");
-        uiUtils.addTooltip(backLink, "ESC: Back");
-        uiUtils.addTooltip(addExpense, "CTRL + N: Add expense");
-        uiUtils.addTooltip(addParticipantButton, "CTRL + N: Add participant");
-        uiUtils.addTooltip(newParticipantButton, "CTRL + N: Create participant");
-        uiUtils.addTooltip(confirmButton, "ENTER: Confirm");
-        uiUtils.addTooltip(filterTextField, "CTRL + F: Filter");
-
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (!participantsMenu.isVisible()               // NO MENUS OPEN
                     && !addParticipantsMenu.isVisible()
@@ -319,6 +316,15 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                         return;
                     }
                 }
+                if (expenseMenu.isVisible()) {
+                    if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                        toggleExpenseMenu();
+                        if (expenseDetails.isVisible()) {
+                            toggleExpenseDetails();
+                        }
+                        return;
+                    }
+                }
             }
         });
 
@@ -361,14 +367,34 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         participantsButton.setText(lm.get("eventoverview_participants"));
         debtsButton.setText(lm.get("eventoverview_debts"));
         filterTextField.setPromptText(lm.get("eventoverview_filter"));
+        expenseIncludes.setText(lm.get("eventoverview_expense_includes"));
         Text popupText = (Text) clipboardPopup.getChildren().getFirst();
         popupText.setText(lm.get("eventoverview_copied_to_clipboard"));
+
         addParticipantButton.setText(lm.get("eventoverview_add_participant"));
         closeButton.setText(lm.get("general_close"));
         confirmButton.setText(lm.get("general_confirm"));
         newParticipantButton.setText(lm.get("general_new"));
+
         editExpense.setText(lm.get("eventoverview_edit_expense"));
         removeExpense.setText(lm.get("eventoverview_delete_expense"));
+        expenseDetailsButton.setText(lm.get("eventoverview_expense_details"));
+        expenseDetailsText.setText(lm.get("eventoverview_expense_details"));
+        titleDescription.setText(lm.get("addexpense_description") + ": ");
+        titleDate.setText(lm.get("addexpense_date") + ": ");
+        titleOwner.setText(lm.get("addexpense_sponsor") + ": ");
+        titleAmount.setText(lm.get("addexpense_quantity") + ": ");
+        titleParticipants.setText(lm.get("eventoverview_expense_involved") + ": ");
+        titleTags.setText(lm.get("eventoverview_expense_tags") + ": ");
+
+        uiUtils.addTooltip(inviteCodeButton, "CTRL + C: " + lm.get("eventoverview_tooltip_copy"));
+        uiUtils.addTooltip(backLink, "ESC: " + lm.get("general_back"));
+        uiUtils.addTooltip(addExpense, "CTRL + N: " + lm.get("eventoverview_tooltip_add_expense"));
+        uiUtils.addTooltip(addParticipantButton, "CTRL + N: " + lm.get("eventoverview_tooltip_add_participant"));
+        uiUtils.addTooltip(newParticipantButton,
+                "CTRL + N: " + lm.get("eventoverview_tooltip_create_participant"));
+        uiUtils.addTooltip(confirmButton, "ENTER: " + lm.get("general_confirm"));
+        uiUtils.addTooltip(filterTextField, "CTRL + F: " + lm.get("eventoverview_tooltip_filter"));
     }
 
     /**
@@ -444,20 +470,22 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         }
 
 
+        String all = uiUtils.getLanguageMap().get("eventoverview_all");
+        String noFilter = uiUtils.getLanguageMap().get("eventoverview_no_filter");
         tagFilterChoiceBox.getItems().removeAll(tagFilterChoiceBox.getItems());
         tagFilterChoiceBox.getItems().addAll(tags);
-        tagFilterChoiceBox.getItems().addFirst("All");
+        tagFilterChoiceBox.getItems().addFirst(all);
 
         if (filterOwnerChoiceBox != null) {
             filterOwnerChoiceBox.getItems().removeAll(filterOwnerChoiceBox.getItems());
             filterOwnerChoiceBox.getItems().addAll(participants);
-            filterOwnerChoiceBox.getItems().addFirst("No filter.");
+            filterOwnerChoiceBox.getItems().addFirst(noFilter);
         }
 
         if (filterbyParticipantChoiceBox != null) {
             filterbyParticipantChoiceBox.getItems().removeAll(filterbyParticipantChoiceBox.getItems());
             filterbyParticipantChoiceBox.getItems().addAll(participants);
-            filterbyParticipantChoiceBox.getItems().addFirst("No filter.");
+            filterbyParticipantChoiceBox.getItems().addFirst(noFilter);
         }
 
 
@@ -1366,8 +1394,43 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         this.tagFilterChoiceBox = tagFilterChoiceBox;
     }
 
-
     public void setLanguageDropdown(ComboBox<Language> languageDropdown) {
         this.languageDropdown = languageDropdown;
+    }
+
+    public void setExpenseIncludes(Text expenseIncludes) {
+        this.expenseIncludes = expenseIncludes;
+    }
+
+    public void setExpenseDetailsButton(Button expenseDetailsButton) {
+        this.expenseDetailsButton = expenseDetailsButton;
+    }
+
+    public void setExpenseDetailsText(Text expenseDetailsText) {
+        this.expenseDetailsText = expenseDetailsText;
+    }
+
+    public void setTitleDescription(Text titleDescription) {
+        this.titleDescription = titleDescription;
+    }
+
+    public void setTitleDate(Text titleDate) {
+        this.titleDate = titleDate;
+    }
+
+    public void setTitleOwner(Text titleOwner) {
+        this.titleOwner = titleOwner;
+    }
+
+    public void setTitleAmount(Text titleAmount) {
+        this.titleAmount = titleAmount;
+    }
+
+    public void setTitleTags(Text titleTags) {
+        this.titleTags = titleTags;
+    }
+
+    public void setTitleParticipants(Text titleParticipants) {
+        this.titleParticipants = titleParticipants;
     }
 }

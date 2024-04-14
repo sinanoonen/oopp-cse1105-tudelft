@@ -141,6 +141,10 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     private TextField filterTextField;
     @FXML
     private ChoiceBox<String> tagFilterChoiceBox;
+    @FXML
+    private ChoiceBox<String> filterOwnerChoiceBox;
+    @FXML
+    private ChoiceBox<String> filterbyParticipantChoiceBox;
     private boolean expenseMenuVisible = false;
     private boolean expenseDetailsVisible = false;
     @FXML
@@ -227,19 +231,52 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             resetTransactionsContainer();
         });
 
-        uiUtils.addTooltip(inviteCodeButton, "CTRL + C: Copy invite code");
-        uiUtils.addTooltip(backLink, "ESC: Back");
-        uiUtils.addTooltip(addExpense, "CTRL + N: Add expense");
-        uiUtils.addTooltip(addParticipantButton, "CTRL + N: Add participant");
-        uiUtils.addTooltip(newParticipantButton, "CTRL + N: Create participant");
-        uiUtils.addTooltip(confirmButton, "ENTER: Confirm");
-        uiUtils.addTooltip(filterTextField, "CTRL + F: Filter");
+        if (filterOwnerChoiceBox != null) {
+            filterOwnerChoiceBox.setOnAction((event) -> {
+                int selectedIndex = filterOwnerChoiceBox.getSelectionModel().getSelectedIndex();
+                Object selectedItem = filterOwnerChoiceBox.getSelectionModel().getSelectedItem();
+
+                if (filterOwnerChoiceBox.getValue() != null
+                        && filterOwnerChoiceBox.getValue().equals("No filter.")) {
+                    filterOwnerChoiceBox.setValue(null);
+                }
+
+                resetTransactionsContainer();
+            });
+
+        }
+        if (filterbyParticipantChoiceBox != null) {
+            filterbyParticipantChoiceBox.setOnAction((event) -> {
+                int selectedIndex = filterbyParticipantChoiceBox.getSelectionModel().getSelectedIndex();
+                Object selectedItem = filterbyParticipantChoiceBox.getSelectionModel().getSelectedItem();
+
+                if (filterbyParticipantChoiceBox
+                        .getValue() != null
+                        && filterbyParticipantChoiceBox
+                        .getValue()
+                        .equals("No filter.")
+                ) {
+                    filterbyParticipantChoiceBox.setValue(null);
+                }
+
+                resetTransactionsContainer();
+            });
+        }
+
+
+        UIUtils.addTooltip(inviteCodeButton, "CTRL + C: Copy invite code");
+        UIUtils.addTooltip(backLink, "ESC: Back");
+        UIUtils.addTooltip(addExpense, "CTRL + N: Add expense");
+        UIUtils.addTooltip(addParticipantButton, "CTRL + N: Add participant");
+        UIUtils.addTooltip(newParticipantButton, "CTRL + N: Create participant");
+        UIUtils.addTooltip(confirmButton, "ENTER: Confirm");
+        UIUtils.addTooltip(filterTextField, "CTRL + F: Filter");
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (!participantsMenu.isVisible()               // NO MENUS OPEN
                     && !addParticipantsMenu.isVisible()
                     && !expenseMenu.isVisible()) {
-                if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                if (keyEvent.getCode().equals(KeyCode.ESCAPE) && !title.isEditable()) {
                     onBackClicked(null);
                     return;
                 }
@@ -397,13 +434,33 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         }
 
         Set<String> tags = new HashSet<>();
+        Set<String> participants = new HashSet<>();
         for (Transaction t : event.transactions()) {
             tags.addAll(t.getTags().stream().map(Tag::getName).toList());
+            participants.add(t.getOwner());
+            if (t instanceof Expense) {
+                participants.addAll(((Expense) t).getDebts().keySet());
+            }
         }
+
 
         tagFilterChoiceBox.getItems().removeAll(tagFilterChoiceBox.getItems());
         tagFilterChoiceBox.getItems().addAll(tags);
         tagFilterChoiceBox.getItems().addFirst("All");
+
+        if (filterOwnerChoiceBox != null) {
+            filterOwnerChoiceBox.getItems().removeAll(filterOwnerChoiceBox.getItems());
+            filterOwnerChoiceBox.getItems().addAll(participants);
+            filterOwnerChoiceBox.getItems().addFirst("No filter.");
+        }
+
+        if (filterbyParticipantChoiceBox != null) {
+            filterbyParticipantChoiceBox.getItems().removeAll(filterbyParticipantChoiceBox.getItems());
+            filterbyParticipantChoiceBox.getItems().addAll(participants);
+            filterbyParticipantChoiceBox.getItems().addFirst("No filter.");
+        }
+
+
 
         resetTransactionsContainer();
 
@@ -461,6 +518,9 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 && !keyEvent.getCode().equals(KeyCode.ESCAPE)
                 || title.getText().isEmpty()) {
             return;
+        }
+        if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+            title.undo();
         }
         titleBox.setVisible(false);
         title.setEditable(false);
@@ -967,18 +1027,30 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 .stream()
                 .filter(t -> t instanceof Expense)
                 .map(t -> (Expense) t)
-                .filter(t -> t.getDescription()
+                .filter(t -> (t.getDescription()
                         .contains(filterTextField.getText()) || t.getDebts()
                         .containsKey(filterTextField.getText()))
+                        && (filterbyParticipantChoiceBox.getValue() == null
+                        || t.getDebts().containsKey(filterbyParticipantChoiceBox.getValue())))
                 .map(e -> (Transaction) e)
                 .toList();
 
+
         List<Transaction> filteredTransactions = new ArrayList<>(filteredExpenses);
         for (Transaction t : event.transactions()) {
-            if (t instanceof Payment) {
+            if (t instanceof Payment
+                    && (t.getOwner().contains(filterTextField.getText())
+                    && (filterOwnerChoiceBox
+                        .getValue() == null
+                        || t
+                        .getOwner().equals(filterOwnerChoiceBox.getValue()))
+                    && (filterbyParticipantChoiceBox
+                    .getValue() == null
+                        || ((Payment) t).getRecipient().equals(filterbyParticipantChoiceBox.getValue())))) {
                 filteredTransactions.add(t);
             }
         }
+
 
 
         if (tagFilterChoiceBox.getValue() != null) {
@@ -986,6 +1058,12 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                     .filter(t -> t.getTags().stream()
                             .map(Tag::getName).toList()
                             .contains(tagFilterChoiceBox.getValue()))
+                    .toList();
+        }
+
+        if (filterOwnerChoiceBox != null && filterOwnerChoiceBox.getValue() != null) {
+            filteredTransactions = filteredTransactions.stream()
+                    .filter(t -> t.getOwner().equals(filterOwnerChoiceBox.getValue()))
                     .toList();
         }
 

@@ -23,6 +23,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -79,6 +81,12 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
         } else {
             uiUtils.deactivateHighContrastMode(root);
         }
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
+                onBackClicked(null);
+            }
+        });
     }
 
     @Override

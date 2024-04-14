@@ -36,7 +36,6 @@ public class UserController {
      */
     @GetMapping(path = {"", "/"})
     public List<User> getAllUsers() {
-        System.out.println("/users: Received valid GET request");
         return repo.findAll();
     }
 
@@ -50,10 +49,8 @@ public class UserController {
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         List<User> results = repo.getUserByEmail(email);
         if (results == null || results.isEmpty()) {
-            System.out.println("/users: Received bad GET request");
             return ResponseEntity.badRequest().build();
         }
-        System.out.println("/users: Received valid GET request");
         return ResponseEntity.ok(results.getFirst());
     }
 
@@ -71,15 +68,12 @@ public class UserController {
         }
 
         if (isNullOrEmpty(email) || (update.getEmail() != null && !update.getEmail().equals(email))) {
-            System.out.println("/users: Received bad PUT request");
             return ResponseEntity.badRequest().build();
         }
         var response = getUserByEmail(email);
         if (response.getStatusCode().isError()) {
-            System.out.println("/users: Received bad PUT request");
             return response;
         }
-        System.out.println("/users: Received valid PUT request");
         User user = response.getBody();
         assert user != null;
         String name = isNullOrEmpty(update.getName()) ? user.getName() : update.getName();
@@ -106,11 +100,8 @@ public class UserController {
             || isNullOrEmpty(user.getIban())
             || isNullOrEmpty(user.getBic())
         ) {
-            System.out.println("/users: Received bad POST request");
             return ResponseEntity.badRequest().build();
         }
-        System.out.println("/users: Received valid POST request:");
-        System.out.println(user);
         User saved = repo.save(user);
         listenerService.notifyListeners(user.getEventID().toString());
         return ResponseEntity.ok(saved);
@@ -124,9 +115,7 @@ public class UserController {
     @DeleteMapping("/{email}")
     public ResponseEntity<User> deleteUser(@PathVariable String email) {
         int res = repo.deleteUserByEmail(email);
-        System.out.println("Received " + (res == 1 ? "valid" : "bad") + " DELETE request");
         if (res == 1) {
-            System.out.println("Deleting user " + email);
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();

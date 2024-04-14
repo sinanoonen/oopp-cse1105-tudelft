@@ -5,13 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.testfx.framework.junit5.ApplicationTest;
 
 /**
@@ -22,6 +25,10 @@ public class ServerSelectCtrlTest extends ApplicationTest {
     private ServerUtils serverUtils;
     private MainCtrl mainCtrl;
     private ServerSelectCtrl serverSelectCtrl;
+    @Mock
+    private UIUtils uiUtils;
+    @Mock
+    private ClientUtils clientUtils;
 
     /**
      * This is the setup for headless tests.
@@ -45,7 +52,8 @@ public class ServerSelectCtrlTest extends ApplicationTest {
         serverUtils = mock(ServerUtils.class);
         mainCtrl = mock(MainCtrl.class);
 
-        serverSelectCtrl = new ServerSelectCtrl(serverUtils, mainCtrl, null);
+        serverSelectCtrl = new ServerSelectCtrl(serverUtils,
+                mainCtrl, uiUtils, clientUtils, null);
 
         serverSelectCtrl.setIpField(new TextField());
         serverSelectCtrl.setPortField(new TextField());
@@ -75,7 +83,8 @@ public class ServerSelectCtrlTest extends ApplicationTest {
 
     @Test
     public void testValidIP() {
-        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null, null, null);
+        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null, null, null,
+                null, null);
         assertTrue(serverSelectCtrl.validIP("localhost"));
         assertTrue(serverSelectCtrl.validIP("192.168.0.1"));
         assertFalse(serverSelectCtrl.validIP(""));
@@ -85,7 +94,8 @@ public class ServerSelectCtrlTest extends ApplicationTest {
 
     @Test
     public void testValidPort() {
-        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null, null, null);
+        ServerSelectCtrl serverSelectCtrl = new ServerSelectCtrl(null,
+                null, null, null, null);
         assertTrue(serverSelectCtrl.validPort("80"));
         assertTrue(serverSelectCtrl.validPort("65535"));
         assertFalse(serverSelectCtrl.validPort("-1"));
@@ -98,6 +108,8 @@ public class ServerSelectCtrlTest extends ApplicationTest {
         serverSelectCtrl.getIpField().setText("");
         serverSelectCtrl.getPortField().setText("");
 
+        UIUtils uiUtils1 = new UIUtils();
+        serverSelectCtrl.setUiUtils(uiUtils1);
         assertFalse(serverSelectCtrl.validateFields());
 
         serverSelectCtrl.getIpField().setText("localhost");

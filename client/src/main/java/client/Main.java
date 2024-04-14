@@ -33,6 +33,7 @@ import client.scenes.SettingsCtrl;
 import client.utils.ClientUtils;
 import client.utils.ConfigReader;
 import client.utils.ServerUtils;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -47,9 +48,14 @@ public class Main extends Application {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
+    @Inject
+    private ConfigReader configReader;
+
+    @Inject
+    private ClientUtils clientUtils;
+
 
     public static void main(String[] args) throws URISyntaxException, IOException {
-        ConfigReader.initialize();
         launch();
     }
 
@@ -59,6 +65,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        Main.INJECTOR.injectMembers(this);
+
+        if (configReader == null) {
+            throw new RuntimeException("Dependency injection failed for configReader.");
+        }
+
+        configReader.initialize();
         var homePage = FXML.load(HomePageCtrl.class, "client", "scenes", "HomePage.fxml");
         var eventOverview = FXML.load(EventOverviewCtrl.class, "client", "scenes", "EventOverview.fxml");
         var debtOverview = FXML.load(DebtOverviewCtrl.class, "client", "scenes", "DebtOverview.fxml");
@@ -86,13 +99,12 @@ public class Main extends Application {
                 adminLogin,
                 serverSelect);
 
-
         primaryStage.setOnCloseRequest(e -> {
             homePage.getKey().stop();
-            ConfigReader.writeLanguage(ClientUtils.getLanguage());
-            ConfigReader.writeCurrency(ClientUtils.getCurrency());
-            ConfigReader.writeIP(ServerUtils.getIp());
-            ConfigReader.writePort(ServerUtils.getPort());
+            configReader.writeLanguage(clientUtils.getLanguage());
+            configReader.writeCurrency(clientUtils.getCurrency());
+            configReader.writeIP(ServerUtils.getIp());
+            configReader.writePort(ServerUtils.getPort());
         });
     }
 }

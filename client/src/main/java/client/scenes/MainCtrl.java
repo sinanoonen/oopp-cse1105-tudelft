@@ -23,6 +23,7 @@ import client.enums.ManageUserMode;
 import client.utils.ClientUtils;
 import client.utils.ConfigReader;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
 import commons.Event;
 import commons.User;
@@ -72,6 +73,12 @@ public class MainCtrl {
 
     private Scene serverSelect;
     private ServerSelectCtrl serverSelectCtrl;
+    @Inject
+    private UIUtils uiUtils;
+    @Inject
+    private ClientUtils clientUtils;
+    @Inject
+    private ConfigReader configReader;
     @Inject
     private WebSocketServerUtils webSocketServerUtils;
 
@@ -136,10 +143,10 @@ public class MainCtrl {
         primaryStage.show();
 
         //Set default language and currency
-        ClientUtils.setCurrency(ConfigReader.getCurrency());
-        ClientUtils.setLanguage(ConfigReader.getLanguage());
-        ServerUtils.setServer(ConfigReader.getIP(), ConfigReader.getPort());
-        webSocketServerUtils.setSession(ConfigReader.getIP(), ConfigReader.getPort());
+        clientUtils.setCurrency(configReader.getCurrency());
+        clientUtils.setLanguage(configReader.getLanguage());
+        ServerUtils.setServer(configReader.getIP(), configReader.getPort());
+        webSocketServerUtils.setSession(configReader.getIP(), configReader.getPort());
 
         showHomePage();
         primaryStage.show();

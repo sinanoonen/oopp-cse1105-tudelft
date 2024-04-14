@@ -27,6 +27,8 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
 
     @FXML
     private AnchorPane root;
@@ -43,18 +45,28 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
     @FXML
     private Pane errorPopup;
 
+    /**
+     * Creates a controller for addEvent scene.
+     *
+     * @param serverUtils server service
+     * @param mainCtrl main controller
+     * @param uiUtils ui service
+     * @param clientUtils client service
+     */
     @Inject
-    public AddEventCtrl(ServerUtils serverUtils, MainCtrl mainCtrl) {
+    public AddEventCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, UIUtils uiUtils, ClientUtils clientUtils) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
@@ -70,7 +82,7 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        var languageMap = UIUtils.getLanguageMap();
+        var languageMap = uiUtils.getLanguageMap();
         title.setText(languageMap.get("addevent"));
         prompt.setText(languageMap.get("addevent_event_name") + ":");
         cancelButton.setText(languageMap.get("general_cancel"));
@@ -85,10 +97,10 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
         inputField.setEditable(false);
         errorPopup.setOpacity(0);
 
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         updateLanguage();
@@ -115,11 +127,11 @@ public class AddEventCtrl implements Initializable, LanguageInterface {
      */
     public void saveEvent() {
         if (inputField.getText().isEmpty()) {
-            displayInputError(UIUtils.getLanguageMap().get("addevent_error_empty_title"));
+            displayInputError(uiUtils.getLanguageMap().get("addevent_error_empty_title"));
             return;
         }
         if (inputField.getText().length() > 20) {
-            displayInputError(UIUtils.getLanguageMap().get("addevent_error_max_length") + " (20)");
+            displayInputError(uiUtils.getLanguageMap().get("addevent_error_max_length") + " (20)");
             return;
         }
 

@@ -17,9 +17,10 @@
 package client;
 
 import client.scenes.AddExpenseCtrl;
-import client.scenes.AddQuoteCtrl;
 import client.scenes.MainCtrl;
-import client.scenes.QuoteOverviewCtrl;
+import client.utils.ClientUtils;
+import client.utils.ConfigReader;
+import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -33,10 +34,11 @@ public class MyModule implements Module {
     @Override
     public void configure(Binder binder) {
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(AddQuoteCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(QuoteOverviewCtrl.class).in(Scopes.SINGLETON);
         binder.bind(AddExpenseCtrl.class).in(Scopes.SINGLETON);
 
+        binder.bind(ConfigReader.class).in(Scopes.SINGLETON);
+        binder.bind(ClientUtils.class).in(Scopes.SINGLETON);
+        binder.bind(UIUtils.class).in(Scopes.SINGLETON);
         binder.bind(WebSocketServerUtils.class).asEagerSingleton();
     }
 }

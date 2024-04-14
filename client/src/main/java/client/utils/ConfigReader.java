@@ -9,18 +9,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+import org.springframework.stereotype.Service;
 
 /**
  * Singleton class to read client config file.
  */
+@Service
 public class ConfigReader {
-    private static final String CONFIG_FILE = "config.properties";
-    private static final String CONFIG_PATH = "src/main/resources/" + CONFIG_FILE;
-    private static final Properties PROPERTIES = new Properties();
-    private static final String DEFAULT_IP = "localhost";
-    private static final String DEFAULT_PORT = "8080";
+    private final String configFile = "config.properties";
+    private final String configPath = "src/main/resources/" + configFile;
+    private Properties properties = new Properties();
+    private String defaultIp = "localhost";
+    private String defaultPort = "8080";
 
-    private ConfigReader() {}
+    public ConfigReader() {}
 
     /**
      * Loads configs into ConfigReader object.
@@ -29,15 +31,15 @@ public class ConfigReader {
      * @throws IOException if error occurred while reading config file
      */
     @SuppressWarnings("checkstyle:CommentsIndentation")
-    public static void initialize() throws IOException {
+    public void initialize() throws IOException {
 
-// FileInputStream is = new FileInputStream(CONFIG_FILE);
-// PROPERTIES.load(is);
-// is.close();
+    // FileInputStream is = new FileInputStream(CONFIG_FILE);
+    // PROPERTIES.load(is);
+    // is.close();
 
-        try (InputStream is = ConfigReader.class.getClassLoader().getResourceAsStream(CONFIG_FILE)) {
+        try (InputStream is = ConfigReader.class.getClassLoader().getResourceAsStream(configFile)) {
             if (is != null) {
-                PROPERTIES.load(is);
+                properties.load(is);
             } else {
                 throw new FileNotFoundException("config.properties not found in the classpath");
             }
@@ -49,8 +51,8 @@ public class ConfigReader {
      *
      * @return language stored in config file, english if none found
      */
-    public static Language getLanguage() {
-        return switch (PROPERTIES.getProperty("language")) {
+    public Language getLanguage() {
+        return switch (properties.getProperty("language")) {
             case "EN" -> Language.ENGLISH;
             case "NL" -> Language.DUTCH;
             case "TR" -> Language.TURKISH;
@@ -58,14 +60,14 @@ public class ConfigReader {
         };
     }
 
-    public static String getIP() {
-        String ip = PROPERTIES.getProperty("ip");
-        return ip == null ? DEFAULT_IP : ip;
+    public String getIP() {
+        String ip = properties.getProperty("ip");
+        return ip == null ? defaultIp : ip;
     }
 
-    public static String getPort() {
-        String port = PROPERTIES.getProperty("port");
-        return port == null ? DEFAULT_PORT : port;
+    public String getPort() {
+        String port = properties.getProperty("port");
+        return port == null ? defaultPort : port;
     }
 
     /**
@@ -73,8 +75,8 @@ public class ConfigReader {
      *
      * @return Currency in config file, EUR if none found
      */
-    public static Currency getCurrency() {
-        return switch (PROPERTIES.getProperty("currency")) {
+    public Currency getCurrency() {
+        return switch (properties.getProperty("currency")) {
             case "USD" -> Currency.USD;
             case "GBP" -> Currency.GBP;
             case "JPY" -> Currency.JPY;
@@ -83,8 +85,8 @@ public class ConfigReader {
         };
     }
 
-    public static String getEmailHost() {
-        String host = PROPERTIES.getProperty("email.host");
+    public String getEmailHost() {
+        String host = properties.getProperty("email.host");
         return (host != null && !host.isEmpty()) ? host : null;
     }
 
@@ -93,8 +95,8 @@ public class ConfigReader {
      *
      * @return the email port
      */
-    public static int getEmailPort() {
-        String portStr = PROPERTIES.getProperty("email.port");
+    public int getEmailPort() {
+        String portStr = properties.getProperty("email.port");
         try {
             return (portStr != null && !portStr.isEmpty()) ? Integer.parseInt(portStr) : -1;
         } catch (NumberFormatException e) {
@@ -102,27 +104,27 @@ public class ConfigReader {
         }
     }
 
-    public static String getEmailUsername() {
-        String username = PROPERTIES.getProperty("email.username");
+    public String getEmailUsername() {
+        String username = properties.getProperty("email.username");
         return (username != null && !username.isEmpty()) ? username : null;
     }
 
-    public static String getEmailPassword() {
-        String password = PROPERTIES.getProperty("email.password");
+    public String getEmailPassword() {
+        String password = properties.getProperty("email.password");
         return (password != null && !password.isEmpty()) ? password : null;
     }
 
-    public static EmailConfig getEmailConfig() {
+    public EmailConfig getEmailConfig() {
         return new EmailConfig(getEmailHost(), getEmailPort(), getEmailUsername(), getEmailPassword());
     }
 
     /**
      * Writes the language to the config file.
      */
-    public static void writeLanguage(Language language) {
-        PROPERTIES.setProperty("language", language.code);
-        try (OutputStream os = new FileOutputStream(CONFIG_PATH)) {
-            PROPERTIES.store(os, null);
+    public void writeLanguage(Language language) {
+        properties.setProperty("language", language.code);
+        try (OutputStream os = new FileOutputStream(configPath)) {
+            properties.store(os, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -131,10 +133,10 @@ public class ConfigReader {
     /**
      * Writes the currency to the config file.
      */
-    public static void writeCurrency(Currency currency) {
-        PROPERTIES.setProperty("currency", currency.toString());
-        try (OutputStream os = new FileOutputStream(CONFIG_PATH)) {
-            PROPERTIES.store(os, null);
+    public void writeCurrency(Currency currency) {
+        properties.setProperty("currency", currency.toString());
+        try (OutputStream os = new FileOutputStream(configPath)) {
+            properties.store(os, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,10 +145,10 @@ public class ConfigReader {
     /**
      * Write the IP address to the properties file.
      */
-    public static void writeIP(String ip) {
-        PROPERTIES.setProperty("ip", ip);
-        try (OutputStream os = new FileOutputStream(CONFIG_PATH)) {
-            PROPERTIES.store(os, null);
+    public void writeIP(String ip) {
+        properties.setProperty("ip", ip);
+        try (OutputStream os = new FileOutputStream(configPath)) {
+            properties.store(os, null);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -156,10 +158,10 @@ public class ConfigReader {
      * Writes the port to the properties file.
      *
      */
-    public static void writePort(String port) {
-        PROPERTIES.setProperty("port", port);
-        try (OutputStream os = new FileOutputStream(CONFIG_PATH)) {
-            PROPERTIES.store(os, null);
+    public void writePort(String port) {
+        properties.setProperty("port", port);
+        try (OutputStream os = new FileOutputStream(configPath)) {
+            properties.store(os, null);
         } catch (IOException e) {
             e.printStackTrace();
         }

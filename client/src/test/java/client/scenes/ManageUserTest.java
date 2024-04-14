@@ -3,12 +3,15 @@ package client.scenes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import client.enums.ManageUserMode;
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import commons.Event;
 import commons.User;
 import java.util.UUID;
@@ -36,6 +39,10 @@ import org.testfx.framework.junit5.ApplicationTest;
 public class ManageUserTest extends ApplicationTest {
     @Mock
     private ServerUtils serverUtils;
+    @Mock
+    private UIUtils uiUtils;
+    @Mock
+    private ClientUtils clientUtils;
     @Mock
     private MainCtrl mainCtrl;
     ManageUserMode mode;
@@ -80,8 +87,8 @@ public class ManageUserTest extends ApplicationTest {
     @BeforeEach
     public void setUpCreate() {
         MockitoAnnotations.initMocks(this);
-        controller = new ManageUserCtrl(serverUtils, mainCtrl, null);
-
+        controller = new ManageUserCtrl(serverUtils, mainCtrl, null, uiUtils, clientUtils);
+        event = mock(Event.class);
         this.mode = ManageUserMode.CREATE;
 
         title = new Text();

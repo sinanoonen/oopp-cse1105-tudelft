@@ -7,7 +7,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import commons.Event;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -46,6 +48,10 @@ public class AddEventCtrlTest extends ApplicationTest {
     private AddEventCtrl controller;
     @Captor
     private ArgumentCaptor<Event> eventCaptor;
+    @Mock
+    private UIUtils uiUtils;
+    @Mock
+    private ClientUtils clientUtils;
 
 
 
@@ -69,7 +75,7 @@ public class AddEventCtrlTest extends ApplicationTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        controller = new AddEventCtrl(serverUtils, mainCtrl);
+        controller = new AddEventCtrl(serverUtils, mainCtrl, uiUtils, clientUtils);
 
         inputField = new TextField();
         errorPopUp = new Pane();

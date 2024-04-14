@@ -40,6 +40,8 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
 
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
     private final WebSocketServerUtils socket;
     private Event event;
     private DebtSettler debtSettler;
@@ -57,23 +59,27 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
      * A constructor for the DebtPaymentOverview.
      *
      * @param serverUtils the server utils
-     * @param mainCtrl the main controller
-     * @param socket the socket connection
+     * @param mainCtrl    the main controller
+     * @param uiUtils    the uiUtils
+     * @param clientUtils  the ClientUtils
+     * @param socket      the socket connection
      */
     @Inject
     public DebtPaymentOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl,
-                                   WebSocketServerUtils socket) {
+                                   UIUtils uiUtils, ClientUtils clientUtils, WebSocketServerUtils socket) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
         this.socket = socket;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
@@ -85,7 +91,7 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
 
     @Override
     public void updateLanguage() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         backLink.setText(lm.get("general_back"));
         instructionText.setText(lm.get("debtsoverview_payment_instructions"));
     }
@@ -101,11 +107,11 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
 
         resetParticipantsPaymentContainer();
 
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
             instructionText.setFill(javafx.scene.paint.Color.WHITE);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
             instructionText.setFill(javafx.scene.paint.Color.web("#8e8e8e"));
         }
 
@@ -113,7 +119,7 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
             Platform.runLater(() -> {
                 UUID uuid = UUID.fromString(message.getContent().substring(15));
                 if (event != null && uuid.equals(event.getInviteCode())) {
-                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    uiUtils.showEventDeletedWarning(event.getTitle());
                     mainCtrl.showHomePage();
                 }
             });
@@ -165,12 +171,12 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
         );
 
         base.setExpanded(false);
-        String titleText = settlement.replace("___", ClientUtils.getCurrency().toString());
+        String titleText = settlement.replace("___", clientUtils.getCurrency().toString());
         String[] settlementArray = settlement.split(" ");
         double amount = Double.parseDouble(settlementArray[3]);
         double convertedValue = ExchangeProvider.convertCurrency(amount,
                 "EUR",
-                ClientUtils.getCurrency().toString());
+                clientUtils.getCurrency().toString());
         convertedValue = Math.round(convertedValue * 100.0) / 100.0;
         titleText = titleText.replace(String.valueOf(amount), String.valueOf(convertedValue));
 
@@ -200,7 +206,7 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
         double finalConvertedValue = convertedValue;
         payOffDebt.onActionProperty().set(actionEvent -> {
             Payment payment = new Payment(settlementArray[0], LocalDate.now(), (float) finalConvertedValue,
-                    ClientUtils.getCurrency(), settlementArray[settlementArray.length - 1]);
+                    clientUtils.getCurrency(), settlementArray[settlementArray.length - 1]);
             payment = serverUtils.addPayment(event.getInviteCode(), payment);
             event.addTransaction(payment);
             onExit();
@@ -220,12 +226,12 @@ public class DebtPaymentOverviewCtrl implements Initializable, LanguageInterface
         payOffDebt.setFont(Font.font("SansSerif", 15));
         payOffDebt.setTextFill(Paint.valueOf("#FFFFFF"));
 
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(pane);
-            UIUtils.activateHighContrastMode(payOffDebt);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(pane);
+            uiUtils.activateHighContrastMode(payOffDebt);
         } else {
-            UIUtils.deactivateHighContrastMode(pane);
-            UIUtils.deactivateHighContrastMode(payOffDebt);
+            uiUtils.deactivateHighContrastMode(pane);
+            uiUtils.deactivateHighContrastMode(payOffDebt);
         }
 
         pane.getChildren().addAll(content, payOffDebt);

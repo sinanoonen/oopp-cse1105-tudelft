@@ -908,6 +908,12 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             }
         });
 
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(base);
+        } else {
+            uiUtils.deactivateHighContrastMode(base);
+        }
+
 
         return base;
     }
@@ -965,6 +971,12 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         currency.setFont(Font.font("SansSerif", 15));
         currency.setFill(Paint.valueOf("#FFFFFF"));
         currency.setMouseTransparent(true);
+
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(base);
+        } else {
+            uiUtils.deactivateHighContrastMode(base);
+        }
 
         base.getChildren().addAll(sender, recipient, amount, currency);
 

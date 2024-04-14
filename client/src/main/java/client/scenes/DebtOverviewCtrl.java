@@ -9,6 +9,7 @@ import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
 import com.google.inject.Inject;
 import commons.Event;
+import commons.User;
 import commons.WebSocketMessage;
 import commons.transactions.Expense;
 import java.net.URL;
@@ -22,6 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -51,6 +53,8 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
     private ListView<Node> participantsDebtContainer;
     @FXML
     private Button debtSettleButton;
+    @FXML
+    private ListView<Node> participants;
     @FXML
     private Pane buttonDarkener;
     @FXML
@@ -179,24 +183,16 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
     }
 
     private Node totalSpentNode() {
-        Pane base = new Pane();
+        TitledPane base = new TitledPane();
         base.setPrefWidth(participantsDebtContainer.getPrefWidth() - 20);
-        base.setPrefHeight(100);
+        base.setPrefHeight(30);
         base.setStyle("-fx-background-color: #444444;"
                 + " -fx-border-width: 3;"
                 + " -fx-border-color: black;"
                 + " -fx-background-radius: 5;"
                 + " -fx-border-radius: 5;"
         );
-
-        Text text = new Text(uiUtils.getLanguageMap().get("debtsoverview_total_sum"));
-        final double nameTopPadding = base.getPrefHeight() / 2 + 5;
-        final double nameLeftPadding = 0.12f * base.getPrefWidth();
-        text.setLayoutX(base.getLayoutX() + nameLeftPadding);
-        text.setLayoutY(base.getLayoutY() + nameTopPadding);
-        text.setFont(Font.font("SansSerif", 15));
-        text.setFill(Paint.valueOf("#FFFFFF"));
-        text.setMouseTransparent(true);
+        base.setExpanded(false);
 
         double sumOfExpenses = 0.00;
         for (Expense expense : event.getExpenses()) {
@@ -205,18 +201,86 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
             sumOfExpenses += newAmount;
         }
         sumOfExpenses = Math.round(sumOfExpenses * 100.0) / 100.0;
+        String sum = String.valueOf(sumOfExpenses);
+
+        String titleText = uiUtils.getLanguageMap().get("debtsoverview_total_sum") + ' ' + sum
+                + ' ' + clientUtils.getCurrency().toString();
+        base.setText(titleText);
+        base.setFont(Font.font("SansSerif", 15));
+
+        Pane pane = new Pane();
+        pane.setPrefWidth(0.9 * base.getPrefWidth());
+        pane.setPrefHeight(150);
+        pane.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: black;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
+
+        participants = new ListView<>();
+        participants.setPrefHeight(pane.getPrefHeight());
+        participants.setPrefWidth(pane.getPrefWidth());
+        pane.getChildren().add(participants);
+        List<Node> nodes = event.getParticipants()
+                .stream()
+                .map(this::participantFactory)
+                .toList();
+        participants.getItems().addAll(nodes);
+
+        base.setContent(participants);
+        base.setOnMouseClicked(mouseEvent -> {
+            if (base.isExpanded()) {
+                base.setPrefHeight(200);
+            } else {
+                base.setPrefHeight(30);
+            }
+        });
 
 
-        Text sumText = new Text(String.valueOf(sumOfExpenses));
+        return base;
+    }
+
+    private Node participantFactory(User user) {
+        Pane base = new Pane();
+        base.setPrefWidth(participants.getPrefWidth() - 20);
+        base.setPrefHeight(80);
+        base.setStyle("-fx-background-color: #444444;"
+                + " -fx-border-width: 3;"
+                + " -fx-border-color: black;"
+                + " -fx-background-radius: 5;"
+                + " -fx-border-radius: 5;"
+        );
+
+        Text username = new Text(user.getName());
+        final double nameTopPadding = base.getPrefHeight() / 2 + 5;
+        final double nameLeftPadding = 0.12f * base.getPrefWidth();
+        username.setLayoutX(base.getLayoutX() + nameLeftPadding);
+        username.setLayoutY(base.getLayoutY() + nameTopPadding);
+        username.setFont(Font.font("SansSerif", 15));
+        username.setFill(Paint.valueOf("#FFFFFF"));
+        username.setMouseTransparent(true);
+
+        List<Expense> expenses = event.getExpensesByParticipant(user.getName());
+        double amount = 0.0;
+        for (Expense expense : expenses) {
+            amount += (expense.getDebts().get(user.getName()));
+        }
+        double convertedValue = Math.abs(amount);
+        convertedValue = ExchangeProvider.convertCurrency(convertedValue,
+                "EUR",
+                clientUtils.getCurrency().toString());
+        convertedValue = Math.round(convertedValue * 100.0) / 100.0;
+        Text debt = new Text(String.valueOf(convertedValue));
         final double debtLeftPadding = 0.7f * base.getPrefWidth();
-        sumText.setLayoutX(base.getLayoutX() + debtLeftPadding);
-        sumText.setLayoutY(base.getLayoutY() + nameTopPadding);
-        sumText.setFont(Font.font("SansSerif", 15));
-        sumText.setFill(Paint.valueOf("#FFFFFF"));
-        sumText.setMouseTransparent(true);
+        debt.setLayoutX(base.getLayoutX() + debtLeftPadding);
+        debt.setLayoutY(base.getLayoutY() + nameTopPadding);
+        debt.setFont(Font.font("SansSerif", 15));
+        debt.setFill(Paint.valueOf("#FFFFFF"));
+        debt.setMouseTransparent(true);
 
         Text currency = new Text(clientUtils.getCurrency().toString());
-        final double currencyLeftPadding = debtLeftPadding + sumText.getText().length() * 8;
+        final double currencyLeftPadding = debtLeftPadding + debt.getText().length() * 8;
         currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
         final double topPadding = base.getPrefHeight() / 2 + 5;
         currency.setLayoutY(base.getLayoutY() + topPadding);
@@ -224,8 +288,13 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
         currency.setFill(Paint.valueOf("#FFFFFF"));
         currency.setMouseTransparent(true);
 
-        base.getChildren().addAll(text, sumText, currency);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(base);
+        } else {
+            uiUtils.deactivateHighContrastMode(base);
+        }
 
+        base.getChildren().addAll(username, debt, currency);
         return base;
     }
 
@@ -273,6 +342,12 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
         currency.setFont(Font.font("SansSerif", 15));
         currency.setFill(Paint.valueOf("#FFFFFF"));
         currency.setMouseTransparent(true);
+
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(base);
+        } else {
+            uiUtils.deactivateHighContrastMode(base);
+        }
 
         base.getChildren().addAll(username, debt, currency);
 

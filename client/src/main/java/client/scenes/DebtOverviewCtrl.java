@@ -124,7 +124,7 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
             balanceText.setFill(javafx.scene.paint.Color.web("#8e8e8e"));
         }
 
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+        socket.registerForMessages("/topic/event", WebSocketMessage.class, message -> {
             Platform.runLater(() -> {
                 UUID uuid = UUID.fromString(message.getContent().substring(15));
                 if (event != null && uuid.equals(event.getInviteCode())) {
@@ -304,6 +304,58 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
      * Unsubscribe from sockets and any other clean-up code.
      */
     public void onExit() {
-        socket.unregisterFromMessages("/topic/eventsUpdated");
+        socket.unregisterFromMessages("/topic/event");
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public Event getEvent() {
+        return this.event;
+    }
+
+    public void setDebtSettler(DebtSettler debtSettler) {
+        this.debtSettler = debtSettler;
+    }
+
+    public DebtSettler getDebtSettler() {
+        return this.debtSettler;
+    }
+
+    public void setRoot(AnchorPane root) {
+        this.root = root;
+    }
+
+    public void setParticipantsDebtContainer(ListView<Node> participantsDebtContainer) {
+        this.participantsDebtContainer = participantsDebtContainer;
+    }
+
+    public ListView<Node> getParticipantsDebtContainer() {
+        return this.participantsDebtContainer;
+    }
+
+    public void setDebtSettleButton(Button debtSettleButton) {
+        this.debtSettleButton = debtSettleButton;
+    }
+
+    public Button getDebtSettleButton() {
+        return this.debtSettleButton;
+    }
+
+    public void setButtonDarkener(Pane buttonDarkener) {
+        this.buttonDarkener = buttonDarkener;
+    }
+
+    public void setBackLink(Hyperlink backLink) {
+        this.backLink = backLink;
+    }
+
+    public void setBalanceText(Text balanceText) {
+        this.balanceText = balanceText;
+    }
+
+    public Text getBalanceText() {
+        return this.balanceText;
     }
 }

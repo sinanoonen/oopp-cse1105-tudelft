@@ -117,7 +117,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
             uiUtils.deactivateHighContrastMode(root);
         }
 
-        socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
+        socket.registerForMessages("/topic/event", WebSocketMessage.class, message -> {
             Platform.runLater(this::loadEvents);
         });
 
@@ -474,7 +474,7 @@ public class AdminOverviewCtrl implements Initializable, LanguageInterface {
             Optional<ButtonType> result = confirmationDialog.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 UUID uuid = selectedEvent.getInviteCode();
-                socket.sendWebSocketMessage("/app/deleteEvent", uuid.toString());
+                socket.sendWebSocketMessage("/app/event", uuid.toString());
                 selectedEvent = null;
             }
         } else {

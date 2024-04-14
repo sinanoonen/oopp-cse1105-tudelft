@@ -138,6 +138,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     @FXML
     private Button removeExpense;
     @FXML
+    private Button expenseDetailsButton;
+    @FXML
     private TextField filterTextField;
     @FXML
     private ChoiceBox<String> tagFilterChoiceBox;
@@ -147,6 +149,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     private ChoiceBox<String> filterbyParticipantChoiceBox;
     private boolean expenseMenuVisible = false;
     private boolean expenseDetailsVisible = false;
+    @FXML
+    private Text expenseDetailsText;
     @FXML
     private Text titleDescription;
     @FXML
@@ -171,6 +175,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     private Text titleParticipants;
     @FXML
     private Text involvedParticipants;
+    @FXML
+    private Text expenseIncludes;
     @FXML
     private ComboBox<Language> languageDropdown;
 
@@ -361,14 +367,25 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         participantsButton.setText(lm.get("eventoverview_participants"));
         debtsButton.setText(lm.get("eventoverview_debts"));
         filterTextField.setPromptText(lm.get("eventoverview_filter"));
+        expenseIncludes.setText(lm.get("eventoverview_expense_includes"));
         Text popupText = (Text) clipboardPopup.getChildren().getFirst();
         popupText.setText(lm.get("eventoverview_copied_to_clipboard"));
+
         addParticipantButton.setText(lm.get("eventoverview_add_participant"));
         closeButton.setText(lm.get("general_close"));
         confirmButton.setText(lm.get("general_confirm"));
         newParticipantButton.setText(lm.get("general_new"));
+
         editExpense.setText(lm.get("eventoverview_edit_expense"));
         removeExpense.setText(lm.get("eventoverview_delete_expense"));
+        expenseDetailsButton.setText(lm.get("eventoverview_expense_details"));
+        expenseDetailsText.setText(lm.get("eventoverview_expense_details"));
+        titleDescription.setText(lm.get("addexpense_description") + ": ");
+        titleDate.setText(lm.get("addexpense_date") + ": ");
+        titleOwner.setText(lm.get("addexpense_sponsor") + ": ");
+        titleAmount.setText(lm.get("addexpense_quantity") + ": ");
+        titleParticipants.setText(lm.get("eventoverview_expense_involved") + ": ");
+        titleTags.setText(lm.get("eventoverview_expense_tags") + ": ");
     }
 
     /**
@@ -444,20 +461,22 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         }
 
 
+        String all = uiUtils.getLanguageMap().get("eventoverview_all");
+        String noFilter = uiUtils.getLanguageMap().get("eventoverview_no_filter");
         tagFilterChoiceBox.getItems().removeAll(tagFilterChoiceBox.getItems());
         tagFilterChoiceBox.getItems().addAll(tags);
-        tagFilterChoiceBox.getItems().addFirst("All");
+        tagFilterChoiceBox.getItems().addFirst(all);
 
         if (filterOwnerChoiceBox != null) {
             filterOwnerChoiceBox.getItems().removeAll(filterOwnerChoiceBox.getItems());
             filterOwnerChoiceBox.getItems().addAll(participants);
-            filterOwnerChoiceBox.getItems().addFirst("No filter.");
+            filterOwnerChoiceBox.getItems().addFirst(noFilter);
         }
 
         if (filterbyParticipantChoiceBox != null) {
             filterbyParticipantChoiceBox.getItems().removeAll(filterbyParticipantChoiceBox.getItems());
             filterbyParticipantChoiceBox.getItems().addAll(participants);
-            filterbyParticipantChoiceBox.getItems().addFirst("No filter.");
+            filterbyParticipantChoiceBox.getItems().addFirst(noFilter);
         }
 
 

@@ -128,6 +128,7 @@ public class Event {
         }
         setPayments(payments);
         setExpenses(expenses);
+        setLastActivity(LocalDateTime.now());
     }
 
     /**

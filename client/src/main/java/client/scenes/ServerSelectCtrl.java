@@ -42,6 +42,7 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
     private Button cancelButton;
     @FXML
     private Button connectButton;
+    @Inject
     private WebSocketServerUtils webSocketServerUtils;
 
     /**
@@ -119,6 +120,7 @@ public class ServerSelectCtrl implements Initializable, LanguageInterface {
             webSocketServerUtils.setSession(ipField.getText(), portField.getText());
             mainCtrl.showHomePage();
         } catch (Exception e) {
+            e.printStackTrace();
             mainCtrl.showServerSelect();
             HomePageCtrl.displayErrorPopup(
                     uiUtils.getLanguageMap().get("serverselect_error_failed_connection"),

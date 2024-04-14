@@ -4,19 +4,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
 
 
 /**
  * This class is to test the exchange between currencies.
  */
 public class ExchangeProviderTest {
-
-    @BeforeEach
-    void prefetchRates() {
-        ExchangeRates rates = ExchangeProvider.getExchangeRates();
-    }
 
     @Test
     void testGetExchangeRates() {
@@ -63,6 +63,33 @@ public class ExchangeProviderTest {
 
         double convertedBack = ExchangeProvider.convertCurrency(converted, "CNY", "GBP");
         assertEquals(Math.round(amount), Math.round(convertedBack));
+    }
+
+    @AfterEach
+    void testFileCaching() {
+        ExchangeRates rates = ExchangeProvider.getExchangeRates();
+        File file = new File("src/main/resources/exchangeRates.txt");
+        assert file.exists();
+        assert file.length() > 0;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            ExchangeRates cachedRates = mapper.readValue(file, ExchangeRates.class);
+            assertEquals(rates, cachedRates);
+        } catch (Exception e) {
+            throw new RuntimeException("Error reading cached exchange rates in test", e);
+        }
+    }
+
+    @AfterEach
+    void testFileCachingExpiration() {
+        File file = new File("src/main/resources/exchangeRates.txt");
+        long lastModified = System.currentTimeMillis() - 300001;
+        file.setLastModified(lastModified);
+
+        ExchangeRates rates = ExchangeProvider.getExchangeRates();
+        assert file.exists();
+        assert file.length() > 0;
+        assertNotEquals(lastModified, file.lastModified());
     }
 
 

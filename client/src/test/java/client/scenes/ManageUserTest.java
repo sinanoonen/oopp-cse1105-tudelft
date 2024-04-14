@@ -146,25 +146,6 @@ public class ManageUserTest extends ApplicationTest {
     }
 
     @Test
-    public void testInvalidIban() {
-        controller.getNameField().setText("John Doe");
-        controller.getEmailField().setText("john.doe@example.com");
-        controller.getIbanField().setText("");
-        controller.create();
-        verify(serverUtils, never()).createUser(any());
-    }
-
-    @Test
-    public void testInvalidBic() {
-        controller.getNameField().setText("John Doe");
-        controller.getEmailField().setText("john.doe@example.com");
-        controller.getIbanField().setText("123456789");
-        controller.getBicField().setText("");
-        controller.create();
-        verify(serverUtils, never()).createUser(any());
-    }
-
-    @Test
     public void testSaveWithValidInputs() {
         controller.getNameField().setText("John Doe");
         controller.getEmailField().setText("john.doe@example.com");

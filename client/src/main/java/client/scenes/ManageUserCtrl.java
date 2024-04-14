@@ -245,16 +245,17 @@ public class ManageUserCtrl implements Initializable, LanguageInterface {
             HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_invalid_email_existing"), errorPopup);
             return false;
         }
-        // IBAN CHECKING
-        if (isNullOrEmpty(ibanField.getText())) {
-            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_iban"), errorPopup);
-            return false;
-        }
-        // BIC CHECKING
-        if (isNullOrEmpty(bicField.getText())) {
-            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_bic"), errorPopup);
-            return false;
-        }
+        // Commented out to allow for optional bank details
+        //        // IBAN CHECKING
+        //        if (isNullOrEmpty(ibanField.getText())) {
+        //            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_iban"), errorPopup);
+        //            return false;
+        //        }
+        //        // BIC CHECKING
+        //        if (isNullOrEmpty(bicField.getText())) {
+        //            HomePageCtrl.displayErrorPopup(lm.get("manageuser_error_empty_bic"), errorPopup);
+        //            return false;
+        //        }
 
         return true;
     }

@@ -76,9 +76,9 @@ public class UserController {
         }
         User user = response.getBody();
         assert user != null;
-        String name = isNullOrEmpty(update.getName()) ? user.getName() : update.getName();
-        String iban = isNullOrEmpty(update.getIban()) ? user.getIban() : update.getIban();
-        String bic = isNullOrEmpty(update.getBic()) ? user.getBic() : update.getBic();
+        String name = update.getName() == null ? user.getName() : update.getName();
+        String iban = update.getIban() == null ? user.getIban() : update.getIban();
+        String bic = update.getBic() == null ? user.getBic() : update.getBic();
         UUID eventID = update.getEventID() == null ? user.getEventID() : update.getEventID();
         listenerService.notifyListeners(update.getEventID().toString());
         return repo.updateUser(name, iban, bic, email) == 1
@@ -97,11 +97,17 @@ public class UserController {
         if (user == null
             || isNullOrEmpty(user.getName())
             || isNullOrEmpty(user.getEmail())
-            || isNullOrEmpty(user.getIban())
-            || isNullOrEmpty(user.getBic())
         ) {
             return ResponseEntity.badRequest().build();
         }
+
+        if (user.getIban() == null) {
+            user.setIban("");
+        }
+        if (user.getBic() == null) {
+            user.setBic("");
+        }
+
         User saved = repo.save(user);
         listenerService.notifyListeners(user.getEventID().toString());
         return ResponseEntity.ok(saved);

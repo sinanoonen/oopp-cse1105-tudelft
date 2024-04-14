@@ -5,12 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.io.File;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 
 /**
@@ -84,9 +81,9 @@ public class ExchangeProviderTest {
     void testFileCachingExpiration() {
         File file = new File("src/main/resources/exchangeRates.txt");
         long lastModified = System.currentTimeMillis() - 300001;
-        file.setLastModified(lastModified);
+        assert file.setLastModified(lastModified);
 
-        ExchangeRates rates = ExchangeProvider.getExchangeRates();
+        ExchangeProvider.getExchangeRates();
         assert file.exists();
         assert file.length() > 0;
         assertNotEquals(lastModified, file.lastModified());

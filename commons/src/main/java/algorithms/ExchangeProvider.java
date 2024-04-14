@@ -1,7 +1,6 @@
 package algorithms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -37,7 +36,8 @@ public class ExchangeProvider {
     public static ExchangeRates getExchangeRates() {
         // if exchange rates are already cached and not older than 5 minutes, return them
         File file = new File("src/main/resources/exchangeRates.txt");
-        if (file.exists() && System.currentTimeMillis() - file.lastModified() < 300000) {
+        if (file.exists()
+                && System.currentTimeMillis() - file.lastModified() < 300000) {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 return mapper.readValue(file, ExchangeRates.class);
@@ -54,18 +54,24 @@ public class ExchangeProvider {
 
         HttpResponse<String> response;
         try (HttpClient httpClient = HttpClient.newHttpClient()) {
-            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            response = httpClient.send(request,
+                    HttpResponse.BodyHandlers.ofString()
+            );
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Error sending request", e);
         }
 
         ObjectMapper mapper = new ObjectMapper();
         try {
-            ExchangeRates exchangeRates = mapper.readValue(response.body(), ExchangeRates.class);
+            ExchangeRates exchangeRates = mapper
+                    .readValue(response.body(), ExchangeRates.class);
 
             // caches exchange rates to a file (create file if it doesn't exist)
             try {
-                mapper.writeValue(file, exchangeRates);
+                mapper.writeValue(
+                        file,
+                        exchangeRates
+                );
             } catch (IOException e) {
                 System.out.println("Error writing exchange rates to file: " + e);
             }

@@ -941,6 +941,15 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         recipient.setFill(Paint.valueOf("#FFFFFF"));
         recipient.setMouseTransparent(true);
 
+        Text arrow = new Text("--->");
+        arrow.setFont(Font.font("SansSerif", 15));
+        arrow.setFill(Paint.valueOf("#FFFFFF"));
+        arrow.setMouseTransparent(true);
+        final double arrowTopPadding = senderTopPadding;
+        final double arrowLeftPadding = 5f / 8f * base.getPrefWidth();
+        arrow.setLayoutX(base.getLayoutX() + arrowLeftPadding);
+        arrow.setLayoutY(base.getLayoutY() + arrowTopPadding);
+
         double convertedValue = payment.getAmount();
         convertedValue = ExchangeProvider.convertCurrency(convertedValue,
                 payment.getCurrency().toString(),
@@ -966,7 +975,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         currency.setFill(Paint.valueOf("#FFFFFF"));
         currency.setMouseTransparent(true);
 
-        base.getChildren().addAll(sender, recipient, amount, currency);
+        base.getChildren().addAll(sender, arrow, recipient, amount, currency);
 
         return base;
     }

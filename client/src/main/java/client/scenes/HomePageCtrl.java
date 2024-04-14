@@ -357,6 +357,12 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
             }
         });
 
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(base);
+        } else {
+            uiUtils.deactivateHighContrastMode(base);
+        }
+
         return base;
     }
 

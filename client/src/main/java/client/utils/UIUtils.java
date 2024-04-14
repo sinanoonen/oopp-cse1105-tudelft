@@ -15,22 +15,26 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Tooltip;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.springframework.stereotype.Service;
 
 /**
  * A utility class for UI operations.
  */
+@Service
 public class UIUtils {
 
-    private static final int CONTRAST_THRESHOLD = 75;
-    private static final double CONTRAST_MODIFIER = 0.86;
-    private static final double BRIGHTNESS_MODIFIER = 23;
-    private static final double TOOLTIP_FONT_SIZE = 12;
+    private final int contrastThreshold = 75;
+    private final double contrastModifier = 0.86;
+    private final double brightnessModifier = 23;
+    private final double tooltipFontSize = 12;
 
-    private static final HashMap<Node, String> colorMap = new HashMap<>();
+    private final HashMap<Node, String> colorMap = new HashMap<>();
 
-    private static final List<Node> activePages = new LinkedList<>();
+    private final List<Node> activePages = new LinkedList<>();
 
-    private static Map<String, String> languageMap = new HashMap<>();
+    private Map<String, String> languageMap = new HashMap<>();
+
+    public UIUtils() {}
 
     /**
      * Changes the color of a node.
@@ -38,7 +42,7 @@ public class UIUtils {
      * @param node the node to change the color of
      * @param color the new color
      */
-    public static void changeColor(Node node, String color, String attribute) {
+    public void changeColor(Node node, String color, String attribute) {
         String currentStyle = node.getStyle();
         String newColor = attribute + ": " + color + ";";
 
@@ -51,7 +55,7 @@ public class UIUtils {
         node.setStyle(currentStyle + newColor);
     }
 
-    private static void increaseNodeContrast(Node node) {
+    private void increaseNodeContrast(Node node) {
         String currentStyle = node.getStyle();
         if (!colorMap.containsKey(node)) {
             colorMap.put(node, currentStyle);
@@ -126,16 +130,16 @@ public class UIUtils {
         }
     }
 
-    private static void increaseColorContrast(int[] rgb) {
+    private void increaseColorContrast(int[] rgb) {
         int average = (rgb[0] + rgb[1] + rgb[2]) / 3;
         // if average is above threshold, add contrastModifier to all rgb values
-        if (average > CONTRAST_THRESHOLD) {
+        if (average > contrastThreshold) {
             for (int i = 0; i < 3; i++) {
-                rgb[i] = Math.min(255, (int) ((rgb[i] * (1.0 + CONTRAST_MODIFIER)) + BRIGHTNESS_MODIFIER));
+                rgb[i] = Math.min(255, (int) ((rgb[i] * (1.0 + contrastModifier)) + brightnessModifier));
             }
         } else {
             for (int i = 0; i < 3; i++) {
-                rgb[i] = Math.max(0, (int) ((rgb[i] * (1.0 - CONTRAST_MODIFIER)) + BRIGHTNESS_MODIFIER));
+                rgb[i] = Math.max(0, (int) ((rgb[i] * (1.0 - contrastModifier)) + brightnessModifier));
             }
         }
 
@@ -150,7 +154,7 @@ public class UIUtils {
      *
      * @param root the root node
      */
-    public static void activateHighContrastMode(Node root) {
+    public void activateHighContrastMode(Node root) {
 
         if (activePages.contains(root)) {
             return;
@@ -160,7 +164,7 @@ public class UIUtils {
         activePages.add(root);
 
         if (root instanceof Parent && !(root instanceof ChoiceBox) && !(root instanceof Hyperlink)) {
-            ((Parent) root).getChildrenUnmodifiable().forEach(UIUtils::activateHighContrastMode);
+            ((Parent) root).getChildrenUnmodifiable().forEach(this::activateHighContrastMode);
         }
 
     }
@@ -170,14 +174,14 @@ public class UIUtils {
      *
      * @param root the root node
      */
-    public static void deactivateHighContrastMode(Node root) {
+    public void deactivateHighContrastMode(Node root) {
 
         if (!activePages.contains(root)) {
             return;
         }
 
         if (root instanceof Parent) {
-            ((Parent) root).getChildrenUnmodifiable().forEach(UIUtils::deactivateHighContrastMode);
+            ((Parent) root).getChildrenUnmodifiable().forEach(this::deactivateHighContrastMode);
         }
 
         if (colorMap.containsKey(root)) {
@@ -187,7 +191,7 @@ public class UIUtils {
 
     }
 
-    private static int[] hexToRGB(String hex) {
+    private int[] hexToRGB(String hex) {
         hex = stringToHex(hex);
 
         if (hex.startsWith("#")) {
@@ -201,7 +205,7 @@ public class UIUtils {
         return new int[] {r, g, b};
     }
 
-    private static String stringToHex(String color) {
+    private String stringToHex(String color) {
         return switch (color) {
             case "black" -> "#000000";
             case "white" -> "#FFFFFF";
@@ -221,7 +225,7 @@ public class UIUtils {
      *
      * @param eventTitle the title of the event
      */
-    public static void showEventDeletedWarning(String eventTitle) {
+    public void showEventDeletedWarning(String eventTitle) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Event Deleted");
         alert.setHeaderText(null);
@@ -235,9 +239,9 @@ public class UIUtils {
      * @param node node to add tooltip to
      * @param text text to display in tooltip
      */
-    public static void addTooltip(Node node, String text) {
+    public void addTooltip(Node node, String text) {
         Tooltip tooltip = new Tooltip(text);
-        tooltip.setFont(new Font("SansSerif", TOOLTIP_FONT_SIZE));
+        tooltip.setFont(new Font("SansSerif", tooltipFontSize));
         Tooltip.install(node, tooltip);
     }
 
@@ -247,7 +251,8 @@ public class UIUtils {
      *
      * @param language language to load into map
      */
-    public static void loadLanguageMap(Language language) {
+    @SuppressWarnings("unchecked")
+    public void loadLanguageMap(Language language) {
         String path = "src/main/resources/client/languages/" + language.toString().toLowerCase() + ".json";
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -257,7 +262,7 @@ public class UIUtils {
         }
     }
 
-    public static Map<String, String> getLanguageMap() {
+    public Map<String, String> getLanguageMap() {
         return languageMap;
     }
 }

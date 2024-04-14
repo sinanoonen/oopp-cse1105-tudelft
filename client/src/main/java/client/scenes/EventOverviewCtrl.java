@@ -74,6 +74,8 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
 
     private Event event;
     private Map<Language, Image> flags;
@@ -139,6 +141,10 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
     private TextField filterTextField;
     @FXML
     private ChoiceBox<String> tagFilterChoiceBox;
+    @FXML
+    private ChoiceBox<String> filterOwnerChoiceBox;
+    @FXML
+    private ChoiceBox<String> filterbyParticipantChoiceBox;
     private boolean expenseMenuVisible = false;
     private boolean expenseDetailsVisible = false;
     @FXML
@@ -174,21 +180,25 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
      * @param serverUtils serverUtils
      * @param mainCtrl    mainCtrl
      * @param socket      socket
+     * @param uiUtils    uiUtils
+     * @param clientUtils  clientUtils
      */
     @Inject
     public EventOverviewCtrl(ServerUtils serverUtils, MainCtrl mainCtrl,
-                             WebSocketServerUtils socket) {
+                             WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
         this.socket = socket;
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         serverUtils.longPollEvents(e -> {
@@ -221,13 +231,46 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             resetTransactionsContainer();
         });
 
-        UIUtils.addTooltip(inviteCodeButton, "CTRL + C: Copy invite code");
-        UIUtils.addTooltip(backLink, "ESC: Back");
-        UIUtils.addTooltip(addExpense, "CTRL + N: Add expense");
-        UIUtils.addTooltip(addParticipantButton, "CTRL + N: Add participant");
-        UIUtils.addTooltip(newParticipantButton, "CTRL + N: Create participant");
-        UIUtils.addTooltip(confirmButton, "ENTER: Confirm");
-        UIUtils.addTooltip(filterTextField, "CTRL + F: Filter");
+        if (filterOwnerChoiceBox != null) {
+            filterOwnerChoiceBox.setOnAction((event) -> {
+                int selectedIndex = filterOwnerChoiceBox.getSelectionModel().getSelectedIndex();
+                Object selectedItem = filterOwnerChoiceBox.getSelectionModel().getSelectedItem();
+
+                if (filterOwnerChoiceBox.getValue() != null
+                        && filterOwnerChoiceBox.getValue().equals("No filter.")) {
+                    filterOwnerChoiceBox.setValue(null);
+                }
+
+                resetTransactionsContainer();
+            });
+
+        }
+        if (filterbyParticipantChoiceBox != null) {
+            filterbyParticipantChoiceBox.setOnAction((event) -> {
+                int selectedIndex = filterbyParticipantChoiceBox.getSelectionModel().getSelectedIndex();
+                Object selectedItem = filterbyParticipantChoiceBox.getSelectionModel().getSelectedItem();
+
+                if (filterbyParticipantChoiceBox
+                        .getValue() != null
+                        && filterbyParticipantChoiceBox
+                        .getValue()
+                        .equals("No filter.")
+                ) {
+                    filterbyParticipantChoiceBox.setValue(null);
+                }
+
+                resetTransactionsContainer();
+            });
+        }
+
+
+        uiUtils.addTooltip(inviteCodeButton, "CTRL + C: Copy invite code");
+        uiUtils.addTooltip(backLink, "ESC: Back");
+        uiUtils.addTooltip(addExpense, "CTRL + N: Add expense");
+        uiUtils.addTooltip(addParticipantButton, "CTRL + N: Add participant");
+        uiUtils.addTooltip(newParticipantButton, "CTRL + N: Create participant");
+        uiUtils.addTooltip(confirmButton, "ENTER: Confirm");
+        uiUtils.addTooltip(filterTextField, "CTRL + F: Filter");
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (!participantsMenu.isVisible()               // NO MENUS OPEN
@@ -304,7 +347,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         languageDropdown.setCellFactory(lv -> new ImageCell());
         languageDropdown.setButtonCell(new ImageCell());
         languageDropdown.setOnAction(event -> {
-            ClientUtils.setLanguage(languageDropdown.getValue());
+            clientUtils.setLanguage(languageDropdown.getValue());
             updateLanguage();
         });
         languageDropdown.getItems().addAll(flags.keySet());
@@ -312,7 +355,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         backLink.setText(lm.get("general_back"));
         inviteCodeButton.setText(lm.get("eventoverview_invite_code"));
         participantsButton.setText(lm.get("eventoverview_participants"));
@@ -384,20 +427,40 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         resetNewParticipantsContainer();
         resetParticipantsContainer();
 
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         Set<String> tags = new HashSet<>();
+        Set<String> participants = new HashSet<>();
         for (Transaction t : event.transactions()) {
             tags.addAll(t.getTags().stream().map(Tag::getName).toList());
+            participants.add(t.getOwner());
+            if (t instanceof Expense) {
+                participants.addAll(((Expense) t).getDebts().keySet());
+            }
         }
+
 
         tagFilterChoiceBox.getItems().removeAll(tagFilterChoiceBox.getItems());
         tagFilterChoiceBox.getItems().addAll(tags);
         tagFilterChoiceBox.getItems().addFirst("All");
+
+        if (filterOwnerChoiceBox != null) {
+            filterOwnerChoiceBox.getItems().removeAll(filterOwnerChoiceBox.getItems());
+            filterOwnerChoiceBox.getItems().addAll(participants);
+            filterOwnerChoiceBox.getItems().addFirst("No filter.");
+        }
+
+        if (filterbyParticipantChoiceBox != null) {
+            filterbyParticipantChoiceBox.getItems().removeAll(filterbyParticipantChoiceBox.getItems());
+            filterbyParticipantChoiceBox.getItems().addAll(participants);
+            filterbyParticipantChoiceBox.getItems().addFirst("No filter.");
+        }
+
+
 
         resetTransactionsContainer();
 
@@ -406,7 +469,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             Platform.runLater(() -> {
                 UUID uuid = UUID.fromString(message.getContent().substring(15));
                 if (event != null && uuid.equals(event.getInviteCode())) {
-                    UIUtils.showEventDeletedWarning(event.getTitle());
+                    uiUtils.showEventDeletedWarning(event.getTitle());
                     mainCtrl.showHomePage();
                 }
             });
@@ -424,7 +487,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             }
         });
 
-        languageDropdown.setValue(ClientUtils.getLanguage());
+        languageDropdown.setValue(clientUtils.getLanguage());
         updateLanguage();
     }
 
@@ -699,7 +762,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
 
         if (event.getTotalEURDebt(user) != 0) {
             HomePageCtrl.displayErrorPopup(
-                    UIUtils.getLanguageMap().get("eventoverview_error_existing_debts"),
+                    uiUtils.getLanguageMap().get("eventoverview_error_existing_debts"),
                     errorPopup
             );
             return;
@@ -749,7 +812,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         double convertedValue = expense.getAmount();
         convertedValue = ExchangeProvider.convertCurrency(convertedValue,
                 expense.getCurrency().toString(),
-                ClientUtils.getCurrency().toString());
+                clientUtils.getCurrency().toString());
         convertedValue = Math.round(convertedValue * 100.0) / 100.0;
         Text amount = new Text(String.valueOf(convertedValue));
 
@@ -763,7 +826,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         amount.setMouseTransparent(true);
         amount.setTextAlignment(TextAlignment.RIGHT);
 
-        Text currency = new Text(ClientUtils.getCurrency().toString());
+        Text currency = new Text(clientUtils.getCurrency().toString());
         final double currencyTopPadding = titleTopPadding;
         final double currencyLeftPadding = amountLeftPadding + amount.getText().length() * 9;
         currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
@@ -853,7 +916,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         double convertedValue = payment.getAmount();
         convertedValue = ExchangeProvider.convertCurrency(convertedValue,
                 payment.getCurrency().toString(),
-                ClientUtils.getCurrency().toString());
+                clientUtils.getCurrency().toString());
         convertedValue = Math.round(convertedValue * 100.0) / 100.0;
         Text amount = new Text(String.valueOf(convertedValue));
 
@@ -866,7 +929,7 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         amount.setFill(Paint.valueOf("#FFFFFF"));
         amount.setMouseTransparent(true);
 
-        Text currency = new Text(ClientUtils.getCurrency().toString());
+        Text currency = new Text(clientUtils.getCurrency().toString());
         final double currencyTopPadding = senderTopPadding;
         final double currencyLeftPadding = amountLeftPadding + amount.getText().length() * 9;
         currency.setLayoutX(base.getLayoutX() + currencyLeftPadding);
@@ -964,18 +1027,30 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                 .stream()
                 .filter(t -> t instanceof Expense)
                 .map(t -> (Expense) t)
-                .filter(t -> t.getDescription()
+                .filter(t -> (t.getDescription()
                         .contains(filterTextField.getText()) || t.getDebts()
                         .containsKey(filterTextField.getText()))
+                        && (filterbyParticipantChoiceBox.getValue() == null
+                        || t.getDebts().containsKey(filterbyParticipantChoiceBox.getValue())))
                 .map(e -> (Transaction) e)
                 .toList();
 
+
         List<Transaction> filteredTransactions = new ArrayList<>(filteredExpenses);
         for (Transaction t : event.transactions()) {
-            if (t instanceof Payment) {
+            if (t instanceof Payment
+                    && (t.getOwner().contains(filterTextField.getText())
+                    && (filterOwnerChoiceBox
+                        .getValue() == null
+                        || t
+                        .getOwner().equals(filterOwnerChoiceBox.getValue()))
+                    && (filterbyParticipantChoiceBox
+                    .getValue() == null
+                        || ((Payment) t).getRecipient().equals(filterbyParticipantChoiceBox.getValue())))) {
                 filteredTransactions.add(t);
             }
         }
+
 
 
         if (tagFilterChoiceBox.getValue() != null) {
@@ -983,6 +1058,12 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
                     .filter(t -> t.getTags().stream()
                             .map(Tag::getName).toList()
                             .contains(tagFilterChoiceBox.getValue()))
+                    .toList();
+        }
+
+        if (filterOwnerChoiceBox != null && filterOwnerChoiceBox.getValue() != null) {
+            filteredTransactions = filteredTransactions.stream()
+                    .filter(t -> t.getOwner().equals(filterOwnerChoiceBox.getValue()))
                     .toList();
         }
 

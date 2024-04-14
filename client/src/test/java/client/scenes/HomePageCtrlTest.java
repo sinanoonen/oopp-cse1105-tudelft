@@ -9,7 +9,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import client.utils.ClientUtils;
+import client.utils.ConfigReader;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import commons.EmailRequest;
 import commons.Event;
 import java.util.UUID;
@@ -38,6 +41,10 @@ public class HomePageCtrlTest extends ApplicationTest {
     private MainCtrl mainCtrl;
     @InjectMocks
     private HomePageCtrl controller;
+    @Mock
+    private UIUtils uiUtils;
+    @Mock
+    private ClientUtils clientUtils;
 
     /**
      * This is the setup for headless tests.
@@ -56,16 +63,19 @@ public class HomePageCtrlTest extends ApplicationTest {
     /**
      * This is the setUp for testing.
      */
+    @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        controller = new HomePageCtrl(serverUtils, mainCtrl, null);
+        controller = new HomePageCtrl(serverUtils, mainCtrl, null, uiUtils, clientUtils);
 
         Pane settingsOverlay = new Pane();
         Pane screenDarkener = new Pane();
         TextField codeInput = new TextField();
         Pane errorPopup = new Pane(new Text(""));
         ListView<Node> eventsList = new ListView<>();
+        ConfigReader cg = new ConfigReader();
+        controller.setConfigReader(cg);
 
         controller.setSettingsOverlay(settingsOverlay);
         controller.setScreenDarkener(screenDarkener);

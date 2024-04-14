@@ -9,7 +9,11 @@ import static org.mockito.Mockito.verify;
 import client.enums.Language;
 import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import commons.Currency;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -25,6 +29,7 @@ import org.mockito.MockitoAnnotations;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
+
 /**
  * This is used to test the SettingsCtrl class.
  */
@@ -37,6 +42,10 @@ public class SettingsCtrlTest extends ApplicationTest {
 
     @InjectMocks
     private SettingsCtrl settingsCtrl;
+    private UIUtils uiUtils;
+
+    private ClientUtils clientUtils;
+    private List<Language> languageList = new ArrayList<>();
 
     /**
      * This is the setup for headless tests.
@@ -58,7 +67,10 @@ public class SettingsCtrlTest extends ApplicationTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        settingsCtrl = new SettingsCtrl(serverUtils, mainCtrl);
+        uiUtils = new UIUtils();
+        clientUtils = new ClientUtils(uiUtils);
+        settingsCtrl = new SettingsCtrl(serverUtils, mainCtrl, uiUtils, clientUtils);
+        languageList.addAll(Arrays.asList(Language.values()));
         Platform.runLater(() -> {
             settingsCtrl.setCurrencyChoiceBox(new ChoiceBox<>());
             settingsCtrl.setLanguageChoiceBox(new ChoiceBox<>());
@@ -97,9 +109,9 @@ public class SettingsCtrlTest extends ApplicationTest {
         settingsCtrl.getLanguageChoiceBox().setValue(Language.ENGLISH);
         settingsCtrl.getHighContrastCheckBox().setSelected(true);
 
-        ClientUtils.setCurrency(Currency.USD);
-        ClientUtils.setLanguage(Language.ENGLISH);
-        ClientUtils.setHighContrast(false);
+        clientUtils.setCurrency(Currency.USD);
+        clientUtils.setLanguage(Language.ENGLISH);
+        clientUtils.setHighContrast(false);
 
         settingsCtrl.refresh();
 

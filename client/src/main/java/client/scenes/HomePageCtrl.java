@@ -49,6 +49,8 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
     private final ServerUtils serverUtils;
     private final MainCtrl mainCtrl;
     private final WebSocketServerUtils socket;
+    private final UIUtils uiUtils;
+    private final ClientUtils clientUtils;
 
     private List<Event> events;
     private Map<Language, Image> flags;
@@ -100,31 +102,43 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
     @FXML
     private ComboBox<Language> languageDropdown;
 
+    public void setConfigReader(ConfigReader configReader) {
+        this.configReader = configReader;
+    }
+
+    @Inject
+    private ConfigReader configReader;
+
     /**
      * Constructor for the HomePage controller.
      *
      * @param serverUtils serverUtils
      * @param mainCtrl    mainCtrl
      * @param socket      socket
+     * @param uiUtils     uiUtils
+     * @param clientUtils  clientUtils
      */
     @Inject
-    public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl, WebSocketServerUtils socket) {
+    public HomePageCtrl(ServerUtils serverUtils, MainCtrl mainCtrl,
+                        WebSocketServerUtils socket, UIUtils uiUtils, ClientUtils clientUtils) {
         this.serverUtils = serverUtils;
         this.mainCtrl = mainCtrl;
         this.socket = socket;
+        this.uiUtils = uiUtils;
+        this.clientUtils = clientUtils;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
-        UIUtils.addTooltip(addButton, "CTRL + N: Add event");
-        UIUtils.addTooltip(newEventButton, "CTRL + N: Create new event");
-        UIUtils.addTooltip(joinButton, "Enter: Join event");
+        uiUtils.addTooltip(addButton, "CTRL + N: Add event");
+        uiUtils.addTooltip(newEventButton, "CTRL + N: Create new event");
+        uiUtils.addTooltip(joinButton, "Enter: Join event");
 
         socket.registerForMessages("/topic/eventsUpdated", WebSocketMessage.class, message -> {
             Platform.runLater(() -> {
@@ -183,7 +197,7 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         languageDropdown.setCellFactory(lv -> new ImageCell());
         languageDropdown.setButtonCell(new ImageCell());
         languageDropdown.setOnAction(event -> {
-            ClientUtils.setLanguage(languageDropdown.getValue());
+            clientUtils.setLanguage(languageDropdown.getValue());
             updateLanguage();
         });
         languageDropdown.getItems().addAll(flags.keySet());
@@ -191,7 +205,7 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
 
     @Override
     public void updateLanguage() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         eventsText.setText(lm.get("homepage_events"));
         settingsText.setText(lm.get("homepage_settings"));
         adminText.setText(lm.get("homepage_admin_login"));
@@ -226,15 +240,15 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
 
         reloadEventsList();
 
-        if (ClientUtils.isHighContrast()) {
-            UIUtils.activateHighContrastMode(root);
+        if (clientUtils.isHighContrast()) {
+            uiUtils.activateHighContrastMode(root);
         } else {
-            UIUtils.deactivateHighContrastMode(root);
+            uiUtils.deactivateHighContrastMode(root);
         }
 
         serverUtils.longPollEvents(e -> refresh()); // register for polling; on update, refresh
 
-        languageDropdown.setValue(ClientUtils.getLanguage());
+        languageDropdown.setValue(clientUtils.getLanguage());
         updateLanguage();
     }
 
@@ -299,14 +313,14 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
         try {
             uuid = UUID.fromString(input);
         } catch (Exception e) {
-            displayInputError(UIUtils.getLanguageMap().get("homepage_error_invalid_code"));
+            displayInputError(uiUtils.getLanguageMap().get("homepage_error_invalid_code"));
             return;
         }
         try {
             Event event = serverUtils.getEventByUUID(uuid);
             mainCtrl.showEventOverview(event);
         } catch (Exception e) {
-            displayInputError(UIUtils.getLanguageMap().get("homepage_error_event_not_found"));
+            displayInputError(uiUtils.getLanguageMap().get("homepage_error_event_not_found"));
         }
     }
 
@@ -406,10 +420,10 @@ public class HomePageCtrl implements Initializable, LanguageInterface {
      * This method handles the sending of a test mail.
      */
     public void onTestEmailClicked() {
-        var lm = UIUtils.getLanguageMap();
+        var lm = uiUtils.getLanguageMap();
         showInfo(lm.get("homepage_info_loading"), lm.get("homepage_info_email_sent"));
 
-        EmailConfig emailConfig = ConfigReader.getEmailConfig();
+        EmailConfig emailConfig = configReader.getEmailConfig();
         if (!emailConfig.isComplete()) {
             showAlert(lm.get("homepage_info_email_config"), lm.get("homepage_info_email_setup"));
             return;

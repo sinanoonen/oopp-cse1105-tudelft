@@ -4,7 +4,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import javafx.application.Platform;
 import javafx.scene.control.PasswordField;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,6 +26,10 @@ public class AdminLoginCtrlTest extends ApplicationTest {
 
     @Mock
     private ServerUtils serverUtils;
+    @Mock
+    private UIUtils uiUtils;
+    @Mock
+    private ClientUtils clientUtils;
     @Mock
     private MainCtrl mainCtrl;
     @Mock
@@ -52,7 +58,7 @@ public class AdminLoginCtrlTest extends ApplicationTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        controller = new AdminLoginCtrl(serverUtils, mainCtrl);
+        controller = new AdminLoginCtrl(serverUtils, mainCtrl, uiUtils, clientUtils);
 
         passwordField = new PasswordField();
         controller.setPasswordField(passwordField);

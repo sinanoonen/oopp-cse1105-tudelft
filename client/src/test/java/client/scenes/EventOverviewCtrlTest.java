@@ -9,7 +9,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import client.utils.ClientUtils;
 import client.utils.ServerUtils;
+import client.utils.UIUtils;
 import client.utils.WebSocketServerUtils;
 import commons.Event;
 import java.util.UUID;
@@ -46,6 +48,10 @@ public class EventOverviewCtrlTest extends ApplicationTest {
     private MainCtrl mainCtrl;
     @Mock
     private WebSocketServerUtils socket;
+    @Mock
+    private UIUtils uiUtils;
+    @Mock
+    private ClientUtils clientUtils;
 
     @InjectMocks
     private EventOverviewCtrl controller;
@@ -73,7 +79,7 @@ public class EventOverviewCtrlTest extends ApplicationTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        controller = new EventOverviewCtrl(serverUtils, mainCtrl, socket);
+        controller = new EventOverviewCtrl(serverUtils, mainCtrl, socket, uiUtils, clientUtils);
         when(mainCtrl.getPrimaryStage()).thenReturn(mockStage);
         controller.setParticipantsMenu(new Pane());
         controller.setTitle(new TextField());

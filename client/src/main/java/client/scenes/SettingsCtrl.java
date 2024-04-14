@@ -89,6 +89,8 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
         highContrastText.setText(lm.get("settings_high_contrast"));
         generalText.setText(lm.get("settings_general"));
         accessibilityText.setText(lm.get("settings_accessibility"));
+
+        uiUtils.addTooltip(addLanguageButton, lm.get("setting_tooltip_template_download"));
     }
 
     @Override
@@ -130,8 +132,6 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
                 return;
             }
         });
-
-        uiUtils.addTooltip(addLanguageButton, uiUtils.getLanguageMap().get("setting_tooltip_template_download"));
     }
 
     /**

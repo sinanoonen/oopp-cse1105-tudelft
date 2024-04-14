@@ -269,16 +269,6 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             });
         }
 
-        var lm = uiUtils.getLanguageMap();
-        uiUtils.addTooltip(inviteCodeButton, "CTRL + C: " + lm.get("eventoverview_tooltip_copy"));
-        uiUtils.addTooltip(backLink, "ESC: " + lm.get("general_back"));
-        uiUtils.addTooltip(addExpense, "CTRL + N: " + lm.get("eventoverview_tooltip_add_expense"));
-        uiUtils.addTooltip(addParticipantButton, "CTRL + N: " + lm.get("eventoverview_tooltip_add_participant"));
-        uiUtils.addTooltip(newParticipantButton,
-                "CTRL + N: " + lm.get("eventoverview_tooltip_create_participant"));
-        uiUtils.addTooltip(confirmButton, "ENTER: " + lm.get("general_confirm"));
-        uiUtils.addTooltip(filterTextField, "CTRL + F: " + lm.get("eventoverview_tooltip_filter"));
-
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (!participantsMenu.isVisible()               // NO MENUS OPEN
                     && !addParticipantsMenu.isVisible()
@@ -396,6 +386,15 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         titleAmount.setText(lm.get("addexpense_quantity") + ": ");
         titleParticipants.setText(lm.get("eventoverview_expense_involved") + ": ");
         titleTags.setText(lm.get("eventoverview_expense_tags") + ": ");
+
+        uiUtils.addTooltip(inviteCodeButton, "CTRL + C: " + lm.get("eventoverview_tooltip_copy"));
+        uiUtils.addTooltip(backLink, "ESC: " + lm.get("general_back"));
+        uiUtils.addTooltip(addExpense, "CTRL + N: " + lm.get("eventoverview_tooltip_add_expense"));
+        uiUtils.addTooltip(addParticipantButton, "CTRL + N: " + lm.get("eventoverview_tooltip_add_participant"));
+        uiUtils.addTooltip(newParticipantButton,
+                "CTRL + N: " + lm.get("eventoverview_tooltip_create_participant"));
+        uiUtils.addTooltip(confirmButton, "ENTER: " + lm.get("general_confirm"));
+        uiUtils.addTooltip(filterTextField, "CTRL + F: " + lm.get("eventoverview_tooltip_filter"));
     }
 
     /**

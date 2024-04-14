@@ -85,8 +85,6 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
             uiUtils.deactivateHighContrastMode(root);
         }
 
-        uiUtils.addTooltip(backLink, "ESC: " + uiUtils.getLanguageMap().get("general_back"));
-
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {
                 onBackClicked(null);
@@ -100,6 +98,8 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
         balanceText.setText(lm.get("debtsoverview_participant_balance"));
         debtSettleButton.setText(lm.get("debtsoverview_settle"));
         backLink.setText(lm.get("general_back"));
+
+        uiUtils.addTooltip(backLink, "ESC: " + lm.get("general_back"));
     }
 
     /**

@@ -101,7 +101,7 @@ public class DebtOverviewCtrlTest extends ApplicationTest {
     public void testCleanUpOnExit() {
         controller.onExit();
 
-        verify(socket, times(1)).unregisterFromMessages("/topic/eventsUpdated");
+        verify(socket, times(1)).unregisterFromMessages("/topic/event");
     }
 
     @Test

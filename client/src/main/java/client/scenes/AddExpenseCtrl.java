@@ -186,6 +186,7 @@ public class AddExpenseCtrl implements Initializable, LanguageInterface {
                 UUID uuid = UUID.fromString(message.getContent().substring(15));
                 if (event != null && uuid.equals(event.getInviteCode())) {
                     uiUtils.showEventDeletedWarning(event.getTitle());
+                    onExit();
                     mainCtrl.showHomePage();
                 }
             });

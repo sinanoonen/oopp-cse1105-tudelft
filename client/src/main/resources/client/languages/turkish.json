@@ -69,6 +69,11 @@
   "eventoverview_invite_code": "Davet Kodu",
   "eventoverview_no_filter": "",
   "eventoverview_participants": "Katılımcılar",
+  "eventoverview_tooltip_add_expense": "",
+  "eventoverview_tooltip_add_participant": "",
+  "eventoverview_tooltip_copy": "",
+  "eventoverview_tooltip_create_participant": "",
+  "eventoverview_tooltip_filter": "",
 
   "homepage_admin_login": "Yönetici girişi",
   "homepage_code": "KOD",
@@ -88,6 +93,9 @@
   "homepage_server_select": "Sunucu Seç",
   "homepage_settings": "Ayarlar",
   "homepage_test_mail": "Test E-Postası",
+  "homepage_tooltip_add_event": "",
+  "homepage_tooltip_create_event": "",
+  "homepage_tooltip_join_event": "",
 
   "manageuser_bic": "BIC",
   "manageuser_create_new_user": "YENİ KULLANICI YARAT",
@@ -112,5 +120,6 @@
   "settings_currency": "Para Birimi",
   "settings_general": "Genel",
   "settings_high_contrast": "Yüksek Kontrast Modu",
-  "settings_language": "Dil Seçeneği"
+  "settings_language": "Dil Seçeneği",
+  "setting_tooltip_template_download": ""
 }

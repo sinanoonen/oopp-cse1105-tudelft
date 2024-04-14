@@ -69,6 +69,11 @@
   "eventoverview_invite_code": "Invite Code",
   "eventoverview_no_filter": "No filter",
   "eventoverview_participants": "Participants",
+  "eventoverview_tooltip_add_expense": "Add expense",
+  "eventoverview_tooltip_add_participant": "Add participant",
+  "eventoverview_tooltip_copy": "Copy invite code",
+  "eventoverview_tooltip_create_participant": "Create participant",
+  "eventoverview_tooltip_filter": "Filter",
 
   "homepage_admin_login": "Admin Login",
   "homepage_code": "CODE",
@@ -88,6 +93,9 @@
   "homepage_server_select": "Server Select",
   "homepage_settings": "Settings",
   "homepage_test_mail": "Test Mail",
+  "homepage_tooltip_add_event": "Add event",
+  "homepage_tooltip_create_event": "Create event",
+  "homepage_tooltip_join_event": "Join event",
 
   "manageuser_bic": "BIC",
   "manageuser_create_new_user": "CREATE NEW USER",
@@ -112,5 +120,6 @@
   "settings_currency": "Currency",
   "settings_general": "General",
   "settings_high_contrast": "High Contrast",
-  "settings_language": "Language"
+  "settings_language": "Language",
+  "setting_tooltip_template_download": "Download language template"
 }

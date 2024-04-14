@@ -269,14 +269,14 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
             });
         }
 
-
-        uiUtils.addTooltip(inviteCodeButton, "CTRL + C: Copy invite code");
-        uiUtils.addTooltip(backLink, "ESC: Back");
-        uiUtils.addTooltip(addExpense, "CTRL + N: Add expense");
-        uiUtils.addTooltip(addParticipantButton, "CTRL + N: Add participant");
-        uiUtils.addTooltip(newParticipantButton, "CTRL + N: Create participant");
-        uiUtils.addTooltip(confirmButton, "ENTER: Confirm");
-        uiUtils.addTooltip(filterTextField, "CTRL + F: Filter");
+        var lm = uiUtils.getLanguageMap();
+        uiUtils.addTooltip(inviteCodeButton, "CTRL + C: " + lm.get("eventoverview_tooltip_copy"));
+        uiUtils.addTooltip(backLink, "ESC: " + lm.get("general_back"));
+        uiUtils.addTooltip(addExpense, "CTRL + N: " + lm.get("eventoverview_tooltip_add_expense"));
+        uiUtils.addTooltip(addParticipantButton, "CTRL + N: " + lm.get("eventoverview_tooltip_add_participant"));
+        uiUtils.addTooltip(newParticipantButton, "CTRL + N: " + lm.get("eventoverview_tooltip_create_participant"));
+        uiUtils.addTooltip(confirmButton, "ENTER: " + lm.get("general_confirm"));
+        uiUtils.addTooltip(filterTextField, "CTRL + F: " + lm.get("eventoverview_tooltip_filter"));
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (!participantsMenu.isVisible()               // NO MENUS OPEN

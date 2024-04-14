@@ -69,6 +69,11 @@
   "eventoverview_invite_code": "",
   "eventoverview_no_filter": "",
   "eventoverview_participants": "",
+  "eventoverview_tooltip_add_expense": "",
+  "eventoverview_tooltip_add_participant": "",
+  "eventoverview_tooltip_copy": "",
+  "eventoverview_tooltip_create_participant": "",
+  "eventoverview_tooltip_filter": "",
 
   "homepage_admin_login": "",
   "homepage_code": "",
@@ -88,6 +93,9 @@
   "homepage_server_select": "",
   "homepage_settings": "",
   "homepage_test_mail": "",
+  "homepage_tooltip_add_event": "",
+  "homepage_tooltip_create_event": "",
+  "homepage_tooltip_join_event": "",
 
   "manageuser_bic": "",
   "manageuser_create_new_user": "",
@@ -112,5 +120,6 @@
   "settings_currency": "",
   "settings_general": "",
   "settings_high_contrast": "",
-  "settings_language": ""
+  "settings_language": "",
+  "setting_tooltip_template_download": ""
 }

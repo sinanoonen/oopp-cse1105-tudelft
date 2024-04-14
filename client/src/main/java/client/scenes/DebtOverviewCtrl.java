@@ -85,7 +85,7 @@ public class DebtOverviewCtrl implements Initializable, LanguageInterface {
             uiUtils.deactivateHighContrastMode(root);
         }
 
-        uiUtils.addTooltip(backLink, "ESC: Back");
+        uiUtils.addTooltip(backLink, "ESC: " + uiUtils.getLanguageMap().get("general_back"));
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode().equals(KeyCode.ESCAPE)) {

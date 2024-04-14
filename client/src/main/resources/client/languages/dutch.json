@@ -69,6 +69,11 @@
   "eventoverview_invite_code": "Uitnodigingscode",
   "eventoverview_no_filter": "",
   "eventoverview_participants": "Deelnemers",
+  "eventoverview_tooltip_add_expense": "",
+  "eventoverview_tooltip_add_participant": "",
+  "eventoverview_tooltip_copy": "",
+  "eventoverview_tooltip_create_participant": "",
+  "eventoverview_tooltip_filter": "",
 
   "homepage_admin_login": "Inloggen als beheerder",
   "homepage_code": "CODE",
@@ -88,6 +93,9 @@
   "homepage_server_select": "Server Selecteren",
   "homepage_settings": "Instellingen",
   "homepage_test_mail": "Test Mail",
+  "homepage_tooltip_add_event": "",
+  "homepage_tooltip_create_event": "",
+  "homepage_tooltip_join_event": "",
 
   "manageuser_bic": "BIC",
   "manageuser_create_new_user": "Maak een nieuwe gebruiker aan",
@@ -112,5 +120,6 @@
   "settings_currency": "Valuta",
   "settings_general": "Algemeen",
   "settings_high_contrast": "Hoog Contrast",
-  "settings_language": "Taal"
+  "settings_language": "Taal",
+  "setting_tooltip_template_download": ""
 }

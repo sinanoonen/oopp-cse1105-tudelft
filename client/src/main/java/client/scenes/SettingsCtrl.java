@@ -131,7 +131,7 @@ public class SettingsCtrl implements Initializable, LanguageInterface {
             }
         });
 
-        uiUtils.addTooltip(addLanguageButton, "Download language template");
+        uiUtils.addTooltip(addLanguageButton, uiUtils.getLanguageMap().get("setting_tooltip_template_download"));
     }
 
     /**

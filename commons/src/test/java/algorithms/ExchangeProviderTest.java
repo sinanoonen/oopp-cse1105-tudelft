@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
+import java.io.FileWriter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -86,6 +87,32 @@ public class ExchangeProviderTest {
         ExchangeProvider.getExchangeRates();
         assert file.exists();
         assert file.length() > 0;
+        assertNotEquals(lastModified, file.lastModified());
+    }
+
+    @AfterEach
+    void testFileTampered() {
+        ExchangeProvider.getExchangeRates();
+        File file = new File("src/main/resources/exchangeRates.txt");
+        assert file.exists();
+        assert file.length() > 0;
+
+        long lastModified = file.lastModified();
+
+        assertEquals(lastModified, file.lastModified());
+
+        // tamper with the file (overwrite data and write random string)
+        FileWriter writer;
+        try {
+            writer = new FileWriter(file);
+            writer.write("random string");
+            writer.close();
+        } catch (Exception e) {
+            throw new RuntimeException("Error tampering with cached exchange rates in test", e);
+        }
+
+        ExchangeProvider.getExchangeRates();
+
         assertNotEquals(lastModified, file.lastModified());
     }
 

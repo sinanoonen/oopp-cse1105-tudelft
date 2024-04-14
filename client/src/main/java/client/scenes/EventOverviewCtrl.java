@@ -264,13 +264,13 @@ public class EventOverviewCtrl implements Initializable, LanguageInterface {
         }
 
 
-        UIUtils.addTooltip(inviteCodeButton, "CTRL + C: Copy invite code");
-        UIUtils.addTooltip(backLink, "ESC: Back");
-        UIUtils.addTooltip(addExpense, "CTRL + N: Add expense");
-        UIUtils.addTooltip(addParticipantButton, "CTRL + N: Add participant");
-        UIUtils.addTooltip(newParticipantButton, "CTRL + N: Create participant");
-        UIUtils.addTooltip(confirmButton, "ENTER: Confirm");
-        UIUtils.addTooltip(filterTextField, "CTRL + F: Filter");
+        uiUtils.addTooltip(inviteCodeButton, "CTRL + C: Copy invite code");
+        uiUtils.addTooltip(backLink, "ESC: Back");
+        uiUtils.addTooltip(addExpense, "CTRL + N: Add expense");
+        uiUtils.addTooltip(addParticipantButton, "CTRL + N: Add participant");
+        uiUtils.addTooltip(newParticipantButton, "CTRL + N: Create participant");
+        uiUtils.addTooltip(confirmButton, "ENTER: Confirm");
+        uiUtils.addTooltip(filterTextField, "CTRL + F: Filter");
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (!participantsMenu.isVisible()               // NO MENUS OPEN

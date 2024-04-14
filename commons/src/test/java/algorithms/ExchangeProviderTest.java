@@ -4,7 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.FileWriter;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -12,11 +15,6 @@ import org.junit.jupiter.api.Test;
  * This class is to test the exchange between currencies.
  */
 public class ExchangeProviderTest {
-
-    @BeforeEach
-    void prefetchRates() {
-        ExchangeRates rates = ExchangeProvider.getExchangeRates();
-    }
 
     @Test
     void testGetExchangeRates() {
@@ -63,6 +61,59 @@ public class ExchangeProviderTest {
 
         double convertedBack = ExchangeProvider.convertCurrency(converted, "CNY", "GBP");
         assertEquals(Math.round(amount), Math.round(convertedBack));
+    }
+
+    @AfterEach
+    void testFileCaching() {
+        ExchangeRates rates = ExchangeProvider.getExchangeRates();
+        File file = new File("src/main/resources/exchangeRates.txt");
+        assert file.exists();
+        assert file.length() > 0;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            ExchangeRates cachedRates = mapper.readValue(file, ExchangeRates.class);
+            assertEquals(rates, cachedRates);
+        } catch (Exception e) {
+            throw new RuntimeException("Error reading cached exchange rates in test", e);
+        }
+    }
+
+    @AfterEach
+    void testFileCachingExpiration() {
+        File file = new File("src/main/resources/exchangeRates.txt");
+        long lastModified = System.currentTimeMillis() - 300001;
+        assert file.setLastModified(lastModified);
+
+        ExchangeProvider.getExchangeRates();
+        assert file.exists();
+        assert file.length() > 0;
+        assertNotEquals(lastModified, file.lastModified());
+    }
+
+    @AfterEach
+    void testFileTampered() {
+        ExchangeProvider.getExchangeRates();
+        File file = new File("src/main/resources/exchangeRates.txt");
+        assert file.exists();
+        assert file.length() > 0;
+
+        long lastModified = file.lastModified();
+
+        assertEquals(lastModified, file.lastModified());
+
+        // tamper with the file (overwrite data and write random string)
+        FileWriter writer;
+        try {
+            writer = new FileWriter(file);
+            writer.write("random string");
+            writer.close();
+        } catch (Exception e) {
+            throw new RuntimeException("Error tampering with cached exchange rates in test", e);
+        }
+
+        ExchangeProvider.getExchangeRates();
+
+        assertNotEquals(lastModified, file.lastModified());
     }
 
 
